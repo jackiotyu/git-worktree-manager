@@ -35,6 +35,9 @@ export const refreshWorkTreeCmd = () => {
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
+            // TODO 挑选分支，新建worktree
+            // TODO 保存git仓库引用地址
+            // TODO 展示所有已存在的git worktree
             vscode.commands.registerCommand(Commands.freshTree, refreshWorkTreeCmd),
             vscode.commands.registerCommand(Commands.switchWorkTree, switchWorkTreeCmd),
         );
