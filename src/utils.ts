@@ -51,7 +51,7 @@ export function getBranchList(keys: string[]) {
     if (!folderRoot.uri) {
         return {};
     }
-    const proc = cp.spawnSync('git', ['branch', `--format=${formatQuery(keys)}`], {
+    const proc = cp.spawnSync('git', ['branch', `--format=${formatQuery(keys)}`, '--sort=-worktreepath'], {
         cwd: folderRoot.uri.fsPath,
     });
     if (proc.stderr.toString()) {
