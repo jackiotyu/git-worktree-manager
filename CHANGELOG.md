@@ -1,9 +1,5 @@
-# Change Log
+## [0.0.1] 2023-08-24
 
-All notable changes to the "git-worktree-manager" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
+### Add
 
 - Initial release
