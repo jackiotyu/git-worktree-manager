@@ -8,8 +8,23 @@
     "vscode": "^1.81.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "SCM Providers"
   ],
+  "keywords": [
+    "git",
+    "worktree",
+    "git worktree",
+    "manager",
+    "switch branch"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jackiotyu/git-worktree-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jackiotyu/git-worktree-manager/issues"
+  },
   "icon": "images/icon.png",
   "activationEvents": [],
   "main": "./dist/extension.js",
