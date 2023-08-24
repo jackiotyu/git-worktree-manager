@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { updateTreeDataEvent } from './events';
+import { updateTreeDataEvent } from '@/lib/events';
 
 class WorkspaceFolderRoot implements vscode.Disposable {
     private _uri?: vscode.Uri;
