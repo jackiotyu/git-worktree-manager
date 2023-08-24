@@ -34,6 +34,11 @@ const executeGitCommand: (args?: string[]) =>string = (args?: string[]) => {
     return executeGitCommandBase(folderRoot.uri?.fsPath || '', args);
 };
 
+const executeGitCommandAuto = (cwd: string = '', args?: string[]) => {
+    if(!cwd) {return executeGitCommand(args);};
+    return executeGitCommandBase(cwd, args);
+};
+
 export function judgeIsCurrentFolder(path: string) {
     return comparePath(folderRoot.uri?.fsPath, path);
 }
@@ -121,9 +126,9 @@ export function getBranchList<T extends string>(keys: T[]) {
     }
 }
 
-export async function addWorkTree(path: string, branch: string) {
+export async function addWorkTree(path: string, branch: string, cwd?: string) {
     try {
-        executeGitCommand([WORK_TREE, 'add', path, branch]);
+        executeGitCommandAuto(cwd, [WORK_TREE, 'add', path, branch]);
         return true;
     } catch (error: any) {
         vscode.window.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
@@ -131,33 +136,33 @@ export async function addWorkTree(path: string, branch: string) {
     }
 }
 
-export function removeWorkTree(path: string) {
-    return executeGitCommand([WORK_TREE, 'remove', path]);
+export function removeWorkTree(path: string, cwd?: string) {
+    return executeGitCommandAuto(cwd, [WORK_TREE, 'remove', path]);
 }
 
-export function repairWorkTree(path: string) {
-    return executeGitCommand([WORK_TREE, 'repair', path]);
+export function repairWorkTree(path: string, cwd?: string) {
+    return executeGitCommandAuto(cwd, [WORK_TREE, 'repair', path]);
 }
 
-export function moveWorkTree(oldPath: string, newPath: string) {
-    return executeGitCommand([WORK_TREE, 'move', oldPath, newPath]);
+export function moveWorkTree(oldPath: string, newPath: string, cwd?: string) {
+    return executeGitCommandAuto(cwd, [WORK_TREE, 'move', oldPath, newPath]);
 }
 
-export function lockWorkTree(path: string) {
-    return executeGitCommand([WORK_TREE, 'lock', path]);
+export function lockWorkTree(path: string, cwd?: string) {
+    return executeGitCommandAuto(cwd, [WORK_TREE, 'lock', path]);
 }
 
-export function unlockWorkTree(path: string) {
-    return executeGitCommand([WORK_TREE, 'unlock', path]);
+export function unlockWorkTree(path: string, cwd?: string) {
+    return executeGitCommandAuto(cwd, [WORK_TREE, 'unlock', path]);
 }
 
 export function formatTime(time: string) {
     return dayjs(time).fromNow();
 }
 
-export function pruneWorkTree(dryRun: boolean = false) {
+export function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
     try {
-        executeGitCommand([WORK_TREE, 'prune', (dryRun ? '--dry-run' : ''), '-v'].filter(i => i));
+        executeGitCommandAuto(cwd, [WORK_TREE, 'prune', (dryRun ? '--dry-run' : ''), '-v'].filter(i => i));
         return [];
     } catch(error: any) {
         if(/Removing worktrees/.test(error.message)) {

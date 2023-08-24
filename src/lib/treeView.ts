@@ -10,9 +10,11 @@ export class WorkTreeItem extends vscode.TreeItem {
     path: string;
     name: string;
     type = TreeItemKind.worktree;
-    constructor(item: WorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState) {
+    parent?: GitFolderItem;
+    constructor(item: WorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
         super(item.name, collapsible);
         this.description = `${item.isMain ? '✨ ' : ''}${item.path}`;
+        this.parent = parent;
 
         const isCurrent = judgeIsCurrentFolder(item.path);
         const themeColor = isCurrent ? new vscode.ThemeColor('charts.blue') : void 0;
@@ -107,6 +109,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
                    this.refresh();
                 }
             }),
+            updateTreeDataEvent.event(() => {
+                this.refresh();
+            }),
             updateFolderEvent.event(() => {
                 this.refresh();
             })
@@ -127,7 +132,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         }
         if(element.type === TreeItemKind.gitFolder) {
             return getWorkTreeList(element.path).map(item => {
-                return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
+                return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
             });
         }
     }

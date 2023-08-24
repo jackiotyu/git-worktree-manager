@@ -163,7 +163,7 @@
       "view/item/context": [
         {
           "command": "git-worktree-manager.removeWorkTree",
-          "when": "view === git-worktree-manager-list && viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
           "group": "worktree-delete"
         },
         {
@@ -183,22 +183,22 @@
         },
         {
           "command": "git-worktree-manager.repairWorkTree",
-          "when": "view === git-worktree-manager-list && viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "worktree-action"
         },
         {
           "command": "git-worktree-manager.moveWorkTree",
-          "when": "view === git-worktree-manager-list && viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "worktree-action"
         },
         {
           "command": "git-worktree-manager.lockWorkTree",
-          "when": "view === git-worktree-manager-list && viewItem =~ /git-worktree-manager.worktreeItem.unlock/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/",
           "group": "inline"
         },
         {
           "command": "git-worktree-manager.unlockWorkTree",
-          "when": "view === git-worktree-manager-list && viewItem =~ /git-worktree-manager.worktreeItem.lock/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/",
           "group": "inline"
         }
       ]

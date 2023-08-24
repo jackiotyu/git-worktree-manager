@@ -112,7 +112,7 @@ const removeWorkTreeCmd = async (item: WorkTreeItem) => {
         if (!confirm) {
             return;
         }
-        removeWorkTree(item.path);
+        removeWorkTree(item.path, item.parent?.path);
         updateTreeDataEvent.fire();
         vscode.window.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
     } catch (error) {
@@ -145,20 +145,20 @@ const revealInSystemExplorerCmd = (item: WorkTreeItem) => {
     vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 
-const commonWorkTreeCmd = (path: string, cmd: Commands) => {
+const commonWorkTreeCmd = (path: string, cmd: Commands, cwd?: string) => {
     let cmdName = localize('operation');
     try {
         switch (cmd) {
             case Commands.lockWorkTree:
-                lockWorkTree(path);
+                lockWorkTree(path, cwd);
                 cmdName = localize('lock');
                 break;
             case Commands.unlockWorkTree:
-                unlockWorkTree(path);
+                unlockWorkTree(path, cwd);
                 cmdName = localize('unlock');
                 break;
             case Commands.repairWorkTree:
-                repairWorkTree(path);
+                repairWorkTree(path, cwd);
                 cmdName = localize('repair');
                 break;
         }
@@ -170,15 +170,15 @@ const commonWorkTreeCmd = (path: string, cmd: Commands) => {
 };
 
 const repairWorkTreeCmd = (item: WorkTreeItem) => {
-    commonWorkTreeCmd(item.path, Commands.repairWorkTree);
+    commonWorkTreeCmd(item.path, Commands.repairWorkTree, item.parent?.path);
 };
 
 const lockWorkTreeCmd = (item: WorkTreeItem) => {
-    commonWorkTreeCmd(item.path, Commands.lockWorkTree);
+    commonWorkTreeCmd(item.path, Commands.lockWorkTree, item.parent?.path);
 };
 
 const unlockWorkTreeCmd = (item: WorkTreeItem) => {
-    commonWorkTreeCmd(item.path, Commands.unlockWorkTree);
+    commonWorkTreeCmd(item.path, Commands.unlockWorkTree, item.parent?.path);
 };
 
 const moveWorkTreeCmd = async (item: WorkTreeItem) => {
@@ -195,7 +195,7 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
             return;
         }
         let folderUri = uriList[0];
-        moveWorkTree(item.path, folderUri.fsPath);
+        moveWorkTree(item.path, folderUri.fsPath, item.parent?.path);
         updateTreeDataEvent.fire();
         vscode.window.showInformationMessage(localize('msg.success.moveWorkTree'));
     } catch (error) {
