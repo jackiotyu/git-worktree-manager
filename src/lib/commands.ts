@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { updateTreeDataEvent, updateFolderEvent } from '@/lib/events';
+import localize from '@/localize';
 import {
     getFolderIcon,
     getWorkTreeList,
@@ -30,8 +31,8 @@ export const switchWorkTreeCmd = () => {
     });
     const options: vscode.QuickPickOptions = {
         canPickMany: false,
-        placeHolder: '请选择切换的目录',
-        title: 'worktree切换',
+        placeHolder: localize('msg.placeHolder.switchWorkTree'),
+        title: localize('msg.title.switchWorkTree'),
     };
     vscode.window.showQuickPick(items, options).then((workTree) => {
         if (!workTree) {
@@ -50,7 +51,10 @@ export const refreshWorkTreeCmd = () => {
 
 const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string }) => {
     const { folderPath, name, label } = info;
-    let confirmCreate = await confirmModal('创建worktree', `将在 ${folderPath} 下创建${label}为 ${name} 的 worktree`);
+    let confirmCreate = await confirmModal(
+        localize('msg.modal.title.createWorkTree'),
+        localize('msg.modal.detail.createWorkTree', folderPath, label, name),
+    );
     if (!confirmCreate) {
         return;
     }
@@ -59,7 +63,10 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
         return;
     }
     updateTreeDataEvent.fire();
-    let confirmOpen = await confirmModal('打开目录', `是否在新窗口打开新建的worktree?`);
+    let confirmOpen = await confirmModal(
+        localize('msg.modal.title.openFolder'),
+        localize('msg.modal.detail.openFolder'),
+    );
     if (!confirmOpen) {
         return;
     }
@@ -80,15 +87,15 @@ export const addWorkTreeCmd = async () => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri,
-        openLabel: '选择目录',
-        title: '请选择需要创建worktree的目录',
+        openLabel: localize('msg.modal.title.pickFolder'),
+        title: localize('msg.modal.detail.pickFolder'),
     });
     if (!uriList?.length) {
         return;
     }
     let folderUri = uriList[0];
     let folderPath = folderUri.fsPath;
-    let label = branch ? '分支' : '提交hash';
+    let label = branch ? localize('branch') : localize('commitHash');
     await createWorkTreeFromInfo({
         name: branch || hash || '',
         label,
@@ -98,15 +105,18 @@ export const addWorkTreeCmd = async () => {
 
 const removeWorkTreeCmd = async (item: WorkTreeItem) => {
     try {
-        const confirm = await confirmModal('删除worktree', `将删除 ${item.path} 目录的worktree`);
+        const confirm = await confirmModal(
+            localize('msg.modal.title.deleteWorkTree'),
+            localize('msg.modal.detail.deleteWorkTree', item.path),
+        );
         if (!confirm) {
             return;
         }
         removeWorkTree(item.path);
         updateTreeDataEvent.fire();
-        vscode.window.showInformationMessage(`成功删除 ${item.path} 目录的 worktree`);
+        vscode.window.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
     } catch (error) {
-        vscode.window.showErrorMessage(`worktree 移除失败\n\n ${util.inspect(error)}`);
+        vscode.window.showErrorMessage(localize('msg.fail.deleteWorkTree', util.inspect(error)));
     }
 };
 
@@ -116,8 +126,8 @@ const addWorkTreeFromBranchCmd = async (item: WorkTreeItem) => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri,
-        openLabel: '选择目录',
-        title: '请选择需要创建worktree的目录',
+        openLabel: localize('msg.modal.title.pickFolder'),
+        title: localize('msg.modal.detail.pickFolder'),
     });
     if (!uriList?.length) {
         return;
@@ -136,26 +146,26 @@ const revealInSystemExplorerCmd = (item: WorkTreeItem) => {
 };
 
 const commonWorkTreeCmd = (path: string, cmd: Commands) => {
-    let cmdName = '操作';
+    let cmdName = localize('operation');
     try {
         switch (cmd) {
             case Commands.lockWorkTree:
                 lockWorkTree(path);
-                cmdName = '锁定';
+                cmdName = localize('lock');
                 break;
             case Commands.unlockWorkTree:
                 unlockWorkTree(path);
-                cmdName = '解锁';
+                cmdName = localize('unlock');
                 break;
             case Commands.repairWorkTree:
                 repairWorkTree(path);
-                cmdName = '修复';
+                cmdName = localize('repair');
                 break;
         }
-        vscode.window.showInformationMessage(`worktree ${cmdName}成功`);
+        vscode.window.showInformationMessage(localize('msg.success.commonAction', cmdName));
         updateTreeDataEvent.fire();
     } catch (error) {
-        vscode.window.showErrorMessage(`worktree ${cmdName}失败 ${util.inspect(error, false, 1, true)}`);
+        vscode.window.showErrorMessage(localize('msg.fail.commonAction', cmdName, util.inspect(error, false, 1, true)));
     }
 };
 
@@ -178,8 +188,8 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
             canSelectFolders: true,
             canSelectMany: false,
             defaultUri: folderRoot.uri,
-            openLabel: '选择目录',
-            title: `请选择将 worktree 的目录从 ${item.path} 移动到的新位置`,
+            openLabel: localize('msg.modal.title.pickFolder'),
+            title: localize('msg.modal.detail.moveToFolder', item.path),
         });
         if (!uriList?.length) {
             return;
@@ -187,31 +197,19 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
         let folderUri = uriList[0];
         moveWorkTree(item.path, folderUri.fsPath);
         updateTreeDataEvent.fire();
-        vscode.window.showInformationMessage(`worktree 移动成功`);
+        vscode.window.showInformationMessage(localize('msg.success.moveWorkTree'));
     } catch (error) {
-        vscode.window.showErrorMessage(`worktree 移动失败 \n\n ${util.inspect(error)}`);
+        vscode.window.showErrorMessage(localize('msg.fail.moveWorkTree', util.inspect(error)));
     }
 };
 
 const switchToSelectWorkTreeCmd = async (item: WorkTreeItem) => {
     try {
-        let pending = vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
+        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
             forceNewWindow: false,
         });
-        await vscode.window.withProgress(
-            {
-                location: vscode.ProgressLocation.Window,
-                cancellable: true,
-                title: '切换窗口中',
-            },
-            (progress) => {
-                return Promise.resolve(pending).finally(() => {
-                    progress.report({ increment: 100 });
-                });
-            },
-        );
     } catch (error) {
-        vscode.window.showErrorMessage(`切换 worktree 失败 \n\n ${util.inspect(error)}`);
+        vscode.window.showErrorMessage(localize('msg.fail.switchWorkTree', util.inspect(error)));
     }
 };
 
@@ -221,9 +219,9 @@ const pruneWorkTreeCmd = async () => {
         if (!output?.length) {
             return;
         }
-        let ok = '确定';
+        let ok = localize('ok');
         let confirm = await vscode.window.showInformationMessage(
-            '将删除以下 worktree 目录',
+            localize('msg.modal.title.pruneWorkTree'),
             {
                 detail: output.join('  \n'),
                 modal: true,
@@ -235,9 +233,9 @@ const pruneWorkTreeCmd = async () => {
         }
         pruneWorkTree();
         updateTreeDataEvent.fire();
-        vscode.window.showInformationMessage('清理 worktree 成功');
+        vscode.window.showInformationMessage(localize('msg.success.pruneWorkTree'));
     } catch (error) {
-        vscode.window.showErrorMessage(`清理 worktree 失败 \n\n ${error}`);
+        vscode.window.showErrorMessage(localize('msg.fail.pruneWorkTree'));
     }
 };
 
@@ -260,26 +258,26 @@ const addGitFolderCmd = async () => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri,
-        openLabel: '添加git仓库',
-        title: '请选择git仓库目录',
+        openLabel: localize('msg.modal.title.addGitFolder'),
+        title: localize('msg.modal.detail.addGitFolder'),
     });
     if (!uriList?.length) {
         return;
     }
     let folderUri = uriList[0];
-    if(!(await checkGitValid(folderUri.fsPath))) {
-        return vscode.window.showErrorMessage('该目录不是可用的git仓库');
+    if (!(await checkGitValid(folderUri.fsPath))) {
+        return vscode.window.showErrorMessage(localize('msg.error.invalidGitFolder'));
     }
     if (existFolders.some((i) => i.path === folderUri.fsPath)) {
-        return vscode.window.showErrorMessage('git仓库目录在设置中已存在');
+        return vscode.window.showErrorMessage(localize('msg.error.gitFolderExistInSetting'));
     }
     let folderName = await vscode.window.showInputBox({
-        title: '输入展示用的仓库名称',
-        placeHolder: '请输入展示用的名称',
+        title: localize('msg.modal.title.inputGitFolderName'),
+        placeHolder: localize('msg.modal.placeholder.inputGitFolderName'),
         value: folderUri.fsPath,
         validateInput: (value) => {
-            if(!value) {
-                return '请输入展示用的名称';
+            if (!value) {
+                return localize('msg.modal.placeholder.inputGitFolderName');
             }
         },
     });
@@ -288,7 +286,7 @@ const addGitFolderCmd = async () => {
     }
     existFolders.push({ name: folderName, path: folderUri.fsPath });
     await updateFolderConfig(existFolders);
-    vscode.window.showInformationMessage('保存成功');
+    vscode.window.showInformationMessage(localize('msg.success.save'));
 };
 
 const freshGitFolderCmd = () => {
@@ -300,7 +298,7 @@ export class CommandsManger {
         context.subscriptions.push(
             // TODO 保存git仓库引用地址
             // TODO 展示所有已存在的git worktree
-            vscode.commands.registerCommand(Commands.freshTree, refreshWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.refreshWorkTree, refreshWorkTreeCmd),
             vscode.commands.registerCommand(Commands.switchWorkTree, switchWorkTreeCmd),
             vscode.commands.registerCommand(Commands.addWorkTree, addWorkTreeCmd),
             vscode.commands.registerCommand(Commands.repairWorkTree, repairWorkTreeCmd),

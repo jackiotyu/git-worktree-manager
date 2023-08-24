@@ -1849,6 +1849,11 @@ util-deprecate@~1.0.1:
   resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
+vscode-nls-i18n@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.npmmirror.com/vscode-nls-i18n/-/vscode-nls-i18n-0.2.4.tgz#f8fcf1bd03c2ae2420627131b47157394e5f7638"
+  integrity sha512-1gf+s5qznJ6d5e5FavJ/sjzx/VdRMtZcVc8bjKo32mQPqAx+Bzgm0ur46/el1vAO4UGmCMQjlH8sHQdjEln7zQ==
+
 watchpack@^2.4.0:
   version "2.4.0"
   resolved "https://registry.npmmirror.com/watchpack/-/watchpack-2.4.0.tgz#fa33032374962c78113f93c7f2fb4c54c9862a5d"

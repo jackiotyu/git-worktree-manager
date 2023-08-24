@@ -17,68 +17,68 @@
     "commands": [
       {
         "command": "git-worktree-manager.switchWorkTree",
-        "title": "切换 worktree"
+        "title": "%cmd.switchWorkTree%"
       },
       {
         "command": "git-worktree-manager.switchToSelectWorkTree",
-        "title": "当前窗口切换到这个 worktree",
+        "title": "%cmd.switchToSelectWorkTree%",
         "icon": "$(arrow-right)"
       },
       {
-        "command": "git-worktree-manager.freshTree",
-        "title": "刷新 worktree",
+        "command": "git-worktree-manager.refreshWorkTree",
+        "title": "%cmd.freshWorkTree%",
         "icon": "$(refresh)"
       },
       {
         "command": "git-worktree-manager.freshGitFolder",
-        "title": "刷新目录",
+        "title": "%cmd.freshGitFolder%",
         "icon": "$(refresh)"
       },
       {
         "command": "git-worktree-manager.addWorkTree",
-        "title": "添加 worktree",
+        "title": "%cmd.addWorkTree%",
         "icon": "$(add)"
       },
       {
         "command": "git-worktree-manager.addGitFolder",
-        "title": "添加 git 仓库",
+        "title": "%cmd.addGitFolder%",
         "icon": "$(add)"
       },
       {
         "command": "git-worktree-manager.removeWorkTree",
-        "title": "删除 worktree",
+        "title": "%cmd.removeWorkTree%",
         "icon": "$(close)"
       },
       {
         "command": "git-worktree-manager.addWorkTreeFromBranch",
-        "title": "从当前分支创建 worktree",
+        "title": "%cmd.addWorkTreeFromBranch%",
         "icon": "$(add)"
       },
       {
         "command": "git-worktree-manager.revealInSystemExplorer",
-        "title": "在系统文件管理器中展示"
+        "title": "%cmd.revealInSystemExplorer%"
       },
       {
         "command": "git-worktree-manager.repairWorkTree",
-        "title": "修复 worktree"
+        "title": "%cmd.repairWorkTree%"
       },
       {
         "command": "git-worktree-manager.moveWorkTree",
-        "title": "移动 worktree"
+        "title": "%cmd.moveWorkTree%"
       },
       {
         "command": "git-worktree-manager.lockWorkTree",
-        "title": "锁定 worktree",
+        "title": "%cmd.lockWorkTree%",
         "icon": "$(lock)"
       },
       {
         "command": "git-worktree-manager.unlockWorkTree",
-        "title": "解锁 worktree",
+        "title": "%cmd.unlockWorkTree%",
         "icon": "$(unlock)"
       },
       {
         "command": "git-worktree-manager.pruneWorkTree",
-        "title": "清理 worktree",
+        "title": "%cmd.pruneWorkTree%",
         "icon": "$(wand)"
       }
     ],
@@ -87,7 +87,7 @@
         {
           "id": "git-worktree-manager",
           "icon": "images/icon.svg",
-          "title": "worktree 快捷操作"
+          "title": "%sizeBar.git-worktree-manager%"
         }
       ]
     },
@@ -95,17 +95,17 @@
       "git-worktree-manager": [
         {
           "id": "git-worktree-manager-list",
-          "name": "worktree 列表",
+          "name": "%view.git-worktree-manager-list%",
           "visibility": "visible"
         },
         {
           "id": "git-worktree-manager-folders",
-          "name": "git 仓库管理",
+          "name": "%view.git-worktree-manager-folders%",
           "visibility": "visible"
         },
         {
           "id": "git-worktree-manager-setting",
-          "name": "git worktree 设置",
+          "name": "%view.git-worktree-manager-setting%",
           "visibility": "visible"
         }
       ]
@@ -113,17 +113,17 @@
     "viewsWelcome": [
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[新建 worktree](command:git-worktree-manager.addWorkTree)"
+        "contents": "[%viewsWelcome.addWorkTree%](command:git-worktree-manager.addWorkTree)"
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[设置](command:git-worktree-manager.openSetting)"
+        "contents": "[%viewsWelcome.setting%](command:git-worktree-manager.openSetting)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "git-worktree-manager.freshTree",
+          "command": "git-worktree-manager.refreshWorkTree",
           "when": "view == git-worktree-manager-list",
           "group": "navigation@100"
         },
@@ -192,22 +192,22 @@
       ]
     },
     "configuration": {
-      "title": "git-worktree-manager设置",
+      "title": "%config.title%",
       "properties": {
         "git-worktree-manager.gitFolders": {
-          "scope": "machine",
+          "scope": "application",
           "type": "array",
-          "description": "配置git仓库路径, 用于查找 worktree",
+          "description": "%config.gitFolders.description%",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "description": "git仓库名称",
+                "description": "%config.gitFolders.items.name.description%",
                 "type": "string"
               },
               "path": {
                 "type": "string",
-                "description": "git仓库路径"
+                "description": "%config.gitFolders.items.path.description%"
               }
             }
           }
@@ -243,6 +243,7 @@
     "webpack-cli": "^5.0.2"
   },
   "dependencies": {
-    "dayjs": "^1.11.9"
+    "dayjs": "^1.11.9",
+    "vscode-nls-i18n": "^0.2.4"
   }
 }

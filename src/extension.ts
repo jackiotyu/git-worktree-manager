@@ -4,9 +4,11 @@ import { WorkTreeDataProvider, GitFoldersDataProvider } from '@/lib/treeView';
 import folderRoot from '@/lib/folderRoot';
 import { getWorkTreeList } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
+import { init } from 'vscode-nls-i18n';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('git-worktree-manager is now active!');
+    init(context.extensionPath);
     const updateHandler = updateTreeDataEvent.event(() => {
         treeDataEvent.fire(getWorkTreeList());
     });

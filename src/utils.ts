@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
 import { updateTreeDataEvent } from '@/lib/events';
 import { WorkTreeOutputItem, WorkTreeDetail } from '@/types';
+import localize from '@/localize';
 import * as cp from 'child_process';
 // 加载dayjs中文语言包
 import 'dayjs/locale/zh-cn';
@@ -124,8 +125,8 @@ export async function addWorkTree(path: string, branch: string) {
     try {
         executeGitCommand([WORK_TREE, 'add', path, branch]);
         return true;
-    } catch (error) {
-        vscode.window.showErrorMessage(`创建 worktree 失败\n${error}`);
+    } catch (error: any) {
+        vscode.window.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
         return false;
     }
 }

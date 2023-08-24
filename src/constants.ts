@@ -1,7 +1,7 @@
 export const APP_NAME = 'git-worktree-manager';
 
 export enum Commands {
-    freshTree = 'git-worktree-manager.freshTree',
+    refreshWorkTree = 'git-worktree-manager.refreshWorkTree',
     switchWorkTree = 'git-worktree-manager.switchWorkTree',
     addWorkTree = 'git-worktree-manager.addWorkTree',
     addGitFolder = 'git-worktree-manager.addGitFolder',

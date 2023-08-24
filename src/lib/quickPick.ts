@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { getBranchList, formatTime } from '@/utils';
+import localize from '@/localize';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
     branch?: string;
@@ -18,10 +19,8 @@ export const pickBranch = async () => {
         if(!branchList) {return;}
 
         const quickPick = vscode.window.createQuickPick();
-        // quickPick.title = 'Create Worktree for';
-        quickPick.title = '创建 Worktree';
-        // quickPick.placeholder = 'Choose a branch to create new worktree for';
-        quickPick.placeholder = '选择用来创建 worktree 的分支';
+        quickPick.title = localize('msg.info.createWorkTree');
+        quickPick.placeholder = localize('msg.placeholder.createWorkTree');
         const branchItem: BranchForWorkTree[] = branchList.filter(i => !i.worktreepath).map(item => {
             return {
                 label: item['refname:short'],
@@ -39,7 +38,7 @@ export const pickBranch = async () => {
             },
             {
                 label: defaultBranch?.['refname:short'] || '',
-                description: `使用当前分支创建 worktree`,
+                description: localize('msg.pickItem.useCurrentBranch'),
                 iconPath: new vscode.ThemeIcon('source-control'),
                 hash: defaultBranch?.['objectname:short'],
             }

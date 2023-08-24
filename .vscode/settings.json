@@ -12,5 +12,6 @@
     "typescript.tsc.autoDetect": "off",
     "cSpell.words": [
         "worktree"
-    ]
+    ],
+    "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?"
 }

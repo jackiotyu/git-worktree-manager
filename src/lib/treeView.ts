@@ -3,6 +3,7 @@ import { treeDataEvent, updateTreeDataEvent, updateFolderEvent } from '@/lib/eve
 import { WorkTreeDetail } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList } from '@/utils';
 import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
+import localize from '@/localize';
 
 export class WorkTreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon;
@@ -35,15 +36,15 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.name = item.name;
 
         this.tooltip = new vscode.MarkdownString('', true);
-        this.tooltip.appendMarkdown(`$(folder) 路径 ${item.path}\n\n`);
+        this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
         this.tooltip.appendMarkdown(
-            `$(${item.isBranch ? 'source-control' : 'git-commit'}) ${item.isBranch ? '分支' : '提交'}  ${
+            `$(${item.isBranch ? 'source-control' : 'git-commit'}) ${item.isBranch ? localize('branch') : localize('commit')}  ${
                 item.name
             }\n\n`,
         );
-        item.prunable && this.tooltip.appendMarkdown(`$(error) 已从 git 版本中分离`);
-        item.locked && this.tooltip.appendMarkdown(`$(lock) 已锁定该 worktree, 防止被意外清除`);
-        item.isMain && this.tooltip.appendMarkdown(`✨ worktree 主目录, 无法被清除和锁定`);
+        item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
+        item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
+        item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));
 
         this.command = {
             title: 'open worktree',
