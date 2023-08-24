@@ -113,11 +113,11 @@
     "viewsWelcome": [
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[%viewsWelcome.addWorkTree%](command:git-worktree-manager.addWorkTree)"
+        "contents": "[ $(add) ](command:git-worktree-manager.addWorkTree)"
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[%viewsWelcome.setting%](command:git-worktree-manager.openSetting)"
+        "contents": "[ $(gear) ](command:git-worktree-manager.openSetting)"
       }
     ],
     "menus": {
