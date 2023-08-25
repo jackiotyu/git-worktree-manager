@@ -141,7 +141,7 @@ const addWorkTreeFromBranchCmd = async (item: WorkTreeItem) => {
     });
 };
 
-const revealInSystemExplorerCmd = (item: WorkTreeItem) => {
+const revealInSystemExplorerCmd = (item: WorkTreeItem | GitFolderItem) => {
     vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 

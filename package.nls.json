@@ -61,7 +61,7 @@
     "msg.error.gitFolderExistInSetting": "The git repository folder already exists in the settings",
     "msg.success.save": "Saved successfully",
     "msg.success.remove": "Remove successfully",
-    "treeView.tooltip.click": "Click to open new window for this worktree\n\n",
+    "treeView.tooltip.click": "*Click to open new window for this worktree*\n\n",
     "treeView.tooltip.folder": "$(folder) Folder {0}\n\n",
     "commit": "commit",
     "branch": "branch",
