@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent } from '@/lib/events';
+import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/lib/events';
 import { WorkTreeDataProvider, GitFoldersDataProvider } from '@/lib/treeView';
 import folderRoot from '@/lib/folderRoot';
 import { getWorkTreeList } from '@/utils';
@@ -17,14 +17,13 @@ export function activate(context: vscode.ExtensionContext) {
     CommandsManger.register(context);
     const treeData = new WorkTreeDataProvider(context);
     const folderData = new GitFoldersDataProvider(context);
-    setupGitEvents(treeData);
+    setupGitEvents(treeData, context);
+    collectEvent(context);
     context.subscriptions.push(
         folderRoot,
         vscode.window.registerTreeDataProvider(WorkTreeDataProvider.id, treeData),
         updateHandler,
         vscode.window.registerTreeDataProvider(GitFoldersDataProvider.id, folderData),
-        updateTreeDataEvent,
-        treeDataEvent,
     );
 }
 

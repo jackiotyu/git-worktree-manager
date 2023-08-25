@@ -14,29 +14,29 @@ async function getBuiltInGitApi(): Promise<GitAPI | undefined> {
     } catch {}
 }
 
-export const setupGitEvents = async (treeProvider: WorkTreeDataProvider) => {
+export const setupGitEvents = async (treeProvider: WorkTreeDataProvider, context: vscode.ExtensionContext) => {
     const builtinGit = await getBuiltInGitApi();
     if (builtinGit) {
         const throttleOptions: ThrottleSettings = { leading: true, trailing: true };
-        builtinGit.onDidChangeState(
-            throttle(
-                (e) => {
-                    console.log('[builtin git event]: ', e);
-                    builtinGit.repositories.forEach((repo) => {
-                        repo.state.onDidChange(
-                            throttle(
-                                () => {
-                                    treeProvider.refresh();
-                                },
-                                100,
-                                throttleOptions,
-                            ),
-                        );
-                    });
-                },
-                100,
-                throttleOptions,
-            ),
+        const onDidChange = throttle(
+            () => {
+                treeProvider.refresh();
+            },
+            100,
+            throttleOptions,
+        );
+        const onDidChangeState = throttle(
+            (e) => {
+                console.log('[builtin git event]: ', e);
+                builtinGit.repositories.forEach((repo) => {
+                    context.subscriptions.push(repo.state.onDidChange(onDidChange));
+                });
+            },
+            100,
+            throttleOptions,
+        );
+        context.subscriptions.push(
+            builtinGit.onDidChangeState(onDidChangeState),
         );
     }
 };
