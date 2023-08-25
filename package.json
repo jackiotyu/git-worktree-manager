@@ -98,11 +98,13 @@
       },
       {
         "command": "git-worktree-manager.removeGitFolder",
-        "title": "%cmd.removeGitFolder%"
+        "title": "%cmd.removeGitFolder%",
+        "icon": "$(close)"
       },
       {
         "command": "git-worktree-manager.renameGitFolder",
-        "title": "%cmd.renameGitFolder%"
+        "title": "%cmd.renameGitFolder%",
+        "icon": "$(edit)"
       },
       {
         "command": "git-worktree-manager.openTerminal",
@@ -245,12 +247,12 @@
         {
           "command": "git-worktree-manager.renameGitFolder",
           "when": "viewItem == git-worktree-manager.gitFolderItem",
-          "group": "folder-action"
+          "group": "inline"
         },
         {
           "command": "git-worktree-manager.removeGitFolder",
           "when": "viewItem == git-worktree-manager.gitFolderItem",
-          "group": "folder-action"
+          "group": "inline@100"
         }
       ],
       "commandPalette": [
