@@ -5,6 +5,8 @@ export enum Commands {
     switchWorkTree = 'git-worktree-manager.switchWorkTree',
     addWorkTree = 'git-worktree-manager.addWorkTree',
     addGitFolder = 'git-worktree-manager.addGitFolder',
+    removeGitFolder = 'git-worktree-manager.removeGitFolder',
+    renameGitFolder = 'git-worktree-manager.renameGitFolder',
     repairWorkTree = 'git-worktree-manager.repairWorkTree',
     removeWorkTree = 'git-worktree-manager.removeWorkTree',
     moveWorkTree = 'git-worktree-manager.moveWorkTree',
@@ -15,7 +17,7 @@ export enum Commands {
     addWorkTreeFromBranch = 'git-worktree-manager.addWorkTreeFromBranch',
     revealInSystemExplorer = 'git-worktree-manager.revealInSystemExplorer',
     openSetting = 'git-worktree-manager.openSetting',
-    freshGitFolder = 'git-worktree-manager.freshGitFolder',
+    refreshGitFolder = 'git-worktree-manager.refreshGitFolder',
 }
 
 export enum TreeItemKind {

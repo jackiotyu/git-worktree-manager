@@ -93,6 +93,7 @@ export class GitFolderItem extends vscode.TreeItem {
         super(item.name, collapsible);
         this.name = item.name;
         this.path = item.path;
+        this.contextValue = 'git-worktree-manager.gitFolderItem';
     }
 }
 

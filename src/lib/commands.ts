@@ -17,7 +17,7 @@ import { pickBranch } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME, FolderItemConfig } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
-import { WorkTreeItem } from './treeView';
+import { WorkTreeItem, GitFolderItem } from './treeView';
 import * as util from 'util';
 
 export const switchWorkTreeCmd = () => {
@@ -289,8 +289,59 @@ const addGitFolderCmd = async () => {
     vscode.window.showInformationMessage(localize('msg.success.save'));
 };
 
-const freshGitFolderCmd = () => {
+const refreshGitFolderCmd = () => {
     updateFolderEvent.fire();
+};
+
+const pickFolderConfig = (item: GitFolderItem) => {
+    return getFolderConfig().find((row) => row.path === item.path);
+};
+
+const removeGitFolderCmd = async (item: GitFolderItem) => {
+    let path = item.path;
+    let folders = getFolderConfig();
+    if (!folders.some((f) => f.path === path)) {
+        return;
+    }
+    let ok = await confirmModal(
+        localize('msg.modal.title.removeGitFolder'),
+        localize('msg.modal.placeholder.removeGitFolder', item.path, item.name),
+    );
+    if (!ok) {
+        return;
+    }
+    folders = folders.filter((f) => f.path !== path);
+    await updateFolderConfig(folders);
+    vscode.window.showInformationMessage(localize('msg.success.remove'));
+};
+
+const renameGitFolderCmd = async (item: GitFolderItem) => {
+    let folder = pickFolderConfig(item);
+    if (!folder) {
+        return;
+    }
+    const path = folder.path;
+    let name = await vscode.window.showInputBox({
+        title: localize('msg.modal.title.renameGitFolder'),
+        placeHolder: localize('msg.modal.title.inputGitFolderName'),
+        value: folder.name,
+        validateInput(value) {
+            if (!value) {
+                return localize('msg.modal.title.inputGitFolderName');
+            }
+        },
+    });
+    if (!name) {
+        return;
+    }
+    folder.name = name;
+    let allFolders = getFolderConfig();
+    let index = allFolders.findIndex((i) => i.path === path);
+    if (~index) {
+        allFolders[index].name = name;
+        await updateFolderConfig(allFolders);
+        vscode.window.showInformationMessage(localize('msg.success.save'));
+    }
 };
 
 export class CommandsManger {
@@ -312,7 +363,9 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.pruneWorkTree, pruneWorkTreeCmd),
             vscode.commands.registerCommand(Commands.openSetting, openSettingCmd),
             vscode.commands.registerCommand(Commands.addGitFolder, addGitFolderCmd),
-            vscode.commands.registerCommand(Commands.freshGitFolder, freshGitFolderCmd),
+            vscode.commands.registerCommand(Commands.refreshGitFolder, refreshGitFolderCmd),
+            vscode.commands.registerCommand(Commands.removeGitFolder, removeGitFolderCmd),
+            vscode.commands.registerCommand(Commands.renameGitFolder, renameGitFolderCmd),
         );
     }
 }

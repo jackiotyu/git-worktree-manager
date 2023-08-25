@@ -5,7 +5,7 @@
   "description": "",
   "version": "0.0.2",
   "engines": {
-    "vscode": "^1.81.0"
+    "vscode": "^1.60.0"
   },
   "categories": [
     "Other",
@@ -45,8 +45,8 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "git-worktree-manager.freshGitFolder",
-        "title": "%cmd.freshGitFolder%",
+        "command": "git-worktree-manager.refreshGitFolder",
+        "title": "%cmd.refreshGitFolder%",
         "icon": "$(refresh)"
       },
       {
@@ -95,6 +95,14 @@
         "command": "git-worktree-manager.pruneWorkTree",
         "title": "%cmd.pruneWorkTree%",
         "icon": "$(wand)"
+      },
+      {
+        "command": "git-worktree-manager.removeGitFolder",
+        "title": "%cmd.removeGitFolder%"
+      },
+      {
+        "command": "git-worktree-manager.renameGitFolder",
+        "title": "%cmd.renameGitFolder%"
       }
     ],
     "viewsContainers": {
@@ -170,7 +178,7 @@
           "group": "navigation@1"
         },
         {
-          "command": "git-worktree-manager.freshGitFolder",
+          "command": "git-worktree-manager.refreshGitFolder",
           "when": "view === git-worktree-manager-folders",
           "group": "navigation@1"
         }
@@ -215,6 +223,16 @@
           "command": "git-worktree-manager.unlockWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/",
           "group": "inline"
+        },
+        {
+          "command": "git-worktree-manager.renameGitFolder",
+          "when": "viewItem == git-worktree-manager.gitFolderItem",
+          "group": "folder-action"
+        },
+        {
+          "command": "git-worktree-manager.removeGitFolder",
+          "when": "viewItem == git-worktree-manager.gitFolderItem",
+          "group": "folder-action"
         }
       ]
     },
@@ -258,7 +276,7 @@
     "@types/lodash": "^4.14.197",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
-    "@types/vscode": "^1.81.0",
+    "@types/vscode": "^1.60.0",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "@vscode/test-electron": "^2.3.0",
