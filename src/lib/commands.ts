@@ -368,7 +368,9 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
     });
     terminal.show();
     const cmdText = getTerminalCmdConfig();
-    cmdText && terminal.sendText(cmdText);
+    // FIXME delay for prevent terminal dirty data
+    await new Promise<void>(resolve => setTimeout(resolve, 300));
+    cmdText && terminal.sendText(cmdText, true);
 };
 
 const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem) => {
