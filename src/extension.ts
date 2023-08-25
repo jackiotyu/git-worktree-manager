@@ -5,6 +5,7 @@ import folderRoot from '@/lib/folderRoot';
 import { getWorkTreeList } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
 import { init } from 'vscode-nls-i18n';
+import { setupGitEvents } from '@/lib/gitExtension';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('git-worktree-manager is now active!');
@@ -16,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
     CommandsManger.register(context);
     const treeData = new WorkTreeDataProvider(context);
     const folderData = new GitFoldersDataProvider(context);
+    setupGitEvents(treeData);
     context.subscriptions.push(
         folderRoot,
         vscode.window.registerTreeDataProvider(WorkTreeDataProvider.id, treeData),

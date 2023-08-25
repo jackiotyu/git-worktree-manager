@@ -43,10 +43,11 @@ export class WorkTreeItem extends vscode.TreeItem {
             `$(${item.isBranch ? 'source-control' : 'git-commit'}) ${item.isBranch ? localize('branch') : localize('commit')}  ${
                 item.name
             }\n\n`,
-        );
+            );
         item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
         item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
         item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));
+        this.tooltip.appendMarkdown(localize('treeView.tooltip.click'));
 
         this.command = {
             title: 'open worktree',

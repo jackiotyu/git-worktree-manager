@@ -55,6 +55,7 @@
     "msg.error.invalidGitFolder": "该文件夹不是可用的git仓库",
     "msg.error.gitFolderExistInSetting": "git仓库文件夹在设置中已存在",
     "msg.success.save": "保存成功",
+    "treeView.tooltip.click": "点击用新窗口打开该worktree\n\n",
     "treeView.tooltip.folder": "$(folder) 路径 {0}\n\n",
     "commit": "提交",
     "branch": "分支",

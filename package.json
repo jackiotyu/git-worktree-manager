@@ -255,6 +255,7 @@
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
+    "@types/lodash": "^4.14.197",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
     "@types/vscode": "^1.81.0",
@@ -271,6 +272,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.9",
+    "lodash": "^4.17.21",
     "vscode-nls-i18n": "^0.2.4"
   }
 }

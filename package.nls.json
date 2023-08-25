@@ -55,6 +55,7 @@
     "msg.error.invalidGitFolder": "The folder is not a git repository available",
     "msg.error.gitFolderExistInSetting": "The git repository folder already exists in the settings",
     "msg.success.save": "Saved successfully",
+    "treeView.tooltip.click": "Click to open new window for this worktree\n\n",
     "treeView.tooltip.folder": "$(folder) Folder {0}\n\n",
     "commit": "commit",
     "branch": "branch",
