@@ -17,6 +17,12 @@ async function getBuiltInGitApi(): Promise<GitAPI | undefined> {
 export const setupGitEvents = async (treeProvider: WorkTreeDataProvider, context: vscode.ExtensionContext) => {
     const builtinGit = await getBuiltInGitApi();
     if (builtinGit) {
+        const events: vscode.Disposable[] = [];
+        context.subscriptions.push({
+            dispose() {
+                events.forEach((event) => event.dispose());
+            },
+        });
         const throttleOptions: ThrottleSettings = { leading: true, trailing: true };
         const onDidChange = throttle(
             () => {
@@ -28,15 +34,15 @@ export const setupGitEvents = async (treeProvider: WorkTreeDataProvider, context
         const onDidChangeState = throttle(
             (e) => {
                 console.log('[builtin git event]: ', e);
+                events.forEach((event) => event.dispose());
+                events.length = 0;
                 builtinGit.repositories.forEach((repo) => {
-                    context.subscriptions.push(repo.state.onDidChange(onDidChange));
+                    events.push(repo.state.onDidChange(onDidChange));
                 });
             },
             100,
             throttleOptions,
         );
-        context.subscriptions.push(
-            builtinGit.onDidChangeState(onDidChangeState),
-        );
+        context.subscriptions.push(builtinGit.onDidChangeState(onDidChangeState));
     }
 };
