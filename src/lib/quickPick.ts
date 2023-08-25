@@ -33,17 +33,17 @@ export const pickBranch = async () => {
         const defaultBranch = branchList.find(i => i.HEAD === '*');
         const defaultBranchItem: BranchForWorkTree[] = [
             {
-                label: '',
-                kind: vscode.QuickPickItemKind.Separator
-            },
-            {
                 label: defaultBranch?.['refname:short'] || '',
                 description: localize('msg.pickItem.useCurrentBranch'),
                 iconPath: new vscode.ThemeIcon('source-control'),
                 hash: defaultBranch?.['objectname:short'],
-            }
+            },
+            {
+                label: '',
+                kind: vscode.QuickPickItemKind.Separator
+            },
         ];
-        quickPick.items = [...branchItem, ...defaultBranchItem];
+        quickPick.items = [ ...defaultBranchItem, ...branchItem];
         quickPick.canSelectMany = false;
         quickPick.onDidAccept(() => {
             quickPick.hide();

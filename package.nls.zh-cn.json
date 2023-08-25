@@ -28,7 +28,7 @@
     "msg.error.addWorkTree": "创建 worktree 失败\n{0}",
     "msg.info.createWorkTree": "创建 Worktree",
     "msg.placeholder.createWorkTree": "选择用来创建 worktree 的分支",
-    "msg.pickItem.useCurrentBranch": "使用当前分支创建 worktree",
+    "msg.pickItem.useCurrentBranch": "使用当前提交的hash创建 worktree",
     "msg.title.switchWorkTree": "worktree切换",
     "msg.placeHolder.switchWorkTree": "请选择切换的文件夹",
     "msg.modal.title.createWorkTree": "创建worktree",

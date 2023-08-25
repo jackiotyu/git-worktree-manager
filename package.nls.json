@@ -28,7 +28,7 @@
     "msg.error.addWorkTree": "Failed to create Worktree\n{0}",
     "msg.info.createWorkTree": "Create Worktree for",
     "msg.placeholder.createWorkTree": "Choose a branch to create new worktree for",
-    "msg.pickItem.useCurrentBranch": "Create a worktree using the current branch",
+    "msg.pickItem.useCurrentBranch": "Create a worktree using the current commit hash",
     "msg.title.switchWorkTree": "Worktree switch",
     "msg.placeHolder.switchWorkTree": "Please select the directory to switch",
     "msg.modal.title.createWorkTree": "Create worktree",

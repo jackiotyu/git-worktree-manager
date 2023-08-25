@@ -47,7 +47,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
         item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
         item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));
-        this.tooltip.appendMarkdown(localize('treeView.tooltip.click'));
+        !isCurrent && this.tooltip.appendMarkdown(localize('treeView.tooltip.click'));
 
         this.command = {
             title: 'open worktree',
