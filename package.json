@@ -215,7 +215,7 @@
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.gitFolderItem",
-          "group": "file-action"
+          "group": "file-action@0"
         },
         {
           "command": "git-worktree-manager.switchToSelectWorkTree",
