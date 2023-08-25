@@ -103,6 +103,14 @@
       {
         "command": "git-worktree-manager.renameGitFolder",
         "title": "%cmd.renameGitFolder%"
+      },
+      {
+        "command": "git-worktree-manager.openTerminal",
+        "title": "%cmd.openTerminal%"
+      },
+      {
+        "command": "git-worktree-manager.openWindowsTerminal",
+        "title": "%cmd.openWindowsTerminal%"
       }
     ],
     "viewsContainers": {
@@ -141,7 +149,7 @@
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(gear) 打开设置 ](command:git-worktree-manager.openSetting)",
+        "contents": "[ $(gear) 打开插件设置 ](command:git-worktree-manager.openSetting)",
         "when": "git-worktree-manager.locale == zh-cn"
       },
       {
@@ -184,6 +192,16 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "git-worktree-manager.openTerminal",
+          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "terminal@2"
+        },
+        {
+          "command": "git-worktree-manager.openWindowsTerminal",
+          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "terminal@1"
+        },
         {
           "command": "git-worktree-manager.removeWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
@@ -234,6 +252,86 @@
           "when": "viewItem == git-worktree-manager.gitFolderItem",
           "group": "folder-action"
         }
+      ],
+      "commandPalette": [
+        {
+          "command": "git-worktree-manager.switchToSelectWorkTree",
+          "when": "false",
+          "icon": "$(arrow-right)"
+        },
+        {
+          "command": "git-worktree-manager.refreshWorkTree",
+          "when": "false",
+          "icon": "$(refresh)"
+        },
+        {
+          "command": "git-worktree-manager.refreshGitFolder",
+          "when": "false",
+          "icon": "$(refresh)"
+        },
+        {
+          "command": "git-worktree-manager.addWorkTree",
+          "when": "false",
+          "icon": "$(add)"
+        },
+        {
+          "command": "git-worktree-manager.addGitFolder",
+          "when": "false",
+          "icon": "$(add)"
+        },
+        {
+          "command": "git-worktree-manager.removeWorkTree",
+          "when": "false",
+          "icon": "$(close)"
+        },
+        {
+          "command": "git-worktree-manager.addWorkTreeFromBranch",
+          "when": "false",
+          "icon": "$(add)"
+        },
+        {
+          "command": "git-worktree-manager.revealInSystemExplorer",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.repairWorkTree",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.moveWorkTree",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.lockWorkTree",
+          "when": "false",
+          "icon": "$(lock)"
+        },
+        {
+          "command": "git-worktree-manager.unlockWorkTree",
+          "when": "false",
+          "icon": "$(unlock)"
+        },
+        {
+          "command": "git-worktree-manager.pruneWorkTree",
+          "when": "false",
+          "icon": "$(wand)"
+        },
+        {
+          "command": "git-worktree-manager.removeGitFolder",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.renameGitFolder",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.openTerminal",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.openWindowsTerminal",
+          "when": "false"
+        }
       ]
     },
     "configuration": {
@@ -256,6 +354,18 @@
               }
             }
           }
+        },
+        "git-worktree-manager.terminalLocationInEditor": {
+          "scope": "application",
+          "type": "boolean",
+          "default": false,
+          "description": "%config.terminalLocationInEditor.description%"
+        },
+        "git-worktree-manager.terminalCmd": {
+          "scope": "application",
+          "type": "string",
+          "default": "",
+          "description": "%config.terminalCmd.description%"
         }
       }
     }

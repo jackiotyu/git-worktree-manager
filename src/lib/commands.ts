@@ -12,6 +12,7 @@ import {
     lockWorkTree,
     pruneWorkTree,
     checkGitValid,
+    openWindowsTerminal,
 } from '@/utils';
 import { pickBranch } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -247,6 +248,14 @@ function getFolderConfig() {
     return vscode.workspace.getConfiguration(APP_NAME).get<FolderItemConfig[]>('gitFolders') || [];
 }
 
+function getTerminalLocationConfig() {
+    return vscode.workspace.getConfiguration(APP_NAME).get<boolean>('terminalLocationInEditor') ? vscode.TerminalLocation.Editor : vscode.TerminalLocation.Panel;
+}
+
+function getTerminalCmdConfig() {
+    return vscode.workspace.getConfiguration(APP_NAME).get<string>('terminalCmd') || '';
+}
+
 function updateFolderConfig(value: FolderItemConfig[]) {
     return vscode.workspace.getConfiguration(APP_NAME).update('gitFolders', value, true);
 }
@@ -344,11 +353,35 @@ const renameGitFolderCmd = async (item: GitFolderItem) => {
     }
 };
 
+const openWalkthroughsCmd = () => {
+    vscode.commands.executeCommand('workbench.action.openWalkthrough', 'jackiotyu.git-worktree-manager#git-worktree-usage', false);
+};
+
+const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
+    const terminal = vscode.window.createTerminal({
+        cwd: item.path,
+        name: item.name,
+        iconPath: new vscode.ThemeIcon('terminal-bash'),
+        isTransient: false,
+        hideFromUser: false,
+        location: getTerminalLocationConfig(),
+    });
+    terminal.show();
+    const cmdText = getTerminalCmdConfig();
+    cmdText && terminal.sendText(cmdText);
+};
+
+const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem) => {
+    try {
+        openWindowsTerminal(`${item.path}`);
+    } catch (error) {
+        vscode.window.showErrorMessage(localize('msg.fail.invokeWindowsTerminal', String(error)));;
+    }
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            // TODO 保存git仓库引用地址
-            // TODO 展示所有已存在的git worktree
             vscode.commands.registerCommand(Commands.refreshWorkTree, refreshWorkTreeCmd),
             vscode.commands.registerCommand(Commands.switchWorkTree, switchWorkTreeCmd),
             vscode.commands.registerCommand(Commands.addWorkTree, addWorkTreeCmd),
@@ -366,6 +399,9 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.refreshGitFolder, refreshGitFolderCmd),
             vscode.commands.registerCommand(Commands.removeGitFolder, removeGitFolderCmd),
             vscode.commands.registerCommand(Commands.renameGitFolder, renameGitFolderCmd),
+            vscode.commands.registerCommand(Commands.openWalkthroughs, openWalkthroughsCmd),
+            vscode.commands.registerCommand(Commands.openTerminal, openTerminalCmd),
+            vscode.commands.registerCommand(Commands.openWindowsTerminal, openWindowsTerminalCmd),
         );
     }
 }

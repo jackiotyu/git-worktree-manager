@@ -19,10 +19,25 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => string = (cwd, ar
     const proc = cp.spawnSync('git', args, {
         cwd,
     });
-    const out = proc.stdout.toString();
-    const err = proc.stderr.toString();
+    const out = proc.stdout?.toString();
+    const err = proc.stderr?.toString();
     console.log('[exec stderr] ', err);
     console.log('[exec stdout] ', out);
+    if (!out && err) {
+        throw Error(err);
+    }
+    return out;
+};
+
+export const openWindowsTerminal = (path: string) => {
+    console.log('[open-windows-terminal] ', 'wt', ['-d', path].join(' '));
+    const proc = cp.spawnSync('wt', ['-d', path], {
+        cwd: folderRoot.uri?.fsPath,
+    });
+    const out = proc.stdout?.toString();
+    const err = proc.stderr?.toString();
+    console.log('[exec open-windows-terminal stderr] ', err);
+    console.log('[exec open-windows-terminal stdout] ', out);
     if (!out && err) {
         throw Error(err);
     }

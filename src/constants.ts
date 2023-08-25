@@ -18,6 +18,9 @@ export enum Commands {
     revealInSystemExplorer = 'git-worktree-manager.revealInSystemExplorer',
     openSetting = 'git-worktree-manager.openSetting',
     refreshGitFolder = 'git-worktree-manager.refreshGitFolder',
+    openWalkthroughs = 'git-worktree-manager.openWalkthroughs',
+    openTerminal = 'git-worktree-manager.openTerminal',
+    openWindowsTerminal = 'git-worktree-manager.openWindowsTerminal',
 }
 
 export enum TreeItemKind {
