@@ -72,13 +72,20 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 
 <!-- GETTING STARTED -->
 ## Getting Started
+## 快速开始
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
-1. Open the activitybar and find the `Git Worktree Manager` <image width="16" height="16" src="images/icon.png"> panel
+在VSCode[插件市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
+1. Find the `Git Worktree Manager` <image width="16" height="16" src="images/icon.png"> panel in activitybar.
+在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="images/icon.png"> 面板
+1. Performing various quick operations of git worktree on the panel
+在面板上执行各种 git worktree 快速操作
 
 ### Requirements
+### 要求
 
-* git version >= 2.36 for best performance.
+* git version >= 2.30 for best performance.
+* 建议安装版本号不低于2.30的git
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -87,11 +94,33 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. worktree manager
+1. Worktree manager
+worktree 管理
 
-2. git repository manger
+![create-worktree](images/create-worktree.png)
+- Click the `Add worktree` icon, then following the tips to make a new worktree.
+点击 `添加 worktree` 图标，跟随提示进行操作，添加新的 worktree。
+- It provides some useful command in context menu. You can open a new window for a worktree when click worktree item.
+右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
 
-3. setting
+2. Git repository manger
+ git 仓库管理
+![save-repository](images/save-repository.png)
+- Click the `Add git repository` icon, then following the tips to save a git repository.
+点击 `添加 git 仓库` 图标，跟随提示进行操作，添加一个 git 仓库。
+- Also provider some quick operation in context menu and inline icon.
+右键上下文菜单和行内图标也可以执行一下快速操作。
+- List all worktree in every repository.
+每个仓库都会列出所有 worktree。
+
+3. Setting
+设置
+![open-setting](images/open-setting.png)
+- Open setting quickly by click this button.
+点击这个按钮快速打开设置
+![setting-detail](images/setting-detail.png)
+- Managing settings, for example, providing a terminal command that can be quickly executed in the right-click context menu of the worktree item, called "Open VSCode Integrated Terminal" command.
+管理设置，例如提供终端命令，可以在点击 worktree 项的右键上下文菜单`打开VSCode内置终端`命令中快速运行该命令。
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -147,18 +176,6 @@ Jackiotyu - 2504448153@qq.com
 Project Link: [https://github.com/jackiotyu/git-worktree-manager](https://github.com/jackiotyu/git-worktree-manager)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-<!-- ## Acknowledgments
-
-* []()
-* []()
-* []() -->
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
