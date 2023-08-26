@@ -13,6 +13,7 @@ import {
     pruneWorkTree,
     checkGitValid,
     openWindowsTerminal,
+    addToWorkspace
 } from '@/utils';
 import { pickBranch } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -381,6 +382,10 @@ const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem) => {
     }
 };
 
+const addToWorkspaceCmd = (item: WorkTreeItem) => {
+    return addToWorkspace(item.path);
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -404,6 +409,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.openWalkthroughs, openWalkthroughsCmd),
             vscode.commands.registerCommand(Commands.openTerminal, openTerminalCmd),
             vscode.commands.registerCommand(Commands.openWindowsTerminal, openWindowsTerminalCmd),
+            vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
         );
     }
 }

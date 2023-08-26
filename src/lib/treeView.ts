@@ -32,7 +32,8 @@ export class WorkTreeItem extends vscode.TreeItem {
         }
         let lockPost = !item.isMain && (item.locked ? '.lock' : '.unlock') || '';
         let mainPost = item.isMain ? '.main' : '';
-        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}`;
+        let currentPost = isCurrent ? '.current' : '';
+        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}`;
 
         this.path = item.path;
         this.name = item.name;

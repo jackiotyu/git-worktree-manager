@@ -113,6 +113,10 @@
       {
         "command": "git-worktree-manager.openWindowsTerminal",
         "title": "%cmd.openWindowsTerminal%"
+      },
+      {
+        "command": "git-worktree-manager.addToWorkspace",
+        "title": "%cmd.addToWorkspace%"
       }
     ],
     "viewsContainers": {
@@ -253,6 +257,11 @@
           "command": "git-worktree-manager.removeGitFolder",
           "when": "viewItem == git-worktree-manager.gitFolderItem",
           "group": "inline@100"
+        },
+        {
+          "command": "git-worktree-manager.addToWorkspace",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
+          "group": "workspace"
         }
       ],
       "commandPalette": [

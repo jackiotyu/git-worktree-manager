@@ -17,6 +17,7 @@
     "cmd.pruneWorkTree": "Prune worktree",
     "cmd.openTerminal": "Open in VSCode built-in terminal",
     "cmd.openWindowsTerminal": "Open in Windows terminal",
+    "cmd.addToWorkspace": "Add to workspace",
     "sizeBar.git-worktree-manager": "worktree manager",
     "view.git-worktree-manager-list": "worktree list",
     "view.git-worktree-manager-folders": "git repository manage",

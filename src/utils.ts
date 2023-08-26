@@ -202,3 +202,10 @@ export function checkGitValid(folderPath: string) {
         return false;
     }
 }
+
+export const addToWorkspace = (path: string) => {
+    vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
+        uri: vscode.Uri.file(path),
+        name: path
+    });
+};

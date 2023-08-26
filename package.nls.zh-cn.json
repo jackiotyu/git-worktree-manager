@@ -17,6 +17,7 @@
     "cmd.pruneWorkTree": "清理 worktree",
     "cmd.openTerminal": "在vscode内置终端中打开",
     "cmd.openWindowsTerminal": "在Windows Terminal中打开",
+    "cmd.addToWorkspace": "添加到工作区",
     "sizeBar.git-worktree-manager": "Git Worktree Manager",
     "view.git-worktree-manager-list": "worktree 列表",
     "view.git-worktree-manager-folders": "git 仓库管理",
