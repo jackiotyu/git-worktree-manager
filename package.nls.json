@@ -75,7 +75,7 @@
     "commitHash": "commit hash",
     "treeView.tooltip.error": "$(error) Detached from the git version\n\n",
     "treeView.tooltip.lock": "$(lock) The worktree is locked to prevent accidental purging\n\n",
-    "treeView.tooltip.main": "✨ Worktree main folder, cannot be cleared and locked",
+    "treeView.tooltip.main": "✨ Worktree main folder, cannot be cleared and locked\n\n",
     "ok": "ok",
     "operation": "operation",
     "lock": "lock",
