@@ -103,7 +103,7 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 - [x] List all worktree in current folder.
 - [x] List all repository's worktree.
 - [x] Quick open terminal in select worktree folder.
-- [ ] Localize
+- [ ] Multi-language Support
     - [x] Chinese
 
 See the [open issues](https://github.com/jackiotyu/git-worktree-manager/issues) for a full list of proposed features (and known issues).
@@ -142,7 +142,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Jackiotyu - 2504448153@qq.com
 
 Project Link: [https://github.com/jackiotyu/git-worktree-manager](https://github.com/jackiotyu/git-worktree-manager)
 
