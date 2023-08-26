@@ -3,7 +3,7 @@
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
   "description": "",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.60.0"
   },
