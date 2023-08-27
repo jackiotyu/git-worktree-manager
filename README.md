@@ -94,8 +94,7 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. Worktree manager
-worktree 管理
+1. Worktree manager. 管理 worktree
 
 ![create-worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.5/images/create-worktree.png)
 - Click the `Add worktree` icon, then following the tips to make a new worktree.
@@ -103,24 +102,22 @@ worktree 管理
 - It provides some useful command in context menu. You can open a new window for a worktree when click worktree item.
 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
 
-2. Git repository manger
- git 仓库管理
+2. Git repository manger.  git 仓库管理
 ![save-repository](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.5/images/save-repository.png)
 - Click the `Add git repository` icon, then following the tips to save a git repository.
-点击 `添加 git 仓库` 图标，跟随提示进行操作，添加一个 git 仓库。
+- 点击 `添加 git 仓库` 图标，跟随提示进行操作，添加一个 git 仓库。
 - Also provider some quick operation in context menu and inline icon.
-右键上下文菜单和行内图标也可以执行一下快速操作。
+- 右键上下文菜单和行内图标也可以执行一下快速操作。
 - List all worktree in every repository.
-每个仓库都会列出所有 worktree。
+- 每个仓库都会列出所有 worktree。
 
-3. Setting
-设置
+3. Setting. 设置
 ![open-setting](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.5/images/open-setting.png)
 - Open setting quickly by click this button.
-点击这个按钮快速打开设置
+- 点击这个按钮快速打开设置
 ![setting-detail](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.5/images/setting-detail.png)
 - Managing settings, for example, providing a terminal command that can be quickly executed in the right-click context menu of the worktree item, called "Open VSCode Integrated Terminal" command.
-管理设置，例如提供终端命令，可以在点击 worktree 项的右键上下文菜单`打开VSCode内置终端`命令中快速运行该命令。
+- 管理设置，例如提供终端命令，可以在点击 worktree 项的右键上下文菜单`打开VSCode内置终端`命令中快速运行该命令。
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
