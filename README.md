@@ -32,7 +32,27 @@
   </p>
 </div>
 
+<details>
+  <summary>How Git Worktree Works. git worktree 工作原理</summary>
+  <section>
+    <img src="images/how-worktree-works.png" height="500" width="800" />
+    <p>Git worktree is a feature of the Git version control system that allows you to work on multiple branches or commits within the same repository.
 
+With git worktree, you can create an additional working directory that can be linked to different branches or commits of the original repository. The benefit of this is that you can work on multiple tasks without switching branches, making it convenient for developers to handle different versions of the code.
+
+By creating a new working directory, we can switch between the current directory and the new one, each associated with different branches or commits. This means that we can perform git operations such as committing code, pulling updates, etc., on each directory without affecting each other.
+
+In summary, git worktree provides a flexible way to manage multiple tasks or versions, making development work more efficient and convenient.</p>
+    <p>Git worktree 是 Git 版本控制系统的一个功能，它用于在同一个仓库中同时工作于多个分支或提交。
+
+使用 git worktree 可以创建一个额外的工作目录，这个目录可以连接到原始仓库的不同分支或提交。这样做的好处是可以在不切换分支的情况下同时进行多个任务，方便开发人员处理不同的代码版本。
+
+通过创建一个新的工作目录，我们可以在当前目录和新的工作目录之间切换，而每个目录都可以与不同的分支或提交关联。这意味着我们可以在每个目录上执行 git 操作，例如提交代码、拉取更新等，而不会相互影响。
+
+总结来说，git worktree 提供了一种灵活的方式来管理多个任务或版本，使得开发工作更加高效和便捷。</p>
+  </section>
+</details>
+<br />
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -65,6 +85,9 @@
 
 This plugin aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
 该插件旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
