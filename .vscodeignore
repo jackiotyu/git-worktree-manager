@@ -14,3 +14,4 @@ vsc-extension-quickstart.md
 images/**
 !images/icon.svg
 !images/icon.png
+demo/**
