@@ -25,7 +25,13 @@ export const setupGitEvents = async (context: vscode.ExtensionContext) => {
             },
         });
         const throttleOptions: ThrottleSettings = { leading: true, trailing: true };
-        const onDidChange = throttle(updateTreeDataEvent.fire, 100, throttleOptions);
+        const onDidChange = throttle(
+            () => {
+                updateTreeDataEvent.fire();
+            },
+            100,
+            throttleOptions,
+        );
         const onDidChangeState = throttle(
             (e) => {
                 console.log('[builtin git event]: ', e);

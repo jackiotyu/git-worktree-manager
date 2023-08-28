@@ -16,34 +16,40 @@ export const pickBranch = async () => {
     });
     try {
         const branchList = getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD']);
-        if(!branchList) {return;}
+        if (!branchList) {
+            return;
+        }
 
         const quickPick = vscode.window.createQuickPick();
         quickPick.title = localize('msg.info.createWorkTree');
         quickPick.placeholder = localize('msg.placeholder.createWorkTree');
-        const branchItem: BranchForWorkTree[] = branchList.filter(i => !i.worktreepath).map(item => {
-            return {
-                label: item['refname:short'],
-                description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`,
-                iconPath: new vscode.ThemeIcon('source-control'),
-                hash: item['objectname:short'],
-                branch: item['refname:short']
-            };
-        });
-        const defaultBranch = branchList.find(i => i.HEAD === '*');
+        const branchItem: BranchForWorkTree[] = branchList
+            .filter((i) => !i.worktreepath)
+            .map((item) => {
+                return {
+                    label: item['refname:short'],
+                    description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
+                        item.authordate,
+                    )}`,
+                    iconPath: new vscode.ThemeIcon('source-control'),
+                    hash: item['objectname:short'],
+                    branch: item['refname:short'],
+                };
+            });
+        const defaultBranch = branchList.find((i) => i.HEAD === '*');
         const defaultBranchItem: BranchForWorkTree[] = [
             {
-                label: defaultBranch?.['refname:short'] || '',
+                label: `HEAD ${defaultBranch?.['objectname:short'] || ''}`,
                 description: localize('msg.pickItem.useCurrentBranch'),
                 iconPath: new vscode.ThemeIcon('source-control'),
                 hash: defaultBranch?.['objectname:short'],
             },
             {
                 label: '',
-                kind: vscode.QuickPickItemKind.Separator
+                kind: vscode.QuickPickItemKind.Separator,
             },
         ];
-        quickPick.items = [ ...defaultBranchItem, ...branchItem];
+        quickPick.items = [...defaultBranchItem, ...branchItem];
         quickPick.canSelectMany = false;
         quickPick.onDidAccept(() => {
             quickPick.hide();
