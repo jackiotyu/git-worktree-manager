@@ -15,16 +15,17 @@ export function activate(context: vscode.ExtensionContext) {
         treeDataEvent.fire(getWorkTreeList());
     });
     CommandsManger.register(context);
-    const treeData = new WorkTreeDataProvider(context);
-    const folderData = new GitFoldersDataProvider(context);
-    setupGitEvents(treeData, context);
+    const worktreeView = vscode.window.createTreeView('git-worktree-manager-list', {
+        treeDataProvider: new WorkTreeDataProvider(context),
+        showCollapseAll: false,
+    });
+    const folderView = vscode.window.createTreeView('git-worktree-manager-folders', {
+        treeDataProvider: new GitFoldersDataProvider(context),
+        showCollapseAll: true,
+    });
+    setupGitEvents(context);
     collectEvent(context);
-    context.subscriptions.push(
-        folderRoot,
-        vscode.window.registerTreeDataProvider(WorkTreeDataProvider.id, treeData),
-        updateHandler,
-        vscode.window.registerTreeDataProvider(GitFoldersDataProvider.id, folderData),
-    );
+    context.subscriptions.push(folderRoot, worktreeView, folderView, updateHandler);
 }
 
 export function deactivate() {}

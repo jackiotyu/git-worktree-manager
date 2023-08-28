@@ -19,7 +19,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         const isCurrent = judgeIsCurrentFolder(item.path);
         const themeColor = isCurrent ? new vscode.ThemeColor('charts.blue') : void 0;
 
-        switch(true) {
+        switch (true) {
             case item.prunable:
                 this.iconPath = new vscode.ThemeIcon('error', themeColor);
                 break;
@@ -30,7 +30,7 @@ export class WorkTreeItem extends vscode.TreeItem {
                 this.iconPath = getFolderIcon(item.path, themeColor);
                 break;
         }
-        let lockPost = !item.isMain && (item.locked ? '.lock' : '.unlock') || '';
+        let lockPost = (!item.isMain && (item.locked ? '.lock' : '.unlock')) || '';
         let mainPost = item.isMain ? '.main' : '';
         let currentPost = isCurrent ? '.current' : '';
         this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}`;
@@ -41,10 +41,10 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
         this.tooltip.appendMarkdown(
-            `$(${item.isBranch ? 'source-control' : 'git-commit'}) ${item.isBranch ? localize('branch') : localize('commit')}  ${
-                item.name
-            }\n\n`,
-            );
+            `$(${item.isBranch ? 'source-control' : 'git-commit'}) ${
+                item.isBranch ? localize('branch') : localize('commit')
+            }  ${item.name}\n\n`,
+        );
         item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
         item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
         item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));
@@ -110,9 +110,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            vscode.workspace.onDidChangeConfiguration(event => {
-                if(event.affectsConfiguration(APP_NAME)) {
-                   this.refresh();
+            vscode.workspace.onDidChangeConfiguration((event) => {
+                if (event.affectsConfiguration(APP_NAME)) {
+                    this.refresh();
                 }
             }),
             updateTreeDataEvent.event(() => {
@@ -120,7 +120,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             }),
             updateFolderEvent.event(() => {
                 this.refresh();
-            })
+            }),
         );
         this.refresh();
     }
@@ -131,13 +131,13 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     }
 
     getChildren(element?: CommonWorkTreeItem | undefined): vscode.ProviderResult<CommonWorkTreeItem[]> {
-        if(!element) {
-            return this.data.map(item => {
+        if (!element) {
+            return this.data.map((item) => {
                 return new GitFolderItem(item, vscode.TreeItemCollapsibleState.Collapsed);
             });
         }
-        if(element.type === TreeItemKind.gitFolder) {
-            return getWorkTreeList(element.path).map(item => {
+        if (element.type === TreeItemKind.gitFolder) {
+            return getWorkTreeList(element.path).map((item) => {
                 return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
             });
         }

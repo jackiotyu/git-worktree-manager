@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { WorkTreeDataProvider } from './treeView';
 import { API as GitAPI, GitExtension } from './git.d';
 import throttle from 'lodash/throttle';
 import type { ThrottleSettings } from 'lodash';
+import { updateTreeDataEvent } from '@/lib/events';
 
 async function getBuiltInGitApi(): Promise<GitAPI | undefined> {
     try {
@@ -14,23 +14,18 @@ async function getBuiltInGitApi(): Promise<GitAPI | undefined> {
     } catch {}
 }
 
-export const setupGitEvents = async (treeProvider: WorkTreeDataProvider, context: vscode.ExtensionContext) => {
+export const setupGitEvents = async (context: vscode.ExtensionContext) => {
     const builtinGit = await getBuiltInGitApi();
     if (builtinGit) {
         const events: vscode.Disposable[] = [];
         context.subscriptions.push({
             dispose() {
                 events.forEach((event) => event.dispose());
+                events.length = 0;
             },
         });
         const throttleOptions: ThrottleSettings = { leading: true, trailing: true };
-        const onDidChange = throttle(
-            () => {
-                treeProvider.refresh();
-            },
-            100,
-            throttleOptions,
-        );
+        const onDidChange = throttle(updateTreeDataEvent.fire, 100, throttleOptions);
         const onDidChangeState = throttle(
             (e) => {
                 console.log('[builtin git event]: ', e);
