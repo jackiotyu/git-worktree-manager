@@ -2,7 +2,7 @@
   "publisher": "jackiotyu",
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
-  "description": "",
+  "description": "This plugin aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.该插件旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。",
   "version": "0.0.5",
   "engines": {
     "vscode": "^1.60.0"
