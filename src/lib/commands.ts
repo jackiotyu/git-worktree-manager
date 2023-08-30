@@ -13,14 +13,16 @@ import {
     pruneWorkTree,
     checkGitValid,
     openWindowsTerminal,
-    addToWorkspace
+    addToWorkspace,
 } from '@/utils';
 import { pickBranch } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME, FolderItemConfig } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
-import { WorkTreeItem, GitFolderItem } from './treeView';
+import { WorkTreeItem, GitFolderItem } from '@/lib/treeView';
+import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
+import path from 'path';
 
 export const switchWorkTreeCmd = () => {
     let workTrees = getWorkTreeList();
@@ -246,11 +248,13 @@ function openSettingCmd() {
 }
 
 function getFolderConfig() {
-    return vscode.workspace.getConfiguration(APP_NAME).get<FolderItemConfig[]>('gitFolders') || [];
+    return GlobalState.get('gitFolders', []);
 }
 
 function getTerminalLocationConfig() {
-    return vscode.workspace.getConfiguration(APP_NAME).get<boolean>('terminalLocationInEditor') ? vscode.TerminalLocation.Editor : vscode.TerminalLocation.Panel;
+    return vscode.workspace.getConfiguration(APP_NAME).get<boolean>('terminalLocationInEditor')
+        ? vscode.TerminalLocation.Editor
+        : vscode.TerminalLocation.Panel;
 }
 
 function getTerminalCmdConfig() {
@@ -258,7 +262,7 @@ function getTerminalCmdConfig() {
 }
 
 function updateFolderConfig(value: FolderItemConfig[]) {
-    return vscode.workspace.getConfiguration(APP_NAME).update('gitFolders', value, true);
+    return GlobalState.update('gitFolders', value);
 }
 
 const addGitFolderCmd = async () => {
@@ -267,7 +271,7 @@ const addGitFolderCmd = async () => {
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
-        defaultUri: folderRoot.uri,
+        defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
         openLabel: localize('msg.modal.title.addGitFolder'),
         title: localize('msg.modal.detail.addGitFolder'),
     });
@@ -275,16 +279,29 @@ const addGitFolderCmd = async () => {
         return;
     }
     let folderUri = uriList[0];
-    if (!(await checkGitValid(folderUri.fsPath))) {
+    let folderPath = folderUri.fsPath;
+    if (!(await checkGitValid(folderPath))) {
         return vscode.window.showErrorMessage(localize('msg.error.invalidGitFolder'));
     }
-    if (existFolders.some((i) => i.path === folderUri.fsPath)) {
+    const worktreeList = getWorkTreeList(folderPath);
+    const mainFolder = worktreeList.find((i) => i.isMain);
+    const mainFolderPath = mainFolder?.path ? vscode.Uri.file(mainFolder.path).fsPath : '';
+    if (mainFolderPath && mainFolderPath !== folderPath) {
+        let ok = await confirmModal(
+            localize('msg.modal.title.pickMainFolder'),
+            localize('msg.modal.placeholder.pickMainFolder', folderPath, mainFolderPath),
+        );
+        if (ok) {
+            folderPath = mainFolderPath;
+        }
+    }
+    if (existFolders.some((i) => i.path === folderPath)) {
         return vscode.window.showErrorMessage(localize('msg.error.gitFolderExistInSetting'));
     }
     let folderName = await vscode.window.showInputBox({
         title: localize('msg.modal.title.inputGitFolderName'),
         placeHolder: localize('msg.modal.placeholder.inputGitFolderName'),
-        value: folderUri.fsPath,
+        value: folderPath,
         validateInput: (value) => {
             if (!value) {
                 return localize('msg.modal.placeholder.inputGitFolderName');
@@ -294,7 +311,7 @@ const addGitFolderCmd = async () => {
     if (!folderName) {
         return;
     }
-    existFolders.push({ name: folderName, path: folderUri.fsPath });
+    existFolders.push({ name: folderName, path: folderPath });
     await updateFolderConfig(existFolders);
     vscode.window.showInformationMessage(localize('msg.success.save'));
 };
@@ -355,7 +372,11 @@ const renameGitFolderCmd = async (item: GitFolderItem) => {
 };
 
 const openWalkthroughsCmd = () => {
-    vscode.commands.executeCommand('workbench.action.openWalkthrough', 'jackiotyu.git-worktree-manager#git-worktree-usage', false);
+    vscode.commands.executeCommand(
+        'workbench.action.openWalkthrough',
+        'jackiotyu.git-worktree-manager#git-worktree-usage',
+        false,
+    );
 };
 
 const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
@@ -370,7 +391,7 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
     terminal.show();
     const cmdText = getTerminalCmdConfig();
     // FIXME delay for prevent terminal dirty data
-    await new Promise<void>(resolve => setTimeout(resolve, 300));
+    await new Promise<void>((resolve) => setTimeout(resolve, 300));
     cmdText && terminal.sendText(cmdText, true);
 };
 
@@ -378,7 +399,7 @@ const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem) => {
     try {
         openWindowsTerminal(`${item.path}`);
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.invokeWindowsTerminal', String(error)));;
+        vscode.window.showErrorMessage(localize('msg.fail.invokeWindowsTerminal', String(error)));
     }
 };
 

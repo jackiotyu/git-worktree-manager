@@ -54,6 +54,8 @@
     "msg.modal.title.removeGitFolder": "Remove the git repository reference in list",
     "msg.modal.placeholder.removeGitFolder": "Are you sure to delete this repository reference with path {0} and alias {1}?",
     "msg.modal.placeholder.inputGitFolderName": "Please enter a name for the presentation",
+    "msg.modal.title.pickMainFolder": "Select main folder?",
+    "msg.modal.placeholder.pickMainFolder": "The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}",
     "msg.success.deleteWorkTree": "Successfully deleted the worktree for the {0} folder",
     "msg.fail.deleteWorkTree": "Worktree removal failed\n\n {0}",
     "msg.success.commonAction": "Worktree {0} successfully",

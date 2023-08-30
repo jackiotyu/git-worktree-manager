@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent, updateFolderEvent } from '@/lib/events';
+import { treeDataEvent, updateTreeDataEvent, updateFolderEvent, globalStateEvent } from '@/lib/events';
 import { WorkTreeDetail } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList } from '@/utils';
 import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
+import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 
 export class WorkTreeItem extends vscode.TreeItem {
@@ -110,10 +111,8 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            vscode.workspace.onDidChangeConfiguration((event) => {
-                if (event.affectsConfiguration(APP_NAME)) {
-                    this.refresh();
-                }
+            globalStateEvent.event(() => {
+                this.refresh();
             }),
             updateTreeDataEvent.event(() => {
                 this.refresh();
@@ -126,7 +125,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     }
 
     refresh() {
-        this.data = vscode.workspace.getConfiguration(APP_NAME).get<FolderItemConfig[]>('gitFolders') || [];
+        this.data = GlobalState.get('gitFolders', []);
         this._onDidChangeTreeData.fire();
     }
 

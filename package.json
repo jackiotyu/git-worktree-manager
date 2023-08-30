@@ -348,24 +348,6 @@
     "configuration": {
       "title": "%config.title%",
       "properties": {
-        "git-worktree-manager.gitFolders": {
-          "scope": "application",
-          "type": "array",
-          "description": "%config.gitFolders.description%",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "description": "%config.gitFolders.items.name.description%",
-                "type": "string"
-              },
-              "path": {
-                "type": "string",
-                "description": "%config.gitFolders.items.path.description%"
-              }
-            }
-          }
-        },
         "git-worktree-manager.terminalLocationInEditor": {
           "scope": "application",
           "type": "boolean",

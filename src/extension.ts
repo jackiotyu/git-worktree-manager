@@ -6,9 +6,11 @@ import { getWorkTreeList } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
 import { init } from 'vscode-nls-i18n';
 import { setupGitEvents } from '@/lib/gitExtension';
+import { GlobalState } from '@/lib/globalState';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('git-worktree-manager is now active!');
+    GlobalState.init(context);
     init(context.extensionPath);
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
     const updateHandler = updateTreeDataEvent.event(() => {
