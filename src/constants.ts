@@ -34,3 +34,5 @@ export interface FolderItemConfig {
     name: string;
     path: string;
 }
+
+export type AlertLevel = 'warn' | 'info' | 'error';
