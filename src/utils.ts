@@ -181,7 +181,6 @@ export function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
         return [];
     } catch(error: any) {
         if(/Removing worktrees/.test(error.message)) {
-            // TODO 处理成路径
             let text: string = error.message;
             let matched = text.matchAll(/Removing worktrees\/(.*):/g);
             let list = [];
