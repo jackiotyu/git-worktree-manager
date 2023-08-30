@@ -3,8 +3,14 @@ import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
 import { globalStateEvent } from '@/lib/events';
 
 interface Thenable<T> {
-	then<TResult>(onfulfilled?: (value: T) => TResult | Thenable<TResult>, onrejected?: (reason: any) => TResult | Thenable<TResult>): Thenable<TResult>;
-	then<TResult>(onfulfilled?: (value: T) => TResult | Thenable<TResult>, onrejected?: (reason: any) => void): Thenable<TResult>;
+    then<TResult>(
+        onfulfilled?: (value: T) => TResult | Thenable<TResult>,
+        onrejected?: (reason: any) => TResult | Thenable<TResult>,
+    ): Thenable<TResult>;
+    then<TResult>(
+        onfulfilled?: (value: T) => TResult | Thenable<TResult>,
+        onrejected?: (reason: any) => void,
+    ): Thenable<TResult>;
 }
 
 export class GlobalState {
@@ -13,18 +19,17 @@ export class GlobalState {
         this.context = context;
 
         // FIXME 兼容旧数据
-        if(vscode.workspace.getConfiguration(APP_NAME).has('gitFolders')) {
+        if (this.get('gitFolders', []).length === 0 && vscode.workspace.getConfiguration(APP_NAME).has('gitFolders')) {
             let data = vscode.workspace.getConfiguration(APP_NAME).get<FolderItemConfig[]>('gitFolders');
             if (data && data.length) {
                 this.update('gitFolders', data);
-                vscode.workspace.getConfiguration(APP_NAME).update('gitFolders', []);
             }
         }
 
         context.subscriptions.push({
             dispose: () => {
                 (this.context as any) = null;
-            }
+            },
         });
     }
 
