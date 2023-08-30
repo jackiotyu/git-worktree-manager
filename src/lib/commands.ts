@@ -408,7 +408,9 @@ const addToWorkspaceCmd = (item: WorkTreeItem) => {
 };
 
 const copyFilePathCmd = (item: WorkTreeItem | GitFolderItem) => {
-    vscode.env.clipboard.writeText(item.path);
+    vscode.env.clipboard.writeText(item.path).then(() => {
+        vscode.window.showInformationMessage(localize('msg.success.copy', item.path));
+    });
 };
 
 export class CommandsManger {
