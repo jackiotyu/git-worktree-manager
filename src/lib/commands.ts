@@ -407,6 +407,10 @@ const addToWorkspaceCmd = (item: WorkTreeItem) => {
     return addToWorkspace(item.path);
 };
 
+const copyFilePathCmd = (item: WorkTreeItem | GitFolderItem) => {
+    vscode.env.clipboard.writeText(item.path);
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -431,6 +435,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.openTerminal, openTerminalCmd),
             vscode.commands.registerCommand(Commands.openWindowsTerminal, openWindowsTerminalCmd),
             vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
+            vscode.commands.registerCommand(Commands.copyFilePath, copyFilePathCmd),
         );
     }
 }

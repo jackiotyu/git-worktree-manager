@@ -117,6 +117,10 @@
       {
         "command": "git-worktree-manager.addToWorkspace",
         "title": "%cmd.addToWorkspace%"
+      },
+      {
+        "command": "git-worktree-manager.copyFilePath",
+        "title": "%cmd.copyFilePath%"
       }
     ],
     "viewsContainers": {
@@ -262,6 +266,11 @@
           "command": "git-worktree-manager.addToWorkspace",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
           "group": "workspace"
+        },
+        {
+          "command": "git-worktree-manager.copyFilePath",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
+          "group": "workspace"
         }
       ],
       "commandPalette": [
@@ -341,6 +350,10 @@
         },
         {
           "command": "git-worktree-manager.openWindowsTerminal",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.copyFilePath",
           "when": "false"
         }
       ]

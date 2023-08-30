@@ -18,6 +18,7 @@
     "cmd.openTerminal": "Open in VSCode built-in terminal",
     "cmd.openWindowsTerminal": "Open in Windows terminal",
     "cmd.addToWorkspace": "Add to workspace",
+    "cmd.copyFilePath": "Copy file path",
     "sizeBar.git-worktree-manager": "worktree manager",
     "view.git-worktree-manager-list": "worktree list",
     "view.git-worktree-manager-folders": "git repository manage",

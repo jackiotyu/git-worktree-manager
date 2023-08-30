@@ -22,6 +22,7 @@ export enum Commands {
     openTerminal = 'git-worktree-manager.openTerminal',
     openWindowsTerminal = 'git-worktree-manager.openWindowsTerminal',
     addToWorkspace = 'git-worktree-manager.addToWorkspace',
+    copyFilePath = 'git-worktree-manager.copyFilePath',
 }
 
 export enum TreeItemKind {
