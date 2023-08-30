@@ -1,3 +1,10 @@
+## [0.0.6] 2023-08-30
+
+### Change
+
+- Update README.
+- Disable the `git-worktree-manager.gitFolders` setting, now save git repository references locally.
+
 ## [0.0.5] 2023-08-26
 
 ### Change
