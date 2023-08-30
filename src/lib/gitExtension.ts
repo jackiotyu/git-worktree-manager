@@ -25,6 +25,14 @@ export const setupGitEvents = async (context: vscode.ExtensionContext) => {
             },
         });
         const throttleOptions: ThrottleSettings = { leading: true, trailing: true };
+        const checkRepos = (e?: any) => {
+            console.log('[builtin git event]: ', e);
+            events.forEach((event) => event.dispose());
+            events.length = 0;
+            builtinGit.repositories.forEach((repo) => {
+                events.push(repo.state.onDidChange(onDidChange));
+            });
+        };
         const onDidChange = throttle(
             () => {
                 updateTreeDataEvent.fire();
@@ -32,18 +40,8 @@ export const setupGitEvents = async (context: vscode.ExtensionContext) => {
             100,
             throttleOptions,
         );
-        const onDidChangeState = throttle(
-            (e) => {
-                console.log('[builtin git event]: ', e);
-                events.forEach((event) => event.dispose());
-                events.length = 0;
-                builtinGit.repositories.forEach((repo) => {
-                    events.push(repo.state.onDidChange(onDidChange));
-                });
-            },
-            100,
-            throttleOptions,
-        );
+        const onDidChangeState = throttle(checkRepos, 100, throttleOptions);
+        checkRepos();
         context.subscriptions.push(builtinGit.onDidChangeState(onDidChangeState));
     }
 };
