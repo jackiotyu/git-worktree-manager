@@ -24,6 +24,10 @@ import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
 
+interface CmdItem extends vscode.QuickPickItem {
+    use?: 'close';
+}
+
 export const switchWorkTreeCmd = () => {
     let workTrees = getWorkTreeList();
     const items: vscode.QuickPickItem[] = workTrees.map((item) => {
@@ -252,13 +256,13 @@ function getFolderConfig() {
 }
 
 function getTerminalLocationConfig() {
-    return vscode.workspace.getConfiguration(APP_NAME).get<boolean>('terminalLocationInEditor')
+    return vscode.workspace.getConfiguration(APP_NAME).get<string>('terminalLocationInEditor')
         ? vscode.TerminalLocation.Editor
         : vscode.TerminalLocation.Panel;
 }
 
-function getTerminalCmdConfig() {
-    return vscode.workspace.getConfiguration(APP_NAME).get<string>('terminalCmd') || '';
+function getTerminalCmdListConfig() {
+    return vscode.workspace.getConfiguration(APP_NAME).get<string[]>('terminalCmdList', []);
 }
 
 function updateFolderConfig(value: FolderItemConfig[]) {
@@ -389,7 +393,36 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
         location: getTerminalLocationConfig(),
     });
     terminal.show();
-    const cmdText = getTerminalCmdConfig();
+    const cmdList = getTerminalCmdListConfig();
+    if (!cmdList.length) {
+        return;
+    }
+    let cmdText = cmdList[0];
+    if (cmdList.length > 1) {
+        const items: CmdItem[] = cmdList.map((text) => {
+            return {
+                label: text,
+                iconPath: new vscode.ThemeIcon('terminal-bash'),
+            };
+        });
+        items.push(
+            {
+                label: '',
+                kind: vscode.QuickPickItemKind.Separator,
+            },
+            {
+                label: localize('close'),
+                iconPath: new vscode.ThemeIcon('close-all'),
+                use: 'close',
+            },
+        );
+        let item = await await vscode.window.showQuickPick(items, {
+            title: localize('msg.modal.title.selectCmd'),
+            placeHolder: localize('msg.modal.placeholder.selectCmd'),
+            canPickMany: false,
+        });
+        cmdText = item && item.use !== 'close' ? item.label : '';
+    }
     // FIXME delay for prevent terminal dirty data
     await new Promise<void>((resolve) => setTimeout(resolve, 300));
     cmdText && terminal.sendText(cmdText, true);

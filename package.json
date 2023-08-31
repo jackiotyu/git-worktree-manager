@@ -367,11 +367,14 @@
           "default": false,
           "description": "%config.terminalLocationInEditor.description%"
         },
-        "git-worktree-manager.terminalCmd": {
+        "git-worktree-manager.terminalCmdList": {
           "scope": "application",
-          "type": "string",
-          "default": "",
-          "description": "%config.terminalCmd.description%"
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "%config.terminalCmdList.description%"
         }
       }
     }

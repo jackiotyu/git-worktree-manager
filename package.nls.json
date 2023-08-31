@@ -27,7 +27,7 @@
     "viewsWelcome.setting": "Setting",
     "config.title": "Git Worktree Manager setting",
     "config.terminalLocationInEditor.description": "Whether to open the built-in terminal in the editor, it opens in the panel by default",
-    "config.terminalCmd.description": "Send command text when opening the terminal, such as node -v",
+    "config.terminalCmdList.description": "Send command text when opening the terminal, such as node -v",
     "config.windowsTerminalInvoke.description": "Evoke Windows Terminal",
     "msg.error.addWorkTree": "Failed to create Worktree\n{0}",
     "msg.info.createWorkTree": "Create Worktree for",
@@ -54,6 +54,8 @@
     "msg.modal.placeholder.inputGitFolderName": "Please enter a name for the presentation",
     "msg.modal.title.pickMainFolder": "Select main folder?",
     "msg.modal.placeholder.pickMainFolder": "The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}",
+    "msg.modal.title.selectCmd": "Select command",
+    "msg.modal.placeholder.selectCmd": "Select the command you need to execute in the terminal, or close this quickPick to open the terminal directly",
     "msg.success.deleteWorkTree": "Successfully deleted the worktree for the {0} folder",
     "msg.fail.deleteWorkTree": "Worktree removal failed\n\n {0}",
     "msg.success.commonAction": "Worktree {0} successfully",
@@ -81,5 +83,6 @@
     "operation": "operation",
     "lock": "lock",
     "unlock": "unlock",
-    "repair": "repair"
+    "repair": "repair",
+    "close": "Close"
 }
