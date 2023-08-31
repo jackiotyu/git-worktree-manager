@@ -1,3 +1,9 @@
+## [0.0.7] 2023-08-31
+
+### Change
+
+- Change the setting `git-worktree-manager.terminalCmd` to `git-worktree-manager.terminalCmdList`, support multi command now.
+
 ## [0.0.6] 2023-08-30
 
 ### Change
