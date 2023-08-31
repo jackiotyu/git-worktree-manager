@@ -55,7 +55,7 @@
     "msg.modal.title.pickMainFolder": "Select main folder?",
     "msg.modal.placeholder.pickMainFolder": "The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}",
     "msg.modal.title.selectCmd": "Select command",
-    "msg.modal.placeholder.selectCmd": "Select the command you need to execute in the terminal, or close this quickPick to open the terminal directly",
+    "msg.modal.placeholder.selectCmd": "Select the command you need to execute in the terminal",
     "msg.success.deleteWorkTree": "Successfully deleted the worktree for the {0} folder",
     "msg.fail.deleteWorkTree": "Worktree removal failed\n\n {0}",
     "msg.success.commonAction": "Worktree {0} successfully",
