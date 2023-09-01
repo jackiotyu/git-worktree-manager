@@ -143,7 +143,7 @@ export function getBranchList<T extends string>(keys: T[]) {
 
 export async function addWorkTree(path: string, branch: string, cwd?: string) {
     try {
-        executeGitCommandAuto(cwd, [WORK_TREE, 'add', path, branch]);
+        executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', path, branch]);
         return true;
     } catch (error: any) {
         vscode.window.showErrorMessage(localize('msg.error.addWorkTree', String(error)));

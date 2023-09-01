@@ -121,11 +121,11 @@ const removeWorkTreeCmd = async (item: WorkTreeItem) => {
             return;
         }
         removeWorkTree(item.path, item.parent?.path);
-        updateTreeDataEvent.fire();
         vscode.window.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.deleteWorkTree', util.inspect(error)));
+        vscode.window.showErrorMessage(localize('msg.fail.deleteWorkTree', String(error)));
     }
+    updateTreeDataEvent.fire();
 };
 
 const addWorkTreeFromBranchCmd = async (item: WorkTreeItem) => {
@@ -171,10 +171,10 @@ const commonWorkTreeCmd = (path: string, cmd: Commands, cwd?: string) => {
                 break;
         }
         vscode.window.showInformationMessage(localize('msg.success.commonAction', cmdName));
-        updateTreeDataEvent.fire();
     } catch (error) {
         vscode.window.showErrorMessage(localize('msg.fail.commonAction', cmdName, util.inspect(error, false, 1, true)));
     }
+    updateTreeDataEvent.fire();
 };
 
 const repairWorkTreeCmd = (item: WorkTreeItem) => {
@@ -204,11 +204,11 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
         }
         let folderUri = uriList[0];
         moveWorkTree(item.path, folderUri.fsPath, item.parent?.path);
-        updateTreeDataEvent.fire();
         vscode.window.showInformationMessage(localize('msg.success.moveWorkTree'));
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.moveWorkTree', util.inspect(error)));
+        vscode.window.showErrorMessage(localize('msg.fail.moveWorkTree', String(error)));
     }
+    updateTreeDataEvent.fire();
 };
 
 const switchToSelectWorkTreeCmd = async (item: WorkTreeItem) => {
@@ -217,7 +217,7 @@ const switchToSelectWorkTreeCmd = async (item: WorkTreeItem) => {
             forceNewWindow: false,
         });
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.switchWorkTree', util.inspect(error)));
+        vscode.window.showErrorMessage(localize('msg.fail.switchWorkTree', String(error)));
     }
 };
 
@@ -240,11 +240,11 @@ const pruneWorkTreeCmd = async () => {
             return;
         }
         pruneWorkTree();
-        updateTreeDataEvent.fire();
         vscode.window.showInformationMessage(localize('msg.success.pruneWorkTree'));
     } catch (error) {
         vscode.window.showErrorMessage(localize('msg.fail.pruneWorkTree'));
     }
+    updateTreeDataEvent.fire();
 };
 
 function openSettingCmd() {

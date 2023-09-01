@@ -48,6 +48,22 @@ export const pickBranch = async () => {
                 label: '',
                 kind: vscode.QuickPickItemKind.Separator,
             },
+            // worktree branch list
+            ...branchList.filter(i => i.worktreepath).map(item => {
+                return {
+                    label: item['refname:short'],
+                    description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
+                        item.authordate,
+                    )}`,
+                    iconPath: new vscode.ThemeIcon('source-control'),
+                    hash: item['objectname:short'],
+                    branch: item['refname:short'],
+                };
+            }),
+            {
+                label: '',
+                kind: vscode.QuickPickItemKind.Separator,
+            },
         ];
         quickPick.items = [...defaultBranchItem, ...branchItem];
         quickPick.canSelectMany = false;
