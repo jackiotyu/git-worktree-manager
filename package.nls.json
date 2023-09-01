@@ -9,7 +9,7 @@
     "cmd.removeGitFolder": "Remove this git repository",
     "cmd.removeWorkTree": "Delete worktree",
     "cmd.addWorkTreeFromBranch": "Create a worktree from the current branch",
-    "cmd.revealInSystemExplorer": "Displayed in the system explorer",
+    "cmd.revealInSystemExplorer": "Reveal in the system explorer",
     "cmd.repairWorkTree": "Repair worktree",
     "cmd.moveWorkTree": "Move worktree",
     "cmd.lockWorkTree": "Lock worktree",
