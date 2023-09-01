@@ -126,6 +126,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     refresh() {
         this.data = GlobalState.get('gitFolders', []);
+        this.data.sort((a, b) => a.name.localeCompare(b.name));
         this._onDidChangeTreeData.fire();
     }
 
