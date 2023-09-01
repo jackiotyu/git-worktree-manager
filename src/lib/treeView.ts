@@ -5,6 +5,7 @@ import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList } from '@/utils';
 import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
+import throttle from 'lodash/throttle';
 
 export class WorkTreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon;
@@ -111,15 +112,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            globalStateEvent.event(() => {
-                this.refresh();
-            }),
-            updateTreeDataEvent.event(() => {
-                this.refresh();
-            }),
-            updateFolderEvent.event(() => {
-                this.refresh();
-            }),
+            globalStateEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
+            updateTreeDataEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
+            updateFolderEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
         );
         this.refresh();
     }
