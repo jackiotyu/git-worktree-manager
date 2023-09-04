@@ -96,7 +96,7 @@ export class GitFolderItem extends vscode.TreeItem {
         super(item.name, collapsible);
         this.name = item.name;
         this.path = item.path;
-        this.iconPath = new vscode.ThemeIcon('source-control');
+        this.iconPath = new vscode.ThemeIcon('repo');
         this.contextValue = 'git-worktree-manager.gitFolderItem';
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
