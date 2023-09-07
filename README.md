@@ -152,6 +152,7 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 - [x] List all worktree in current folder.
 - [x] List all repository's worktree.
 - [x] Quick open terminal in select worktree folder.
+- [ ] Switch any branch, use `git switch --ignore-other-worktrees`.
 - [ ] Multi-language Support
     - [x] Chinese
 
