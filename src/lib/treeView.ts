@@ -8,10 +8,11 @@ import {
 } from '@/lib/events';
 import { WorkTreeDetail } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
-import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
+import { TreeItemKind, FolderItemConfig, APP_NAME, RecentFolderConfig } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 import throttle from 'lodash/throttle';
+import path from 'path';
 
 export class WorkTreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon;
@@ -150,13 +151,15 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
 export class FolderItem extends vscode.TreeItem {
     path: string;
-    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: FolderItemConfig) {
+    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: RecentFolderConfig) {
         super(name, collapsible);
-        this.iconPath = new vscode.ThemeIcon('folder');
+        this.iconPath = vscode.ThemeIcon.Folder;
         this.contextValue = 'git-worktree-manager.folderItem';
         this.path = item.path;
+        this.description = item.path;
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
+        this.resourceUri = item.uri;
         this.command = {
             title: 'open folder',
             command: 'vscode.openFolder',
@@ -167,7 +170,7 @@ export class FolderItem extends vscode.TreeItem {
 
 export class RecentFoldersDataProvider implements vscode.TreeDataProvider<FolderItem> {
     static id = 'git-worktree-manager-recent';
-    private data: FolderItemConfig[] = [];
+    private data: RecentFolderConfig[] = [];
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
@@ -177,8 +180,9 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Folder
         let list = await getRecentFolders();
         this.data = list.map((item) => {
             return {
-                name: item.label || item.folderUri.fsPath,
+                name: item.label || path.basename(item.folderUri.fsPath),
                 path: item.folderUri.fsPath,
+                uri: item.folderUri,
             };
         });
         this._onDidChangeTreeData.fire();
