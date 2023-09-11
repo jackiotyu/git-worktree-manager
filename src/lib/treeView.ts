@@ -1,7 +1,13 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent, updateFolderEvent, globalStateEvent } from '@/lib/events';
+import {
+    treeDataEvent,
+    updateTreeDataEvent,
+    updateFolderEvent,
+    globalStateEvent,
+    updateRecentEvent,
+} from '@/lib/events';
 import { WorkTreeDetail } from '@/types';
-import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList } from '@/utils';
+import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
 import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
@@ -138,6 +144,51 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         }
     }
     getTreeItem(element: CommonWorkTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+        return element;
+    }
+}
+
+export class FolderItem extends vscode.TreeItem {
+    path: string;
+    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: FolderItemConfig) {
+        super(name, collapsible);
+        this.iconPath = new vscode.ThemeIcon('folder');
+        this.contextValue = 'git-worktree-manager.folderItem';
+        this.path = item.path;
+        this.tooltip = new vscode.MarkdownString('', true);
+        this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
+        this.command = {
+            title: 'open folder',
+            command: 'vscode.openFolder',
+            arguments: [vscode.Uri.file(item.path), { forceNewWindow: true }],
+        };
+    }
+}
+
+export class RecentFoldersDataProvider implements vscode.TreeDataProvider<FolderItem> {
+    static id = 'git-worktree-manager-recent';
+    private data: FolderItemConfig[] = [];
+    _onDidChangeTreeData = new vscode.EventEmitter<void>();
+    onDidChangeTreeData = this._onDidChangeTreeData.event;
+    constructor(context: vscode.ExtensionContext) {
+        context.subscriptions.push(updateRecentEvent.event(this.refresh));
+    }
+    refresh = async () => {
+        let list = await getRecentFolders();
+        this.data = list.map((item) => {
+            return {
+                name: item.label || item.folderUri.fsPath,
+                path: item.folderUri.fsPath,
+            };
+        });
+        this._onDidChangeTreeData.fire();
+    };
+    getChildren(element?: FolderItem | undefined): vscode.ProviderResult<FolderItem[]> {
+        return this.data.map((item) => {
+            return new FolderItem(item.name, vscode.TreeItemCollapsibleState.None, item);
+        });
+    }
+    getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
 }

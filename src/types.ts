@@ -1,3 +1,5 @@
+import { Uri as URI } from 'vscode';
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface WorkTreeDetail {
     name: string;
@@ -15,4 +17,14 @@ export interface WorkTreeOutputItem {
     detached: void;
     prunable: string;
     branch?: string;
+}
+
+export interface IRecentFolder {
+	readonly folderUri: URI;
+	label?: string;
+	readonly remoteAuthority?: string;
+}
+
+export interface IRecentlyOpened {
+	workspaces: Array<IRecentFolder>;
 }

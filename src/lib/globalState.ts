@@ -2,17 +2,6 @@ import * as vscode from 'vscode';
 import { TreeItemKind, FolderItemConfig, APP_NAME } from '@/constants';
 import { globalStateEvent } from '@/lib/events';
 
-interface Thenable<T> {
-    then<TResult>(
-        onfulfilled?: (value: T) => TResult | Thenable<TResult>,
-        onrejected?: (reason: any) => TResult | Thenable<TResult>,
-    ): Thenable<TResult>;
-    then<TResult>(
-        onfulfilled?: (value: T) => TResult | Thenable<TResult>,
-        onrejected?: (reason: any) => void,
-    ): Thenable<TResult>;
-}
-
 export class GlobalState {
     static context: vscode.ExtensionContext;
     static init(context: vscode.ExtensionContext) {

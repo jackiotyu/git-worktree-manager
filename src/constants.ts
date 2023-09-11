@@ -13,7 +13,7 @@ export enum Commands {
     lockWorkTree = 'git-worktree-manager.lockWorkTree',
     unlockWorkTree = 'git-worktree-manager.unlockWorkTree',
     pruneWorkTree = 'git-worktree-manager.pruneWorkTree',
-    switchToSelectWorkTree = 'git-worktree-manager.switchToSelectWorkTree',
+    switchToSelectFolder = 'git-worktree-manager.switchToSelectFolder',
     addWorkTreeFromBranch = 'git-worktree-manager.addWorkTreeFromBranch',
     revealInSystemExplorer = 'git-worktree-manager.revealInSystemExplorer',
     openSetting = 'git-worktree-manager.openSetting',
@@ -23,6 +23,9 @@ export enum Commands {
     openWindowsTerminal = 'git-worktree-manager.openWindowsTerminal',
     addToWorkspace = 'git-worktree-manager.addToWorkspace',
     copyFilePath = 'git-worktree-manager.copyFilePath',
+    refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',
+    openRecent = 'git-worktree-manager.openRecent',
+    addToGitFolder = 'git-worktree-manager.addToGitFolder',
 }
 
 export enum TreeItemKind {

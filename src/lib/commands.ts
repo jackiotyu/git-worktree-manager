@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { updateTreeDataEvent, updateFolderEvent } from '@/lib/events';
+import { updateTreeDataEvent, updateFolderEvent, updateRecentEvent } from '@/lib/events';
 import localize from '@/localize';
 import {
     getFolderIcon,
@@ -19,7 +19,7 @@ import { pickBranch } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME, FolderItemConfig } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
-import { WorkTreeItem, GitFolderItem } from '@/lib/treeView';
+import { WorkTreeItem, GitFolderItem, FolderItem } from '@/lib/treeView';
 import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
@@ -211,7 +211,7 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
     updateTreeDataEvent.fire();
 };
 
-const switchToSelectWorkTreeCmd = async (item: WorkTreeItem) => {
+const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
     try {
         await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
             forceNewWindow: false,
@@ -269,21 +269,8 @@ function updateFolderConfig(value: FolderItemConfig[]) {
     return GlobalState.update('gitFolders', value);
 }
 
-const addGitFolderCmd = async () => {
+const addToGitFolder = async (folderPath: string) => {
     let existFolders = getFolderConfig();
-    let uriList = await vscode.window.showOpenDialog({
-        canSelectFiles: false,
-        canSelectFolders: true,
-        canSelectMany: false,
-        defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
-        openLabel: localize('msg.modal.title.addGitFolder'),
-        title: localize('msg.modal.detail.addGitFolder'),
-    });
-    if (!uriList?.length) {
-        return;
-    }
-    let folderUri = uriList[0];
-    let folderPath = folderUri.fsPath;
     if (!(await checkGitValid(folderPath))) {
         return vscode.window.showErrorMessage(localize('msg.error.invalidGitFolder'));
     }
@@ -318,6 +305,23 @@ const addGitFolderCmd = async () => {
     existFolders.push({ name: folderName, path: folderPath });
     await updateFolderConfig(existFolders);
     vscode.window.showInformationMessage(localize('msg.success.save'));
+};
+
+const addGitFolderCmd = async () => {
+    let uriList = await vscode.window.showOpenDialog({
+        canSelectFiles: false,
+        canSelectFolders: true,
+        canSelectMany: false,
+        defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
+        openLabel: localize('msg.modal.title.addGitFolder'),
+        title: localize('msg.modal.detail.addGitFolder'),
+    });
+    if (!uriList?.length) {
+        return;
+    }
+    let folderUri = uriList[0];
+    let folderPath = folderUri.fsPath;
+    await addToGitFolder(folderPath);
 };
 
 const refreshGitFolderCmd = () => {
@@ -383,7 +387,7 @@ const openWalkthroughsCmd = () => {
     );
 };
 
-const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
+const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
     const terminal = vscode.window.createTerminal({
         cwd: item.path,
         name: item.name,
@@ -428,7 +432,7 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem) => {
     cmdText && terminal.sendText(cmdText, true);
 };
 
-const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem) => {
+const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem | FolderItem) => {
     try {
         openWindowsTerminal(`${item.path}`);
     } catch (error) {
@@ -436,14 +440,26 @@ const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem) => {
     }
 };
 
-const addToWorkspaceCmd = (item: WorkTreeItem) => {
+const addToWorkspaceCmd = (item: WorkTreeItem | FolderItem) => {
     return addToWorkspace(item.path);
 };
 
-const copyFilePathCmd = (item: WorkTreeItem | GitFolderItem) => {
+const copyFilePathCmd = (item: WorkTreeItem | GitFolderItem | FolderItem) => {
     vscode.env.clipboard.writeText(item.path).then(() => {
         vscode.window.showInformationMessage(localize('msg.success.copy', item.path));
     });
+};
+
+const refreshRecentFolderCmd = () => {
+    updateRecentEvent.fire();
+};
+
+const openRecentCmd = () => {
+    return vscode.commands.executeCommand('workbench.action.openRecent');
+};
+
+const addToGitFolderCmd = (item: FolderItem) => {
+    return addToGitFolder(item.path);
 };
 
 export class CommandsManger {
@@ -457,7 +473,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.moveWorkTree, moveWorkTreeCmd),
             vscode.commands.registerCommand(Commands.lockWorkTree, lockWorkTreeCmd),
             vscode.commands.registerCommand(Commands.unlockWorkTree, unlockWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.switchToSelectWorkTree, switchToSelectWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.switchToSelectFolder, switchToSelectFolderCmd),
             vscode.commands.registerCommand(Commands.addWorkTreeFromBranch, addWorkTreeFromBranchCmd),
             vscode.commands.registerCommand(Commands.revealInSystemExplorer, revealInSystemExplorerCmd),
             vscode.commands.registerCommand(Commands.pruneWorkTree, pruneWorkTreeCmd),
@@ -471,6 +487,9 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.openWindowsTerminal, openWindowsTerminalCmd),
             vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
             vscode.commands.registerCommand(Commands.copyFilePath, copyFilePathCmd),
+            vscode.commands.registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),
+            vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
+            vscode.commands.registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
         );
     }
 }

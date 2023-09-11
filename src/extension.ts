@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/lib/events';
-import { WorkTreeDataProvider, GitFoldersDataProvider } from '@/lib/treeView';
+import { treeDataEvent, updateTreeDataEvent, collectEvent, updateRecentEvent } from '@/lib/events';
+import { WorkTreeDataProvider, GitFoldersDataProvider, RecentFoldersDataProvider } from '@/lib/treeView';
 import folderRoot from '@/lib/folderRoot';
 import { getWorkTreeList } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
@@ -18,17 +18,29 @@ export function activate(context: vscode.ExtensionContext) {
         throttle(() => treeDataEvent.fire(getWorkTreeList()), 300, { trailing: true, leading: true }),
     );
     CommandsManger.register(context);
-    const worktreeView = vscode.window.createTreeView('git-worktree-manager-list', {
+    const worktreeView = vscode.window.createTreeView(WorkTreeDataProvider.id, {
         treeDataProvider: new WorkTreeDataProvider(context),
         showCollapseAll: false,
     });
-    const folderView = vscode.window.createTreeView('git-worktree-manager-folders', {
+    const folderView = vscode.window.createTreeView(GitFoldersDataProvider.id, {
         treeDataProvider: new GitFoldersDataProvider(context),
         showCollapseAll: true,
     });
+    const recentFolderView = vscode.window.createTreeView(RecentFoldersDataProvider.id, {
+        treeDataProvider: new RecentFoldersDataProvider(context),
+    });
+    recentFolderView.onDidChangeVisibility(
+        throttle(
+            (event: vscode.TreeViewVisibilityChangeEvent) => {
+                event.visible && updateRecentEvent.fire();
+            },
+            60,
+            { leading: false, trailing: true },
+        ),
+    );
     setupGitEvents(context);
     collectEvent(context);
-    context.subscriptions.push(folderRoot, worktreeView, folderView, updateHandler);
+    context.subscriptions.push(folderRoot, worktreeView, folderView, recentFolderView, updateHandler);
 }
 
 export function deactivate() {}

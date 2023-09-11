@@ -39,8 +39,8 @@
         "title": "%cmd.switchWorkTree%"
       },
       {
-        "command": "git-worktree-manager.switchToSelectWorkTree",
-        "title": "%cmd.switchToSelectWorkTree%",
+        "command": "git-worktree-manager.switchToSelectFolder",
+        "title": "%cmd.switchToSelectFolder%",
         "icon": "$(arrow-right)"
       },
       {
@@ -51,6 +51,11 @@
       {
         "command": "git-worktree-manager.refreshGitFolder",
         "title": "%cmd.refreshGitFolder%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "git-worktree-manager.refreshRecentFolder",
+        "title": "%cmd.refreshFolder%",
         "icon": "$(refresh)"
       },
       {
@@ -125,6 +130,16 @@
       {
         "command": "git-worktree-manager.copyFilePath",
         "title": "%cmd.copyFilePath%"
+      },
+      {
+        "command": "git-worktree-manager.openRecent",
+        "title": "%cmd.openRecent%",
+        "icon": "$(search)"
+      },
+      {
+        "command": "git-worktree-manager.addToGitFolder",
+        "title": "%cmd.addToGitFolder%",
+        "icon": "$(search)"
       }
     ],
     "viewsContainers": {
@@ -147,6 +162,11 @@
           "id": "git-worktree-manager-folders",
           "name": "%view.git-worktree-manager-folders%",
           "visibility": "visible"
+        },
+        {
+          "id": "git-worktree-manager-recent",
+          "name": "%view.git-worktree-manager-recent%",
+          "visibility": "collapsed"
         },
         {
           "id": "git-worktree-manager-setting",
@@ -203,17 +223,27 @@
           "command": "git-worktree-manager.refreshGitFolder",
           "when": "view === git-worktree-manager-folders",
           "group": "navigation@1"
+        },
+        {
+          "command": "git-worktree-manager.refreshRecentFolder",
+          "when": "view === git-worktree-manager-recent",
+          "group": "navigation@2"
+        },
+        {
+          "command": "git-worktree-manager.openRecent",
+          "when": "view === git-worktree-manager-recent",
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
         {
           "command": "git-worktree-manager.openTerminal",
-          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
           "group": "terminal@2"
         },
         {
           "command": "git-worktree-manager.openWindowsTerminal",
-          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
           "group": "terminal@1"
         },
         {
@@ -232,7 +262,7 @@
           "group": "file-action@0"
         },
         {
-          "command": "git-worktree-manager.switchToSelectWorkTree",
+          "command": "git-worktree-manager.switchToSelectFolder",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "inline@100"
         },
@@ -275,11 +305,31 @@
           "command": "git-worktree-manager.copyFilePath",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
           "group": "workspace"
+        },
+        {
+          "command": "git-worktree-manager.addToWorkspace",
+          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "group": "workspace"
+        },
+        {
+          "command": "git-worktree-manager.copyFilePath",
+          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "group": "workspace"
+        },
+        {
+          "command": "git-worktree-manager.addToGitFolder",
+          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "group": "workspace"
+        },
+        {
+          "command": "git-worktree-manager.switchToSelectFolder",
+          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "group": "inline@100"
         }
       ],
       "commandPalette": [
         {
-          "command": "git-worktree-manager.switchToSelectWorkTree",
+          "command": "git-worktree-manager.switchToSelectFolder",
           "when": "false",
           "icon": "$(arrow-right)"
         },
@@ -290,6 +340,11 @@
         },
         {
           "command": "git-worktree-manager.refreshGitFolder",
+          "when": "false",
+          "icon": "$(refresh)"
+        },
+        {
+          "command": "git-worktree-manager.refreshRecentFolder",
           "when": "false",
           "icon": "$(refresh)"
         },
@@ -358,6 +413,10 @@
         },
         {
           "command": "git-worktree-manager.copyFilePath",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.addToGitFolder",
           "when": "false"
         }
       ]
