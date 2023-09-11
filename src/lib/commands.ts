@@ -402,6 +402,14 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) 
         return;
     }
     let cmdText = cmdList[0];
+    let cancelToken = new vscode.CancellationTokenSource();
+    let disposable = vscode.window.onDidCloseTerminal(async (t) => {
+        let [pid, currentPid] = await Promise.all([t.processId, terminal.processId]);
+        if (pid === currentPid) {
+            cancelToken.cancel();
+            disposable.dispose();
+        }
+    });
     if (cmdList.length > 1) {
         const items: CmdItem[] = cmdList.map((text) => {
             return {
@@ -420,11 +428,15 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) 
                 use: 'close',
             },
         );
-        let item = await await vscode.window.showQuickPick(items, {
-            title: localize('msg.modal.title.selectCmd'),
-            placeHolder: localize('msg.modal.placeholder.selectCmd'),
-            canPickMany: false,
-        });
+        let item = await vscode.window.showQuickPick(
+            items,
+            {
+                title: localize('msg.modal.title.selectCmd'),
+                placeHolder: localize('msg.modal.placeholder.selectCmd'),
+                canPickMany: false,
+            },
+            cancelToken.token,
+        );
         cmdText = item && item.use !== 'close' ? item.label : '';
     }
     // FIXME delay for prevent terminal dirty data
