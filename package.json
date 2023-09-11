@@ -3,7 +3,7 @@
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
   "description": "Switch git worktree easily🚀. 快速切换git工作树",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.60.0"
   },

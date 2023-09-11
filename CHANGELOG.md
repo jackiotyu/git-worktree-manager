@@ -1,3 +1,9 @@
+## [0.0.9] 2023-09-11
+
+### Change
+
+- Add `recently opened folders` view
+
 ## [0.0.7] 2023-08-31
 
 ### Change
