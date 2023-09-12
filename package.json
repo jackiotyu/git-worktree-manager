@@ -258,7 +258,7 @@
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.gitFolderItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.gitFolderItem || viewItem == git-worktree-manager.folderItem",
           "group": "file-action@0"
         },
         {
