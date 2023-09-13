@@ -1,3 +1,9 @@
+## [0.1.1] 2023-09-13
+
+### Change
+
+- Switch any branch, use `git switch --ignore-other-worktrees`.
+
 ## [0.0.9] 2023-09-11
 
 ### Change
