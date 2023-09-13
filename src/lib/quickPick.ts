@@ -7,7 +7,7 @@ interface BranchForWorkTree extends vscode.QuickPickItem {
     hash?: string;
 }
 
-export const pickBranch = async () => {
+export const pickBranch = async (title: string = localize('msg.info.createWorkTree'), placeholder: string = localize('msg.placeholder.createWorkTree')) => {
     let resolve: (value?: any) => void = () => {};
     let reject: (value?: any) => void = () => {};
     let waiting = new Promise<BranchForWorkTree | void>((_resolve, _reject) => {
@@ -21,8 +21,8 @@ export const pickBranch = async () => {
         }
 
         const quickPick = vscode.window.createQuickPick();
-        quickPick.title = localize('msg.info.createWorkTree');
-        quickPick.placeholder = localize('msg.placeholder.createWorkTree');
+        quickPick.title = title;
+        quickPick.placeholder = placeholder;
         const branchItem: BranchForWorkTree[] = branchList
             .filter((i) => !i.worktreepath)
             .map((item) => {

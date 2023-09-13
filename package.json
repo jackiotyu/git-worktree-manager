@@ -140,6 +140,10 @@
         "command": "git-worktree-manager.addToGitFolder",
         "title": "%cmd.addToGitFolder%",
         "icon": "$(search)"
+      },
+      {
+        "command": "git-worktree-manager.checkoutBranch",
+        "title": "%cmd.checkoutBranch%"
       }
     ],
     "viewsContainers": {
@@ -247,11 +251,6 @@
           "group": "terminal@1"
         },
         {
-          "command": "git-worktree-manager.removeWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
-          "group": "worktree-delete"
-        },
-        {
           "command": "git-worktree-manager.addWorkTreeFromBranch",
           "when": "view === git-worktree-manager-list && viewItem == git-worktree-manager.branchItem",
           "group": "worktree-action"
@@ -267,16 +266,6 @@
           "group": "inline@100"
         },
         {
-          "command": "git-worktree-manager.repairWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
-          "group": "worktree-action"
-        },
-        {
-          "command": "git-worktree-manager.moveWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
-          "group": "worktree-action"
-        },
-        {
           "command": "git-worktree-manager.lockWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/",
           "group": "inline"
@@ -285,6 +274,11 @@
           "command": "git-worktree-manager.unlockWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/",
           "group": "inline"
+        },
+        {
+          "command": "git-worktree-manager.checkoutBranch",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "git-action"
         },
         {
           "command": "git-worktree-manager.renameGitFolder",
@@ -325,7 +319,29 @@
           "command": "git-worktree-manager.switchToSelectFolder",
           "when": "viewItem =~ /git-worktree-manager.folderItem/",
           "group": "inline@100"
+        },
+        {
+          "group": "worktree-action",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "submenu": "worktree-action"
         }
+      ],
+      "worktree-action": [
+          {
+            "command": "git-worktree-manager.repairWorkTree",
+            "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+            "group": "worktree-action"
+          },
+          {
+            "command": "git-worktree-manager.moveWorkTree",
+            "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+            "group": "worktree-action"
+          },
+          {
+            "command": "git-worktree-manager.removeWorkTree",
+            "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+            "group": "worktree-delete"
+          }
       ],
       "commandPalette": [
         {
@@ -418,9 +434,20 @@
         {
           "command": "git-worktree-manager.addToGitFolder",
           "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.checkoutBranch",
+          "when": "false"
         }
       ]
     },
+    "submenus": [
+      {
+        "icon": "$(source-control)",
+        "id": "worktree-action",
+        "label": "worktree操作"
+      }
+    ],
     "configuration": {
       "title": "%config.title%",
       "properties": {

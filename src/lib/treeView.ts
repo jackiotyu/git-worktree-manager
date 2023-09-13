@@ -170,27 +170,28 @@ export class FolderItem extends vscode.TreeItem {
 
 export class RecentFoldersDataProvider implements vscode.TreeDataProvider<FolderItem> {
     static id = 'git-worktree-manager-recent';
-    private data: RecentFolderConfig[] = [];
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
-        context.subscriptions.push(updateRecentEvent.event(this.refresh));
+        context.subscriptions.push(updateRecentEvent.event(throttle(this.refresh, 300)));
     }
     refresh = async () => {
-        let list = await getRecentFolders();
-        this.data = list.map((item) => {
-            return {
-                name: item.label || path.basename(item.folderUri.fsPath),
-                path: item.folderUri.fsPath,
-                uri: item.folderUri,
-            };
-        });
         this._onDidChangeTreeData.fire();
     };
     getChildren(element?: FolderItem | undefined): vscode.ProviderResult<FolderItem[]> {
-        return this.data.map((item) => {
-            return new FolderItem(item.name, vscode.TreeItemCollapsibleState.None, item);
-        });
+        return getRecentFolders().then((list) =>
+            list
+                .map<RecentFolderConfig>((item) => {
+                    return {
+                        name: item.label || path.basename(item.folderUri.fsPath),
+                        path: item.folderUri.fsPath,
+                        uri: item.folderUri,
+                    };
+                })
+                .map<FolderItem>((item) => {
+                    return new FolderItem(item.name, vscode.TreeItemCollapsibleState.None, item);
+                }),
+        );
     }
     getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;

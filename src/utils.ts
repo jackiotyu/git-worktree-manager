@@ -9,6 +9,7 @@ import 'dayjs/locale/zh-cn';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as util from 'util';
+import fs from 'fs/promises';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -134,7 +135,7 @@ export function parseOutput<T extends string>(output: string, keyList: T[]): Rec
 
 export function getBranchList<T extends string>(keys: T[]) {
     try {
-        let output = executeGitCommand(['branch', `--format=${formatQuery(keys)}`, '--sort=-worktreepath']);
+        let output = executeGitCommand(['branch', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
         return parseOutput(output, keys);
     } catch {
         return [];
@@ -202,6 +203,11 @@ export function checkGitValid(folderPath: string) {
     }
 }
 
+export const checkoutBranch = (cwd: string, branchName: string, ...args: string[]) => {
+    let list = [...args, branchName].filter(i => i);
+    return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
+};
+
 export const addToWorkspace = (path: string) => {
     vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
         uri: vscode.Uri.file(path),
@@ -212,4 +218,8 @@ export const addToWorkspace = (path: string) => {
 export const getRecentFolders = async () => {
     let data = await vscode.commands.executeCommand('_workbench.getRecentlyOpened') as IRecentlyOpened;
     return data.workspaces.filter(item => item.folderUri && item.folderUri.scheme === 'file');
+};
+
+export const checkExist = (path: string) => {
+    return fs.stat(path).then(() => true).catch(() => false);
 };

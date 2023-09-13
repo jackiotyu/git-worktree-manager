@@ -29,15 +29,6 @@ export function activate(context: vscode.ExtensionContext) {
     const recentFolderView = vscode.window.createTreeView(RecentFoldersDataProvider.id, {
         treeDataProvider: new RecentFoldersDataProvider(context),
     });
-    recentFolderView.onDidChangeVisibility(
-        throttle(
-            (event: vscode.TreeViewVisibilityChangeEvent) => {
-                event.visible && updateRecentEvent.fire();
-            },
-            60,
-            { leading: false, trailing: true },
-        ),
-    );
     setupGitEvents(context);
     collectEvent(context);
     context.subscriptions.push(folderRoot, worktreeView, folderView, recentFolderView, updateHandler);

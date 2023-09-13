@@ -12,8 +12,10 @@ import {
     lockWorkTree,
     pruneWorkTree,
     checkGitValid,
+    checkoutBranch,
     openWindowsTerminal,
     addToWorkspace,
+    checkExist,
 } from '@/utils';
 import { pickBranch } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -27,6 +29,15 @@ import path from 'path';
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
 }
+
+const checkFolderExist = async (path: string) => {
+    let exist = await checkExist(path);
+    if (!exist) {
+        vscode.window.showErrorMessage(localize('msg.error.folderNotExist'));
+        return false;
+    }
+    return true;
+};
 
 export const switchWorkTreeCmd = () => {
     let workTrees = getWorkTreeList();
@@ -149,7 +160,10 @@ const addWorkTreeFromBranchCmd = async (item: WorkTreeItem) => {
     });
 };
 
-const revealInSystemExplorerCmd = (item: WorkTreeItem | GitFolderItem) => {
+const revealInSystemExplorerCmd = async (item: WorkTreeItem | GitFolderItem) => {
+    if (!(await checkFolderExist(item.path))) {
+        return;
+    }
     vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 
@@ -270,6 +284,9 @@ function updateFolderConfig(value: FolderItemConfig[]) {
 }
 
 const addToGitFolder = async (folderPath: string) => {
+    if (!(await checkFolderExist(folderPath))) {
+        return;
+    }
     let existFolders = getFolderConfig();
     if (!(await checkGitValid(folderPath))) {
         return vscode.window.showErrorMessage(localize('msg.error.invalidGitFolder'));
@@ -388,6 +405,9 @@ const openWalkthroughsCmd = () => {
 };
 
 const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+    if (!(await checkFolderExist(item.path))) {
+        return;
+    }
     const terminal = vscode.window.createTerminal({
         cwd: item.path,
         name: item.name,
@@ -417,17 +437,6 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) 
                 iconPath: new vscode.ThemeIcon('terminal-bash'),
             };
         });
-        items.push(
-            {
-                label: '',
-                kind: vscode.QuickPickItemKind.Separator,
-            },
-            {
-                label: localize('close'),
-                iconPath: new vscode.ThemeIcon('close-all'),
-                use: 'close',
-            },
-        );
         let item = await vscode.window.showQuickPick(
             items,
             {
@@ -444,7 +453,10 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) 
     cmdText && terminal.sendText(cmdText, true);
 };
 
-const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+const openWindowsTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+    if (!(await checkFolderExist(item.path))) {
+        return;
+    }
     try {
         openWindowsTerminal(`${item.path}`);
     } catch (error) {
@@ -452,7 +464,10 @@ const openWindowsTerminalCmd = (item: WorkTreeItem | GitFolderItem | FolderItem)
     }
 };
 
-const addToWorkspaceCmd = (item: WorkTreeItem | FolderItem) => {
+const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
+    if (!(await checkFolderExist(item.path))) {
+        return;
+    }
     return addToWorkspace(item.path);
 };
 
@@ -472,6 +487,24 @@ const openRecentCmd = () => {
 
 const addToGitFolderCmd = (item: FolderItem) => {
     return addToGitFolder(item.path);
+};
+
+const checkoutBranchCmd = async (item: WorkTreeItem) => {
+    let branchItem = await pickBranch(localize('msg.info.checkoutBranch'), localize('msg.placeholder.checkoutBranch'));
+    if (!branchItem) {
+        return;
+    }
+
+    try {
+        const checkoutText = branchItem.branch || branchItem.hash || '';
+        const prefix = checkoutText === branchItem.hash ? '--detach' : '';
+        checkoutBranch(item.path, checkoutText, prefix);
+    } catch (error: any) {
+        if (!(error.message as string).startsWith('HEAD is now at')) {
+            vscode.window.showInformationMessage(localize('msg.fail.commonAction', 'checkout', error));
+        }
+    }
+    updateTreeDataEvent.fire();
 };
 
 export class CommandsManger {
@@ -502,6 +535,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),
             vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
             vscode.commands.registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
+            vscode.commands.registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
         );
     }
 }
