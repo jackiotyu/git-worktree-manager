@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getBranchList, formatTime } from '@/utils';
+import { getBranchList, getRemoteBranchList, getTagList, formatTime } from '@/utils';
 import localize from '@/localize';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
@@ -7,7 +7,10 @@ interface BranchForWorkTree extends vscode.QuickPickItem {
     hash?: string;
 }
 
-export const pickBranch = async (title: string = localize('msg.info.createWorkTree'), placeholder: string = localize('msg.placeholder.createWorkTree')) => {
+export const pickBranch = async (
+    title: string = localize('msg.info.createWorkTree'),
+    placeholder: string = localize('msg.placeholder.createWorkTree'),
+) => {
     let resolve: (value?: any) => void = () => {};
     let reject: (value?: any) => void = () => {};
     let waiting = new Promise<BranchForWorkTree | void>((_resolve, _reject) => {
@@ -19,11 +22,13 @@ export const pickBranch = async (title: string = localize('msg.info.createWorkTr
         if (!branchList) {
             return;
         }
+        const remoteBranchList = getRemoteBranchList(['refname:short', 'objectname:short']);
+        const tagList = getTagList(['refname:short', 'objectname:short']);
 
         const quickPick = vscode.window.createQuickPick();
         quickPick.title = title;
         quickPick.placeholder = placeholder;
-        const branchItem: BranchForWorkTree[] = branchList
+        const branchItems: BranchForWorkTree[] = branchList
             .filter((i) => !i.worktreepath)
             .map((item) => {
                 return {
@@ -37,7 +42,7 @@ export const pickBranch = async (title: string = localize('msg.info.createWorkTr
                 };
             });
         const defaultBranch = branchList.find((i) => i.HEAD === '*');
-        const defaultBranchItem: BranchForWorkTree[] = [
+        const defaultBranchItems: BranchForWorkTree[] = [
             {
                 label: `HEAD ${defaultBranch?.['objectname:short'] || ''}`,
                 description: localize('msg.pickItem.useCurrentBranch'),
@@ -49,23 +54,44 @@ export const pickBranch = async (title: string = localize('msg.info.createWorkTr
                 kind: vscode.QuickPickItemKind.Separator,
             },
             // worktree branch list
-            ...branchList.filter(i => i.worktreepath).map(item => {
-                return {
-                    label: item['refname:short'],
-                    description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
-                        item.authordate,
-                    )}`,
-                    iconPath: new vscode.ThemeIcon('source-control'),
-                    hash: item['objectname:short'],
-                    branch: item['refname:short'],
-                };
-            }),
+            ...branchList
+                .filter((i) => i.worktreepath)
+                .map((item) => {
+                    return {
+                        label: item['refname:short'],
+                        description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
+                            item.authordate,
+                        )}`,
+                        iconPath: new vscode.ThemeIcon('source-control'),
+                        hash: item['objectname:short'],
+                        branch: item['refname:short'],
+                    };
+                }),
             {
                 label: '',
                 kind: vscode.QuickPickItemKind.Separator,
             },
         ];
-        quickPick.items = [...defaultBranchItem, ...branchItem];
+
+        const remoteBranchItems: BranchForWorkTree[] = remoteBranchList.map((item) => {
+            return {
+                label: item['refname:short'],
+                iconPath: new vscode.ThemeIcon('cloud'),
+                description: item['objectname:short'],
+                hash: item['objectname:short'],
+            };
+        });
+
+        const tagItems: BranchForWorkTree[] = tagList.map((item) => {
+            return {
+                label: item['refname:short'],
+                iconPath: new vscode.ThemeIcon('tag'),
+                description: item['objectname:short'],
+                branch: item['objectname:short'],
+            };
+        });
+
+        quickPick.items = [...defaultBranchItems, ...branchItems, ...remoteBranchItems, ...tagItems];
         quickPick.canSelectMany = false;
         quickPick.onDidAccept(() => {
             quickPick.hide();

@@ -142,6 +142,24 @@ export function getBranchList<T extends string>(keys: T[]) {
     }
 }
 
+export function getRemoteBranchList<T extends string>(keys: T[]) {
+    try {
+        let output = executeGitCommand(['branch', '-r', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        return parseOutput(output, keys);
+    } catch {
+        return [];
+    }
+}
+
+export function getTagList<T extends string>(keys: T[]) {
+    try {
+        let output = executeGitCommand(['tag', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        return parseOutput(output, keys);
+    } catch {
+        return [];
+    }
+}
+
 export async function addWorkTree(path: string, branch: string, cwd?: string) {
     try {
         executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', path, branch]);
