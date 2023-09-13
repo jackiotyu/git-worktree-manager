@@ -87,7 +87,7 @@ export const pickBranch = async (
                 label: item['refname:short'],
                 iconPath: new vscode.ThemeIcon('tag'),
                 description: item['objectname:short'],
-                branch: item['objectname:short'],
+                hash: item['objectname:short'],
             };
         });
 
