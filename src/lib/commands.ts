@@ -25,6 +25,7 @@ import { WorkTreeItem, GitFolderItem, FolderItem } from '@/lib/treeView';
 import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
+import { Alert } from '@/lib/adaptor/window';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -33,7 +34,7 @@ interface CmdItem extends vscode.QuickPickItem {
 const checkFolderExist = async (path: string) => {
     let exist = await checkExist(path);
     if (!exist) {
-        vscode.window.showErrorMessage(localize('msg.error.folderNotExist'));
+        Alert.showErrorMessage(localize('msg.error.folderNotExist'));
         return false;
     }
     return true;
@@ -132,9 +133,9 @@ const removeWorkTreeCmd = async (item: WorkTreeItem) => {
             return;
         }
         removeWorkTree(item.path, item.parent?.path);
-        vscode.window.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
+        Alert.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.deleteWorkTree', String(error)));
+        Alert.showErrorMessage(localize('msg.fail.deleteWorkTree', String(error)));
     }
     updateTreeDataEvent.fire();
 };
@@ -184,9 +185,9 @@ const commonWorkTreeCmd = (path: string, cmd: Commands, cwd?: string) => {
                 cmdName = localize('repair');
                 break;
         }
-        vscode.window.showInformationMessage(localize('msg.success.commonAction', cmdName));
+        Alert.showInformationMessage(localize('msg.success.commonAction', cmdName));
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.commonAction', cmdName, util.inspect(error, false, 1, true)));
+        Alert.showErrorMessage(localize('msg.fail.commonAction', cmdName, util.inspect(error, false, 1, true)));
     }
     updateTreeDataEvent.fire();
 };
@@ -218,9 +219,9 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
         }
         let folderUri = uriList[0];
         moveWorkTree(item.path, folderUri.fsPath, item.parent?.path);
-        vscode.window.showInformationMessage(localize('msg.success.moveWorkTree'));
+        Alert.showInformationMessage(localize('msg.success.moveWorkTree'));
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.moveWorkTree', String(error)));
+        Alert.showErrorMessage(localize('msg.fail.moveWorkTree', String(error)));
     }
     updateTreeDataEvent.fire();
 };
@@ -231,7 +232,7 @@ const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
             forceNewWindow: false,
         });
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.switchWorkTree', String(error)));
+        Alert.showErrorMessage(localize('msg.fail.switchWorkTree', String(error)));
     }
 };
 
@@ -242,7 +243,7 @@ const pruneWorkTreeCmd = async () => {
             return;
         }
         let ok = localize('ok');
-        let confirm = await vscode.window.showInformationMessage(
+        let confirm = await Alert.showInformationMessage(
             localize('msg.modal.title.pruneWorkTree'),
             {
                 detail: output.join('  \n'),
@@ -254,9 +255,9 @@ const pruneWorkTreeCmd = async () => {
             return;
         }
         pruneWorkTree();
-        vscode.window.showInformationMessage(localize('msg.success.pruneWorkTree'));
+        Alert.showInformationMessage(localize('msg.success.pruneWorkTree'));
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.pruneWorkTree'));
+        Alert.showErrorMessage(localize('msg.fail.pruneWorkTree'));
     }
     updateTreeDataEvent.fire();
 };
@@ -289,7 +290,7 @@ const addToGitFolder = async (folderPath: string) => {
     }
     let existFolders = getFolderConfig();
     if (!(await checkGitValid(folderPath))) {
-        return vscode.window.showErrorMessage(localize('msg.error.invalidGitFolder'));
+        return Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
     }
     const worktreeList = getWorkTreeList(folderPath);
     const mainFolder = worktreeList.find((i) => i.isMain);
@@ -304,7 +305,7 @@ const addToGitFolder = async (folderPath: string) => {
         }
     }
     if (existFolders.some((i) => i.path === folderPath)) {
-        return vscode.window.showErrorMessage(localize('msg.error.gitFolderExistInSetting'));
+        return Alert.showErrorMessage(localize('msg.error.gitFolderExistInSetting'));
     }
     let folderName = await vscode.window.showInputBox({
         title: localize('msg.modal.title.inputGitFolderName'),
@@ -321,7 +322,7 @@ const addToGitFolder = async (folderPath: string) => {
     }
     existFolders.push({ name: folderName, path: folderPath });
     await updateFolderConfig(existFolders);
-    vscode.window.showInformationMessage(localize('msg.success.save'));
+    Alert.showInformationMessage(localize('msg.success.save'));
 };
 
 const addGitFolderCmd = async () => {
@@ -364,7 +365,7 @@ const removeGitFolderCmd = async (item: GitFolderItem) => {
     }
     folders = folders.filter((f) => f.path !== path);
     await updateFolderConfig(folders);
-    vscode.window.showInformationMessage(localize('msg.success.remove'));
+    Alert.showInformationMessage(localize('msg.success.remove'));
 };
 
 const renameGitFolderCmd = async (item: GitFolderItem) => {
@@ -392,7 +393,7 @@ const renameGitFolderCmd = async (item: GitFolderItem) => {
     if (~index) {
         allFolders[index].name = name;
         await updateFolderConfig(allFolders);
-        vscode.window.showInformationMessage(localize('msg.success.save'));
+        Alert.showInformationMessage(localize('msg.success.save'));
     }
 };
 
@@ -460,7 +461,7 @@ const openWindowsTerminalCmd = async (item: WorkTreeItem | GitFolderItem | Folde
     try {
         openWindowsTerminal(`${item.path}`);
     } catch (error) {
-        vscode.window.showErrorMessage(localize('msg.fail.invokeWindowsTerminal', String(error)));
+        Alert.showErrorMessage(localize('msg.fail.invokeWindowsTerminal', String(error)));
     }
 };
 
@@ -473,7 +474,7 @@ const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
 
 const copyFilePathCmd = (item: WorkTreeItem | GitFolderItem | FolderItem) => {
     vscode.env.clipboard.writeText(item.path).then(() => {
-        vscode.window.showInformationMessage(localize('msg.success.copy', item.path));
+        Alert.showInformationMessage(localize('msg.success.copy', item.path));
     });
 };
 
@@ -501,7 +502,7 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
         checkoutBranch(item.path, checkoutText, prefix);
     } catch (error: any) {
         if (!(error.message as string).startsWith('HEAD is now at')) {
-            vscode.window.showInformationMessage(localize('msg.fail.commonAction', 'checkout', error));
+            Alert.showInformationMessage(localize('msg.fail.commonAction', 'checkout', error));
         }
     }
     updateTreeDataEvent.fire();

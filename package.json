@@ -465,6 +465,17 @@
             "type": "string"
           },
           "description": "%config.terminalCmdList.description%"
+        },
+        "git-worktree-manager.alertLevel": {
+          "scope": "application",
+          "enum": ["info", "warn", "error"],
+          "enumDescriptions": [
+            "%config.alertLevel.enum.info%",
+            "%config.alertLevel.enum.warn%",
+            "%config.alertLevel.enum.error%"
+          ],
+          "default": "info",
+          "description": "%config.alertLevel.description%"
         }
       }
     }

@@ -1,27 +1,21 @@
 import { window, ExtensionContext, workspace } from 'vscode';
 import { APP_NAME, AlertLevel } from '@/constants';
 
-abstract class AlertRequire {
-  static showErrorMessage: typeof window.showErrorMessage;
-  static showInformationMessage: typeof window.showInformationMessage;
-  static showWarningMessage: typeof window.showWarningMessage;
-}
-
 enum LevelNum {
     'info' = 1,
     'warn' = 2,
     'error' = 3,
 }
 
-export class Alert implements AlertRequire {
+export class Alert {
     static level: AlertLevel = 'info';
     static init(context: ExtensionContext) {
         context.subscriptions.push(
-            workspace.onDidChangeConfiguration(event => {
-                if(event.affectsConfiguration(APP_NAME)) {
+            workspace.onDidChangeConfiguration((event) => {
+                if (event.affectsConfiguration(APP_NAME)) {
                     this.updateLevel();
                 }
-            })
+            }),
         );
         this.updateLevel();
     }
@@ -31,18 +25,23 @@ export class Alert implements AlertRequire {
     static get levelNum() {
         return LevelNum[this.level];
     }
-    static showErrorMessage(...args: Parameters<typeof window.showErrorMessage>) {
-        return window.showErrorMessage(...args);
-    }
-    static showInformationMessage(...args: Parameters<typeof window.showInformationMessage>) {
-        if(this.levelNum > LevelNum.info) {return;};
-        return window.showInformationMessage(...args);
-    }
-    static showWarningMessage(...args: Parameters<typeof window.showWarningMessage>) {
-        if(this.levelNum > LevelNum.warn) {return;};
-        return window.showWarningMessage(...args);
-    }
+    static showErrorMessage: typeof window.showErrorMessage = (message: any, options: any, ...items: any[]) => {
+        return window.showErrorMessage(message, options, ...items);
+    };
+    static showInformationMessage: typeof window.showInformationMessage = (
+        message: any,
+        options: any,
+        ...items: any[]
+    ) => {
+        if (this.levelNum > LevelNum.info) {
+            return Promise.resolve();
+        }
+        return window.showInformationMessage(message, options, ...items);
+    };
+    static showWarningMessage: typeof window.showWarningMessage = (message: any, options: any, ...items: any[]) => {
+        if (this.levelNum > LevelNum.warn) {
+            return Promise.resolve();
+        }
+        return window.showWarningMessage(message, options, ...items);
+    };
 }
-
-export default Alert;
-

@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as util from 'util';
 import fs from 'fs/promises';
+import { Alert } from '@/lib/adaptor/window';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -165,7 +166,7 @@ export async function addWorkTree(path: string, branch: string, cwd?: string) {
         executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', path, branch]);
         return true;
     } catch (error: any) {
-        vscode.window.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
+        Alert.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
         return false;
     }
 }
