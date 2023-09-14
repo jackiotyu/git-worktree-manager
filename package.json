@@ -120,8 +120,8 @@
         "title": "%cmd.openTerminal%"
       },
       {
-        "command": "git-worktree-manager.openWindowsTerminal",
-        "title": "%cmd.openWindowsTerminal%"
+        "command": "git-worktree-manager.openExternalTerminal",
+        "title": "%cmd.openExternalTerminal%"
       },
       {
         "command": "git-worktree-manager.addToWorkspace",
@@ -246,7 +246,7 @@
           "group": "terminal@2"
         },
         {
-          "command": "git-worktree-manager.openWindowsTerminal",
+          "command": "git-worktree-manager.openExternalTerminal",
           "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
           "group": "terminal@1"
         },
@@ -424,7 +424,7 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.openWindowsTerminal",
+          "command": "git-worktree-manager.openExternalTerminal",
           "when": "false"
         },
         {

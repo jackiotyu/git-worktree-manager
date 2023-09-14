@@ -13,7 +13,7 @@ import {
     pruneWorkTree,
     checkGitValid,
     checkoutBranch,
-    openWindowsTerminal,
+    openExternalTerminal,
     addToWorkspace,
     checkExist,
 } from '@/utils';
@@ -454,14 +454,14 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) 
     cmdText && terminal.sendText(cmdText, true);
 };
 
-const openWindowsTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+const openExternalTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
     if (!(await checkFolderExist(item.path))) {
         return;
     }
     try {
-        openWindowsTerminal(`${item.path}`);
+        openExternalTerminal(`${item.path}`);
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.invokeWindowsTerminal', String(error)));
+        Alert.showErrorMessage(localize('msg.fail.invokeExternalTerminal', String(error)));
     }
 };
 
@@ -530,7 +530,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.renameGitFolder, renameGitFolderCmd),
             vscode.commands.registerCommand(Commands.openWalkthroughs, openWalkthroughsCmd),
             vscode.commands.registerCommand(Commands.openTerminal, openTerminalCmd),
-            vscode.commands.registerCommand(Commands.openWindowsTerminal, openWindowsTerminalCmd),
+            vscode.commands.registerCommand(Commands.openExternalTerminal, openExternalTerminalCmd),
             vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
             vscode.commands.registerCommand(Commands.copyFilePath, copyFilePathCmd),
             vscode.commands.registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),

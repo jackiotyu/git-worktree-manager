@@ -22,7 +22,7 @@ export enum Commands {
     refreshGitFolder = 'git-worktree-manager.refreshGitFolder',
     openWalkthroughs = 'git-worktree-manager.openWalkthroughs',
     openTerminal = 'git-worktree-manager.openTerminal',
-    openWindowsTerminal = 'git-worktree-manager.openWindowsTerminal',
+    openExternalTerminal = 'git-worktree-manager.openExternalTerminal',
     addToWorkspace = 'git-worktree-manager.addToWorkspace',
     copyFilePath = 'git-worktree-manager.copyFilePath',
     refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',

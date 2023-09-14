@@ -31,19 +31,8 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => string = (cwd, ar
     return out;
 };
 
-export const openWindowsTerminal = (path: string) => {
-    console.log('[open-windows-terminal] ', 'wt', ['-d', path].join(' '));
-    const proc = cp.spawnSync('wt', ['-d', path], {
-        cwd: folderRoot.uri?.fsPath,
-    });
-    const out = proc.stdout?.toString();
-    const err = proc.stderr?.toString();
-    console.log('[exec open-windows-terminal stderr] ', err);
-    console.log('[exec open-windows-terminal stdout] ', out);
-    if (!out && err) {
-        throw Error(err);
-    }
-    return out;
+export const openExternalTerminal = (path: string) => {
+    return vscode.commands.executeCommand('openInTerminal', vscode.Uri.file(path));
 };
 
 const executeGitCommand: (args?: string[]) =>string = (args?: string[]) => {
@@ -75,6 +64,7 @@ export function getWorkTreeList(root?: string) {
     try {
         const output = executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']);
         const mainFolder = executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']).replace('/.git', '');
+        console.log(output, 'output');
         let list = output
             .split('\n')
             .reduce<string[][]>(
