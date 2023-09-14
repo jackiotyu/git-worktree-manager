@@ -18,16 +18,34 @@ export const pickBranch = async (
         reject = _reject;
     });
     try {
-        const branchList = getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD']);
-        if (!branchList) {
-            return;
-        }
-        const remoteBranchList = getRemoteBranchList(['refname:short', 'objectname:short']);
-        const tagList = getTagList(['refname:short', 'objectname:short']);
-
         const quickPick = vscode.window.createQuickPick();
         quickPick.title = title;
         quickPick.placeholder = placeholder;
+        quickPick.canSelectMany = false;
+        quickPick.onDidAccept(() => {
+            resolve(quickPick.selectedItems[0]);
+            quickPick.hide();
+        });
+        quickPick.onDidHide(() => {
+            resolve();
+            quickPick.dispose();
+        });
+        quickPick.show();
+        quickPick.busy = true;
+
+        const [branchList, remoteBranchList, tagList] = await Promise.resolve().then(() => {
+            return Promise.all([
+                getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD']),
+                getRemoteBranchList(['refname:short', 'objectname:short']),
+                getTagList(['refname:short', 'objectname:short']),
+            ]);
+        });
+
+        if (!branchList) {
+            quickPick.hide();
+            return;
+        }
+
         const branchItems: BranchForWorkTree[] = branchList
             .filter((i) => !i.worktreepath)
             .map((item) => {
@@ -92,13 +110,9 @@ export const pickBranch = async (
         });
 
         quickPick.items = [...defaultBranchItems, ...branchItems, ...remoteBranchItems, ...tagItems];
-        quickPick.canSelectMany = false;
-        quickPick.onDidAccept(() => {
-            quickPick.hide();
-            resolve(quickPick.selectedItems[0]);
-        });
-        quickPick.onDidHide(() => resolve());
-        quickPick.show();
+
+        quickPick.busy = false;
+
         return await waiting;
     } catch (error) {
         console.log('pickBranch error ', error);
