@@ -474,7 +474,7 @@
             "%config.alertLevel.enum.warn%",
             "%config.alertLevel.enum.error%"
           ],
-          "default": "info",
+          "default": "error",
           "description": "%config.alertLevel.description%"
         }
       }

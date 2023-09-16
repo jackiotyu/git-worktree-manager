@@ -8,7 +8,7 @@ enum LevelNum {
 }
 
 export class Alert {
-    static level: AlertLevel = 'info';
+    static level: AlertLevel = 'error';
     static init(context: ExtensionContext) {
         context.subscriptions.push(
             workspace.onDidChangeConfiguration((event) => {
@@ -20,7 +20,7 @@ export class Alert {
         this.updateLevel();
     }
     static updateLevel() {
-        this.level = workspace.getConfiguration(APP_NAME).get<AlertLevel>('alertLevel') || 'info';
+        this.level = workspace.getConfiguration(APP_NAME).get<AlertLevel>('alertLevel') || 'error';
     }
     static get levelNum() {
         return LevelNum[this.level];
