@@ -11,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/jackiotyu/git-worktree-manager">
-    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/icon.png" alt="Logo" width="80" height="80">
+    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Git Worktree Manager</h3>
@@ -35,7 +35,7 @@
 <details>
   <summary>How Git Worktree Works. git worktree 工作原理</summary>
   <section>
-    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/how-worktree-works.png" height="500" width="800" />
+    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/how-worktree-works.png" height="500" width="800" />
     <p>Git worktree is a feature of the Git version control system that allows you to work on multiple branches or commits within the same repository.
 
 With git worktree, you can create an additional working directory that can be linked to different branches or commits of the original repository. The benefit of this is that you can work on multiple tasks without switching branches, making it convenient for developers to handle different versions of the code.
@@ -99,8 +99,8 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
 在VSCode[插件市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
-1. Find the `Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/icon.png"> panel in activitybar.
-在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/icon.png"> 面板
+1. Find the `Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/icon.png"> panel in activitybar.
+在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/icon.png"> 面板
 1. Performing various quick operations of git worktree on the panel
 在面板上执行各种 git worktree 快速操作
 
@@ -119,7 +119,7 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 
 1. Worktree manager. 管理 worktree
 
-![create-worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/create-worktree.png)
+![create-worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/create-worktree.png)
 - Click the `Add worktree` icon, then following the tips to make a new worktree.
 点击 `添加 worktree` 图标，跟随提示进行操作，添加新的 worktree。
 - It provides some useful command in context menu. You can open a new window for a worktree when click worktree item.
@@ -128,7 +128,7 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
 
 2. Git repository manger.  git 仓库管理
-![save-repository](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/save-repository.png)
+![save-repository](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/save-repository.png)
 - Click the `Add git repository` icon, then following the tips to save a git repository.
 - 点击 `添加 git 仓库` 图标，跟随提示进行操作，添加一个 git 仓库。
 - Also provider some quick operation in context menu and inline icon.
@@ -137,10 +137,10 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 - 每个仓库都会列出所有 worktree。
 
 3. Setting. 设置
-![open-setting](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/open-setting.png)
+![open-setting](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/open-setting.png)
 - Open setting quickly by click this button.
 - 点击这个按钮快速打开设置
-![setting-detail](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/setting-detail.png)
+![setting-detail](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/setting-detail.png)
 - Managing settings, for example, providing a terminal command that can be quickly executed in the right-click context menu of the worktree item, called "Open VSCode Integrated Terminal" command.
 - 管理设置，例如提供终端命令，可以在点击 worktree 项的右键上下文菜单`打开VSCode内置终端`命令中快速运行该命令。
 
@@ -215,4 +215,4 @@ Project Link: [https://github.com/jackiotyu/git-worktree-manager](https://github
 [issues-url]: https://github.com/jackiotyu/git-worktree-manager/issues
 [license-shield]: https://img.shields.io/github/license/jackiotyu/git-worktree-manager.svg?style=for-the-badge
 [license-url]: https://github.com/jackiotyu/git-worktree-manager/blob/master/LICENSE
-[product-screenshot]: images/overview.png
+[product-screenshot]: https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.2/images/overview.png
