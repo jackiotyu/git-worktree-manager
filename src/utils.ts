@@ -124,27 +124,27 @@ export function parseOutput<T extends string>(output: string, keyList: T[]): Rec
     return workTrees;
 }
 
-export function getBranchList<T extends string>(keys: T[]) {
+export function getBranchList<T extends string>(keys: T[], cwd?: string) {
     try {
-        let output = executeGitCommand(['branch', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        let output = executeGitCommandAuto(cwd, ['branch', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
         return parseOutput(output, keys);
     } catch {
         return [];
     }
 }
 
-export function getRemoteBranchList<T extends string>(keys: T[]) {
+export function getRemoteBranchList<T extends string>(keys: T[], cwd?: string) {
     try {
-        let output = executeGitCommand(['branch', '-r', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        let output = executeGitCommandAuto(cwd, ['branch', '-r', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
         return parseOutput(output, keys);
     } catch {
         return [];
     }
 }
 
-export function getTagList<T extends string>(keys: T[]) {
+export function getTagList<T extends string>(keys: T[], cwd?: string) {
     try {
-        let output = executeGitCommand(['tag', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        let output = executeGitCommandAuto(cwd, ['tag', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
         return parseOutput(output, keys);
     } catch {
         return [];

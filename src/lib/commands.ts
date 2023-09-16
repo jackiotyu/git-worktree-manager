@@ -491,7 +491,7 @@ const addToGitFolderCmd = (item: FolderItem) => {
 };
 
 const checkoutBranchCmd = async (item: WorkTreeItem) => {
-    let branchItem = await pickBranch(localize('msg.info.checkoutBranch'), localize('msg.placeholder.checkoutBranch'));
+    let branchItem = await pickBranch(localize('msg.info.checkoutBranch'), localize('msg.placeholder.checkoutBranch'), item.path);
     if (!branchItem) {
         return;
     }
