@@ -29,6 +29,8 @@ export enum Commands {
     openRecent = 'git-worktree-manager.openRecent',
     addToGitFolder = 'git-worktree-manager.addToGitFolder',
     checkoutBranch = 'git-worktree-manager.checkoutBranch',
+    gitFolderViewAsTree = 'git-worktree-manager.gitFolderViewAsTree',
+    gitFolderViewAsList = 'git-worktree-manager.gitFolderViewAsList',
 }
 
 export enum TreeItemKind {

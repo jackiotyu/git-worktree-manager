@@ -17,9 +17,11 @@
     "git worktree",
     "manager",
     "switch branch",
+    "switch folder",
     "run command",
     "git 工作树",
     "切换分支",
+    "切换文件夹",
     "运行命令"
   ],
   "repository": {
@@ -144,6 +146,18 @@
       {
         "command": "git-worktree-manager.checkoutBranch",
         "title": "%cmd.checkoutBranch%"
+      },
+      {
+        "command": "git-worktree-manager.gitFolderViewAsTree",
+        "title": "%cmd.viewAsList%",
+        "icon": "$(list-tree)",
+        "enablement": "git-worktree-manager.gitFolderViewAsTree"
+      },
+      {
+        "command": "git-worktree-manager.gitFolderViewAsList",
+        "title": "%cmd.viewAsTree%",
+          "icon": "$(list-flat)",
+          "enablement": "!git-worktree-manager.gitFolderViewAsTree"
       }
     ],
     "viewsContainers": {
@@ -234,9 +248,19 @@
           "group": "navigation@1"
         },
         {
+          "command": "git-worktree-manager.gitFolderViewAsTree",
+          "when": "view === git-worktree-manager-folders && git-worktree-manager.gitFolderViewAsTree",
+          "group": "navigation@2"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderViewAsList",
+          "when": "view === git-worktree-manager-folders && !git-worktree-manager.gitFolderViewAsTree",
+          "group": "navigation@2"
+        },
+        {
           "command": "git-worktree-manager.refreshGitFolder",
           "when": "view === git-worktree-manager-folders",
-          "group": "navigation@1"
+          "group": "navigation@3"
         },
         {
           "command": "git-worktree-manager.refreshRecentFolder",
@@ -381,8 +405,15 @@
         },
         {
           "command": "git-worktree-manager.addGitFolder",
-          "when": "false",
-          "icon": "$(add)"
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderViewAsTree",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderViewAsList",
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.removeWorkTree",

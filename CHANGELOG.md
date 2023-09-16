@@ -1,3 +1,11 @@
+## [0.1.3] 2023-09-16
+
+### Change
+
+- Fixed switch branch on other repository.
+- Update README.
+- Add `View as List` for repository manage.
+
 ## [0.1.2] 2023-09-15
 
 ### Change

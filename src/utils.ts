@@ -64,7 +64,6 @@ export function getWorkTreeList(root?: string) {
     try {
         const output = executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']);
         const mainFolder = executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']).replace('/.git', '');
-        console.log(output, 'output');
         let list = output
             .split('\n')
             .reduce<string[][]>(

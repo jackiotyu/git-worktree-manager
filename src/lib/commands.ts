@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { updateTreeDataEvent, updateFolderEvent, updateRecentEvent } from '@/lib/events';
+import { updateTreeDataEvent, updateFolderEvent, updateRecentEvent, toggleGitFolderViewAsEvent } from '@/lib/events';
 import localize from '@/localize';
 import {
     getFolderIcon,
@@ -34,7 +34,7 @@ interface CmdItem extends vscode.QuickPickItem {
 const checkFolderExist = async (path: string) => {
     let exist = await checkExist(path);
     if (!exist) {
-        Alert.showErrorMessage(localize('msg.error.folderNotExist'));
+        Alert.showErrorMessage(localize('msg.error.folderNotExist'), { modal: true });
         return false;
     }
     return true;
@@ -508,6 +508,10 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
     updateTreeDataEvent.fire();
 };
 
+const toggleGitFolderViewAs = (asTree: boolean) => {
+    toggleGitFolderViewAsEvent.fire(asTree);
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -537,6 +541,12 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
             vscode.commands.registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
             vscode.commands.registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
+            vscode.commands.registerCommand(Commands.gitFolderViewAsTree, () => {
+                toggleGitFolderViewAs(false);
+            }),
+            vscode.commands.registerCommand(Commands.gitFolderViewAsList, () => {
+                toggleGitFolderViewAs(true);
+            }),
         );
     }
 }

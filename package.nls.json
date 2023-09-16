@@ -23,6 +23,8 @@
     "cmd.openRecent": "Open recently used folders and files",
     "cmd.addToGitFolder": "Save git repository",
     "cmd.checkoutBranch": "Checkout branch",
+    "cmd.viewAsTree": "View as Tree",
+    "cmd.viewAsList": "View as List",
     "sizeBar.git-worktree-manager": "worktree manager",
     "view.git-worktree-manager-list": "worktree list",
     "view.git-worktree-manager-folders": "git repository manage",

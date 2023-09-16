@@ -5,6 +5,7 @@ import {
     updateFolderEvent,
     globalStateEvent,
     updateRecentEvent,
+    toggleGitFolderViewAsEvent,
 } from '@/lib/events';
 import { WorkTreeDetail } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
@@ -12,6 +13,7 @@ import { TreeItemKind, FolderItemConfig, APP_NAME, RecentFolderConfig } from '@/
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 import throttle from 'lodash/throttle';
+import debounce from 'lodash/debounce';
 import path from 'path';
 
 export class WorkTreeItem extends vscode.TreeItem {
@@ -115,6 +117,7 @@ type CommonWorkTreeItem = GitFolderItem | WorkTreeItem;
 export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorkTreeItem> {
     static id = 'git-worktree-manager-folders';
     private data: FolderItemConfig[] = [];
+    private viewAsTree: boolean;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
@@ -122,8 +125,17 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             globalStateEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
             updateTreeDataEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
             updateFolderEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
+            toggleGitFolderViewAsEvent.event(debounce((viewAsTree: boolean)=> {
+                this.viewAsTree = viewAsTree;
+                vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
+                GlobalState.update('gitFolderViewAsTree', viewAsTree);
+                this.refresh();
+            }, 300))
         );
         this.refresh();
+        let viewAsTree = GlobalState.get('gitFolderViewAsTree', true);
+        vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
+        this.viewAsTree = viewAsTree;
     }
 
     refresh() {
@@ -134,6 +146,16 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     getChildren(element?: CommonWorkTreeItem | undefined): vscode.ProviderResult<CommonWorkTreeItem[]> {
         if (!element) {
+            if(!this.viewAsTree) {
+                let list = this.data.map(item => {
+                    return getWorkTreeList(item.path);
+                }).map(list => {
+                    return list.map(row => {
+                       return new WorkTreeItem(row, vscode.TreeItemCollapsibleState.None, element);
+                    });
+                });
+                return list.flat();
+            }
             return this.data.map((item) => {
                 return new GitFolderItem(item, vscode.TreeItemCollapsibleState.Collapsed);
             });

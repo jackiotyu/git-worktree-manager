@@ -21,12 +21,13 @@ export class GlobalState {
             },
         });
     }
-
+    static get(key: 'gitFolderViewAsTree', defaultValue: boolean): boolean;
     static get(key: 'gitFolders', defaultValue: FolderItemConfig[]): FolderItemConfig[];
     static get<T>(key: string, defaultValue: T): T {
         return this.context.globalState.get<T>(key, defaultValue);
     }
 
+    static update(key: 'gitFolderViewAsTree', value: boolean): Thenable<void>;
     static update(key: 'gitFolders', value: FolderItemConfig[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.context.globalState.update(key, value).then(() => {
