@@ -1,6 +1,6 @@
 {
     "cmd.switchWorkTree": "Switch worktree",
-    "cmd.switchToSelectFolder": "The current window switches to this folder",
+    "cmd.switchToSelectFolder": "Switch the current window to this folder.",
     "cmd.freshWorkTree": "Refresh worktree",
     "cmd.refreshGitFolder": "Refresh git folder",
     "cmd.refreshFolder": "Refresh folder",
@@ -38,6 +38,7 @@
     "config.alertLevel.enum.info": "Information",
     "config.alertLevel.enum.warn": "Warning",
     "config.alertLevel.enum.error": "Error",
+    "submenus.worktree-action": "Worktree Action",
     "msg.error.addWorkTree": "Failed to create Worktree\n{0}",
     "msg.info.createWorkTree": "Create Worktree for",
     "msg.placeholder.createWorkTree": "Choose a branch to create new worktree for",

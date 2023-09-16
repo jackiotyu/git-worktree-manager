@@ -17,9 +17,9 @@
 <h3 align="center">Git Worktree Manager</h3>
 
   <p align="center">
-    This plugin is designed for managing Git Worktree and provides several functionalities within VS Code. It allows you to list all the Worktrees and quickly switch to a specific one. Additionally, it enables you to directly open the terminal and run commands in the corresponding directory.
+    This plugin is used to quickly manage Git Worktrees in VS Code. It can list all the Worktrees in the current repository and allows for quick switching to a specified Worktree and opening a terminal on the corresponding directory.
     <br />
-    该插件用于管理 Git Worktree，在 VS Code 中提供了一些功能。它可以列出所有的 Worktree，并且可以快速切换到指定的 Worktree。另外，在对应的目录上，它还可以直接打开终端运行命令。
+    该插件用于在 VS Code 中快速管理 Git Worktree。它可以列出当前仓库所有的 Worktree，并且可以快速切换到指定的 Worktree 、在对应目录上打开终端。
     <br />
     <a href="https://github.com/jackiotyu/git-worktree-manager"><strong>Explore the docs »</strong></a>
     <br />
@@ -124,6 +124,8 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 点击 `添加 worktree` 图标，跟随提示进行操作，添加新的 worktree。
 - It provides some useful command in context menu. You can open a new window for a worktree when click worktree item.
 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
+- Using VSCode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
+使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
 
 2. Git repository manger.  git 仓库管理
 ![save-repository](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/save-repository.png)
@@ -213,4 +215,4 @@ Project Link: [https://github.com/jackiotyu/git-worktree-manager](https://github
 [issues-url]: https://github.com/jackiotyu/git-worktree-manager/issues
 [license-shield]: https://img.shields.io/github/license/jackiotyu/git-worktree-manager.svg?style=for-the-badge
 [license-url]: https://github.com/jackiotyu/git-worktree-manager/blob/master/LICENSE
-[product-screenshot]: https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.0.6/images/overview.png
+[product-screenshot]: images/overview.png

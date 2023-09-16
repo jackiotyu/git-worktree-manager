@@ -192,12 +192,22 @@
       },
       {
         "view": "git-worktree-manager-setting",
+        "contents": "[ $(issues) 反馈插件问题 ](https://github.com/jackiotyu/git-worktree-manager/issues)",
+        "when": "git-worktree-manager.locale == zh-cn"
+      },
+      {
+        "view": "git-worktree-manager-setting",
         "contents": "[ $(add) Add worktree ](command:git-worktree-manager.addWorkTree)",
         "when": "git-worktree-manager.locale != zh-cn"
       },
       {
         "view": "git-worktree-manager-setting",
         "contents": "[ $(gear) Open Setting ](command:git-worktree-manager.openSetting)",
+        "when": "git-worktree-manager.locale != zh-cn"
+      },
+      {
+        "view": "git-worktree-manager-setting",
+        "contents": "[ $(issues) Report Issue ](https://github.com/jackiotyu/git-worktree-manager/issues)",
         "when": "git-worktree-manager.locale != zh-cn"
       }
     ],
@@ -445,7 +455,7 @@
       {
         "icon": "$(source-control)",
         "id": "worktree-action",
-        "label": "worktree操作"
+        "label": "%submenus.worktree-action%"
       }
     ],
     "configuration": {
