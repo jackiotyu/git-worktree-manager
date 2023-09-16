@@ -9,6 +9,7 @@ export interface WorkTreeDetail {
     isBranch: boolean;
     locked: boolean;
     isMain: boolean;
+    folderName?: string;
 }
 
 export interface WorkTreeOutputItem {

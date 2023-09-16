@@ -23,7 +23,8 @@ export class WorkTreeItem extends vscode.TreeItem {
     type = TreeItemKind.worktree;
     parent?: GitFolderItem;
     constructor(item: WorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
-        super(item.name, collapsible);
+        let finalName = item.folderName ? `${item.name} → ${item.folderName}` : item.name;
+        super(finalName, collapsible);
         this.description = `${item.isMain ? '✨ ' : ''}${item.path}`;
         this.parent = parent;
 
@@ -125,12 +126,18 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             globalStateEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
             updateTreeDataEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
             updateFolderEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
-            toggleGitFolderViewAsEvent.event(debounce((viewAsTree: boolean)=> {
-                this.viewAsTree = viewAsTree;
-                vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
-                GlobalState.update('gitFolderViewAsTree', viewAsTree);
-                this.refresh();
-            }, 300))
+            toggleGitFolderViewAsEvent.event(
+                debounce((viewAsTree: boolean) => {
+                    this.viewAsTree = viewAsTree;
+                    vscode.commands.executeCommand(
+                        'setContext',
+                        'git-worktree-manager.gitFolderViewAsTree',
+                        viewAsTree,
+                    );
+                    GlobalState.update('gitFolderViewAsTree', viewAsTree);
+                    this.refresh();
+                }, 300),
+            ),
         );
         this.refresh();
         let viewAsTree = GlobalState.get('gitFolderViewAsTree', true);
@@ -146,14 +153,20 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     getChildren(element?: CommonWorkTreeItem | undefined): vscode.ProviderResult<CommonWorkTreeItem[]> {
         if (!element) {
-            if(!this.viewAsTree) {
-                let list = this.data.map(item => {
-                    return getWorkTreeList(item.path);
-                }).map(list => {
-                    return list.map(row => {
-                       return new WorkTreeItem(row, vscode.TreeItemCollapsibleState.None, element);
+            if (!this.viewAsTree) {
+                let list = this.data
+                    .map((item) => {
+                        return [getWorkTreeList(item.path), item] as const;
+                    })
+                    .map(([list, config]) => {
+                        return list.map((row) => {
+                            return new WorkTreeItem(
+                                { ...row, folderName: config.name },
+                                vscode.TreeItemCollapsibleState.None,
+                                element,
+                            );
+                        });
                     });
-                });
                 return list.flat();
             }
             return this.data.map((item) => {

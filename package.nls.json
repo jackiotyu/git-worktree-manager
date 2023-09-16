@@ -44,7 +44,7 @@
     "msg.error.addWorkTree": "Failed to create Worktree\n{0}",
     "msg.info.createWorkTree": "Create Worktree for",
     "msg.placeholder.createWorkTree": "Choose a branch to create new worktree for",
-    "msg.info.checkoutBranch": "Checkout branch",
+    "msg.info.checkoutBranch": "Checkout branch ( {0} )",
     "msg.placeholder.checkoutBranch": "Select branch for checkout",
     "msg.pickItem.useCurrentBranch": "Current commit hash",
     "msg.title.switchWorkTree": "Worktree switch",

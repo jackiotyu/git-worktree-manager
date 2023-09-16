@@ -44,7 +44,7 @@
     "msg.error.addWorkTree": "创建 worktree 失败\n{0}",
     "msg.info.createWorkTree": "创建 Worktree",
     "msg.placeholder.createWorkTree": "选择用来创建 worktree 的分支",
-    "msg.info.checkoutBranch": "签出分支",
+    "msg.info.checkoutBranch": "签出分支 ( {0} )",
     "msg.placeholder.checkoutBranch": "选择签出的分支",
     "msg.pickItem.useCurrentBranch": "当前提交的hash",
     "msg.title.switchWorkTree": "worktree切换",
