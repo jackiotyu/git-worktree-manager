@@ -23,7 +23,7 @@ export class WorkTreeItem extends vscode.TreeItem {
     type = TreeItemKind.worktree;
     parent?: GitFolderItem;
     constructor(item: WorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
-        let finalName = item.folderName ? `${item.name} → ${item.folderName}` : item.name;
+        let finalName = item.folderName ? `${item.name} ⨀ ${item.folderName}` : item.name;
         super(finalName, collapsible);
         this.description = `${item.isMain ? '✨ ' : ''}${item.path}`;
         this.parent = parent;
