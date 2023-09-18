@@ -31,6 +31,8 @@ export enum Commands {
     checkoutBranch = 'git-worktree-manager.checkoutBranch',
     gitFolderViewAsTree = 'git-worktree-manager.gitFolderViewAsTree',
     gitFolderViewAsList = 'git-worktree-manager.gitFolderViewAsList',
+    gitFolderSetOpen = 'git-worktree-manager.gitFolderSetOpen',
+    gitFolderSetClose = 'git-worktree-manager.gitFolderSetClose',
 }
 
 export enum TreeItemKind {
@@ -41,9 +43,13 @@ export enum TreeItemKind {
 export interface FolderItemConfig {
     name: string;
     path: string;
+    // 默认展开
+    defaultOpen?: boolean;
+    // TODO 添加标签
+    tags?: [];
 }
 
-export interface RecentFolderConfig extends FolderItemConfig {
+export interface RecentFolderConfig extends Pick<FolderItemConfig, 'name' | 'path'> {
     uri: Uri
 }
 

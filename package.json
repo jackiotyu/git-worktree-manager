@@ -156,8 +156,18 @@
       {
         "command": "git-worktree-manager.gitFolderViewAsList",
         "title": "%cmd.viewAsTree%",
-          "icon": "$(list-flat)",
-          "enablement": "!git-worktree-manager.gitFolderViewAsTree"
+        "icon": "$(list-flat)",
+        "enablement": "!git-worktree-manager.gitFolderViewAsTree"
+      },
+      {
+        "command": "git-worktree-manager.gitFolderSetOpen",
+        "title": "%cmd.gitFolderSetOpen%",
+        "icon": "$(root-folder)"
+      },
+      {
+        "command": "git-worktree-manager.gitFolderSetClose",
+        "title": "%cmd.gitFolderSetClose%",
+        "icon": "$(root-folder-opened)"
       }
     ],
     "viewsContainers": {
@@ -276,12 +286,12 @@
       "view/item/context": [
         {
           "command": "git-worktree-manager.openTerminal",
-          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/ || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
           "group": "terminal@2"
         },
         {
           "command": "git-worktree-manager.openExternalTerminal",
-          "when": "viewItem == git-worktree-manager.gitFolderItem || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/ || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
           "group": "terminal@1"
         },
         {
@@ -291,7 +301,7 @@
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.gitFolderItem || viewItem == git-worktree-manager.folderItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem =~ /git-worktree-manager.gitFolderItem/ || viewItem == git-worktree-manager.folderItem",
           "group": "file-action@0"
         },
         {
@@ -316,12 +326,22 @@
         },
         {
           "command": "git-worktree-manager.renameGitFolder",
-          "when": "viewItem == git-worktree-manager.gitFolderItem",
-          "group": "inline"
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
+          "group": "inline@1"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderSetOpen",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem(.*)\\.defaultClose/",
+          "group": "inline@2"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderSetClose",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem(.*)\\.defaultOpen/",
+          "group": "inline@2"
         },
         {
           "command": "git-worktree-manager.removeGitFolder",
-          "when": "viewItem == git-worktree-manager.gitFolderItem",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
           "group": "inline@100"
         },
         {
@@ -458,6 +478,14 @@
         },
         {
           "command": "git-worktree-manager.renameGitFolder",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderSetOpen",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.gitFolderSetClose",
           "when": "false"
         },
         {

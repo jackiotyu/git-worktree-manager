@@ -102,12 +102,14 @@ export class GitFolderItem extends vscode.TreeItem {
     type = TreeItemKind.gitFolder;
     name: string;
     path: string;
+    defaultOpen?: boolean = false;
     constructor(item: FolderItemConfig, collapsible: vscode.TreeItemCollapsibleState) {
         super(item.name, collapsible);
         this.name = item.name;
         this.path = item.path;
+        this.defaultOpen = !!item.defaultOpen;
         this.iconPath = new vscode.ThemeIcon('repo');
-        this.contextValue = 'git-worktree-manager.gitFolderItem';
+        this.contextValue = `git-worktree-manager.gitFolderItem.${this.defaultOpen ? 'defaultOpen' : 'defaultClose'}`;
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
     }
@@ -170,7 +172,12 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
                 return list.flat();
             }
             return this.data.map((item) => {
-                return new GitFolderItem(item, vscode.TreeItemCollapsibleState.Collapsed);
+                return new GitFolderItem(
+                    item,
+                    item.defaultOpen
+                        ? vscode.TreeItemCollapsibleState.Expanded
+                        : vscode.TreeItemCollapsibleState.Collapsed,
+                );
             });
         }
         if (element.type === TreeItemKind.gitFolder) {
@@ -232,3 +239,5 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Folder
         return element;
     }
 }
+
+// TODO 分支管理（pull/push）

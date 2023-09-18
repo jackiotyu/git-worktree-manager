@@ -284,6 +284,17 @@ function updateFolderConfig(value: FolderItemConfig[]) {
     return GlobalState.update('gitFolders', value);
 }
 
+async function updateFolderItem(config: FolderItemConfig) {
+    let allFolders = getFolderConfig();
+    let index = allFolders.findIndex((i) => i.path === config.path);
+    if (~index) {
+        allFolders[index] = config;
+        console.log('allFolders', allFolders);
+        await updateFolderConfig(allFolders);
+        Alert.showInformationMessage(localize('msg.success.save'));
+    }
+}
+
 const addToGitFolder = async (folderPath: string) => {
     if (!(await checkFolderExist(folderPath))) {
         return;
@@ -516,6 +527,16 @@ const toggleGitFolderViewAs = (asTree: boolean) => {
     toggleGitFolderViewAsEvent.fire(asTree);
 };
 
+const toggleGitFolderOpenCmd = async (item: GitFolderItem) => {
+    item.defaultOpen = !item.defaultOpen;
+    await updateFolderItem({
+        name: item.name,
+        path: item.path,
+        defaultOpen: item.defaultOpen,
+    });
+    updateFolderEvent.fire();
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -545,6 +566,8 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
             vscode.commands.registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
             vscode.commands.registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
+            vscode.commands.registerCommand(Commands.gitFolderSetOpen, toggleGitFolderOpenCmd),
+            vscode.commands.registerCommand(Commands.gitFolderSetClose, toggleGitFolderOpenCmd),
             vscode.commands.registerCommand(Commands.gitFolderViewAsTree, () => {
                 toggleGitFolderViewAs(false);
             }),

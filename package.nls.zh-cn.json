@@ -25,6 +25,8 @@
     "cmd.checkoutBranch": "签出分支",
     "cmd.viewAsTree": "以树的形式查看",
     "cmd.viewAsList": "以列表形式查看",
+    "cmd.gitFolderSetOpen": "设置为默认展开",
+    "cmd.gitFolderSetClose": "设置为默认关闭",
     "sizeBar.git-worktree-manager": "Git Worktree Manager",
     "view.git-worktree-manager-list": "worktree 列表",
     "view.git-worktree-manager-folders": "git 仓库管理",

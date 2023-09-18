@@ -25,6 +25,8 @@
     "cmd.checkoutBranch": "Checkout branch",
     "cmd.viewAsTree": "View as Tree",
     "cmd.viewAsList": "View as List",
+    "cmd.gitFolderSetOpen": "Set default open",
+    "cmd.gitFolderSetClose": "Set default close",
     "sizeBar.git-worktree-manager": "worktree manager",
     "view.git-worktree-manager-list": "worktree list",
     "view.git-worktree-manager-folders": "git repository manage",
