@@ -137,7 +137,6 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
                         viewAsTree,
                     );
                     GlobalState.update('gitFolderViewAsTree', viewAsTree);
-                    this.refresh();
                 }, 300),
             ),
         );

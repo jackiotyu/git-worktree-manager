@@ -534,7 +534,6 @@ const toggleGitFolderOpenCmd = async (item: GitFolderItem) => {
         path: item.path,
         defaultOpen: item.defaultOpen,
     });
-    updateFolderEvent.fire();
 };
 
 export class CommandsManger {
