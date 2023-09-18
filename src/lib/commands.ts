@@ -17,7 +17,7 @@ import {
     addToWorkspace,
     checkExist,
 } from '@/utils';
-import { pickBranch } from '@/lib/quickPick';
+import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME, FolderItemConfig } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
@@ -536,6 +536,10 @@ const toggleGitFolderOpenCmd = async (item: GitFolderItem) => {
     });
 };
 
+const searchAllWorktreeCmd = () => {
+    pickWorktree();
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -567,6 +571,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
             vscode.commands.registerCommand(Commands.gitFolderSetOpen, toggleGitFolderOpenCmd),
             vscode.commands.registerCommand(Commands.gitFolderSetClose, toggleGitFolderOpenCmd),
+            vscode.commands.registerCommand(Commands.searchAllWorktree, searchAllWorktreeCmd),
             vscode.commands.registerCommand(Commands.gitFolderViewAsTree, () => {
                 toggleGitFolderViewAs(false);
             }),

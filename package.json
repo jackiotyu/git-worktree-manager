@@ -140,8 +140,7 @@
       },
       {
         "command": "git-worktree-manager.addToGitFolder",
-        "title": "%cmd.addToGitFolder%",
-        "icon": "$(search)"
+        "title": "%cmd.addToGitFolder%"
       },
       {
         "command": "git-worktree-manager.checkoutBranch",
@@ -168,6 +167,13 @@
         "command": "git-worktree-manager.gitFolderSetClose",
         "title": "%cmd.gitFolderSetClose%",
         "icon": "$(root-folder-opened)"
+      },
+      {
+        "command": "git-worktree-manager.searchAllWorktree",
+        "title": "%cmd.searchAllWorktree%",
+        "icon": "$(search)",
+        "category": "Worktree",
+        "shortTitle": "search worktree"
       }
     ],
     "viewsContainers": {
@@ -211,6 +217,11 @@
       },
       {
         "view": "git-worktree-manager-setting",
+        "contents": "[ $(search) 搜索 worktree ](command:git-worktree-manager.searchAllWorktree)",
+        "when": "git-worktree-manager.locale == zh-cn"
+      },
+      {
+        "view": "git-worktree-manager-setting",
         "contents": "[ $(gear) 打开插件设置 ](command:git-worktree-manager.openSetting)",
         "when": "git-worktree-manager.locale == zh-cn"
       },
@@ -221,7 +232,12 @@
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(add) Add worktree ](command:git-worktree-manager.addWorkTree)",
+        "contents": "[ $(add) Add Worktree ](command:git-worktree-manager.addWorkTree)",
+        "when": "git-worktree-manager.locale != zh-cn"
+      },
+      {
+        "view": "git-worktree-manager-setting",
+        "contents": "[ $(search) Search Worktree ](command:git-worktree-manager.searchAllWorktree)",
         "when": "git-worktree-manager.locale != zh-cn"
       },
       {
@@ -268,9 +284,14 @@
           "group": "navigation@2"
         },
         {
-          "command": "git-worktree-manager.refreshGitFolder",
+          "command": "git-worktree-manager.searchAllWorktree",
           "when": "view === git-worktree-manager-folders",
           "group": "navigation@3"
+        },
+        {
+          "command": "git-worktree-manager.refreshGitFolder",
+          "when": "view === git-worktree-manager-folders",
+          "group": "navigation@4"
         },
         {
           "command": "git-worktree-manager.refreshRecentFolder",

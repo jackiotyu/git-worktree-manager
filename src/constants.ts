@@ -33,6 +33,7 @@ export enum Commands {
     gitFolderViewAsList = 'git-worktree-manager.gitFolderViewAsList',
     gitFolderSetOpen = 'git-worktree-manager.gitFolderSetOpen',
     gitFolderSetClose = 'git-worktree-manager.gitFolderSetClose',
+    searchAllWorktree = 'git-worktree-manager.searchAllWorktree',
 }
 
 export enum TreeItemKind {

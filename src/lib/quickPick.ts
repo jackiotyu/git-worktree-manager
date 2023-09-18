@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { getBranchList, getRemoteBranchList, getTagList, formatTime } from '@/utils';
+import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTreeList } from '@/utils';
+import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
@@ -10,7 +11,7 @@ interface BranchForWorkTree extends vscode.QuickPickItem {
 export const pickBranch = async (
     title: string = localize('msg.info.createWorkTree'),
     placeholder: string = localize('msg.placeholder.createWorkTree'),
-    cwd?: string
+    cwd?: string,
 ) => {
     let resolve: (value?: any) => void = () => {};
     let reject: (value?: any) => void = () => {};
@@ -118,5 +119,62 @@ export const pickBranch = async (
     } catch (error) {
         console.log('pickBranch error ', error);
         reject(error);
+    }
+};
+
+interface WorkTreePick extends vscode.QuickPickItem {
+    path: string;
+}
+
+export const pickWorktree = async () => {
+    let resolve: (value?: any) => void = () => {};
+    let reject: (value?: any) => void = () => {};
+    let waiting = new Promise<WorkTreePick | void>((_resolve, _reject) => {
+        resolve = _resolve;
+        reject = _reject;
+    });
+    try {
+        const quickPick = vscode.window.createQuickPick<WorkTreePick>();
+        quickPick.placeholder = localize('msg.placeholder.pickWorktree');
+        quickPick.canSelectMany = false;
+        quickPick.matchOnDescription = true;
+        quickPick.matchOnDetail = true;
+        quickPick.onDidAccept(() => {
+            let selectedItem = quickPick.selectedItems[0];
+            if (selectedItem) {
+                vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+                    forceNewWindow: true,
+                });
+            }
+            resolve(selectedItem);
+            quickPick.hide();
+        });
+        quickPick.onDidHide(() => {
+            resolve();
+            quickPick.dispose();
+        });
+        quickPick.busy = true;
+        quickPick.show();
+        const items: WorkTreePick[] = GlobalState.get('gitFolders', [])
+            .map((item) => {
+                return [getWorkTreeList(item.path), item] as const;
+            })
+            .map(([list, config]) => {
+                return list.map<WorkTreePick>((row) => {
+                    return {
+                        label: `${config.name} ⨀ ${row.name}`,
+                        detail: `$(folder) ${row.path}`,
+                        // description: row.path,
+                        path: row.path,
+                        // iconPath: new vscode.ThemeIcon('source-control'),
+                    };
+                });
+            })
+            .flat();
+        quickPick.items = items;
+        quickPick.busy = false;
+        return waiting;
+    } catch {
+        reject();
     }
 };
