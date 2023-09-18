@@ -237,7 +237,7 @@
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(search) Search Worktree ](command:git-worktree-manager.searchAllWorktree)",
+        "contents": "[ $(search) Find Worktree ](command:git-worktree-manager.searchAllWorktree)",
         "when": "git-worktree-manager.locale != zh-cn"
       },
       {

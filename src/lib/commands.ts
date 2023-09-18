@@ -230,6 +230,7 @@ const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
     try {
         await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
             forceNewWindow: false,
+            forceReuseWindow: true,
         });
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.switchWorkTree', String(error)));

@@ -139,6 +139,18 @@ export const pickWorktree = async () => {
         quickPick.canSelectMany = false;
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
+        quickPick.onDidTriggerItemButton((event) => {
+            if (event.button.tooltip === localize('cmd.switchToSelectFolder')) {
+                let selectedItem = event.item;
+                if (selectedItem) {
+                    vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+                        forceNewWindow: false,
+                        forceReuseWindow: true,
+                    });
+                }
+                resolve(selectedItem);
+            }
+        });
         quickPick.onDidAccept(() => {
             let selectedItem = quickPick.selectedItems[0];
             if (selectedItem) {
@@ -167,6 +179,12 @@ export const pickWorktree = async () => {
                         // description: row.path,
                         path: row.path,
                         // iconPath: new vscode.ThemeIcon('source-control'),
+                        buttons: [
+                            {
+                                iconPath: new vscode.ThemeIcon('arrow-right'),
+                                tooltip: localize('cmd.switchToSelectFolder'),
+                            },
+                        ],
                     };
                 });
             })
