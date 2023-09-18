@@ -162,7 +162,7 @@ export const pickWorktree = async () => {
             .map(([list, config]) => {
                 return list.map<WorkTreePick>((row) => {
                     return {
-                        label: `${config.name} ⨀ ${row.name}`,
+                        label: `${row.name} ⬸ ${config.name}`,
                         detail: `$(folder) ${row.path}`,
                         // description: row.path,
                         path: row.path,

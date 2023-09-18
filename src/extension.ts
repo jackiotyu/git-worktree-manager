@@ -8,6 +8,7 @@ import { init } from 'vscode-nls-i18n';
 import { setupGitEvents } from '@/lib/gitExtension';
 import { GlobalState } from '@/lib/globalState';
 import { Alert } from '@/lib/adaptor/window';
+// import { StatusBarItemManager } from '@/lib/statusBarItem';
 import throttle from 'lodash/throttle';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -16,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
     init(context.extensionPath);
     Alert.init(context);
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
+    // StatusBarItemManager.register(context);
     const updateHandler = updateTreeDataEvent.event(
         throttle(() => treeDataEvent.fire(getWorkTreeList()), 300, { trailing: true, leading: true }),
     );

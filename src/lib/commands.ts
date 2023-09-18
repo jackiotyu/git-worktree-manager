@@ -503,7 +503,7 @@ const addToGitFolderCmd = (item: FolderItem) => {
 
 const checkoutBranchCmd = async (item: WorkTreeItem) => {
     let branchItem = await pickBranch(
-        localize('msg.info.checkoutBranch', `${item.name} ⨀ ...${item.path.slice(-24)}`),
+        localize('msg.info.checkoutBranch', `${item.name} ⬸ ...${item.path.slice(-24)}`),
         localize('msg.placeholder.checkoutBranch'),
         item.path,
     );
