@@ -3,6 +3,7 @@ import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTree
 import { GlobalState } from '@/lib/globalState';
 import { WorkTreeCacheItem } from '@/types';
 import localize from '@/localize';
+import groupBy from 'lodash/groupBy';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
     branch?: string;
@@ -124,16 +125,17 @@ export const pickBranch = async (
 };
 
 interface WorkTreePick extends vscode.QuickPickItem {
-    path: string;
+    path?: string;
 }
 
 const mapWorkTreePickItems = (list: WorkTreeCacheItem[]): WorkTreePick[] => {
-    return list.map((row) => {
+    let items = list.map((row) => {
         return {
             label: row.name,
             detail: `$(folder) ${row.path}`,
             description: `$(repo-forked) ${row.label}`,
             path: row.path,
+            key: row.label,
             // iconPath: new vscode.ThemeIcon('source-control'),
             buttons: [
                 {
@@ -143,6 +145,12 @@ const mapWorkTreePickItems = (list: WorkTreeCacheItem[]): WorkTreePick[] => {
             ],
         };
     });
+    let groupMap = groupBy(items, 'key');
+    return Object.keys(groupMap).reduce<WorkTreePick[]>((list, key) => {
+        list.push(...groupMap[key]);
+        list.push({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+        return list;
+    }, []);
 };
 
 export const pickWorktree = async () => {
@@ -159,8 +167,11 @@ export const pickWorktree = async () => {
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
         quickPick.onDidTriggerItemButton((event) => {
+            let selectedItem = event.item;
+            if (!selectedItem.path) {
+                return;
+            }
             if (event.button.tooltip === localize('cmd.switchToSelectFolder')) {
-                let selectedItem = event.item;
                 if (selectedItem) {
                     vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
                         forceNewWindow: false,
@@ -172,7 +183,7 @@ export const pickWorktree = async () => {
         });
         quickPick.onDidAccept(() => {
             let selectedItem = quickPick.selectedItems[0];
-            if (selectedItem) {
+            if (selectedItem?.path) {
                 vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
                     forceNewWindow: true,
                 });
