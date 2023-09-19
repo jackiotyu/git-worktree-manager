@@ -1,36 +1,15 @@
 <a name="readme-top"></a>
 
-
-<!-- PROJECT SHIELDS -->
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
-
-
 <!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/jackiotyu/git-worktree-manager">
-    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.4/images/icon.png" alt="Logo" width="80" height="80">
-  </a>
+# Git Worktree Manager
 
-<h3 align="center">Git Worktree Manager</h3>
+<!-- ABOUT THE PROJECT -->
+This plugin aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
+该插件旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
 
-  <p align="center">
-    This plugin is used to quickly manage Git Worktrees in VS Code. It can list all the Worktrees in the current repository and allows for quick switching to a specified Worktree and opening a terminal on the corresponding directory.
-    <br />
-    该插件用于在 VS Code 中快速管理 Git Worktree。它可以列出当前仓库所有的 Worktree，并且可以快速切换到指定的 Worktree 、在对应目录上打开终端。
-    <br />
-    <a href="https://github.com/jackiotyu/git-worktree-manager"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <!-- <a href="https://github.com/jackiotyu/git-worktree-manager">View Demo</a> -->
-    <!-- · -->
-    <a href="https://github.com/jackiotyu/git-worktree-manager/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/jackiotyu/git-worktree-manager/issues">Request Feature</a>
-  </p>
-</div>
+[![Product Name Screen Shot][product-screenshot]](https://github.com/jackiotyu/git-worktree-manager)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <details>
   <summary>How Git Worktree Works. git worktree 工作原理</summary>
@@ -52,7 +31,6 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 总结来说，git worktree 提供了一种灵活的方式来管理多个任务或版本，使得开发工作更加高效和便捷。</p>
   </section>
 </details>
-<br />
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -75,21 +53,6 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
     <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
-
-
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://github.com/jackiotyu/git-worktree-manager)
-
-This plugin aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
-该插件旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
