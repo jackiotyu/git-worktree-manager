@@ -157,8 +157,11 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 - [x] Quick open recently opened folders.
 - [x] Switch any branch, use `git switch --ignore-other-worktrees`.
 - [x] Change message prompts level.
-- [ ] Multi-language Support
-    - [x] Chinese
+- [ ] Display git branch status.
+- [ ] Quick pull/push branch.
+- [ ] Git repository snapshot.
+- [ ] Multi-language Support.
+    - [x] Chinese.
 
 See the [open issues](https://github.com/jackiotyu/git-worktree-manager/issues) for a full list of proposed features (and known issues).
 

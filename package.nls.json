@@ -27,7 +27,7 @@
     "cmd.viewAsList": "View as List",
     "cmd.gitFolderSetOpen": "Set default open",
     "cmd.gitFolderSetClose": "Set default close",
-    "cmd.searchAllWorktree": "Search Worktree",
+    "cmd.searchAllWorktree": "Find Worktree",
     "sizeBar.git-worktree-manager": "worktree manager",
     "view.git-worktree-manager-list": "worktree list",
     "view.git-worktree-manager-folders": "git repository manage",

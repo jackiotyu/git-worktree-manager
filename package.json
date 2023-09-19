@@ -176,6 +176,12 @@
         "shortTitle": "search worktree"
       }
     ],
+    "keybindings": [
+      {
+        "command": "git-worktree-manager.searchAllWorktree",
+        "key": "ctrl+shift+r"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
