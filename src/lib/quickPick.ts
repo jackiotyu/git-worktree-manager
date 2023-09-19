@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTreeList } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
+import { WorkTreeCacheItem } from '@/types';
 import localize from '@/localize';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
@@ -126,6 +127,24 @@ interface WorkTreePick extends vscode.QuickPickItem {
     path: string;
 }
 
+const mapWorkTreePickItems = (list: WorkTreeCacheItem[]): WorkTreePick[] => {
+    return list.map((row) => {
+        return {
+            label: row.name,
+            detail: `$(folder) ${row.path}`,
+            description: `$(repo-forked) ${row.label}`,
+            path: row.path,
+            // iconPath: new vscode.ThemeIcon('source-control'),
+            buttons: [
+                {
+                    iconPath: new vscode.ThemeIcon('arrow-right'),
+                    tooltip: localize('cmd.switchToSelectFolder'),
+                },
+            ],
+        };
+    });
+};
+
 export const pickWorktree = async () => {
     let resolve: (value?: any) => void = () => {};
     let reject: (value?: any) => void = () => {};
@@ -167,30 +186,27 @@ export const pickWorktree = async () => {
         });
         quickPick.busy = true;
         quickPick.show();
-        const items: WorkTreePick[] = GlobalState.get('gitFolders', [])
-            .map((item) => {
-                return [getWorkTreeList(item.path), item] as const;
-            })
-            .map(([list, config]) => {
-                return list.map<WorkTreePick>((row) => {
-                    return {
-                        label: `${row.name} ⬸ ${config.name}`,
-                        detail: `$(folder) ${row.path}`,
-                        // description: row.path,
-                        path: row.path,
-                        // iconPath: new vscode.ThemeIcon('source-control'),
-                        buttons: [
-                            {
-                                iconPath: new vscode.ThemeIcon('arrow-right'),
-                                tooltip: localize('cmd.switchToSelectFolder'),
-                            },
-                        ],
-                    };
-                });
-            })
-            .flat();
-        quickPick.items = items;
-        quickPick.busy = false;
+        quickPick.items = mapWorkTreePickItems(GlobalState.get('workTreeCache', []));
+        // 先展示出缓存的数据
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        Promise.resolve().then(() => {
+            const list = GlobalState.get('gitFolders', [])
+                .map((item) => {
+                    return [getWorkTreeList(item.path), item] as const;
+                })
+                .map(([list, config]) => {
+                    return list.map<WorkTreeCacheItem>((row) => {
+                        return { ...row, label: config.name };
+                    });
+                })
+                .flat();
+            // 添加缓存
+            GlobalState.update('workTreeCache', list);
+            const items: WorkTreePick[] = mapWorkTreePickItems(list);
+            quickPick.items = items;
+            quickPick.busy = false;
+        });
+
         return waiting;
     } catch {
         reject();

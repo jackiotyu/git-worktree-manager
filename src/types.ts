@@ -20,6 +20,10 @@ export interface WorkTreeOutputItem {
     branch?: string;
 }
 
+export interface WorkTreeCacheItem extends WorkTreeDetail {
+    label: string;
+}
+
 export interface IRecentFolder {
 	readonly folderUri: URI;
 	label?: string;
