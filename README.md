@@ -135,6 +135,8 @@ This plugin aims to provide convenient switching between multiple workspaces, fa
 - 右键上下文菜单和行内图标也可以执行一下快速操作。
 - List all worktree in every repository.
 - 每个仓库都会列出所有 worktree。
+- Open all worktree quick pick by press `ctrl + shift + r`.
+- 按下 `ctrl + shift + r` 打开 worktree 列表。
 
 3. Setting. 设置
 ![open-setting](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.4/images/open-setting.png)

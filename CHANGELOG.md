@@ -1,3 +1,11 @@
+## [0.1.4] 2023-09-19
+
+### Change
+
+- Update README.
+- Add `Find Worktree` command. Default keyboard shortcut is `ctrl + shift + r`.
+- Add  `Set default open/close` icon for repository manage.
+
 ## [0.1.3] 2023-09-16
 
 ### Change
