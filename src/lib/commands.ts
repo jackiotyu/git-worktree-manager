@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
-import { updateTreeDataEvent, updateFolderEvent, updateRecentEvent, toggleGitFolderViewAsEvent, loadAllTreeDataEvent } from '@/lib/events';
+import {
+    updateTreeDataEvent,
+    updateFolderEvent,
+    updateRecentEvent,
+    toggleGitFolderViewAsEvent,
+    loadAllTreeDataEvent,
+} from '@/lib/events';
 import localize from '@/localize';
 import {
     getFolderIcon,
@@ -518,7 +524,7 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
         const prefix = checkoutText === branchItem.hash ? '--detach' : '';
         await checkoutBranch(item.path, checkoutText, prefix);
     } catch (error: any) {
-        if (!(error.message as string).startsWith('HEAD is now at')) {
+        if ((error.message as string).startsWith('fatal:')) {
             Alert.showInformationMessage(localize('msg.fail.commonAction', 'checkout', error));
         }
     }

@@ -33,13 +33,13 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> =
             console.log('[exec stderr] ', chunk.toString());
             err = chunk.toString();
             if (!out && err) {
-                reject(err);
+                reject(Error(err));
             }
         });
         proc.on('close', (code) => {
             console.log('[exec close] ', code);
             if (!out && err) {
-                reject(err);
+                reject(Error(err));
             } else {
                 resolve(out);
             }
