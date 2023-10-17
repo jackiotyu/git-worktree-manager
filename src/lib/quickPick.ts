@@ -136,7 +136,7 @@ const mapWorkTreePickItems = (list: WorkTreeCacheItem[]): WorkTreePick[] => {
         return {
             label: row.name,
             detail: `$(folder) ${row.path}`,
-            description: `$(repo-forked) ${row.label}`,
+            description: `$(repo) ${row.label}`,
             path: row.path,
             key: row.label,
             // iconPath: new vscode.ThemeIcon('source-control'),

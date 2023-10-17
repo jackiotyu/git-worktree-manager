@@ -80,10 +80,12 @@ export function getFolderIcon(path: string, color?: vscode.ThemeColor) {
 export async function getWorkTreeList(root?: string) {
     let cwd = root || folderRoot.uri?.fsPath || '';
     try {
-        const output = await executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']);
-        const mainFolder = (
-            await executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir'])
-        ).replace('/.git', '');
+        const [output, mainFolderFull] = await Promise.all([
+            executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']),
+            executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
+        ]);
+
+        const mainFolder = mainFolderFull.replace('/.git', '');
         let list = output
             .split('\n')
             .reduce<string[][]>(
