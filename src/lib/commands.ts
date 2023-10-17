@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { updateTreeDataEvent, updateFolderEvent, updateRecentEvent, toggleGitFolderViewAsEvent } from '@/lib/events';
+import { updateTreeDataEvent, updateFolderEvent, updateRecentEvent, toggleGitFolderViewAsEvent, loadAllTreeDataEvent } from '@/lib/events';
 import localize from '@/localize';
 import {
     getFolderIcon,
@@ -26,6 +26,7 @@ import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
+import { LoadMoreItem } from '@/types';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -504,7 +505,7 @@ const addToGitFolderCmd = (item: FolderItem) => {
 
 const checkoutBranchCmd = async (item: WorkTreeItem) => {
     let branchItem = await pickBranch(
-        localize('msg.info.checkoutBranch', `${item.name} ⬸ ...${item.path.slice(-24)}`),
+        localize('msg.info.checkoutBranch', `${item.name} ⇄ ...${item.path.slice(-24)}`),
         localize('msg.placeholder.checkoutBranch'),
         item.path,
     );
@@ -539,6 +540,10 @@ const toggleGitFolderOpenCmd = async (item: GitFolderItem) => {
 
 const searchAllWorktreeCmd = () => {
     pickWorktree();
+};
+
+const loadAllTreeDataCmd = (item: LoadMoreItem) => {
+    loadAllTreeDataEvent.fire(item.viewId);
 };
 
 export class CommandsManger {
@@ -579,6 +584,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.gitFolderViewAsList, () => {
                 toggleGitFolderViewAs(true);
             }),
+            vscode.commands.registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
         );
     }
 }

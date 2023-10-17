@@ -7,6 +7,7 @@ export const updateFolderEvent = new vscode.EventEmitter<void>();
 export const globalStateEvent = new vscode.EventEmitter<void>();
 export const updateRecentEvent = new vscode.EventEmitter<void>();
 export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
+export const loadAllTreeDataEvent = new vscode.EventEmitter<string>();
 
 export const collectEvent = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(
@@ -16,5 +17,6 @@ export const collectEvent = (context: vscode.ExtensionContext) => {
         globalStateEvent,
         updateRecentEvent,
         toggleGitFolderViewAsEvent,
+        loadAllTreeDataEvent,
     );
 };

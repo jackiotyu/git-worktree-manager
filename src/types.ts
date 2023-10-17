@@ -1,4 +1,4 @@
-import { Uri as URI } from 'vscode';
+import { Uri as URI, TreeItem } from 'vscode';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface WorkTreeDetail {
@@ -32,4 +32,8 @@ export interface IRecentFolder {
 
 export interface IRecentlyOpened {
 	workspaces: Array<IRecentFolder>;
+}
+
+export interface LoadMoreItem extends TreeItem {
+    viewId: string;
 }

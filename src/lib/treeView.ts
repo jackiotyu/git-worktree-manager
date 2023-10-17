@@ -6,10 +6,11 @@ import {
     globalStateEvent,
     updateRecentEvent,
     toggleGitFolderViewAsEvent,
+    loadAllTreeDataEvent,
 } from '@/lib/events';
-import { WorkTreeDetail } from '@/types';
+import { WorkTreeDetail, LoadMoreItem } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
-import { TreeItemKind, FolderItemConfig, APP_NAME, RecentFolderConfig } from '@/constants';
+import { TreeItemKind, FolderItemConfig, APP_NAME, RecentFolderConfig, Commands, ViewId } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 import throttle from 'lodash/throttle';
@@ -23,7 +24,7 @@ export class WorkTreeItem extends vscode.TreeItem {
     type = TreeItemKind.worktree;
     parent?: GitFolderItem;
     constructor(item: WorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
-        let finalName = item.folderName ? `${item.name} ⬸ ${item.folderName}` : item.name;
+        let finalName = item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
         super(finalName, collapsible);
         this.description = `${item.isMain ? '✨ ' : ''}${item.path}`;
         this.parent = parent;
@@ -170,22 +171,26 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
                         );
                     });
                 });
-                return list.flat();
+                return Promise.resolve(list.flat());
             }
-            return this.data.map((item) => {
-                return new GitFolderItem(
-                    item,
-                    item.defaultOpen
-                        ? vscode.TreeItemCollapsibleState.Expanded
-                        : vscode.TreeItemCollapsibleState.Collapsed,
-                );
-            });
+            return Promise.resolve(
+                this.data.map((item) => {
+                    return new GitFolderItem(
+                        item,
+                        item.defaultOpen
+                            ? vscode.TreeItemCollapsibleState.Expanded
+                            : vscode.TreeItemCollapsibleState.Collapsed,
+                    );
+                }),
+            );
         }
         if (element.type === TreeItemKind.gitFolder) {
             let list = await getWorkTreeList(element.path);
-            return list.map((item) => {
-                return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
-            });
+            return Promise.resolve(
+                list.map((item) => {
+                    return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
+                }),
+            );
         }
     }
     getTreeItem(element: CommonWorkTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -212,19 +217,50 @@ export class FolderItem extends vscode.TreeItem {
     }
 }
 
-export class RecentFoldersDataProvider implements vscode.TreeDataProvider<FolderItem> {
-    static id = 'git-worktree-manager-recent';
+export class FolderLoadMore extends vscode.TreeItem implements LoadMoreItem {
+    viewId = ViewId.gitWorktreeManagerRecent;
+    constructor(public name = localize('treeView.item.loadMore')) {
+        super(name, vscode.TreeItemCollapsibleState.None);
+        this.contextValue = 'git-worktree-manager.loadMore';
+        this.command = {
+            title: localize('treeView.item.loadMore'),
+            command: Commands.loadMoreRecentFolder,
+        };
+    }
+}
+
+type RecentFolderItem = FolderLoadMore | FolderItem;
+
+export class RecentFoldersDataProvider implements vscode.TreeDataProvider<RecentFolderItem> {
+    static id: string = ViewId.gitWorktreeManagerRecent;
+    private pageNo = 1;
+    private pageSize = 40;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
-        context.subscriptions.push(updateRecentEvent.event(throttle(this.refresh, 300)));
+        context.subscriptions.push(
+            updateRecentEvent.event(throttle(this.refresh, 300)),
+            vscode.commands.registerCommand(Commands.loadMoreRecentFolder, this.loadMoreFolder),
+            loadAllTreeDataEvent.event(this.loadAllCheck),
+        );
     }
     refresh = async () => {
         this._onDidChangeTreeData.fire();
     };
-    async getChildren(element?: FolderItem | undefined): Promise<FolderItem[]> {
+    loadAllCheck = (viewId: string) => {
+        if (viewId === RecentFoldersDataProvider.id) {
+            this.pageSize = Infinity;
+            this.refresh();
+        }
+    };
+    loadMoreFolder = () => {
+        this.pageNo += 1;
+        this.refresh();
+    };
+    async getChildren(element?: RecentFolderItem | undefined): Promise<RecentFolderItem[]> {
         let folders = await getRecentFolders();
-        return folders
+        let itemList = folders
+            .slice(0, this.pageNo * this.pageSize)
             .map<RecentFolderConfig>((item) => {
                 return {
                     name: item.label || path.basename(item.folderUri.fsPath),
@@ -232,9 +268,13 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Folder
                     uri: item.folderUri,
                 };
             })
-            .map<FolderItem>((item) => {
+            .map<RecentFolderItem>((item) => {
                 return new FolderItem(item.name, vscode.TreeItemCollapsibleState.None, item);
             });
+        if (itemList.length < folders.length) {
+            itemList.push(new FolderLoadMore());
+        }
+        return Promise.resolve(itemList);
     }
     getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
