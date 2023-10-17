@@ -1,3 +1,11 @@
+## [0.1.5] 2023-10-17
+
+### Change
+
+- Update README.
+- Using child_process `spawn` instead of `spawnSync` for better performance.
+- Paging `recently opened folders`.
+
 ## [0.1.4] 2023-09-19
 
 ### Change
