@@ -152,22 +152,24 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         this._onDidChangeTreeData.fire();
     }
 
-    getChildren(element?: CommonWorkTreeItem | undefined): vscode.ProviderResult<CommonWorkTreeItem[]> {
+    async getChildren(element?: CommonWorkTreeItem | undefined): Promise<CommonWorkTreeItem[] | undefined> {
         if (!element) {
             if (!this.viewAsTree) {
-                let list = this.data
-                    .map((item) => {
-                        return [getWorkTreeList(item.path), item] as const;
-                    })
-                    .map(([list, config]) => {
-                        return list.map((row) => {
-                            return new WorkTreeItem(
-                                { ...row, folderName: config.name },
-                                vscode.TreeItemCollapsibleState.None,
-                                element,
-                            );
-                        });
+                let itemList = await Promise.all(
+                    this.data.map(async (item) => {
+                        let list = await getWorkTreeList(item.path);
+                        return [list, item] as const;
+                    }),
+                );
+                let list = itemList.map(([list, config]) => {
+                    return list.map((row) => {
+                        return new WorkTreeItem(
+                            { ...row, folderName: config.name },
+                            vscode.TreeItemCollapsibleState.None,
+                            element,
+                        );
                     });
+                });
                 return list.flat();
             }
             return this.data.map((item) => {
@@ -180,7 +182,8 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             });
         }
         if (element.type === TreeItemKind.gitFolder) {
-            return getWorkTreeList(element.path).map((item) => {
+            let list = await getWorkTreeList(element.path);
+            return list.map((item) => {
                 return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
             });
         }
@@ -219,20 +222,19 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Folder
     refresh = async () => {
         this._onDidChangeTreeData.fire();
     };
-    getChildren(element?: FolderItem | undefined): vscode.ProviderResult<FolderItem[]> {
-        return getRecentFolders().then((list) =>
-            list
-                .map<RecentFolderConfig>((item) => {
-                    return {
-                        name: item.label || path.basename(item.folderUri.fsPath),
-                        path: item.folderUri.fsPath,
-                        uri: item.folderUri,
-                    };
-                })
-                .map<FolderItem>((item) => {
-                    return new FolderItem(item.name, vscode.TreeItemCollapsibleState.None, item);
-                }),
-        );
+    async getChildren(element?: FolderItem | undefined): Promise<FolderItem[]> {
+        let folders = await getRecentFolders();
+        return folders
+            .map<RecentFolderConfig>((item) => {
+                return {
+                    name: item.label || path.basename(item.folderUri.fsPath),
+                    path: item.folderUri.fsPath,
+                    uri: item.folderUri,
+                };
+            })
+            .map<FolderItem>((item) => {
+                return new FolderItem(item.name, vscode.TreeItemCollapsibleState.None, item);
+            });
     }
     getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;

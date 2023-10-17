@@ -83,7 +83,7 @@
     "msg.fail.switchWorkTree": "切换 worktree 失败 \n\n {0}",
     "msg.fail.invokeExternalTerminal": "打开外部终端失败\n\n {0}",
     "msg.success.pruneWorkTree": "清理 worktree 成功",
-    "msg.fail.pruneWorkTree": "清理 worktree 失败 \n\n {0}",
+    "msg.fail.pruneWorkTree": "清理 worktree 失败",
     "msg.error.invalidGitFolder": "该文件夹不是可用的git仓库",
     "msg.error.gitFolderExistInSetting": "git仓库文件夹在设置中已存在",
     "msg.error.folderNotExist": "文件夹不存在",

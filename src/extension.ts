@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
     // StatusBarItemManager.register(context);
     const updateHandler = updateTreeDataEvent.event(
-        throttle(() => treeDataEvent.fire(getWorkTreeList()), 300, { trailing: true, leading: true }),
+        throttle(async () => treeDataEvent.fire((await getWorkTreeList())), 300, { trailing: true, leading: true }),
     );
     CommandsManger.register(context);
     const worktreeView = vscode.window.createTreeView(WorkTreeDataProvider.id, {

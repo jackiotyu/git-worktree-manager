@@ -83,7 +83,7 @@
     "msg.fail.switchWorkTree": "Switching worktree failed \n\n {0}",
     "msg.fail.invokeExternalTerminal": "Opening External Terminal failed\n\n {0}",
     "msg.success.pruneWorkTree": "Prune worktree succeeded",
-    "msg.fail.pruneWorkTree": "Failed to prune worktree \n\n {0}",
+    "msg.fail.pruneWorkTree": "Failed to prune worktree",
     "msg.error.invalidGitFolder": "The folder is not a git repository available",
     "msg.error.gitFolderExistInSetting": "The git repository folder already exists in the settings",
     "msg.error.folderNotExist": "The folder does not exist",

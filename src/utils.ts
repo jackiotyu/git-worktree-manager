@@ -16,32 +16,50 @@ dayjs.locale(vscode.env.language); // 全局使用
 
 const WORK_TREE = 'worktree';
 
-const executeGitCommandBase: (cwd: string, args?: string[]) => string = (cwd, args) => {
-    console.log('[executeGitCommand] ', ['git'].concat(args || []).join(' '));
-    const proc = cp.spawnSync('git', args, {
-        cwd,
+const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> = (cwd, args) => {
+    return new Promise((resolve, reject) => {
+        console.log('[executeGitCommand] ', ['git'].concat(args || []).join(' '));
+        const proc = cp.spawn('git', args, {
+            cwd,
+        });
+        let out: string;
+        let err: string;
+        proc.stdout.on('data', (chunk) => {
+            console.log('[exec stdout] ', chunk.toString());
+            out = chunk.toString();
+            resolve(out);
+        });
+        proc.stderr.on('data', (chunk) => {
+            console.log('[exec stderr] ', chunk.toString());
+            err = chunk.toString();
+            if (!out && err) {
+                reject(err);
+            }
+        });
+        proc.on('close', (code) => {
+            console.log('[exec close] ', code);
+            if (!out && err) {
+                reject(err);
+            } else {
+                resolve(out);
+            }
+        });
     });
-    const out = proc.stdout?.toString();
-    const err = proc.stderr?.toString();
-    console.log('[exec stderr] ', err);
-    console.log('[exec stdout] ', out);
-    if (!out && err) {
-        throw Error(err);
-    }
-    return out;
 };
 
 export const openExternalTerminal = (path: string) => {
     return vscode.commands.executeCommand('openInTerminal', vscode.Uri.file(path));
 };
 
-const executeGitCommand: (args?: string[]) =>string = (args?: string[]) => {
+const executeGitCommand: (args?: string[]) => Promise<string> = (args?: string[]) => {
     console.log(folderRoot.uri?.fsPath, 'fsPath');
     return executeGitCommandBase(folderRoot.uri?.fsPath || '', args);
 };
 
 const executeGitCommandAuto = (cwd: string = '', args?: string[]) => {
-    if(!cwd) {return executeGitCommand(args);};
+    if (!cwd) {
+        return executeGitCommand(args);
+    }
     return executeGitCommandBase(cwd, args);
 };
 
@@ -59,11 +77,13 @@ export function getFolderIcon(path: string, color?: vscode.ThemeColor) {
         : new vscode.ThemeIcon('folder', color);
 }
 
-export function getWorkTreeList(root?: string) {
+export async function getWorkTreeList(root?: string) {
     let cwd = root || folderRoot.uri?.fsPath || '';
     try {
-        const output = executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']);
-        const mainFolder = executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']).replace('/.git', '');
+        const output = await executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']);
+        const mainFolder = (
+            await executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir'])
+        ).replace('/.git', '');
         let list = output
             .split('\n')
             .reduce<string[][]>(
@@ -123,28 +143,50 @@ export function parseOutput<T extends string>(output: string, keyList: T[]): Rec
     return workTrees;
 }
 
-export function getBranchList<T extends string>(keys: T[], cwd?: string) {
+export async function getBranchList<T extends string>(keys: T[], cwd?: string) {
     try {
-        let output = executeGitCommandAuto(cwd, ['branch', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        let output = await executeGitCommandAuto(cwd, [
+            'branch',
+            `--format=${formatQuery(keys)}`,
+            '--sort=-committerdate',
+        ]);
         return parseOutput(output, keys);
     } catch {
         return [];
     }
 }
 
-export function getRemoteBranchList<T extends string>(keys: T[], cwd?: string) {
+export async function getRemoteBranchList<T extends string>(keys: T[], cwd?: string) {
     try {
-        let output = executeGitCommandAuto(cwd, ['branch', '-r', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        let output = await executeGitCommandAuto(cwd, [
+            'branch',
+            '-r',
+            `--format=${formatQuery(keys)}`,
+            '--sort=-committerdate',
+        ]);
         return parseOutput(output, keys);
     } catch {
         return [];
     }
 }
 
-export function getTagList<T extends string>(keys: T[], cwd?: string) {
+export async function getTagList<T extends string>(keys: T[], cwd?: string) {
     try {
-        let output = executeGitCommandAuto(cwd, ['tag', `--format=${formatQuery(keys)}`, '--sort=-committerdate']);
+        let output = await executeGitCommandAuto(cwd, [
+            'tag',
+            `--format=${formatQuery(keys)}`,
+            '--sort=-committerdate',
+        ]);
         return parseOutput(output, keys);
+    } catch {
+        return [];
+    }
+}
+
+export async function getRemoteList(cwd: string) {
+    try {
+        let output = await executeGitCommandAuto(cwd, ['remote', '-v']);
+        return output.split('\n').filter((i) => i);
     } catch {
         return [];
     }
@@ -152,7 +194,7 @@ export function getTagList<T extends string>(keys: T[], cwd?: string) {
 
 export async function addWorkTree(path: string, branch: string, cwd?: string) {
     try {
-        executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', path, branch]);
+        await executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', path, branch]);
         return true;
     } catch (error: any) {
         Alert.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
@@ -184,16 +226,19 @@ export function formatTime(time: string) {
     return dayjs(time).fromNow();
 }
 
-export function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
+export async function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
     try {
-        executeGitCommandAuto(cwd, [WORK_TREE, 'prune', (dryRun ? '--dry-run' : ''), '-v'].filter(i => i));
+        await executeGitCommandAuto(
+            cwd,
+            [WORK_TREE, 'prune', dryRun ? '--dry-run' : '', '-v'].filter((i) => i),
+        );
         return [];
-    } catch(error: any) {
-        if(/Removing worktrees/.test(error.message)) {
+    } catch (error: any) {
+        if (/Removing worktrees/.test(error.message)) {
             let text: string = error.message;
             let matched = text.matchAll(/Removing worktrees\/(.*):/g);
             let list = [];
-            for(const worktreePath of matched) {
+            for (const worktreePath of matched) {
                 list.push(worktreePath[1]);
             }
             return list;
@@ -202,32 +247,43 @@ export function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
     }
 }
 
-export function checkGitValid(folderPath: string) {
+export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath || '') {
     try {
-        executeGitCommandBase(folderPath, ['log']);
+        await executeGitCommandBase(folderPath, ['log']);
         return true;
-    }catch {
+    } catch {
         return false;
     }
 }
 
 export const checkoutBranch = (cwd: string, branchName: string, ...args: string[]) => {
-    let list = [...args, branchName].filter(i => i);
+    let list = [...args, branchName].filter((i) => i);
     return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
+};
+
+export const pullBranch = (remoteName: string, branchName: string, remoteBranchName: string, cwd?: string) => {
+    return executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`]);
+};
+
+export const pushBranch = (remoteName: string, localBranchName: string, remoteBranchName: string, cwd?: string) => {
+    return executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`]);
 };
 
 export const addToWorkspace = (path: string) => {
     vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
         uri: vscode.Uri.file(path),
-        name: path
+        name: path,
     });
 };
 
 export const getRecentFolders = async () => {
-    let data = await vscode.commands.executeCommand('_workbench.getRecentlyOpened') as IRecentlyOpened;
-    return data.workspaces.filter(item => item.folderUri && item.folderUri.scheme === 'file');
+    let data = (await vscode.commands.executeCommand('_workbench.getRecentlyOpened')) as IRecentlyOpened;
+    return data.workspaces.filter((item) => item.folderUri && item.folderUri.scheme === 'file');
 };
 
 export const checkExist = (path: string) => {
-    return fs.stat(path).then(() => true).catch(() => false);
+    return fs
+        .stat(path)
+        .then(() => true)
+        .catch(() => false);
 };

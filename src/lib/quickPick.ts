@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
-import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTreeList } from '@/utils';
+import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTreeList, checkGitValid } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { WorkTreeCacheItem } from '@/types';
 import localize from '@/localize';
 import groupBy from 'lodash/groupBy';
+import { Alert } from '@/lib/adaptor/window';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
     branch?: string;
@@ -14,14 +15,19 @@ export const pickBranch = async (
     title: string = localize('msg.info.createWorkTree'),
     placeholder: string = localize('msg.placeholder.createWorkTree'),
     cwd?: string,
-) => {
-    let resolve: (value?: any) => void = () => {};
+): Promise<BranchForWorkTree | void> =>  {
+    let resolve: (value?: BranchForWorkTree | void) => void = () => {};
     let reject: (value?: any) => void = () => {};
     let waiting = new Promise<BranchForWorkTree | void>((_resolve, _reject) => {
         resolve = _resolve;
         reject = _reject;
     });
     try {
+        let isValidGit = await checkGitValid();
+        if(!isValidGit) {
+            Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
+            return;
+        }
         const quickPick = vscode.window.createQuickPick();
         quickPick.title = title;
         quickPick.placeholder = placeholder;
@@ -36,14 +42,11 @@ export const pickBranch = async (
         });
         quickPick.show();
         quickPick.busy = true;
-
-        const [branchList, remoteBranchList, tagList] = await Promise.resolve().then(() => {
-            return Promise.all([
-                getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD'], cwd),
-                getRemoteBranchList(['refname:short', 'objectname:short'], cwd),
-                getTagList(['refname:short', 'objectname:short'], cwd),
-            ]);
-        });
+        const [branchList, remoteBranchList, tagList] = await Promise.all([
+            getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD'], cwd),
+            getRemoteBranchList(['refname:short', 'objectname:short'], cwd),
+            getTagList(['refname:short', 'objectname:short'], cwd),
+        ]);
 
         if (!branchList) {
             quickPick.hide();
@@ -200,23 +203,25 @@ export const pickWorktree = async () => {
         quickPick.items = mapWorkTreePickItems(GlobalState.get('workTreeCache', []));
         // 先展示出缓存的数据
         await new Promise<void>((resolve) => setTimeout(resolve, 0));
-        Promise.resolve().then(() => {
-            const list = GlobalState.get('gitFolders', [])
-                .map((item) => {
-                    return [getWorkTreeList(item.path), item] as const;
-                })
-                .map(([list, config]) => {
-                    return list.map<WorkTreeCacheItem>((row) => {
-                        return { ...row, label: config.name };
-                    });
-                })
-                .flat();
-            // 添加缓存
-            GlobalState.update('workTreeCache', list);
-            const items: WorkTreePick[] = mapWorkTreePickItems(list);
-            quickPick.items = items;
-            quickPick.busy = false;
-        });
+        const gitFolders = GlobalState.get('gitFolders', []);
+        const worktreeList = await Promise.all(
+            gitFolders.map(async (item) => {
+                const list = await getWorkTreeList(item.path);
+                return [list, item] as const;
+            }),
+        );
+        const list = worktreeList
+            .map(([list, config]) => {
+                return list.map<WorkTreeCacheItem>((row) => {
+                    return { ...row, label: config.name };
+                });
+            })
+            .flat();
+        // 添加缓存
+        GlobalState.update('workTreeCache', list);
+        const items: WorkTreePick[] = mapWorkTreePickItems(list);
+        quickPick.items = items;
+        quickPick.busy = false;
 
         return waiting;
     } catch {

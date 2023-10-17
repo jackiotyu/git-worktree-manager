@@ -40,8 +40,8 @@ const checkFolderExist = async (path: string) => {
     return true;
 };
 
-export const switchWorkTreeCmd = () => {
-    let workTrees = getWorkTreeList();
+export const switchWorkTreeCmd = async () => {
+    let workTrees = await getWorkTreeList();
     const items: vscode.QuickPickItem[] = workTrees.map((item) => {
         return {
             label: item.name,
@@ -132,7 +132,7 @@ const removeWorkTreeCmd = async (item: WorkTreeItem) => {
         if (!confirm) {
             return;
         }
-        removeWorkTree(item.path, item.parent?.path);
+        await removeWorkTree(item.path, item.parent?.path);
         Alert.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.deleteWorkTree', String(error)));
@@ -168,20 +168,20 @@ const revealInSystemExplorerCmd = async (item: WorkTreeItem | GitFolderItem) => 
     vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 
-const commonWorkTreeCmd = (path: string, cmd: Commands, cwd?: string) => {
+const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {
     let cmdName = localize('operation');
     try {
         switch (cmd) {
             case Commands.lockWorkTree:
-                lockWorkTree(path, cwd);
+                await lockWorkTree(path, cwd);
                 cmdName = localize('lock');
                 break;
             case Commands.unlockWorkTree:
-                unlockWorkTree(path, cwd);
+                await unlockWorkTree(path, cwd);
                 cmdName = localize('unlock');
                 break;
             case Commands.repairWorkTree:
-                repairWorkTree(path, cwd);
+                await repairWorkTree(path, cwd);
                 cmdName = localize('repair');
                 break;
         }
@@ -218,7 +218,7 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
             return;
         }
         let folderUri = uriList[0];
-        moveWorkTree(item.path, folderUri.fsPath, item.parent?.path);
+        await moveWorkTree(item.path, folderUri.fsPath, item.parent?.path);
         Alert.showInformationMessage(localize('msg.success.moveWorkTree'));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.moveWorkTree', String(error)));
@@ -239,7 +239,7 @@ const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
 
 const pruneWorkTreeCmd = async () => {
     try {
-        let output = pruneWorkTree(true);
+        let output = await pruneWorkTree(true);
         if (!output?.length) {
             return;
         }
@@ -255,7 +255,7 @@ const pruneWorkTreeCmd = async () => {
         if (confirm !== ok) {
             return;
         }
-        pruneWorkTree();
+        await pruneWorkTree();
         Alert.showInformationMessage(localize('msg.success.pruneWorkTree'));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.pruneWorkTree'));
@@ -304,7 +304,7 @@ const addToGitFolder = async (folderPath: string) => {
     if (!(await checkGitValid(folderPath))) {
         return Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
     }
-    const worktreeList = getWorkTreeList(folderPath);
+    const worktreeList = await getWorkTreeList(folderPath);
     const mainFolder = worktreeList.find((i) => i.isMain);
     const mainFolderPath = mainFolder?.path ? vscode.Uri.file(mainFolder.path).fsPath : '';
     if (mainFolderPath && mainFolderPath !== folderPath) {
@@ -471,7 +471,7 @@ const openExternalTerminalCmd = async (item: WorkTreeItem | GitFolderItem | Fold
         return;
     }
     try {
-        openExternalTerminal(`${item.path}`);
+        await openExternalTerminal(`${item.path}`);
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.invokeExternalTerminal', String(error)));
     }
@@ -515,7 +515,7 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
     try {
         const checkoutText = branchItem.branch || branchItem.hash || '';
         const prefix = checkoutText === branchItem.hash ? '--detach' : '';
-        checkoutBranch(item.path, checkoutText, prefix);
+        await checkoutBranch(item.path, checkoutText, prefix);
     } catch (error: any) {
         if (!(error.message as string).startsWith('HEAD is now at')) {
             Alert.showInformationMessage(localize('msg.fail.commonAction', 'checkout', error));
