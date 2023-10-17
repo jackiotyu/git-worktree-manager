@@ -34,6 +34,8 @@ export enum Commands {
     gitFolderSetOpen = 'git-worktree-manager.gitFolderSetOpen',
     gitFolderSetClose = 'git-worktree-manager.gitFolderSetClose',
     searchAllWorktree = 'git-worktree-manager.searchAllWorktree',
+    loadMoreRecentFolder = 'git-worktree-manager.loadMoreRecentFolder',
+    loadAllTreeData = 'git-worktree-manager.loadAllTreeData'
 }
 
 export enum TreeItemKind {
