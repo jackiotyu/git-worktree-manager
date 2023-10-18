@@ -22,25 +22,27 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> =
         const proc = cp.spawn('git', args, {
             cwd,
         });
-        let out: string;
-        let err: string;
+        let out: Buffer = new Buffer('');
+        let err: Buffer = new Buffer('');
+
         proc.stdout.on('data', (chunk) => {
-            console.log('[exec stdout] ', chunk.toString());
-            out = chunk.toString();
+            // console.log('[exec stdout] ', chunk.toString());
+            out = Buffer.concat([out, chunk]);
         });
         proc.stderr.on('data', (chunk) => {
-            console.log('[exec stderr] ', chunk.toString());
-            err = chunk.toString();
+            // console.log('[exec stderr] ', chunk.toString());
+            err = Buffer.concat([err, chunk]);
         });
         proc.on('close', (code) => {
             console.log('[exec close] ', code);
             if (code !== 0) {
-                return reject(Error(err || 'exit code: ' + code));
+                console.log('[exec stderr] ', err.toString());
+                return reject(Error(err.toString() || 'exit code: ' + code));
             }
             if (!out && err) {
-                reject(Error(err));
+                reject(Error(err.toString()));
             } else {
-                resolve(out);
+                resolve(out.toString());
             }
         });
     });
