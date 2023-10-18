@@ -22,8 +22,8 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> =
         const proc = cp.spawn('git', args, {
             cwd,
         });
-        let out: Buffer = new Buffer('');
-        let err: Buffer = new Buffer('');
+        let out: Buffer = Buffer.from('', 'utf-8');
+        let err: Buffer = Buffer.from('', 'utf-8');
 
         proc.stdout.on('data', (chunk) => {
             // console.log('[exec stdout] ', chunk.toString());
@@ -33,16 +33,15 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> =
             // console.log('[exec stderr] ', chunk.toString());
             err = Buffer.concat([err, chunk]);
         });
+        proc.on('error', reject);
         proc.on('close', (code) => {
             console.log('[exec close] ', code);
-            if (code !== 0) {
-                console.log('[exec stderr] ', err.toString());
-                return reject(Error(err.toString() || 'exit code: ' + code));
-            }
-            if (!out && err) {
-                reject(Error(err.toString()));
-            } else {
+            if (code === 0) {
+                // console.log('[exec stdout] ', out.toString());
                 resolve(out.toString());
+            } else {
+                console.log('[exec stderr] ', err.toString());
+                reject(Error(err.toString()));
             }
         });
     });
@@ -252,7 +251,7 @@ export async function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
 
 export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath || '') {
     try {
-        await executeGitCommandBase(folderPath, ['log']);
+        await executeGitCommandBase(folderPath, ['branch']);
         return true;
     } catch {
         return false;
