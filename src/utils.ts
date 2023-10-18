@@ -27,17 +27,16 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> =
         proc.stdout.on('data', (chunk) => {
             console.log('[exec stdout] ', chunk.toString());
             out = chunk.toString();
-            resolve(out);
         });
         proc.stderr.on('data', (chunk) => {
             console.log('[exec stderr] ', chunk.toString());
             err = chunk.toString();
-            if (!out && err) {
-                reject(Error(err));
-            }
         });
         proc.on('close', (code) => {
             console.log('[exec close] ', code);
+            if (code !== 0) {
+                return reject(Error(err || 'exit code: ' + code));
+            }
             if (!out && err) {
                 reject(Error(err));
             } else {
@@ -276,7 +275,7 @@ export const addToWorkspace = (path: string) => {
         uri: vscode.Uri.file(path),
         name: path,
     });
-    if(success) {
+    if (success) {
         treeDataEvent.fire([]);
     }
 };
