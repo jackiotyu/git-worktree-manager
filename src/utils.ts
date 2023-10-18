@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
 import { updateTreeDataEvent } from '@/lib/events';
-import { WorkTreeOutputItem, WorkTreeDetail, IRecentlyOpened } from '@/types';
+import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened } from '@/types';
 import localize from '@/localize';
 import * as cp from 'child_process';
 // 加载dayjs中文语言包
@@ -108,7 +108,7 @@ export async function getWorkTreeList(root?: string) {
                 return new Map<string, string | void>(itemList);
             })
             .map((mapItem) => Object.fromEntries(mapItem));
-        let detailList = (list as unknown as WorkTreeOutputItem[]).map((item) => {
+        let detailList = (list as unknown as IWorkTreeOutputItem[]).map((item) => {
             return {
                 name: (item.branch || item.HEAD?.slice(0, 8) || '').replace('refs/heads/', ''),
                 path: item.worktree,

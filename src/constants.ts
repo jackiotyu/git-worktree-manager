@@ -1,4 +1,3 @@
-import { type Uri } from 'vscode';
 
 export const APP_NAME = 'git-worktree-manager';
 
@@ -41,19 +40,6 @@ export enum Commands {
 export enum TreeItemKind {
     worktree = 'worktree',
     gitFolder = 'gitFolder',
-}
-
-export interface FolderItemConfig {
-    name: string;
-    path: string;
-    // 默认展开
-    defaultOpen?: boolean;
-    // TODO 添加标签
-    tags?: [];
-}
-
-export interface RecentFolderConfig extends Pick<FolderItemConfig, 'name' | 'path'> {
-    uri: Uri
 }
 
 export type AlertLevel = 'warn' | 'info' | 'error';

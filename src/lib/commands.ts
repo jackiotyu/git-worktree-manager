@@ -25,14 +25,14 @@ import {
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
-import { Commands, APP_NAME, FolderItemConfig } from '@/constants';
+import { Commands, APP_NAME } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
 import { WorkTreeItem, GitFolderItem, FolderItem } from '@/lib/treeView';
 import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
-import { LoadMoreItem } from '@/types';
+import { ILoadMoreItem, IFolderItemConfig } from '@/types';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -288,11 +288,11 @@ function getTerminalCmdListConfig() {
     return vscode.workspace.getConfiguration(APP_NAME).get<string[]>('terminalCmdList', []);
 }
 
-function updateFolderConfig(value: FolderItemConfig[]) {
+function updateFolderConfig(value: IFolderItemConfig[]) {
     return GlobalState.update('gitFolders', value);
 }
 
-async function updateFolderItem(config: FolderItemConfig) {
+async function updateFolderItem(config: IFolderItemConfig) {
     let allFolders = getFolderConfig();
     let index = allFolders.findIndex((i) => i.path === config.path);
     if (~index) {
@@ -548,7 +548,7 @@ const searchAllWorktreeCmd = () => {
     pickWorktree();
 };
 
-const loadAllTreeDataCmd = (item: LoadMoreItem) => {
+const loadAllTreeDataCmd = (item: ILoadMoreItem) => {
     loadAllTreeDataEvent.fire(item.viewId);
 };
 

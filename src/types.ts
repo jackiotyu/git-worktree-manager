@@ -1,7 +1,8 @@
 import { Uri as URI, TreeItem } from 'vscode';
+import { ViewId } from '@/constants';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface WorkTreeDetail {
+export interface IWorkTreeDetail {
     name: string;
     path: string;
     detached: boolean;
@@ -12,7 +13,7 @@ export interface WorkTreeDetail {
     folderName?: string;
 }
 
-export interface WorkTreeOutputItem {
+export interface IWorkTreeOutputItem {
     worktree: string;
     HEAD: string;
     detached: void;
@@ -20,7 +21,7 @@ export interface WorkTreeOutputItem {
     branch?: string;
 }
 
-export interface WorkTreeCacheItem extends WorkTreeDetail {
+export interface IWorkTreeCacheItem extends IWorkTreeDetail {
     label: string;
 }
 
@@ -34,6 +35,19 @@ export interface IRecentlyOpened {
 	workspaces: Array<IRecentFolder>;
 }
 
-export interface LoadMoreItem extends TreeItem {
-    viewId: string;
+export interface ILoadMoreItem extends TreeItem {
+    viewId: ViewId;
+}
+
+export interface IFolderItemConfig {
+    name: string;
+    path: string;
+    // 默认展开
+    defaultOpen?: boolean;
+    // TODO 添加标签
+    tags?: [];
+}
+
+export interface IRecentFolderConfig extends Pick<IFolderItemConfig, 'name' | 'path'> {
+    uri: URI;
 }

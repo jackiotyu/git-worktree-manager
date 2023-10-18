@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTreeList, checkGitValid } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
-import { WorkTreeCacheItem } from '@/types';
+import { IWorkTreeCacheItem } from '@/types';
 import localize from '@/localize';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
@@ -131,7 +131,7 @@ interface WorkTreePick extends vscode.QuickPickItem {
     path?: string;
 }
 
-const mapWorkTreePickItems = (list: WorkTreeCacheItem[]): WorkTreePick[] => {
+const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     let items = list.map((row) => {
         return {
             label: row.name,
@@ -164,7 +164,7 @@ export const pickWorktree = async () => {
         reject = _reject;
     });
     try {
-        let list: WorkTreeCacheItem[] = [];
+        let list: IWorkTreeCacheItem[] = [];
         const quickPick = vscode.window.createQuickPick<WorkTreePick>();
         quickPick.placeholder = localize('msg.placeholder.pickWorktree');
         quickPick.canSelectMany = false;
@@ -238,7 +238,7 @@ export const pickWorktree = async () => {
         );
         list = worktreeList
             .map(([list, config]) => {
-                return list.map<WorkTreeCacheItem>((row) => {
+                return list.map<IWorkTreeCacheItem>((row) => {
                     return { ...row, label: config.name };
                 });
             })

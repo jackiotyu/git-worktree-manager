@@ -8,9 +8,9 @@ import {
     toggleGitFolderViewAsEvent,
     loadAllTreeDataEvent,
 } from '@/lib/events';
-import { WorkTreeDetail, LoadMoreItem } from '@/types';
+import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
-import { TreeItemKind, FolderItemConfig, APP_NAME, RecentFolderConfig, Commands, ViewId } from '@/constants';
+import { TreeItemKind, APP_NAME, Commands, ViewId } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 import throttle from 'lodash/throttle';
@@ -23,7 +23,7 @@ export class WorkTreeItem extends vscode.TreeItem {
     name: string;
     type = TreeItemKind.worktree;
     parent?: GitFolderItem;
-    constructor(item: WorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
+    constructor(item: IWorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
         let finalName = item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
         super(finalName, collapsible);
         this.description = `${item.isMain ? '✨ ' : ''}${item.path}`;
@@ -73,7 +73,7 @@ export class WorkTreeItem extends vscode.TreeItem {
 
 export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeItem> {
     static id = ViewId.gitWorktreeManagerList;
-    private data: WorkTreeDetail[] = [];
+    private data: IWorkTreeDetail[] = [];
     private _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
@@ -104,7 +104,7 @@ export class GitFolderItem extends vscode.TreeItem {
     name: string;
     path: string;
     defaultOpen?: boolean = false;
-    constructor(item: FolderItemConfig, collapsible: vscode.TreeItemCollapsibleState) {
+    constructor(item: IFolderItemConfig, collapsible: vscode.TreeItemCollapsibleState) {
         super(item.name, collapsible);
         this.name = item.name;
         this.path = item.path;
@@ -120,7 +120,7 @@ type CommonWorkTreeItem = GitFolderItem | WorkTreeItem;
 
 export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorkTreeItem> {
     static id = ViewId.gitWorktreeManagerFolders;
-    private data: FolderItemConfig[] = [];
+    private data: IFolderItemConfig[] = [];
     private viewAsTree: boolean;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -200,7 +200,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
 export class FolderItem extends vscode.TreeItem {
     path: string;
-    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: RecentFolderConfig) {
+    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: IRecentFolderConfig) {
         super(name, collapsible);
         this.iconPath = vscode.ThemeIcon.Folder;
         this.contextValue = 'git-worktree-manager.folderItem';
@@ -217,7 +217,7 @@ export class FolderItem extends vscode.TreeItem {
     }
 }
 
-export class FolderLoadMore extends vscode.TreeItem implements LoadMoreItem {
+export class FolderLoadMore extends vscode.TreeItem implements ILoadMoreItem {
     viewId = ViewId.gitWorktreeManagerRecent;
     constructor(public name = localize('treeView.item.loadMore')) {
         super(name, vscode.TreeItemCollapsibleState.None);
@@ -232,7 +232,7 @@ export class FolderLoadMore extends vscode.TreeItem implements LoadMoreItem {
 type RecentFolderItem = FolderLoadMore | FolderItem;
 
 export class RecentFoldersDataProvider implements vscode.TreeDataProvider<RecentFolderItem> {
-    static id: string = ViewId.gitWorktreeManagerRecent;
+    static id = ViewId.gitWorktreeManagerRecent;
     private pageNo = 1;
     private pageSize = 40;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
@@ -247,7 +247,7 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     refresh = async () => {
         this._onDidChangeTreeData.fire();
     };
-    loadAllCheck = (viewId: string) => {
+    loadAllCheck = (viewId: ViewId) => {
         if (viewId === RecentFoldersDataProvider.id) {
             this.pageSize = Infinity;
             this.refresh();
@@ -261,7 +261,7 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
         let folders = await getRecentFolders();
         let itemList = folders
             .slice(0, this.pageNo * this.pageSize)
-            .map<RecentFolderConfig>((item) => {
+            .map<IRecentFolderConfig>((item) => {
                 return {
                     name: item.label || path.basename(item.folderUri.fsPath),
                     path: item.folderUri.fsPath,
