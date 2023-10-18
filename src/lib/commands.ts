@@ -524,10 +524,7 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
         const prefix = checkoutText === branchItem.hash ? '--detach' : '';
         await checkoutBranch(item.path, checkoutText, prefix);
     } catch (error: any) {
-        const errMsg = (error.message as string)?.trim();
-        if (errMsg.startsWith('fatal:') || errMsg.startsWith('error:')) {
-            Alert.showErrorMessage(localize('msg.fail.commonAction', 'checkout', error));
-        }
+        Alert.showErrorMessage(localize('msg.fail.commonAction', 'checkout', error));
     }
     updateTreeDataEvent.fire();
 };
