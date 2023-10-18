@@ -251,7 +251,7 @@ export async function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
 
 export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath || '') {
     try {
-        await executeGitCommandBase(folderPath, ['branch']);
+        await executeGitCommandBase(folderPath, ['rev-parse', '--is-inside-work-tree']);
         return true;
     } catch {
         return false;
