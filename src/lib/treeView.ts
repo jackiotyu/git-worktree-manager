@@ -72,7 +72,7 @@ export class WorkTreeItem extends vscode.TreeItem {
 }
 
 export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeItem> {
-    static id = 'git-worktree-manager-list';
+    static id = ViewId.gitWorktreeManagerList;
     private data: WorkTreeDetail[] = [];
     private _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -119,7 +119,7 @@ export class GitFolderItem extends vscode.TreeItem {
 type CommonWorkTreeItem = GitFolderItem | WorkTreeItem;
 
 export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorkTreeItem> {
-    static id = 'git-worktree-manager-folders';
+    static id = ViewId.gitWorktreeManagerFolders;
     private data: FolderItemConfig[] = [];
     private viewAsTree: boolean;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();

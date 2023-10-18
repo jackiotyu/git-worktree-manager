@@ -59,5 +59,7 @@ export interface RecentFolderConfig extends Pick<FolderItemConfig, 'name' | 'pat
 export type AlertLevel = 'warn' | 'info' | 'error';
 
 export enum ViewId {
-    gitWorktreeManagerRecent = 'git-worktree-manager-recent'
+    gitWorktreeManagerRecent = 'git-worktree-manager-recent',
+    gitWorktreeManagerList = 'git-worktree-manager-list',
+    gitWorktreeManagerFolders = 'git-worktree-manager-folders',
 }

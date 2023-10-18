@@ -15,7 +15,7 @@ export const pickBranch = async (
     title: string = localize('msg.info.createWorkTree'),
     placeholder: string = localize('msg.placeholder.createWorkTree'),
     cwd?: string,
-): Promise<BranchForWorkTree | void> =>  {
+): Promise<BranchForWorkTree | void> => {
     let resolve: (value?: BranchForWorkTree | void) => void = () => {};
     let reject: (value?: any) => void = () => {};
     let waiting = new Promise<BranchForWorkTree | void>((_resolve, _reject) => {
@@ -24,7 +24,7 @@ export const pickBranch = async (
     });
     try {
         let isValidGit = await checkGitValid();
-        if(!isValidGit) {
+        if (!isValidGit) {
             Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
             return;
         }
@@ -135,11 +135,11 @@ const mapWorkTreePickItems = (list: WorkTreeCacheItem[]): WorkTreePick[] => {
     let items = list.map((row) => {
         return {
             label: row.name,
-            detail: `$(folder) ${row.path}`,
-            description: `$(repo) ${row.label}`,
+            detail: `${row.path}`,
+            description: `⇄ ${row.label}`,
             path: row.path,
             key: row.label,
-            // iconPath: new vscode.ThemeIcon('source-control'),
+            iconPath: new vscode.ThemeIcon('repo'),
             buttons: [
                 {
                     iconPath: new vscode.ThemeIcon('arrow-right'),
@@ -164,11 +164,36 @@ export const pickWorktree = async () => {
         reject = _reject;
     });
     try {
+        let list: WorkTreeCacheItem[] = [];
         const quickPick = vscode.window.createQuickPick<WorkTreePick>();
         quickPick.placeholder = localize('msg.placeholder.pickWorktree');
         quickPick.canSelectMany = false;
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
+        quickPick.keepScrollPosition = true;
+        const sortByNameTips = localize('msg.modal.button.sortByName');
+        const sortByRepoTips = localize('msg.modal.button.sortByRepo');
+        const baseButtons: vscode.QuickInputButton[] = [
+            { iconPath: new vscode.ThemeIcon('case-sensitive'), tooltip: sortByNameTips },
+        ];
+        const resetButtons: vscode.QuickInputButton[] = [
+            { iconPath: new vscode.ThemeIcon('list-flat'), tooltip: sortByRepoTips },
+        ];
+        quickPick.buttons = baseButtons;
+        quickPick.onDidTriggerButton((event) => {
+            if (event.tooltip === sortByNameTips) {
+                quickPick.items = [...quickPick.items]
+                    .sort((a, b) => a.label.localeCompare(b.label))
+                    .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
+                quickPick.buttons = resetButtons;
+                return;
+            }
+            if (event.tooltip === sortByRepoTips) {
+                quickPick.items = mapWorkTreePickItems(list);
+                quickPick.buttons = baseButtons;
+                return;
+            }
+        });
         quickPick.onDidTriggerItemButton((event) => {
             let selectedItem = event.item;
             if (!selectedItem.path) {
@@ -200,7 +225,8 @@ export const pickWorktree = async () => {
         });
         quickPick.busy = true;
         quickPick.show();
-        quickPick.items = mapWorkTreePickItems(GlobalState.get('workTreeCache', []));
+        list = GlobalState.get('workTreeCache', []);
+        quickPick.items = mapWorkTreePickItems(list);
         // 先展示出缓存的数据
         await new Promise<void>((resolve) => setTimeout(resolve, 0));
         const gitFolders = GlobalState.get('gitFolders', []);
@@ -210,7 +236,7 @@ export const pickWorktree = async () => {
                 return [list, item] as const;
             }),
         );
-        const list = worktreeList
+        list = worktreeList
             .map(([list, config]) => {
                 return list.map<WorkTreeCacheItem>((row) => {
                     return { ...row, label: config.name };
