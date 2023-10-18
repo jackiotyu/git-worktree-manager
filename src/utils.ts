@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
-import { updateTreeDataEvent } from '@/lib/events';
+import { treeDataEvent } from '@/lib/events';
 import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened } from '@/types';
 import localize from '@/localize';
 import * as cp from 'child_process';
@@ -272,10 +272,13 @@ export const pushBranch = (remoteName: string, localBranchName: string, remoteBr
 };
 
 export const addToWorkspace = (path: string) => {
-    vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
+    let success = vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
         uri: vscode.Uri.file(path),
         name: path,
     });
+    if(success) {
+        treeDataEvent.fire([]);
+    }
 };
 
 export const getRecentFolders = async () => {
