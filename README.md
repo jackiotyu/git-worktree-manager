@@ -4,8 +4,8 @@
 # Git Worktree Manager
 
 <!-- ABOUT THE PROJECT -->
-This plugin aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
-该插件旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
+This extension aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
+该扩展旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
 
 [![Product Name Screen Shot][product-screenshot]](https://github.com/jackiotyu/git-worktree-manager)
 
@@ -61,7 +61,7 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 ## 快速开始
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
-在VSCode[插件市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
+在VSCode[扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
 1. Find the `Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.4/images/icon.png"> panel in activitybar.
 在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.4/images/icon.png"> 面板
 1. Performing various quick operations of git worktree on the panel
@@ -89,6 +89,11 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
 - Using VSCode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
 使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
+- Quick pull/push commits in remote branch.
+快速在远程分支上pull/push提交。
+- Quick view git history. (current use extension [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
+快速查看git提交历史. (当前使用扩展 [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
+
 
 2. Git repository manger.  git 仓库管理
 ![save-repository](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.4/images/save-repository.png)
@@ -122,7 +127,7 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 - [x] Quick open recently opened folders.
 - [x] Switch any branch, use `git switch --ignore-other-worktrees`.
 - [x] Change message prompts level.
-- [x] Quick view git history. (current use [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
+- [x] Quick view git history.
 - [ ] Display git branch status.
 - [x] Quick pull/push branch.
 - [ ] Git repository snapshot.

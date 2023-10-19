@@ -3,7 +3,7 @@
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
   "description": "Switch git worktree easily🚀. 快速切换git工作树",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -248,12 +248,12 @@
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(gear) 打开插件设置 ](command:git-worktree-manager.openSetting)",
+        "contents": "[ $(gear) 打开扩展设置 ](command:git-worktree-manager.openSetting)",
         "when": "git-worktree-manager.locale == zh-cn"
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(issues) 反馈插件问题 ](https://github.com/jackiotyu/git-worktree-manager/issues)",
+        "contents": "[ $(issues) 反馈扩展问题 ](https://github.com/jackiotyu/git-worktree-manager/issues)",
         "when": "git-worktree-manager.locale == zh-cn"
       },
       {

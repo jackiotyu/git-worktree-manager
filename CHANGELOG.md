@@ -1,3 +1,11 @@
+## [0.1.8] 2023-10-19
+
+### Change
+
+- Update README.
+- Quick pull/push commits in remote branch.
+- Quick view git history. (current use extension [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
+
 ## [0.1.5] 2023-10-17
 
 ### Change

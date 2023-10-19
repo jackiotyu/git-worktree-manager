@@ -43,7 +43,7 @@
     "config.terminalLocationInEditor.description": "是否在编辑器中打开内置终端, 默认在面板中打开",
     "config.terminalCmdList.description": "打开终端时传入指令, 例如 node -v",
     "config.externalTerminalInvoke.description": "唤起外部终端",
-    "config.alertLevel.description": "配置插件消息提示最低等级",
+    "config.alertLevel.description": "配置扩展消息提示的最低等级",
     "config.alertLevel.enum.info": "提示",
     "config.alertLevel.enum.warn": "警告",
     "config.alertLevel.enum.error": "错误",
