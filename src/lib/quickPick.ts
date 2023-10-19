@@ -232,7 +232,7 @@ export const pickWorktree = async () => {
         const gitFolders = GlobalState.get('gitFolders', []);
         const worktreeList = await Promise.all(
             gitFolders.map(async (item) => {
-                const list = await getWorkTreeList(item.path);
+                const list = await getWorkTreeList(item.path, true);
                 return [list, item] as const;
             }),
         );

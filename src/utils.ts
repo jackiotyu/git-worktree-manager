@@ -79,13 +79,13 @@ export function getFolderIcon(path: string, color?: vscode.ThemeColor) {
         : new vscode.ThemeIcon('folder', color);
 }
 
-export async function getWorkTreeList(root?: string): Promise<IWorkTreeDetail[]> {
+export async function getWorkTreeList(root?: string, skipRemote?: boolean): Promise<IWorkTreeDetail[]> {
     let cwd = root || folderRoot.uri?.fsPath || '';
     try {
         const [output, mainFolderFull, remoteBranchOutput] = await Promise.all([
             executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']),
             executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
-            executeGitCommandBase(cwd, ['remote']),
+            skipRemote ? Promise.resolve('') : executeGitCommandBase(cwd, ['remote']),
         ]);
 
         const mainFolder = mainFolderFull.replace('/.git', '');
@@ -116,7 +116,7 @@ export async function getWorkTreeList(root?: string): Promise<IWorkTreeDetail[]>
         let detailList = await Promise.all(
             (list as unknown as IWorkTreeOutputItem[]).map(async (item) => {
                 const branchName = item.branch?.replace('refs/heads/', '') || '';
-                const aheadBehind = branchName
+                const aheadBehind = !skipRemote && branchName
                     ? await getAheadBehindCommitCount(branchName, `${remoteName}/${branchName}`, item.worktree)
                     : void 0;
                 return {

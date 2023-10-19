@@ -313,7 +313,7 @@ const addToGitFolder = async (folderPath: string) => {
     if (!(await checkGitValid(folderPath))) {
         return Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
     }
-    const worktreeList = await getWorkTreeList(folderPath);
+    const worktreeList = await getWorkTreeList(folderPath, true);
     const mainFolder = worktreeList.find((i) => i.isMain);
     const mainFolderPath = mainFolder?.path ? vscode.Uri.file(mainFolder.path).fsPath : '';
     if (mainFolderPath && mainFolderPath !== folderPath) {
