@@ -334,15 +334,10 @@ export const checkExist = (path: string) => {
         .catch(() => false);
 };
 
-export const pullOrPushAction = async (action: 'pull' | 'push', branchName: string, cwd?: string) => {
-    const remoteBranchList = await getRemoteBranchList(['refname:short'], cwd);
-    const item = remoteBranchList.find((row) => row['refname:short'].split('/')[1] === branchName);
-    if (!item) {
-        return false;
-    }
-    const [remoteName, ...remoteBranchNameArgs] = item['refname:short'].split('/');
-    const remoteBranchName = remoteBranchNameArgs.join('/');
+export const pullOrPushAction = async (action: 'pull' | 'push', branchName: string, cwd: string) => {
+    const remoteBranchOutput = await executeGitCommandBase(cwd, ['remote']);
+    const [remoteName] = remoteBranchOutput.split('\n');
     return action === 'pull'
-        ? pullBranch(remoteName, branchName, remoteBranchName, cwd)
-        : pushBranch(remoteName, branchName, remoteBranchName, cwd);
+        ? pullBranch(remoteName, branchName, `${remoteName}/${branchName}`, cwd)
+        : pushBranch(remoteName, branchName, `${remoteName}/${branchName}`, cwd);
 };
