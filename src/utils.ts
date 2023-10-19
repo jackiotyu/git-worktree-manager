@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
-import { treeDataEvent } from '@/lib/events';
+import { treeDataEvent, updateTreeDataEvent } from '@/lib/events';
 import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened } from '@/types';
 import localize from '@/localize';
 import * as cp from 'child_process';
@@ -11,6 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import * as util from 'util';
 import fs from 'fs/promises';
 import { Alert } from '@/lib/adaptor/window';
+import { actionProgressWrapper } from '@/lib/progress';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -296,11 +297,19 @@ export const checkoutBranch = (cwd: string, branchName: string, ...args: string[
 };
 
 export const pullBranch = (remoteName: string, branchName: string, remoteBranchName: string, cwd?: string) => {
-    return executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`]);
+    actionProgressWrapper(
+        localize('cmd.pullWorkTree'),
+        () => executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`]),
+        updateTreeDataEvent.fire,
+    );
 };
 
 export const pushBranch = (remoteName: string, localBranchName: string, remoteBranchName: string, cwd?: string) => {
-    return executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`]);
+    actionProgressWrapper(
+        localize('cmd.pushWorkTree'),
+        () => executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`]),
+        updateTreeDataEvent.fire,
+    );
 };
 
 export const addToWorkspace = (path: string) => {
