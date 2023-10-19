@@ -1,4 +1,3 @@
-
 export const APP_NAME = 'git-worktree-manager';
 
 export enum Commands {
@@ -34,7 +33,8 @@ export enum Commands {
     gitFolderSetClose = 'git-worktree-manager.gitFolderSetClose',
     searchAllWorktree = 'git-worktree-manager.searchAllWorktree',
     loadMoreRecentFolder = 'git-worktree-manager.loadMoreRecentFolder',
-    loadAllTreeData = 'git-worktree-manager.loadAllTreeData'
+    loadAllTreeData = 'git-worktree-manager.loadAllTreeData',
+    viewHistory = 'git-worktree-manager.viewHistory',
 }
 
 export enum TreeItemKind {

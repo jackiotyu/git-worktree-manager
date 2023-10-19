@@ -179,6 +179,11 @@
         "command": "git-worktree-manager.loadAllTreeData",
         "title": "%cmd.loadAllTreeData%",
         "icon": "$(unfold)"
+      },
+      {
+        "command": "git-worktree-manager.viewHistory",
+        "title": "%cmd.viewHistory%",
+        "icon": "$(history)"
       }
     ],
     "keybindings": [
@@ -270,6 +275,11 @@
           "group": "navigation@100"
         },
         {
+          "command": "git-worktree-manager.viewHistory",
+          "when": "view == git-worktree-manager-list",
+          "group": "navigation@20"
+        },
+        {
           "command": "git-worktree-manager.addWorkTree",
           "when": "view === git-worktree-manager-list",
           "group": "navigation@1"
@@ -358,6 +368,11 @@
         },
         {
           "command": "git-worktree-manager.renameGitFolder",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
+          "group": "inline@1"
+        },
+        {
+          "command": "git-worktree-manager.viewHistory",
           "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
           "group": "inline@1"
         },
@@ -548,6 +563,10 @@
         {
           "command": "git-worktree-manager.loadAllTreeData",
           "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.viewHistory",
+          "when": "false"
         }
       ]
     },
@@ -586,6 +605,15 @@
           ],
           "default": "error",
           "description": "%config.alertLevel.description%"
+        },
+        "git-worktree-manager.gitHistoryExtension": {
+          "scope": "application",
+          "enum": ["mhutchie.git-graph"],
+          "enumDescriptions": [
+            "git graph"
+          ],
+          "default": "mhutchie.git-graph",
+          "description": "%config.gitHistoryExtension.description%"
         }
       }
     }

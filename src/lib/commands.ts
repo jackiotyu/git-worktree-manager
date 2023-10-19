@@ -32,6 +32,7 @@ import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
+import { GitHistory } from '@/lib/adaptor/gitHistory';
 import { ILoadMoreItem, IFolderItemConfig } from '@/types';
 
 interface CmdItem extends vscode.QuickPickItem {
@@ -550,6 +551,11 @@ const loadAllTreeDataCmd = (item: ILoadMoreItem) => {
     loadAllTreeDataEvent.fire(item.viewId);
 };
 
+const viewHistoryCmd = (item?: GitFolderItem) => {
+    let uri = item ? vscode.Uri.file(item.path) : folderRoot.uri;
+    uri && GitHistory.openHistory(uri);
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -589,6 +595,7 @@ export class CommandsManger {
                 toggleGitFolderViewAs(true);
             }),
             vscode.commands.registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
+            vscode.commands.registerCommand(Commands.viewHistory, viewHistoryCmd),
         );
     }
 }
