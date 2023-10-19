@@ -610,7 +610,7 @@
           "scope": "application",
           "enum": ["mhutchie.git-graph"],
           "enumDescriptions": [
-            "git graph"
+            "git graph ⇄ https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph"
           ],
           "default": "mhutchie.git-graph",
           "description": "%config.gitHistoryExtension.description%"

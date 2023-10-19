@@ -4,7 +4,7 @@ import { Alert } from '@/lib/adaptor/window';
 import localize from '@/localize';
 
 export enum GitHistoryExtension {
-    // gitHistory = 'donjayamanne.githistory',
+    gitHistory = 'donjayamanne.githistory',
     gitGraph = 'mhutchie.git-graph',
 }
 
@@ -40,6 +40,9 @@ export class GitHistory {
         switch (this.extensionName) {
             case GitHistoryExtension.gitGraph:
                 return commands.executeCommand('git-graph.view', { rootUri: uri });
+            // FIXME git history 无法实现浏览其他仓库的历史
+            // case GitHistoryExtension.gitHistory:
+            //     return commands.executeCommand('git.viewHistory', uri);
         }
     }
 }
