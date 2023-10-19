@@ -122,8 +122,9 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 - [x] Quick open recently opened folders.
 - [x] Switch any branch, use `git switch --ignore-other-worktrees`.
 - [x] Change message prompts level.
+- [x] Quick view git history. (current use [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
 - [ ] Display git branch status.
-- [ ] Quick pull/push branch.
+- [x] Quick pull/push branch.
 - [ ] Git repository snapshot.
 - [ ] Multi-language Support.
     - [x] Chinese.

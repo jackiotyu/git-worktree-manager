@@ -11,6 +11,8 @@ export interface IWorkTreeDetail {
     locked: boolean;
     isMain: boolean;
     folderName?: string;
+    ahead?: number;
+    behind?: number;
 }
 
 export interface IWorkTreeOutputItem {

@@ -103,6 +103,16 @@
         "icon": "$(unlock)"
       },
       {
+        "command": "git-worktree-manager.pullWorkTree",
+        "title": "%cmd.pullWorkTree%",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "git-worktree-manager.pushWorkTree",
+        "title": "%cmd.pushWorkTree%",
+        "icon": "$(arrow-up)"
+      },
+      {
         "command": "git-worktree-manager.pruneWorkTree",
         "title": "%cmd.pruneWorkTree%",
         "icon": "$(wand)"
@@ -352,14 +362,24 @@
           "group": "inline@100"
         },
         {
+          "command": "git-worktree-manager.pushWorkTree",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.ahead/",
+          "group": "inline@10"
+        },
+        {
+          "command": "git-worktree-manager.pullWorkTree",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.behind/",
+          "group": "inline@10"
+        },
+        {
           "command": "git-worktree-manager.lockWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/",
-          "group": "inline"
+          "group": "inline@20"
         },
         {
           "command": "git-worktree-manager.unlockWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/",
-          "group": "inline"
+          "group": "inline@20"
         },
         {
           "command": "git-worktree-manager.checkoutBranch",
@@ -566,6 +586,14 @@
         },
         {
           "command": "git-worktree-manager.viewHistory",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.pullWorkTree",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.pushWorkTree",
           "when": "false"
         }
       ]

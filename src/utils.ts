@@ -60,6 +60,7 @@ const executeGitCommandAuto = (cwd: string = '', args?: string[]) => {
     if (!cwd) {
         return executeGitCommand(args);
     }
+
     return executeGitCommandBase(cwd, args);
 };
 
@@ -77,15 +78,17 @@ export function getFolderIcon(path: string, color?: vscode.ThemeColor) {
         : new vscode.ThemeIcon('folder', color);
 }
 
-export async function getWorkTreeList(root?: string) {
+export async function getWorkTreeList(root?: string): Promise<IWorkTreeDetail[]> {
     let cwd = root || folderRoot.uri?.fsPath || '';
     try {
-        const [output, mainFolderFull] = await Promise.all([
+        const [output, mainFolderFull, remoteBranchOutput] = await Promise.all([
             executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']),
             executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
+            executeGitCommandBase(cwd, ['remote']),
         ]);
 
         const mainFolder = mainFolderFull.replace('/.git', '');
+        const [remoteName] = remoteBranchOutput.split('\n');
         let list = output
             .split('\n')
             .reduce<string[][]>(
@@ -95,6 +98,7 @@ export async function getWorkTreeList(root?: string) {
                     } else {
                         list.push([]);
                     }
+
                     return list;
                 },
                 [[]],
@@ -108,17 +112,25 @@ export async function getWorkTreeList(root?: string) {
                 return new Map<string, string | void>(itemList);
             })
             .map((mapItem) => Object.fromEntries(mapItem));
-        let detailList = (list as unknown as IWorkTreeOutputItem[]).map((item) => {
-            return {
-                name: (item.branch || item.HEAD?.slice(0, 8) || '').replace('refs/heads/', ''),
-                path: item.worktree,
-                isBranch: !!item.branch,
-                detached: Reflect.has(item, 'detached'),
-                prunable: !!item.prunable,
-                locked: Reflect.has(item, 'locked'),
-                isMain: item.worktree.trim() === mainFolder.trim(),
-            };
-        });
+        let detailList = await Promise.all(
+            (list as unknown as IWorkTreeOutputItem[]).map(async (item) => {
+                const branchName = item.branch?.replace('refs/heads/', '') || '';
+                const aheadBehind = branchName
+                    ? await getAheadBehindCommitCount(branchName, `${remoteName}/${branchName}`, item.worktree)
+                    : void 0;
+                return {
+                    name: (item.branch || item.HEAD?.slice(0, 8) || '').replace('refs/heads/', ''),
+                    path: item.worktree,
+                    isBranch: !!item.branch,
+                    detached: Reflect.has(item, 'detached'),
+                    prunable: !!item.prunable,
+                    locked: Reflect.has(item, 'locked'),
+                    isMain: item.worktree.trim() === mainFolder.trim(),
+                    ahead: aheadBehind?.ahead,
+                    behind: aheadBehind?.behind,
+                };
+            }),
+        );
         return detailList;
     } catch (error) {
         console.log('getWorkTreeList error', error);
@@ -243,9 +255,29 @@ export async function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
             for (const worktreePath of matched) {
                 list.push(worktreePath[1]);
             }
+
             return list;
         }
         throw error;
+    }
+}
+
+// Fork from https://github.com/gitkraken/vscode-gitlens/blob/2fd2bbbe328fbe66f879b78a61cab6df65181452/src/env/node/git/git.ts#L1660
+export async function getAheadBehindCommitCount(ref1: string, ref2: string, cwd: string) {
+    try {
+        let data = await executeGitCommandBase(cwd, ['rev-list', '--left-right', '--count', `${ref1}...${ref2}`, '--']);
+        if (data.length === 0) return undefined;
+        const parts = data.split('\t');
+        if (parts.length !== 2) return undefined;
+        const [ahead, behind] = parts;
+        const result = {
+            ahead: parseInt(ahead, 10),
+            behind: parseInt(behind, 10),
+        };
+        if (isNaN(result.ahead) || isNaN(result.behind)) return undefined;
+        return result;
+    } catch {
+        return void 0;
     }
 }
 
@@ -291,4 +323,17 @@ export const checkExist = (path: string) => {
         .stat(path)
         .then(() => true)
         .catch(() => false);
+};
+
+export const pullOrPushAction = async (action: 'pull' | 'push', branchName: string, cwd?: string) => {
+    const remoteBranchList = await getRemoteBranchList(['refname:short'], cwd);
+    const item = remoteBranchList.find((row) => row['refname:short'].split('/')[1] === branchName);
+    if (!item) {
+        return false;
+    }
+    const [remoteName, ...remoteBranchNameArgs] = item['refname:short'].split('/');
+    const remoteBranchName = remoteBranchNameArgs.join('/');
+    return action === 'pull'
+        ? pullBranch(remoteName, branchName, remoteBranchName, cwd)
+        : pushBranch(remoteName, branchName, remoteBranchName, cwd);
 };

@@ -26,7 +26,9 @@ export class WorkTreeItem extends vscode.TreeItem {
     constructor(item: IWorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
         let finalName = item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
         super(finalName, collapsible);
-        this.description = `${item.isMain ? '✨ ' : ''}${item.path}`;
+        this.description = `${item.isMain ? '✨ ' : ''}${item.ahead ? `${item.ahead}↑ ` : ''}${
+            item.behind ? `${item.behind}↓ ` : ''
+        }${item.path}`;
         this.parent = parent;
 
         const isCurrent = judgeIsCurrentFolder(item.path);
@@ -46,7 +48,9 @@ export class WorkTreeItem extends vscode.TreeItem {
         let lockPost = (!item.isMain && (item.locked ? '.lock' : '.unlock')) || '';
         let mainPost = item.isMain ? '.main' : '';
         let currentPost = isCurrent ? '.current' : '';
-        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}`;
+        let aheadPost = item.ahead ? '.ahead' : '';
+        let behindPost = item.behind ? '.behind' : '';
+        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}`;
 
         this.path = item.path;
         this.name = item.name;
@@ -61,6 +65,8 @@ export class WorkTreeItem extends vscode.TreeItem {
         item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
         item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
         item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));
+        item.ahead && this.tooltip.appendMarkdown(localize('treeView.tooltip.ahead', item.ahead + ''));
+        item.behind && this.tooltip.appendMarkdown(localize('treeView.tooltip.behind', item.behind + ''));
         !isCurrent && this.tooltip.appendMarkdown(localize('treeView.tooltip.click'));
 
         this.command = {

@@ -16,6 +16,7 @@ import {
     moveWorkTree,
     unlockWorkTree,
     lockWorkTree,
+    pullOrPushAction,
     pruneWorkTree,
     checkGitValid,
     checkoutBranch,
@@ -547,6 +548,14 @@ const searchAllWorktreeCmd = () => {
     pickWorktree();
 };
 
+const pushWorkTreeCmd = (item: WorkTreeItem) => {
+    pullOrPushAction('push', item.name, item.path);
+};
+
+const pullWorkTreeCmd = (item: WorkTreeItem) => {
+    pullOrPushAction('pull', item.name, item.path);
+};
+
 const loadAllTreeDataCmd = (item: ILoadMoreItem) => {
     loadAllTreeDataEvent.fire(item.viewId);
 };
@@ -594,6 +603,8 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.gitFolderViewAsList, () => {
                 toggleGitFolderViewAs(true);
             }),
+            vscode.commands.registerCommand(Commands.pushWorkTree, pushWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.pullWorkTree, pullWorkTreeCmd),
             vscode.commands.registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
             vscode.commands.registerCommand(Commands.viewHistory, viewHistoryCmd),
         );

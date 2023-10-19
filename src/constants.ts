@@ -12,6 +12,8 @@ export enum Commands {
     moveWorkTree = 'git-worktree-manager.moveWorkTree',
     lockWorkTree = 'git-worktree-manager.lockWorkTree',
     unlockWorkTree = 'git-worktree-manager.unlockWorkTree',
+    pullWorkTree = 'git-worktree-manager.pullWorkTree',
+    pushWorkTree = 'git-worktree-manager.pushWorkTree',
     pruneWorkTree = 'git-worktree-manager.pruneWorkTree',
     switchToSelectFolder = 'git-worktree-manager.switchToSelectFolder',
     addWorkTreeFromBranch = 'git-worktree-manager.addWorkTreeFromBranch',
