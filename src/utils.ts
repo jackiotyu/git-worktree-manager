@@ -300,7 +300,7 @@ export const pullBranch = (remoteName: string, branchName: string, remoteBranchN
     actionProgressWrapper(
         localize('cmd.pullWorkTree'),
         () => executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`]),
-        updateTreeDataEvent.fire,
+        updateTreeDataEvent.fire.bind(updateTreeDataEvent),
     );
 };
 
@@ -308,7 +308,7 @@ export const pushBranch = (remoteName: string, localBranchName: string, remoteBr
     actionProgressWrapper(
         localize('cmd.pushWorkTree'),
         () => executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`]),
-        updateTreeDataEvent.fire,
+        updateTreeDataEvent.fire.bind(updateTreeDataEvent),
     );
 };
 
@@ -335,9 +335,17 @@ export const checkExist = (path: string) => {
 };
 
 export const pullOrPushAction = async (action: 'pull' | 'push', branchName: string, cwd: string) => {
-    const remoteBranchOutput = await executeGitCommandBase(cwd, ['remote']);
-    const [remoteName] = remoteBranchOutput.split('\n');
+    const remoteBranchList = await getRemoteBranchList(['refname:short'], cwd);
+    const item = remoteBranchList.find((row) => {
+        const [remoteName, ...remoteBranchNameArgs] = row['refname:short'].split('/');
+        return remoteBranchNameArgs.join('/').toLowerCase() === branchName.toLowerCase();
+    });
+    if (!item) {
+        return false;
+    }
+    const [remoteName, ...remoteBranchNameArgs] = item['refname:short'].split('/');
+    const remoteBranchName = remoteBranchNameArgs.join('/');
     return action === 'pull'
-        ? pullBranch(remoteName, branchName, `${remoteName}/${branchName}`, cwd)
-        : pushBranch(remoteName, branchName, `${remoteName}/${branchName}`, cwd);
+        ? pullBranch(remoteName, branchName, remoteBranchName, cwd)
+        : pushBranch(remoteName, branchName, remoteBranchName, cwd);
 };
