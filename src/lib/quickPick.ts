@@ -56,16 +56,15 @@ export const pickBranch = async (
         const branchItems: BranchForWorkTree[] = branchList
             .filter((i) => !i.worktreepath)
             .map((item) => {
+                const shortRefName = item['refname:short'].replace(/^heads\//, '');
                 return {
-                    label: item['refname:short'],
+                    label: shortRefName,
                     description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
                         item.authordate,
                     )}`,
                     iconPath: new vscode.ThemeIcon('source-control'),
                     hash: item['objectname:short'],
-                    branch: /\(HEAD detached at/.test(item['refname:short'])
-                        ? item['objectname:short']
-                        : item['refname:short'],
+                    branch: /\(HEAD detached at/.test(shortRefName) ? item['objectname:short'] : shortRefName,
                 };
             });
         const defaultBranch = branchList.find((i) => i.HEAD === '*');
@@ -111,7 +110,7 @@ export const pickBranch = async (
 
         const tagItems: BranchForWorkTree[] = tagList.map((item) => {
             return {
-                label: item['refname:short'],
+                label: item['refname:short'].replace(/^tags\//, ''),
                 iconPath: new vscode.ThemeIcon('tag'),
                 description: item['objectname:short'],
                 hash: item['objectname:short'],
