@@ -23,7 +23,7 @@ export const pickBranch = async (
         reject = _reject;
     });
     try {
-        let isValidGit = await checkGitValid();
+        let isValidGit = await checkGitValid(cwd);
         if (!isValidGit) {
             Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
             return;

@@ -286,5 +286,3 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
         return element;
     }
 }
-
-// TODO 分支管理（pull/push）

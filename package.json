@@ -154,7 +154,8 @@
       },
       {
         "command": "git-worktree-manager.checkoutBranch",
-        "title": "%cmd.checkoutBranch%"
+        "title": "%cmd.checkoutBranch%",
+        "icon": "$(source-control)"
       },
       {
         "command": "git-worktree-manager.gitFolderViewAsTree",
@@ -369,6 +370,11 @@
         {
           "command": "git-worktree-manager.pullWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.behind/",
+          "group": "inline@10"
+        },
+        {
+          "command": "git-worktree-manager.checkoutBranch",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "inline@10"
         },
         {
