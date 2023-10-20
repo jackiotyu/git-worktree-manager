@@ -63,7 +63,9 @@ export const pickBranch = async (
                     )}`,
                     iconPath: new vscode.ThemeIcon('source-control'),
                     hash: item['objectname:short'],
-                    branch: item['refname:short'],
+                    branch: /\(HEAD detached at/.test(item['refname:short'])
+                        ? item['objectname:short']
+                        : item['refname:short'],
                 };
             });
         const defaultBranch = branchList.find((i) => i.HEAD === '*');

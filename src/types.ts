@@ -5,9 +5,11 @@ import { ViewId } from '@/constants';
 export interface IWorkTreeDetail {
     name: string;
     path: string;
+    hash: string;
     detached: boolean;
     prunable: boolean;
     isBranch: boolean;
+    isTag: boolean;
     locked: boolean;
     isMain: boolean;
     folderName?: string;

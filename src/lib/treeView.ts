@@ -57,11 +57,18 @@ export class WorkTreeItem extends vscode.TreeItem {
 
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
-        this.tooltip.appendMarkdown(
-            `$(${item.isBranch ? 'source-control' : 'git-commit'}) ${
-                item.isBranch ? localize('branch') : localize('commit')
-            }  ${item.name}\n\n`,
-        );
+        let sourceIcon = 'git-commit';
+        let sourceName = localize('commit');
+        if (item.isBranch) {
+            sourceIcon = 'source-control';
+            sourceName = localize('branch');
+        } else if (item.isTag) {
+            sourceIcon = 'tag';
+            sourceName = localize('tag');
+        }
+        this.tooltip.appendMarkdown(`$(${sourceIcon}) ${sourceName}  ${item.name}\n\n`);
+        sourceIcon !== 'git-commit' &&
+            this.tooltip.appendMarkdown(`$(git-commit) ${localize('commit')}  ${item.hash}\n\n`);
         item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
         item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
         item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));

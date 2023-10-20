@@ -104,6 +104,7 @@
     "treeView.tooltip.folder": "$(folder) 路径 {0}\n\n",
     "commit": "提交",
     "branch": "分支",
+    "tag": "标记",
     "commitHash": "提交hash",
     "treeView.tooltip.error": "$(error) 已从 git 版本中分离\n\n",
     "treeView.tooltip.lock": "$(lock) 已锁定该 worktree, 防止被意外清除\n\n",

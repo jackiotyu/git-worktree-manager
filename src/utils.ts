@@ -79,6 +79,10 @@ export function getFolderIcon(path: string, color?: vscode.ThemeColor) {
         : new vscode.ThemeIcon('folder', color);
 }
 
+export function getNameRev(cwd: string) {
+    return executeGitCommandBase(cwd, ['describe', '--all']);
+}
+
 export async function getWorkTreeList(root?: string, skipRemote?: boolean): Promise<IWorkTreeDetail[]> {
     let cwd = root || folderRoot.uri?.fsPath || '';
     try {
@@ -116,19 +120,35 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
         let detailList = await Promise.all(
             (list as unknown as IWorkTreeOutputItem[]).map(async (item) => {
                 const branchName = item.branch?.replace('refs/heads/', '') || '';
-                const aheadBehind = !skipRemote && branchName
-                    ? await getAheadBehindCommitCount(branchName, `${remoteName}/${branchName}`, item.worktree)
-                    : void 0;
+                const [aheadBehind, nameRev] = await Promise.all([
+                    !skipRemote && branchName
+                        ? getAheadBehindCommitCount(branchName, `${remoteName}/${branchName}`, item.worktree)
+                        : Promise.resolve(void 0),
+                    getNameRev(item.worktree),
+                ]);
+                const isRemoteRev = /^remotes\//.test(nameRev);
+                const isTag = /^tags\/[^~]+/.test(nameRev);
+                let name = branchName;
+                if (!name) {
+                    name = isRemoteRev || /^heads\//.test(nameRev)
+                        ? item.HEAD?.slice(0, 8)
+                        : nameRev
+                              .replace(/^tags\//, '')
+                              .replace(/^heads\//, '')
+                              .trim();
+                }
                 return {
-                    name: (item.branch || item.HEAD?.slice(0, 8) || '').replace('refs/heads/', ''),
+                    name,
                     path: item.worktree,
-                    isBranch: !!item.branch,
+                    isBranch: !!branchName,
+                    isTag,
                     detached: Reflect.has(item, 'detached'),
                     prunable: !!item.prunable,
                     locked: Reflect.has(item, 'locked'),
                     isMain: item.worktree.trim() === mainFolder.trim(),
                     ahead: aheadBehind?.ahead,
                     behind: aheadBehind?.behind,
+                    hash: item.HEAD,
                 };
             }),
         );
@@ -189,6 +209,7 @@ export async function getTagList<T extends string>(keys: T[], cwd?: string) {
     try {
         let output = await executeGitCommandAuto(cwd, [
             'tag',
+            '--list',
             `--format=${formatQuery(keys)}`,
             '--sort=-committerdate',
         ]);
@@ -209,7 +230,7 @@ export async function getRemoteList(cwd: string) {
 
 export async function addWorkTree(path: string, branch: string, cwd?: string) {
     try {
-        await executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', path, branch]);
+        await executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', '--guess-remote', path, branch]);
         return true;
     } catch (error: any) {
         Alert.showErrorMessage(localize('msg.error.addWorkTree', String(error)));

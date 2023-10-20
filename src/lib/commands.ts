@@ -35,6 +35,7 @@ import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
 import { GitHistory } from '@/lib/adaptor/gitHistory';
 import { ILoadMoreItem, IFolderItemConfig } from '@/types';
+import { actionProgressWrapper } from '@/lib/progress';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -517,18 +518,14 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
         localize('msg.placeholder.checkoutBranch'),
         item.path,
     );
-    if (!branchItem) {
-        return;
-    }
-
-    try {
-        const checkoutText = branchItem.branch || branchItem.hash || '';
-        const prefix = checkoutText === branchItem.hash ? '--detach' : '';
-        await checkoutBranch(item.path, checkoutText, prefix);
-    } catch (error: any) {
-        Alert.showErrorMessage(localize('msg.fail.commonAction', 'checkout', error));
-    }
-    updateTreeDataEvent.fire();
+    if (!branchItem) return;
+    const checkoutText = branchItem.branch || branchItem.hash || '';
+    const prefix = checkoutText === branchItem.hash ? '--detach' : '';
+    await actionProgressWrapper(
+        localize('msg.info.checkoutBranch', checkoutText),
+        () => checkoutBranch(item.path, checkoutText, prefix),
+        updateTreeDataEvent.fire.bind(updateTreeDataEvent),
+    );
 };
 
 const toggleGitFolderViewAs = (asTree: boolean) => {

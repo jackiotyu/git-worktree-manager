@@ -104,6 +104,7 @@
     "treeView.tooltip.folder": "$(folder) Folder {0}\n\n",
     "commit": "commit",
     "branch": "branch",
+    "tag": "tag",
     "commitHash": "commit hash",
     "treeView.tooltip.error": "$(error) Detached from the git version\n\n",
     "treeView.tooltip.lock": "$(lock) The worktree is locked to prevent accidental purging\n\n",
