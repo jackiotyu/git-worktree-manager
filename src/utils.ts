@@ -124,18 +124,19 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
                     !skipRemote && branchName
                         ? getAheadBehindCommitCount(branchName, `${remoteName}/${branchName}`, item.worktree)
                         : Promise.resolve(void 0),
-                    getNameRev(item.worktree),
+                    !branchName ? getNameRev(item.worktree) : Promise.resolve(''),
                 ]);
                 const isRemoteRev = /^remotes\//.test(nameRev);
                 const isTag = /^tags\/[^~]+/.test(nameRev);
                 let name = branchName;
                 if (!name) {
-                    name = isRemoteRev || /^heads\//.test(nameRev)
-                        ? item.HEAD?.slice(0, 8)
-                        : nameRev
-                              .replace(/^tags\//, '')
-                              .replace(/^heads\//, '')
-                              .trim();
+                    name =
+                        isRemoteRev || /^heads\//.test(nameRev)
+                            ? item.HEAD?.slice(0, 8)
+                            : nameRev
+                                  .replace(/^tags\//, '')
+                                  .replace(/^heads\//, '')
+                                  .trim();
                 }
                 return {
                     name,
