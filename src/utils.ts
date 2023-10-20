@@ -59,7 +59,7 @@ const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.Canc
 };
 
 export const openExternalTerminal = (path: string) => {
-    return vscode.commands.executeCommand('openInTerminal', vscode.Uri.file(path));
+    return vscode.commands.executeCommand('openInTerminal', vscode.Uri.parse(path));
 };
 
 const executeGitCommand = (args?: string[], token?: vscode.CancellationToken): Promise<string> => {
@@ -350,7 +350,7 @@ export const pushBranch = (remoteName: string, localBranchName: string, remoteBr
 
 export const addToWorkspace = (path: string) => {
     let success = vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
-        uri: vscode.Uri.file(path),
+        uri: vscode.Uri.parse(path),
         name: path,
     });
     if (success) {

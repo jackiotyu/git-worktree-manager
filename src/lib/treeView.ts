@@ -79,7 +79,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.command = {
             title: 'open worktree',
             command: 'vscode.openFolder',
-            arguments: [vscode.Uri.file(item.path), { forceNewWindow: true }],
+            arguments: [vscode.Uri.parse(item.path), { forceNewWindow: true }],
         };
     }
 }
@@ -225,7 +225,7 @@ export class FolderItem extends vscode.TreeItem {
         this.command = {
             title: 'open folder',
             command: 'vscode.openFolder',
-            arguments: [vscode.Uri.file(item.path), { forceNewWindow: true }],
+            arguments: [vscode.Uri.parse(item.path), { forceNewWindow: true }],
         };
     }
 }

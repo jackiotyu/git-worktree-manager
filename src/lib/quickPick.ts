@@ -202,7 +202,7 @@ export const pickWorktree = async () => {
             }
             if (event.button.tooltip === localize('cmd.switchToSelectFolder')) {
                 if (selectedItem) {
-                    vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+                    vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.path), {
                         forceNewWindow: false,
                         forceReuseWindow: true,
                     });
@@ -213,7 +213,7 @@ export const pickWorktree = async () => {
         quickPick.onDidAccept(() => {
             let selectedItem = quickPick.selectedItems[0];
             if (selectedItem?.path) {
-                vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+                vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.path), {
                     forceNewWindow: true,
                 });
             }
