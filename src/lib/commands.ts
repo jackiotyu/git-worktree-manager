@@ -521,7 +521,7 @@ const checkoutBranchCmd = async (item: WorkTreeItem) => {
     if (!branchItem) return;
     const checkoutText = branchItem.branch || branchItem.hash || '';
     const prefix = checkoutText === branchItem.hash ? '--detach' : '';
-    await actionProgressWrapper(
+    actionProgressWrapper(
         localize('msg.info.checkoutBranch', checkoutText),
         () => checkoutBranch(item.path, checkoutText, prefix),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),

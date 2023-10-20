@@ -12,12 +12,13 @@ import * as util from 'util';
 import fs from 'fs/promises';
 import { Alert } from '@/lib/adaptor/window';
 import { actionProgressWrapper } from '@/lib/progress';
+import treeKill = require('tree-kill');
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
 const WORK_TREE = 'worktree';
 
-const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> = (cwd, args) => {
+const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
     return new Promise((resolve, reject) => {
         console.log('[executeGitCommand] ', ['git'].concat(args || []).join(' '));
         const proc = cp.spawn('git', args, {
@@ -34,14 +35,23 @@ const executeGitCommandBase: (cwd: string, args?: string[]) => Promise<string> =
             // console.log('[exec stderr] ', chunk.toString());
             err = Buffer.concat([err, chunk]);
         });
+        token?.onCancellationRequested(() => {
+            proc.kill('SIGTERM');
+            if (proc.pid) {
+                treeKill(proc.pid, 'SIGTERM');
+            }
+        });
         proc.on('error', reject);
-        proc.on('close', (code) => {
-            console.log('[exec close] ', code);
+        proc.on('close', (code, signal) => {
+            console.log('[exec close] ', code, signal);
+            // console.log('[exec stdout] ', out.toString());
+            // console.log('[exec stderr] ', err.toString());
+            if (signal === 'SIGTERM') {
+                return resolve('');
+            }
             if (code === 0) {
-                // console.log('[exec stdout] ', out.toString());
                 resolve(out.toString());
             } else {
-                console.log('[exec stderr] ', err.toString());
                 reject(Error(err.toString()));
             }
         });
@@ -52,17 +62,17 @@ export const openExternalTerminal = (path: string) => {
     return vscode.commands.executeCommand('openInTerminal', vscode.Uri.file(path));
 };
 
-const executeGitCommand: (args?: string[]) => Promise<string> = (args?: string[]) => {
+const executeGitCommand = (args?: string[], token?: vscode.CancellationToken): Promise<string> => {
     console.log(folderRoot.uri?.fsPath, 'fsPath');
-    return executeGitCommandBase(folderRoot.uri?.fsPath || '', args);
+    return executeGitCommandBase(folderRoot.uri?.fsPath || '', args, token);
 };
 
-const executeGitCommandAuto = (cwd: string = '', args?: string[]) => {
+const executeGitCommandAuto = (cwd: string = '', args?: string[], token?: vscode.CancellationToken) => {
     if (!cwd) {
-        return executeGitCommand(args);
+        return executeGitCommand(args, token);
     }
 
-    return executeGitCommandBase(cwd, args);
+    return executeGitCommandBase(cwd, args, token);
 };
 
 export function judgeIsCurrentFolder(path: string) {
@@ -319,18 +329,22 @@ export const checkoutBranch = (cwd: string, branchName: string, ...args: string[
 };
 
 export const pullBranch = (remoteName: string, branchName: string, remoteBranchName: string, cwd?: string) => {
+    const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         localize('cmd.pullWorkTree'),
-        () => executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`]),
+        () => executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
+        token,
     );
 };
 
 export const pushBranch = (remoteName: string, localBranchName: string, remoteBranchName: string, cwd?: string) => {
+    const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         localize('cmd.pushWorkTree'),
-        () => executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`]),
+        () => executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
+        token,
     );
 };
 

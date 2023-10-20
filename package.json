@@ -459,21 +459,21 @@
         }
       ],
       "worktree-action": [
-          {
-            "command": "git-worktree-manager.repairWorkTree",
-            "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
-            "group": "worktree-action"
-          },
-          {
-            "command": "git-worktree-manager.moveWorkTree",
-            "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
-            "group": "worktree-action"
-          },
-          {
-            "command": "git-worktree-manager.removeWorkTree",
-            "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
-            "group": "worktree-delete"
-          }
+        {
+          "command": "git-worktree-manager.repairWorkTree",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "worktree-action"
+        },
+        {
+          "command": "git-worktree-manager.moveWorkTree",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "worktree-action"
+        },
+        {
+          "command": "git-worktree-manager.removeWorkTree",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "group": "worktree-delete"
+        }
       ],
       "commandPalette": [
         {
@@ -631,7 +631,11 @@
         },
         "git-worktree-manager.alertLevel": {
           "scope": "application",
-          "enum": ["info", "warn", "error"],
+          "enum": [
+            "info",
+            "warn",
+            "error"
+          ],
           "enumDescriptions": [
             "%config.alertLevel.enum.info%",
             "%config.alertLevel.enum.warn%",
@@ -642,7 +646,9 @@
         },
         "git-worktree-manager.gitHistoryExtension": {
           "scope": "application",
-          "enum": ["mhutchie.git-graph"],
+          "enum": [
+            "mhutchie.git-graph"
+          ],
           "enumDescriptions": [
             "git graph ⇄ https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph"
           ],
@@ -683,6 +689,7 @@
   "dependencies": {
     "dayjs": "^1.11.9",
     "lodash": "^4.17.21",
+    "tree-kill": "^1.2.2",
     "vscode-nls-i18n": "^0.2.4"
   }
 }
