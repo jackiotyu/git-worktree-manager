@@ -82,7 +82,8 @@
       },
       {
         "command": "git-worktree-manager.revealInSystemExplorer",
-        "title": "%cmd.revealInSystemExplorer%"
+        "title": "%cmd.revealInSystemExplorer%",
+        "icon": "$(folder-opened)"
       },
       {
         "command": "git-worktree-manager.repairWorkTree",
@@ -129,11 +130,13 @@
       },
       {
         "command": "git-worktree-manager.openTerminal",
-        "title": "%cmd.openTerminal%"
+        "title": "%cmd.openTerminal%",
+        "icon": "$(terminal)"
       },
       {
         "command": "git-worktree-manager.openExternalTerminal",
-        "title": "%cmd.openExternalTerminal%"
+        "title": "%cmd.openExternalTerminal%",
+        "icon": "$(terminal-bash)"
       },
       {
         "command": "git-worktree-manager.addToWorkspace",
@@ -373,18 +376,33 @@
           "group": "inline@10"
         },
         {
+          "command": "git-worktree-manager.openExternalTerminal",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.showExternalTerminalInTreeItem",
+          "group": "inline@12"
+        },
+        {
+          "command": "git-worktree-manager.openTerminal",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.showTerminalInTreeItem",
+          "group": "inline@12"
+        },
+        {
+          "command": "git-worktree-manager.revealInSystemExplorer",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.showOpenExplorerInTreeItem",
+          "group": "inline@12"
+        },
+        {
           "command": "git-worktree-manager.checkoutBranch",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.showCheckoutInWorktreeItem",
           "group": "inline@15"
         },
         {
           "command": "git-worktree-manager.lockWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/ && config.git-worktree-manager.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
           "command": "git-worktree-manager.unlockWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/ && config.git-worktree-manager.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
@@ -473,6 +491,16 @@
           "command": "git-worktree-manager.removeWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
           "group": "worktree-delete"
+        },
+        {
+          "command": "git-worktree-manager.lockWorkTree",
+          "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.unlock/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "group": "worktree-lock"
+        },
+        {
+          "command": "git-worktree-manager.unlockWorkTree",
+          "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.lock/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "group": "worktree-lock"
         }
       ],
       "commandPalette": [
@@ -654,6 +682,36 @@
           ],
           "default": "mhutchie.git-graph",
           "description": "%config.gitHistoryExtension.description%"
+        },
+        "git-worktree-manager.showLockInWorktreeItem": {
+          "scope": "application",
+          "type": "boolean",
+          "default": false,
+          "description": "%config.showLockInWorktreeItem.description%"
+        },
+        "git-worktree-manager.showOpenExplorerInTreeItem": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.showOpenExplorerInTreeItem.description%"
+        },
+        "git-worktree-manager.showCheckoutInWorktreeItem": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.showCheckoutInWorktreeItem.description%"
+        },
+        "git-worktree-manager.showExternalTerminalInTreeItem": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.showExternalTerminalInTreeItem.description%"
+        },
+        "git-worktree-manager.showTerminalInTreeItem": {
+          "scope": "application",
+          "type": "boolean",
+          "default": false,
+          "description": "%config.showTerminalInTreeItem.description%"
         }
       }
     }
