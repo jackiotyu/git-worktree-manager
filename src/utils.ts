@@ -68,7 +68,6 @@ export const openExternalTerminal = (path: string) => {
 };
 
 const executeGitCommand = (args?: string[], token?: vscode.CancellationToken): Promise<string> => {
-    console.log(folderRoot.uri?.fsPath, 'fsPath');
     return executeGitCommandBase(folderRoot.uri?.fsPath || '', args, token);
 };
 
@@ -170,7 +169,6 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
         );
         return detailList;
     } catch (error) {
-        console.log('getWorkTreeList error', error);
         logger.error(error);
         return [];
     }
@@ -382,7 +380,6 @@ export const pullOrPushAction = async (action: 'pull' | 'push', branchName: stri
         const [remoteName, ...remoteBranchNameArgs] = row['refname:short'].replace(/^remotes\//, '').split('/');
         return remoteBranchNameArgs.join('/').toLowerCase() === branchName.toLowerCase();
     });
-    console.log(item, 'remoteBranchList', remoteBranchList);
     if (!item) {
         return false;
     }

@@ -306,7 +306,6 @@ async function updateFolderItem(config: IFolderItemConfig) {
     let index = allFolders.findIndex((i) => i.path === config.path);
     if (~index) {
         allFolders[index] = config;
-        console.log('allFolders', allFolders);
         await updateFolderConfig(allFolders);
         Alert.showInformationMessage(localize('msg.success.save'));
     }
