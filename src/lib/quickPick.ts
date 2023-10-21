@@ -54,7 +54,7 @@ export const pickBranch = async (
         }
 
         const branchItems: BranchForWorkTree[] = branchList
-            .filter((i) => !i.worktreepath)
+            .filter((i) => !i.worktreepath && i.HEAD !== '*')
             .map((item) => {
                 const shortRefName = item['refname:short'].replace(/^heads\//, '');
                 return {
@@ -64,7 +64,7 @@ export const pickBranch = async (
                     )}`,
                     iconPath: new vscode.ThemeIcon('source-control'),
                     hash: item['objectname:short'],
-                    branch: /\(HEAD detached at/.test(shortRefName) ? item['objectname:short'] : shortRefName,
+                    branch: shortRefName,
                 };
             });
         const defaultBranch = branchList.find((i) => i.HEAD === '*');

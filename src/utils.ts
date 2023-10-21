@@ -379,13 +379,14 @@ export const checkExist = (path: string) => {
 export const pullOrPushAction = async (action: 'pull' | 'push', branchName: string, cwd: string) => {
     const remoteBranchList = await getRemoteBranchList(['refname:short'], cwd);
     const item = remoteBranchList.find((row) => {
-        const [remoteName, ...remoteBranchNameArgs] = row['refname:short'].split('/');
+        const [remoteName, ...remoteBranchNameArgs] = row['refname:short'].replace(/^remotes\//, '').split('/');
         return remoteBranchNameArgs.join('/').toLowerCase() === branchName.toLowerCase();
     });
+    console.log(item, 'remoteBranchList', remoteBranchList);
     if (!item) {
         return false;
     }
-    const [remoteName, ...remoteBranchNameArgs] = item['refname:short'].split('/');
+    const [remoteName, ...remoteBranchNameArgs] = item['refname:short'].replace(/^remotes\//, '').split('/');
     const remoteBranchName = remoteBranchNameArgs.join('/');
     return action === 'pull'
         ? pullBranch(remoteName, branchName, remoteBranchName, cwd)
