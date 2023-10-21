@@ -10,9 +10,10 @@ import { GlobalState } from '@/lib/globalState';
 import { Alert } from '@/lib/adaptor/window';
 // import { StatusBarItemManager } from '@/lib/statusBarItem';
 import throttle from 'lodash/throttle';
+import logger from '@/lib/logger';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('git-worktree-manager is now active!');
+    logger.log('git-worktree-manager is now active!');
     GlobalState.init(context);
     init(context.extensionPath);
     Alert.init(context);
@@ -35,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
     setupGitEvents(context);
     collectEvent(context);
-    context.subscriptions.push(folderRoot, worktreeView, folderView, recentFolderView, updateHandler);
+    context.subscriptions.push(folderRoot, worktreeView, folderView, recentFolderView, updateHandler, logger);
 }
 
 export function deactivate() {}

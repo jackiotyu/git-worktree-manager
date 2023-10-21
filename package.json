@@ -377,32 +377,32 @@
         },
         {
           "command": "git-worktree-manager.openExternalTerminal",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.showExternalTerminalInTreeItem",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.treeView.showExternalTerminalInTreeItem",
           "group": "inline@12"
         },
         {
           "command": "git-worktree-manager.openTerminal",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.showTerminalInTreeItem",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.treeView.showTerminalInTreeItem",
           "group": "inline@12"
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.showOpenExplorerInTreeItem",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.treeView.showOpenExplorerInTreeItem",
           "group": "inline@12"
         },
         {
           "command": "git-worktree-manager.checkoutBranch",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.showCheckoutInWorktreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.treeView.showCheckoutInWorktreeItem",
           "group": "inline@15"
         },
         {
           "command": "git-worktree-manager.lockWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/ && config.git-worktree-manager.showLockInWorktreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
           "command": "git-worktree-manager.unlockWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/ && config.git-worktree-manager.showLockInWorktreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
@@ -683,31 +683,31 @@
           "default": "mhutchie.git-graph",
           "description": "%config.gitHistoryExtension.description%"
         },
-        "git-worktree-manager.showLockInWorktreeItem": {
+        "git-worktree-manager.treeView.showLockInWorktreeItem": {
           "scope": "application",
           "type": "boolean",
           "default": false,
           "description": "%config.showLockInWorktreeItem.description%"
         },
-        "git-worktree-manager.showOpenExplorerInTreeItem": {
+        "git-worktree-manager.treeView.showOpenExplorerInTreeItem": {
           "scope": "application",
           "type": "boolean",
           "default": true,
           "description": "%config.showOpenExplorerInTreeItem.description%"
         },
-        "git-worktree-manager.showCheckoutInWorktreeItem": {
+        "git-worktree-manager.treeView.showCheckoutInWorktreeItem": {
           "scope": "application",
           "type": "boolean",
           "default": true,
           "description": "%config.showCheckoutInWorktreeItem.description%"
         },
-        "git-worktree-manager.showExternalTerminalInTreeItem": {
+        "git-worktree-manager.treeView.showExternalTerminalInTreeItem": {
           "scope": "application",
           "type": "boolean",
           "default": true,
           "description": "%config.showExternalTerminalInTreeItem.description%"
         },
-        "git-worktree-manager.showTerminalInTreeItem": {
+        "git-worktree-manager.treeView.showTerminalInTreeItem": {
           "scope": "application",
           "type": "boolean",
           "default": false,

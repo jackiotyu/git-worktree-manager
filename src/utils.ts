@@ -13,6 +13,7 @@ import fs from 'fs/promises';
 import { Alert } from '@/lib/adaptor/window';
 import { actionProgressWrapper } from '@/lib/progress';
 import treeKill = require('tree-kill');
+import logger from './lib/logger';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -20,7 +21,9 @@ const WORK_TREE = 'worktree';
 
 const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
     return new Promise((resolve, reject) => {
-        console.log('[executeGitCommand] ', ['git'].concat(args || []).join(' '));
+        // console.log('[executeGitCommand] ', ['git'].concat(args || []).join(' '));
+        logger.log(`'Running in' ${cwd}`);
+        logger.log('> ' + ['git'].concat(args || []).join(' '));
         const proc = cp.spawn('git', args, {
             cwd,
         });
@@ -30,10 +33,12 @@ const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.Canc
         proc.stdout.on('data', (chunk) => {
             // console.log('[exec stdout] ', chunk.toString());
             out = Buffer.concat([out, chunk]);
+            logger.trace(chunk.toString());
         });
         proc.stderr.on('data', (chunk) => {
             // console.log('[exec stderr] ', chunk.toString());
             err = Buffer.concat([err, chunk]);
+            logger.error(chunk.toString());
         });
         token?.onCancellationRequested(() => {
             proc.kill('SIGTERM');
@@ -43,7 +48,7 @@ const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.Canc
         });
         proc.on('error', reject);
         proc.on('close', (code, signal) => {
-            console.log('[exec close] ', code, signal);
+            logger.trace('[exec close] ', code, signal);
             // console.log('[exec stdout] ', out.toString());
             // console.log('[exec stderr] ', err.toString());
             if (signal === 'SIGTERM') {
@@ -166,6 +171,7 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
         return detailList;
     } catch (error) {
         console.log('getWorkTreeList error', error);
+        logger.error(error);
         return [];
     }
 }

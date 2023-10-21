@@ -36,6 +36,7 @@ import { Alert } from '@/lib/adaptor/window';
 import { GitHistory } from '@/lib/adaptor/gitHistory';
 import { ILoadMoreItem, IFolderItemConfig } from '@/types';
 import { actionProgressWrapper } from '@/lib/progress';
+import logger from '@/lib/logger';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -146,6 +147,7 @@ const removeWorkTreeCmd = async (item: WorkTreeItem) => {
         Alert.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.deleteWorkTree', String(error)));
+        logger.error(error);
     }
     updateTreeDataEvent.fire();
 };
@@ -198,6 +200,7 @@ const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {
         Alert.showInformationMessage(localize('msg.success.commonAction', cmdName));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.commonAction', cmdName, util.inspect(error, false, 1, true)));
+        logger.error(error);
     }
     updateTreeDataEvent.fire();
 };
@@ -232,6 +235,7 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
         Alert.showInformationMessage(localize('msg.success.moveWorkTree'));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.moveWorkTree', String(error)));
+        logger.error(error);
     }
     updateTreeDataEvent.fire();
 };
@@ -244,6 +248,7 @@ const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
         });
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.switchWorkTree', String(error)));
+        logger.error(error);
     }
 };
 
@@ -269,6 +274,7 @@ const pruneWorkTreeCmd = async () => {
         Alert.showInformationMessage(localize('msg.success.pruneWorkTree'));
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.pruneWorkTree'));
+        logger.error(error);
     }
     updateTreeDataEvent.fire();
 };
