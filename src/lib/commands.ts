@@ -70,7 +70,7 @@ export const switchWorkTreeCmd = async () => {
             return;
         }
         let path = workTrees[workTrees.findIndex((object) => object.name === workTree.label)].path;
-        let uri = vscode.Uri.parse(path);
+        let uri = vscode.Uri.file(path);
         vscode.commands.executeCommand('vscode.openFolder', uri, {
             forceNewWindow: true,
         });
@@ -101,7 +101,7 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
     if (!confirmOpen) {
         return;
     }
-    let folderUri = vscode.Uri.parse(folderPath);
+    let folderUri = vscode.Uri.file(folderPath);
     vscode.commands.executeCommand('vscode.openFolder', folderUri, {
         forceNewWindow: true,
     });
@@ -177,7 +177,7 @@ const revealInSystemExplorerCmd = async (item: WorkTreeItem | GitFolderItem) => 
     if (!(await checkFolderExist(item.path))) {
         return;
     }
-    vscode.commands.executeCommand('revealFileInOS', vscode.Uri.parse(item.path));
+    vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 
 const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {
@@ -242,7 +242,7 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
 
 const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
     try {
-        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(item.path), {
+        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
             forceNewWindow: false,
             forceReuseWindow: true,
         });
@@ -321,7 +321,7 @@ const addToGitFolder = async (folderPath: string) => {
     }
     const worktreeList = await getWorkTreeList(folderPath, true);
     const mainFolder = worktreeList.find((i) => i.isMain);
-    const mainFolderPath = mainFolder?.path ? vscode.Uri.parse(mainFolder.path).fsPath : '';
+    const mainFolderPath = mainFolder?.path ? vscode.Uri.file(mainFolder.path).fsPath : '';
     if (mainFolderPath && mainFolderPath !== folderPath) {
         let ok = await confirmModal(
             localize('msg.modal.title.pickMainFolder'),
@@ -357,7 +357,7 @@ const addGitFolderCmd = async () => {
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
-        defaultUri: folderRoot.uri ? vscode.Uri.parse(path.dirname(folderRoot.uri.fsPath)) : void 0,
+        defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
         openLabel: localize('msg.modal.title.addGitFolder'),
         title: localize('msg.modal.detail.addGitFolder'),
     });
@@ -563,7 +563,7 @@ const loadAllTreeDataCmd = (item: ILoadMoreItem) => {
 };
 
 const viewHistoryCmd = (item?: GitFolderItem) => {
-    let uri = item ? vscode.Uri.parse(item.path) : folderRoot.uri;
+    let uri = item ? vscode.Uri.file(item.path) : folderRoot.uri;
     uri && GitHistory.openHistory(uri);
 };
 
