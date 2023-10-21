@@ -101,7 +101,7 @@ export const pickBranch = async (
 
         const remoteBranchItems: BranchForWorkTree[] = remoteBranchList.map((item) => {
             return {
-                label: item['refname:short'],
+                label: item['refname:short'].replace(/^remotes\//, ''),
                 iconPath: new vscode.ThemeIcon('cloud'),
                 description: item['objectname:short'],
                 hash: item['objectname:short'],
