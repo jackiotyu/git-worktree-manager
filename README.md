@@ -89,6 +89,12 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
 - Using VSCode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
 使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
+```json
+{
+  "terminal.external.osxExec": "iTerm.app",
+  "terminal.external.windowsExec": "C:\\Program Files\\Git\\bin\\bash.exe",
+}
+```
 - Quick pull/push commits in remote branch.
 快速在远程分支上pull/push提交。
 - Quick view git history. (current use extension [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
