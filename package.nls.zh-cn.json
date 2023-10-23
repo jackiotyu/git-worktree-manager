@@ -109,6 +109,7 @@
     "treeView.tooltip.folder": "$(folder) 路径 {0}\n\n",
     "commit": "提交",
     "branch": "分支",
+    "remoteBranch": "远程分支",
     "tag": "标记",
     "commitHash": "提交hash",
     "treeView.tooltip.error": "$(error) 已从 git 版本中分离\n\n",

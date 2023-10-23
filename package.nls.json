@@ -109,6 +109,7 @@
     "treeView.tooltip.folder": "$(folder) Folder {0}\n\n",
     "commit": "commit",
     "branch": "branch",
+    "remoteBranch": "remote branch",
     "tag": "tag",
     "commitHash": "commit hash",
     "treeView.tooltip.error": "$(error) Detached from the git version\n\n",

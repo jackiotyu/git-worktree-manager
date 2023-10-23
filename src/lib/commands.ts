@@ -567,13 +567,13 @@ const searchAllWorktreeCmd = () => {
 };
 
 const pushWorkTreeCmd = (item?: WorkTreeItem) => {
-    if (!item) return;
-    pullOrPushAction('push', item.name, item.path);
+    if (!item?.remoteRef) return;
+    pullOrPushAction('push', item.remoteRef, item.path);
 };
 
 const pullWorkTreeCmd = (item?: WorkTreeItem) => {
-    if (!item) return;
-    pullOrPushAction('pull', item.name, item.path);
+    if (!item?.remoteRef) return;
+    pullOrPushAction('pull', item.remoteRef, item.path);
 };
 
 const loadAllTreeDataCmd = (item?: ILoadMoreItem) => {

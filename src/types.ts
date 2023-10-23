@@ -15,6 +15,7 @@ export interface IWorkTreeDetail {
     folderName?: string;
     ahead?: number;
     behind?: number;
+    remoteRef?: string;
 }
 
 export interface IWorkTreeOutputItem {

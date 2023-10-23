@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getBranchList, getRemoteBranchList, getTagList, formatTime, getWorkTreeList, checkGitValid } from '@/utils';
+import { formatTime, getWorkTreeList, checkGitValid, getAllRefList } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { IWorkTreeCacheItem } from '@/types';
 import localize from '@/localize';
@@ -42,22 +42,32 @@ export const pickBranch = async (
         });
         quickPick.show();
         quickPick.busy = true;
-        // TODO 使用 git for-each-ref 获取所有分支和tag
-        const [branchList, remoteBranchList, tagList] = await Promise.all([
-            getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD'], cwd),
-            getRemoteBranchList(['refname:short', 'objectname:short'], cwd),
-            getTagList(['refname:short', 'objectname:short'], cwd),
-        ]);
-
+        // 使用 git for-each-ref 获取所有分支和tag
+        const allRefList = await getAllRefList(
+            ['refname', 'objectname:short', 'worktreepath', 'authordate', 'HEAD'],
+            cwd,
+        );
+        type RefList = typeof allRefList;
+        let branchList: RefList = [];
+        let remoteBranchList: RefList = [];
+        let tagList: RefList = [];
+        allRefList.forEach((item) => {
+            if (item.refname.startsWith('refs/heads/')) {
+                branchList.push(item);
+            } else if (item.refname.startsWith('refs/remotes/')) {
+                remoteBranchList.push(item);
+            } else if (item.refname.startsWith('refs/tags/')) {
+                tagList.push(item);
+            }
+        });
         if (!branchList) {
             quickPick.hide();
             return;
         }
-
         const branchItems: BranchForWorkTree[] = branchList
             .filter((i) => !i.worktreepath && i.HEAD !== '*')
             .map((item) => {
-                const shortRefName = item['refname:short'].replace(/^heads\//, '');
+                const shortRefName = item['refname'].replace('refs/heads/', '');
                 return {
                     label: shortRefName,
                     description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
@@ -84,14 +94,15 @@ export const pickBranch = async (
             ...branchList
                 .filter((i) => i.worktreepath)
                 .map((item) => {
+                    const shortName = item['refname'].replace('refs/heads/', '');
                     return {
-                        label: item['refname:short'],
+                        label: shortName,
                         description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
                             item.authordate,
                         )}`,
                         iconPath: new vscode.ThemeIcon('source-control'),
                         hash: item['objectname:short'],
-                        branch: item['refname:short'],
+                        branch: shortName,
                     };
                 }),
             {
@@ -102,18 +113,18 @@ export const pickBranch = async (
 
         const remoteBranchItems: BranchForWorkTree[] = remoteBranchList.map((item) => {
             return {
-                label: item['refname:short'].replace(/^remotes\//, ''),
+                label: item['refname'].replace('refs/remotes/', ''),
                 iconPath: new vscode.ThemeIcon('cloud'),
-                description: item['objectname:short'],
+                description: item['objectname:short'] + ' ' + localize('remoteBranch'),
                 hash: item['objectname:short'],
             };
         });
 
         const tagItems: BranchForWorkTree[] = tagList.map((item) => {
             return {
-                label: item['refname:short'].replace(/^tags\//, ''),
+                label: item['refname'].replace('refs/tags/', ''),
                 iconPath: new vscode.ThemeIcon('tag'),
-                description: item['objectname:short'],
+                description: item['objectname:short'] + ' ' + localize('tag'),
                 hash: item['objectname:short'],
             };
         });

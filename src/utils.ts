@@ -133,16 +133,11 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
         let detailList = await Promise.all(
             (list as unknown as IWorkTreeOutputItem[]).map(async (item) => {
                 const branchName = item.branch?.replace('refs/heads/', '') || '';
+                const remoteBranchName = `${remoteName}/${branchName}`;
+                const hasRemote = remoteBranchMap.has(`refs/remotes/${remoteBranchName}`);
                 const [aheadBehind, nameRev] = await Promise.all([
-                    !skipRemote &&
-                    branchName &&
-                    remoteName &&
-                    remoteBranchMap.has(`refs/remotes/${remoteName}/${branchName}`)
-                        ? getAheadBehindCommitCount(
-                              branchName,
-                              `refs/remotes/${remoteName}/${branchName}`,
-                              item.worktree,
-                          )
+                    !skipRemote && branchName && remoteName && hasRemote
+                        ? getAheadBehindCommitCount(branchName, `refs/remotes/${remoteBranchName}`, item.worktree)
                         : Promise.resolve(void 0),
                     !branchName ? getNameRev(item.worktree) : Promise.resolve(''),
                 ]);
@@ -170,6 +165,7 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
                     ahead: aheadBehind?.ahead,
                     behind: aheadBehind?.behind,
                     hash: item.HEAD,
+                    remoteRef: hasRemote ? remoteBranchName : void 0,
                 };
             }),
         );
@@ -199,52 +195,12 @@ export function parseOutput<T extends string>(output: string, keyList: T[]): Rec
     return workTrees;
 }
 
-export async function getBranchList<T extends string>(keys: T[], cwd?: string) {
-    try {
-        let output = await executeGitCommandAuto(cwd, [
-            'branch',
-            `--format=${formatQuery(keys)}`,
-            '--sort=-committerdate',
-        ]);
-        return parseOutput(output, keys);
-    } catch {
-        return [];
-    }
-}
-
-export async function getRemoteBranchList<T extends string>(keys: T[], cwd?: string) {
-    try {
-        let output = await executeGitCommandAuto(cwd, [
-            'branch',
-            '-r',
-            `--format=${formatQuery(keys)}`,
-            '--sort=-committerdate',
-        ]);
-        return parseOutput(output, keys);
-    } catch {
-        return [];
-    }
-}
-
-export async function getTagList<T extends string>(keys: T[], cwd?: string) {
-    try {
-        let output = await executeGitCommandAuto(cwd, [
-            'tag',
-            '--list',
-            `--format=${formatQuery(keys)}`,
-            '--sort=-committerdate',
-        ]);
-        return parseOutput(output, keys);
-    } catch {
-        return [];
-    }
-}
-
 export async function getAllRefList<T extends string>(keys: T[], cwd?: string) {
     try {
         let output = await executeGitCommandAuto(cwd, [
             'for-each-ref',
             `--format=${formatQuery(keys)}`,
+            '--sort=-refname:lstrip=2',
             '--sort=-committerdate',
         ]);
         return parseOutput(output, keys);
@@ -351,21 +307,21 @@ export const checkoutBranch = (cwd: string, branchName: string, ...args: string[
     return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
 };
 
-export const pullBranch = (remoteName: string, branchName: string, remoteBranchName: string, cwd?: string) => {
+export const pullBranch = (remoteName: string, branchName: string, cwd?: string) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         localize('cmd.pullWorkTree'),
-        () => executeGitCommandAuto(cwd, ['pull', remoteName, `${remoteBranchName}:${branchName}`], token.token),
+        () => executeGitCommandAuto(cwd, ['pull', remoteName, `${branchName}:${branchName}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
     );
 };
 
-export const pushBranch = (remoteName: string, localBranchName: string, remoteBranchName: string, cwd?: string) => {
+export const pushBranch = (remoteName: string, branchName: string, cwd?: string) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         localize('cmd.pushWorkTree'),
-        () => executeGitCommandAuto(cwd, ['push', remoteName, `${localBranchName}:${remoteBranchName}`], token.token),
+        () => executeGitCommandAuto(cwd, ['push', remoteName, `${branchName}:${branchName}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
     );
@@ -393,18 +349,8 @@ export const checkExist = (path: string) => {
         .catch(() => false);
 };
 
-export const pullOrPushAction = async (action: 'pull' | 'push', branchName: string, cwd: string) => {
-    const remoteBranchList = await getRemoteBranchList(['refname:short'], cwd);
-    const item = remoteBranchList.find((row) => {
-        const [remoteName, ...remoteBranchNameArgs] = row['refname:short'].replace(/^remotes\//, '').split('/');
-        return remoteBranchNameArgs.join('/').toLowerCase() === branchName.toLowerCase();
-    });
-    if (!item) {
-        return false;
-    }
-    const [remoteName, ...remoteBranchNameArgs] = item['refname:short'].replace(/^remotes\//, '').split('/');
-    const remoteBranchName = remoteBranchNameArgs.join('/');
-    return action === 'pull'
-        ? pullBranch(remoteName, branchName, remoteBranchName, cwd)
-        : pushBranch(remoteName, branchName, remoteBranchName, cwd);
+export const pullOrPushAction = async (action: 'pull' | 'push', refName: string, cwd: string) => {
+    const [remoteName, ...remoteBranchNameArgs] = refName.split('/');
+    const branchName = remoteBranchNameArgs.join('/');
+    return action === 'pull' ? pullBranch(remoteName, branchName, cwd) : pushBranch(remoteName, branchName, cwd);
 };
