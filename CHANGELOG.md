@@ -1,3 +1,12 @@
+## [0.1.8] 2023-10-23
+
+### Change
+
+- Update README.
+- Add treeView icons for quick action.
+- Improve performance of git branch list data processing.
+- Improve treeView presentation.
+
 ## [0.1.8] 2023-10-19
 
 ### Change
