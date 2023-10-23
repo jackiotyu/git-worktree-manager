@@ -134,7 +134,8 @@ export const addWorkTreeCmd = async () => {
     });
 };
 
-const removeWorkTreeCmd = async (item: WorkTreeItem) => {
+const removeWorkTreeCmd = async (item?: WorkTreeItem) => {
+    if (!item) return;
     try {
         const confirm = await confirmModal(
             localize('msg.modal.title.deleteWorkTree'),
@@ -152,7 +153,8 @@ const removeWorkTreeCmd = async (item: WorkTreeItem) => {
     updateTreeDataEvent.fire();
 };
 
-const addWorkTreeFromBranchCmd = async (item: WorkTreeItem) => {
+const addWorkTreeFromBranchCmd = async (item?: WorkTreeItem) => {
+    if (!item) return;
     let uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
@@ -173,7 +175,8 @@ const addWorkTreeFromBranchCmd = async (item: WorkTreeItem) => {
     });
 };
 
-const revealInSystemExplorerCmd = async (item: WorkTreeItem | GitFolderItem) => {
+const revealInSystemExplorerCmd = async (item?: WorkTreeItem | GitFolderItem) => {
+    if (!item) return;
     if (!(await checkFolderExist(item.path))) {
         return;
     }
@@ -205,19 +208,23 @@ const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {
     updateTreeDataEvent.fire();
 };
 
-const repairWorkTreeCmd = (item: WorkTreeItem) => {
+const repairWorkTreeCmd = (item?: WorkTreeItem) => {
+    if (!item) return;
     commonWorkTreeCmd(item.path, Commands.repairWorkTree, item.parent?.path);
 };
 
-const lockWorkTreeCmd = (item: WorkTreeItem) => {
+const lockWorkTreeCmd = (item?: WorkTreeItem) => {
+    if (!item) return;
     commonWorkTreeCmd(item.path, Commands.lockWorkTree, item.parent?.path);
 };
 
-const unlockWorkTreeCmd = (item: WorkTreeItem) => {
+const unlockWorkTreeCmd = (item?: WorkTreeItem) => {
+    if (!item) return;
     commonWorkTreeCmd(item.path, Commands.unlockWorkTree, item.parent?.path);
 };
 
-const moveWorkTreeCmd = async (item: WorkTreeItem) => {
+const moveWorkTreeCmd = async (item?: WorkTreeItem) => {
+    if (!item) return;
     try {
         let uriList = await vscode.window.showOpenDialog({
             canSelectFiles: false,
@@ -240,7 +247,8 @@ const moveWorkTreeCmd = async (item: WorkTreeItem) => {
     updateTreeDataEvent.fire();
 };
 
-const switchToSelectFolderCmd = async (item: WorkTreeItem) => {
+const switchToSelectFolderCmd = async (item?: WorkTreeItem) => {
+    if (!item) return;
     try {
         await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
             forceNewWindow: false,
@@ -373,7 +381,8 @@ const refreshGitFolderCmd = () => {
     updateFolderEvent.fire();
 };
 
-const pickFolderConfig = (item: GitFolderItem) => {
+const pickFolderConfig = (item?: GitFolderItem) => {
+    if (!item) return;
     return getFolderConfig().find((row) => row.path === item.path);
 };
 
@@ -395,7 +404,8 @@ const removeGitFolderCmd = async (item: GitFolderItem) => {
     Alert.showInformationMessage(localize('msg.success.remove'));
 };
 
-const renameGitFolderCmd = async (item: GitFolderItem) => {
+const renameGitFolderCmd = async (item?: GitFolderItem) => {
+    if (!item) return;
     let folder = pickFolderConfig(item);
     if (!folder) {
         return;
@@ -432,7 +442,8 @@ const openWalkthroughsCmd = () => {
     );
 };
 
-const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+const openTerminalCmd = async (item?: WorkTreeItem | GitFolderItem | FolderItem) => {
+    if (!item) return;
     if (!(await checkFolderExist(item.path))) {
         return;
     }
@@ -481,7 +492,8 @@ const openTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) 
     cmdText && terminal.sendText(cmdText, true);
 };
 
-const openExternalTerminalCmd = async (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+const openExternalTerminalCmd = async (item?: WorkTreeItem | GitFolderItem | FolderItem) => {
+    if (!item) return;
     if (!(await checkFolderExist(item.path))) {
         return;
     }
@@ -499,7 +511,8 @@ const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
     return addToWorkspace(item.path);
 };
 
-const copyFilePathCmd = (item: WorkTreeItem | GitFolderItem | FolderItem) => {
+const copyFilePathCmd = (item?: WorkTreeItem | GitFolderItem | FolderItem) => {
+    if (!item) return;
     vscode.env.clipboard.writeText(item.path).then(() => {
         Alert.showInformationMessage(localize('msg.success.copy', item.path));
     });
@@ -513,11 +526,13 @@ const openRecentCmd = () => {
     return vscode.commands.executeCommand('workbench.action.openRecent');
 };
 
-const addToGitFolderCmd = (item: FolderItem) => {
+const addToGitFolderCmd = (item?: FolderItem) => {
+    if (!item) return;
     return addToGitFolder(item.path);
 };
 
-const checkoutBranchCmd = async (item: WorkTreeItem) => {
+const checkoutBranchCmd = async (item?: WorkTreeItem) => {
+    if (!item) return;
     let branchItem = await pickBranch(
         localize('msg.info.checkoutBranch', `${item.name} ⇄ ...${item.path.slice(-24)}`),
         localize('msg.placeholder.checkoutBranch'),
@@ -537,7 +552,8 @@ const toggleGitFolderViewAs = (asTree: boolean) => {
     toggleGitFolderViewAsEvent.fire(asTree);
 };
 
-const toggleGitFolderOpenCmd = async (item: GitFolderItem) => {
+const toggleGitFolderOpenCmd = async (item?: GitFolderItem) => {
+    if (!item) return;
     item.defaultOpen = !item.defaultOpen;
     await updateFolderItem({
         name: item.name,
@@ -550,15 +566,18 @@ const searchAllWorktreeCmd = () => {
     pickWorktree();
 };
 
-const pushWorkTreeCmd = (item: WorkTreeItem) => {
+const pushWorkTreeCmd = (item?: WorkTreeItem) => {
+    if (!item) return;
     pullOrPushAction('push', item.name, item.path);
 };
 
-const pullWorkTreeCmd = (item: WorkTreeItem) => {
+const pullWorkTreeCmd = (item?: WorkTreeItem) => {
+    if (!item) return;
     pullOrPushAction('pull', item.name, item.path);
 };
 
-const loadAllTreeDataCmd = (item: ILoadMoreItem) => {
+const loadAllTreeDataCmd = (item?: ILoadMoreItem) => {
+    if (!item) return;
     loadAllTreeDataEvent.fire(item.viewId);
 };
 

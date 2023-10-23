@@ -21,7 +21,6 @@ const WORK_TREE = 'worktree';
 
 const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
     return new Promise((resolve, reject) => {
-        // console.log('[executeGitCommand] ', ['git'].concat(args || []).join(' '));
         logger.log(`'Running in' ${cwd}`);
         logger.log('> ' + ['git'].concat(args || []).join(' '));
         const proc = cp.spawn('git', args, {
@@ -31,12 +30,10 @@ const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.Canc
         let err: Buffer = Buffer.from('', 'utf-8');
 
         proc.stdout.on('data', (chunk) => {
-            // console.log('[exec stdout] ', chunk.toString());
             out = Buffer.concat([out, chunk]);
             logger.trace(chunk.toString());
         });
         proc.stderr.on('data', (chunk) => {
-            // console.log('[exec stderr] ', chunk.toString());
             err = Buffer.concat([err, chunk]);
             logger.error(chunk.toString());
         });
@@ -46,11 +43,9 @@ const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.Canc
                 treeKill(proc.pid, 'SIGTERM');
             }
         });
-        proc.on('error', reject);
-        proc.on('close', (code, signal) => {
+        proc.once('error', reject);
+        proc.once('close', (code, signal) => {
             logger.trace('[exec close] ', code, signal);
-            // console.log('[exec stdout] ', out.toString());
-            // console.log('[exec stderr] ', err.toString());
             if (signal === 'SIGTERM') {
                 return resolve('');
             }
@@ -100,14 +95,18 @@ export function getNameRev(cwd: string) {
 export async function getWorkTreeList(root?: string, skipRemote?: boolean): Promise<IWorkTreeDetail[]> {
     let cwd = root || folderRoot.uri?.fsPath || '';
     try {
-        const [output, mainFolderFull, remoteBranchOutput] = await Promise.all([
+        const [output, mainFolderFull, remoteBranchOutput, branchList] = await Promise.all([
             executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']),
             executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
             skipRemote ? Promise.resolve('') : executeGitCommandBase(cwd, ['remote']),
+            skipRemote ? Promise.resolve([]) : getAllRefList(['refname']),
         ]);
 
         const mainFolder = mainFolderFull.replace('/.git', '');
         const [remoteName] = remoteBranchOutput.split('\n');
+        const remoteBranchMap = new Map(
+            branchList.filter((item) => item.refname.startsWith('refs/remotes/')).map((item) => [item.refname, true]),
+        );
         let list = output
             .split('\n')
             .reduce<string[][]>(
@@ -135,8 +134,15 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
             (list as unknown as IWorkTreeOutputItem[]).map(async (item) => {
                 const branchName = item.branch?.replace('refs/heads/', '') || '';
                 const [aheadBehind, nameRev] = await Promise.all([
-                    !skipRemote && branchName && remoteName
-                        ? getAheadBehindCommitCount(branchName, `refs/remotes/${remoteName}/${branchName}`, item.worktree)
+                    !skipRemote &&
+                    branchName &&
+                    remoteName &&
+                    remoteBranchMap.has(`refs/remotes/${remoteName}/${branchName}`)
+                        ? getAheadBehindCommitCount(
+                              branchName,
+                              `refs/remotes/${remoteName}/${branchName}`,
+                              item.worktree,
+                          )
                         : Promise.resolve(void 0),
                     !branchName ? getNameRev(item.worktree) : Promise.resolve(''),
                 ]);
@@ -225,6 +231,19 @@ export async function getTagList<T extends string>(keys: T[], cwd?: string) {
         let output = await executeGitCommandAuto(cwd, [
             'tag',
             '--list',
+            `--format=${formatQuery(keys)}`,
+            '--sort=-committerdate',
+        ]);
+        return parseOutput(output, keys);
+    } catch {
+        return [];
+    }
+}
+
+export async function getAllRefList<T extends string>(keys: T[], cwd?: string) {
+    try {
+        let output = await executeGitCommandAuto(cwd, [
+            'for-each-ref',
             `--format=${formatQuery(keys)}`,
             '--sort=-committerdate',
         ]);

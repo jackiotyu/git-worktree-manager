@@ -42,6 +42,7 @@ export const pickBranch = async (
         });
         quickPick.show();
         quickPick.busy = true;
+        // TODO 使用 git for-each-ref 获取所有分支和tag
         const [branchList, remoteBranchList, tagList] = await Promise.all([
             getBranchList(['refname:short', 'objectname:short', 'worktreepath', 'authordate', 'HEAD'], cwd),
             getRemoteBranchList(['refname:short', 'objectname:short'], cwd),
