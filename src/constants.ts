@@ -18,11 +18,13 @@ export enum Commands {
     switchToSelectFolder = 'git-worktree-manager.switchToSelectFolder',
     addWorkTreeFromBranch = 'git-worktree-manager.addWorkTreeFromBranch',
     revealInSystemExplorer = 'git-worktree-manager.revealInSystemExplorer',
+    revealInSystemExplorerContext = 'git-worktree-manager.revealInSystemExplorer.context',
     openSetting = 'git-worktree-manager.openSetting',
     refreshGitFolder = 'git-worktree-manager.refreshGitFolder',
     openWalkthroughs = 'git-worktree-manager.openWalkthroughs',
     openTerminal = 'git-worktree-manager.openTerminal',
     openExternalTerminal = 'git-worktree-manager.openExternalTerminal',
+    openExternalTerminalContext = 'git-worktree-manager.openExternalTerminal.context',
     addToWorkspace = 'git-worktree-manager.addToWorkspace',
     copyFilePath = 'git-worktree-manager.copyFilePath',
     refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',
@@ -42,12 +44,13 @@ export enum Commands {
 export enum TreeItemKind {
     worktree = 'worktree',
     gitFolder = 'gitFolder',
+    folder = 'folder',
 }
 
 export type AlertLevel = 'warn' | 'info' | 'error';
 
 export enum ViewId {
-    gitWorktreeManagerRecent = 'git-worktree-manager-recent',
-    gitWorktreeManagerList = 'git-worktree-manager-list',
-    gitWorktreeManagerFolders = 'git-worktree-manager-folders',
+    folderList = 'git-worktree-manager-recent',
+    worktreeList = 'git-worktree-manager-list',
+    gitFolderList = 'git-worktree-manager-folders',
 }

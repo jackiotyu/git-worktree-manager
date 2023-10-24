@@ -86,6 +86,11 @@
         "icon": "$(folder-opened)"
       },
       {
+        "command": "git-worktree-manager.revealInSystemExplorer.context",
+        "title": "%cmd.revealInSystemExplorer%",
+        "icon": "$(folder-opened)"
+      },
+      {
         "command": "git-worktree-manager.repairWorkTree",
         "title": "%cmd.repairWorkTree%"
       },
@@ -135,6 +140,11 @@
       },
       {
         "command": "git-worktree-manager.openExternalTerminal",
+        "title": "%cmd.openExternalTerminal%",
+        "icon": "$(terminal-bash)"
+      },
+      {
+        "command": "git-worktree-manager.openExternalTerminal.context",
         "title": "%cmd.openExternalTerminal%",
         "icon": "$(terminal-bash)"
       },
@@ -342,12 +352,12 @@
       "view/item/context": [
         {
           "command": "git-worktree-manager.openTerminal",
-          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/ || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/",
           "group": "terminal@2"
         },
         {
-          "command": "git-worktree-manager.openExternalTerminal",
-          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/ || viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem == git-worktree-manager.folderItem",
+          "command": "git-worktree-manager.openExternalTerminal.context",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/",
           "group": "terminal@1"
         },
         {
@@ -356,8 +366,8 @@
           "group": "worktree-action"
         },
         {
-          "command": "git-worktree-manager.revealInSystemExplorer",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ || viewItem =~ /git-worktree-manager.gitFolderItem/ || viewItem == git-worktree-manager.folderItem",
+          "command": "git-worktree-manager.revealInSystemExplorer.context",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/",
           "group": "file-action@0"
         },
         {
@@ -506,28 +516,23 @@
       "commandPalette": [
         {
           "command": "git-worktree-manager.switchToSelectFolder",
-          "when": "false",
-          "icon": "$(arrow-right)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.refreshWorkTree",
-          "when": "false",
-          "icon": "$(refresh)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.refreshGitFolder",
-          "when": "false",
-          "icon": "$(refresh)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.refreshRecentFolder",
-          "when": "false",
-          "icon": "$(refresh)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.addWorkTree",
-          "when": "false",
-          "icon": "$(add)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.addGitFolder",
@@ -543,16 +548,18 @@
         },
         {
           "command": "git-worktree-manager.removeWorkTree",
-          "when": "false",
-          "icon": "$(close)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.addWorkTreeFromBranch",
-          "when": "false",
-          "icon": "$(add)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.revealInSystemExplorer.context",
           "when": "false"
         },
         {
@@ -565,18 +572,15 @@
         },
         {
           "command": "git-worktree-manager.lockWorkTree",
-          "when": "false",
-          "icon": "$(lock)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.unlockWorkTree",
-          "when": "false",
-          "icon": "$(unlock)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.pruneWorkTree",
-          "when": "false",
-          "icon": "$(wand)"
+          "when": "false"
         },
         {
           "command": "git-worktree-manager.removeGitFolder",
@@ -600,6 +604,10 @@
         },
         {
           "command": "git-worktree-manager.openExternalTerminal",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.openExternalTerminal.context",
           "when": "false"
         },
         {

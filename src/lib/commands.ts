@@ -5,6 +5,7 @@ import {
     updateRecentEvent,
     toggleGitFolderViewAsEvent,
     loadAllTreeDataEvent,
+    revealTreeItemEvent,
 } from '@/lib/events';
 import localize from '@/localize';
 import {
@@ -28,7 +29,7 @@ import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
-import { WorkTreeItem, GitFolderItem, FolderItem } from '@/lib/treeView';
+import type { WorkTreeItem, GitFolderItem, FolderItem, AllViewItem } from '@/lib/treeView';
 import { GlobalState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
@@ -175,11 +176,17 @@ const addWorkTreeFromBranchCmd = async (item?: WorkTreeItem) => {
     });
 };
 
-const revealInSystemExplorerCmd = async (item?: WorkTreeItem | GitFolderItem) => {
+const revealTreeItem = (item: AllViewItem) => {
+    revealTreeItemEvent.fire(item);
+    return new Promise((r) => process.nextTick(r));
+};
+
+const revealInSystemExplorerCmd = async (item?: AllViewItem, needRevealTreeItem = true) => {
     if (!item) return;
     if (!(await checkFolderExist(item.path))) {
         return;
     }
+    if (needRevealTreeItem) await revealTreeItem(item);
     vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 
@@ -442,7 +449,7 @@ const openWalkthroughsCmd = () => {
     );
 };
 
-const openTerminalCmd = async (item?: WorkTreeItem | GitFolderItem | FolderItem) => {
+const openTerminalCmd = async (item?: AllViewItem) => {
     if (!item) return;
     if (!(await checkFolderExist(item.path))) {
         return;
@@ -492,12 +499,13 @@ const openTerminalCmd = async (item?: WorkTreeItem | GitFolderItem | FolderItem)
     cmdText && terminal.sendText(cmdText, true);
 };
 
-const openExternalTerminalCmd = async (item?: WorkTreeItem | GitFolderItem | FolderItem) => {
+const openExternalTerminalCmd = async (item?: AllViewItem, needRevealTreeItem = true) => {
     if (!item) return;
     if (!(await checkFolderExist(item.path))) {
         return;
     }
     try {
+        if (needRevealTreeItem) await revealTreeItem(item);
         await openExternalTerminal(`${item.path}`);
     } catch (error) {
         Alert.showErrorMessage(localize('msg.fail.invokeExternalTerminal', String(error)));
@@ -511,7 +519,7 @@ const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
     return addToWorkspace(item.path);
 };
 
-const copyFilePathCmd = (item?: WorkTreeItem | GitFolderItem | FolderItem) => {
+const copyFilePathCmd = (item?: AllViewItem) => {
     if (!item) return;
     vscode.env.clipboard.writeText(item.path).then(() => {
         Alert.showInformationMessage(localize('msg.success.copy', item.path));
@@ -599,7 +607,12 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.unlockWorkTree, unlockWorkTreeCmd),
             vscode.commands.registerCommand(Commands.switchToSelectFolder, switchToSelectFolderCmd),
             vscode.commands.registerCommand(Commands.addWorkTreeFromBranch, addWorkTreeFromBranchCmd),
-            vscode.commands.registerCommand(Commands.revealInSystemExplorer, revealInSystemExplorerCmd),
+            vscode.commands.registerCommand(Commands.revealInSystemExplorer, (item: AllViewItem) =>
+                revealInSystemExplorerCmd(item),
+            ),
+            vscode.commands.registerCommand(Commands.revealInSystemExplorerContext, (item: AllViewItem) =>
+                revealInSystemExplorerCmd(item, false),
+            ),
             vscode.commands.registerCommand(Commands.pruneWorkTree, pruneWorkTreeCmd),
             vscode.commands.registerCommand(Commands.openSetting, openSettingCmd),
             vscode.commands.registerCommand(Commands.addGitFolder, addGitFolderCmd),
@@ -608,7 +621,12 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.renameGitFolder, renameGitFolderCmd),
             vscode.commands.registerCommand(Commands.openWalkthroughs, openWalkthroughsCmd),
             vscode.commands.registerCommand(Commands.openTerminal, openTerminalCmd),
-            vscode.commands.registerCommand(Commands.openExternalTerminal, openExternalTerminalCmd),
+            vscode.commands.registerCommand(Commands.openExternalTerminal, (item: AllViewItem) =>
+                openExternalTerminalCmd(item),
+            ),
+            vscode.commands.registerCommand(Commands.openExternalTerminalContext, (item: AllViewItem) =>
+                openExternalTerminalCmd(item, false),
+            ),
             vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
             vscode.commands.registerCommand(Commands.copyFilePath, copyFilePathCmd),
             vscode.commands.registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),

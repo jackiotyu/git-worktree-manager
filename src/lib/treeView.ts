@@ -7,6 +7,7 @@ import {
     updateRecentEvent,
     toggleGitFolderViewAsEvent,
     loadAllTreeDataEvent,
+    revealTreeItemEvent,
 } from '@/lib/events';
 import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
@@ -21,7 +22,7 @@ export class WorkTreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon;
     path: string;
     name: string;
-    type = TreeItemKind.worktree;
+    readonly type = TreeItemKind.worktree;
     parent?: GitFolderItem;
     remoteRef?: string;
     constructor(item: IWorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
@@ -87,7 +88,7 @@ export class WorkTreeItem extends vscode.TreeItem {
 }
 
 export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeItem> {
-    static id = ViewId.gitWorktreeManagerList;
+    static readonly id = ViewId.worktreeList;
     private data: IWorkTreeDetail[] = [];
     private _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -112,13 +113,17 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeIte
             return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
         });
     }
+    getParent(element: WorkTreeItem): vscode.ProviderResult<WorkTreeItem> {
+        return void 0;
+    }
 }
 
 export class GitFolderItem extends vscode.TreeItem {
-    type = TreeItemKind.gitFolder;
+    readonly type = TreeItemKind.gitFolder;
     name: string;
     path: string;
     defaultOpen?: boolean = false;
+    readonly parent = void 0;
     constructor(item: IFolderItemConfig, collapsible: vscode.TreeItemCollapsibleState) {
         super(item.name, collapsible);
         this.name = item.name;
@@ -134,7 +139,7 @@ export class GitFolderItem extends vscode.TreeItem {
 type CommonWorkTreeItem = GitFolderItem | WorkTreeItem;
 
 export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorkTreeItem> {
-    static id = ViewId.gitWorktreeManagerFolders;
+    static readonly id = ViewId.gitFolderList;
     private data: IFolderItemConfig[] = [];
     private viewAsTree: boolean;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
@@ -211,10 +216,14 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     getTreeItem(element: CommonWorkTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
+    getParent(element: CommonWorkTreeItem): vscode.ProviderResult<CommonWorkTreeItem> {
+        return element.parent;
+    }
 }
 
 export class FolderItem extends vscode.TreeItem {
     path: string;
+    readonly type = TreeItemKind.folder;
     constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: IRecentFolderConfig) {
         super(name, collapsible);
         this.iconPath = vscode.ThemeIcon.Folder;
@@ -233,7 +242,7 @@ export class FolderItem extends vscode.TreeItem {
 }
 
 export class FolderLoadMore extends vscode.TreeItem implements ILoadMoreItem {
-    viewId = ViewId.gitWorktreeManagerRecent;
+    readonly viewId = ViewId.folderList;
     constructor(public name = localize('treeView.item.loadMore')) {
         super(name, vscode.TreeItemCollapsibleState.None);
         this.contextValue = 'git-worktree-manager.loadMore';
@@ -247,7 +256,7 @@ export class FolderLoadMore extends vscode.TreeItem implements ILoadMoreItem {
 type RecentFolderItem = FolderLoadMore | FolderItem;
 
 export class RecentFoldersDataProvider implements vscode.TreeDataProvider<RecentFolderItem> {
-    static id = ViewId.gitWorktreeManagerRecent;
+    static readonly id = ViewId.folderList;
     private pageNo = 1;
     private pageSize = 40;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
@@ -293,5 +302,39 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     }
     getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
+    }
+    getParent(element: RecentFolderItem): vscode.ProviderResult<RecentFolderItem> {
+        return void 0;
+    }
+}
+
+export type AllViewItem = WorkTreeItem | GitFolderItem | FolderItem;
+
+export class TreeViewManager {
+    static register(context: vscode.ExtensionContext) {
+        const worktreeView = vscode.window.createTreeView(WorkTreeDataProvider.id, {
+            treeDataProvider: new WorkTreeDataProvider(context),
+            showCollapseAll: false,
+        });
+        const gitFolderView = vscode.window.createTreeView(GitFoldersDataProvider.id, {
+            treeDataProvider: new GitFoldersDataProvider(context),
+            showCollapseAll: true,
+        });
+        const recentFolderView = vscode.window.createTreeView(RecentFoldersDataProvider.id, {
+            treeDataProvider: new RecentFoldersDataProvider(context),
+        });
+        // FIXME 需要选中treeItem才能保证`revealFileInOS`和`openInTerminal`成功执行
+        revealTreeItemEvent.event((item) => {
+            switch (item.type) {
+                case TreeItemKind.folder:
+                    return recentFolderView.reveal(item, { focus: true, select: true });
+                case TreeItemKind.gitFolder:
+                    return gitFolderView.reveal(item, { focus: true, select: true });
+                case TreeItemKind.worktree:
+                    if (item.parent) return gitFolderView.reveal(item, { focus: true, select: true });
+                    return worktreeView.reveal(item, { focus: true, select: true });
+            }
+        });
+        context.subscriptions.push(worktreeView, gitFolderView, recentFolderView);
     }
 }
