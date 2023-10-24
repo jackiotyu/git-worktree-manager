@@ -115,7 +115,7 @@ export const pickBranch = async (
             return {
                 label: item['refname'].replace('refs/remotes/', ''),
                 iconPath: new vscode.ThemeIcon('cloud'),
-                description: item['objectname:short'] + ' ' + localize('remoteBranch'),
+                description: `${localize('remoteBranch')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`,
                 hash: item['objectname:short'],
             };
         });
@@ -124,7 +124,7 @@ export const pickBranch = async (
             return {
                 label: item['refname'].replace('refs/tags/', ''),
                 iconPath: new vscode.ThemeIcon('tag'),
-                description: item['objectname:short'] + ' ' + localize('tag'),
+                description:`${localize('tag')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`,
                 hash: item['objectname:short'],
             };
         });
