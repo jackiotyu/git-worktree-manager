@@ -16,6 +16,7 @@ export interface IWorkTreeDetail {
     ahead?: number;
     behind?: number;
     remoteRef?: string;
+    remote?: string;
 }
 
 export interface IWorkTreeOutputItem {

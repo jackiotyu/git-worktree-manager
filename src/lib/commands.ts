@@ -575,13 +575,23 @@ const searchAllWorktreeCmd = () => {
 };
 
 const pushWorkTreeCmd = (item?: WorkTreeItem) => {
-    if (!item?.remoteRef) return;
-    pullOrPushAction('push', item.remoteRef, item.path);
+    if (!item || !item.remoteRef || !item.remote) return;
+    pullOrPushAction('push', {
+        branch: item.name,
+        cwd: item.path,
+        remote: item.remote,
+        remoteRef: item.remoteRef,
+    });
 };
 
 const pullWorkTreeCmd = (item?: WorkTreeItem) => {
-    if (!item?.remoteRef) return;
-    pullOrPushAction('pull', item.remoteRef, item.path);
+    if (!item || !item.remoteRef || !item.remote) return;
+    pullOrPushAction('pull', {
+        branch: item.name,
+        cwd: item.path,
+        remote: item.remote,
+        remoteRef: item.remoteRef,
+    });
 };
 
 const loadAllTreeDataCmd = (item?: ILoadMoreItem) => {

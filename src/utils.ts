@@ -17,6 +17,13 @@ import logger from './lib/logger';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
+type PullPushArgs = {
+    remote: string;
+    branch: string;
+    remoteRef: string;
+    cwd: string;
+};
+
 const WORK_TREE = 'worktree';
 
 const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
@@ -96,13 +103,15 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
             executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']),
             executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
             skipRemote ? Promise.resolve('') : executeGitCommandBase(cwd, ['remote']),
-            skipRemote ? Promise.resolve([]) : getAllRefList(['refname'], cwd),
+            skipRemote
+                ? Promise.resolve([])
+                : getAllRefList(['refname', 'upstream:remoteref', 'refname:short', 'upstream:remotename'], cwd),
         ]);
 
         const mainFolder = mainFolderFull.replace('/.git', '');
         const [remoteName] = remoteBranchOutput.split('\n');
         const remoteBranchMap = new Map(
-            branchList.filter((item) => item.refname.startsWith('refs/remotes/')).map((item) => [item.refname, true]),
+            branchList.filter((item) => item['upstream:remoteref']).map((item) => [item.refname, item]),
         );
         let list = output
             .split('\n')
@@ -126,8 +135,11 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
         let detailList = await Promise.all(
             (list as unknown as IWorkTreeOutputItem[]).map(async (item) => {
                 const branchName = item.branch?.replace('refs/heads/', '') || '';
-                const remoteBranchName = `${remoteName}/${branchName}`;
-                const hasRemote = remoteBranchMap.has(`refs/remotes/${remoteBranchName}`);
+                const remoteTrackItem = item.branch ? remoteBranchMap.get(item.branch) : void 0;
+                const remoteRef = remoteTrackItem?.['upstream:remoteref'].replace('refs/heads/', '');
+                const remote = remoteTrackItem?.['upstream:remotename'];
+                const remoteBranchName = `${remote}/${remoteRef}`;
+                const hasRemote = item.branch ? remoteBranchMap.has(item.branch) : false;
                 const [aheadBehind, nameRev] = await Promise.all([
                     !skipRemote && branchName && remoteName && hasRemote
                         ? getAheadBehindCommitCount(branchName, `refs/remotes/${remoteBranchName}`, item.worktree)
@@ -158,7 +170,8 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
                     ahead: aheadBehind?.ahead,
                     behind: aheadBehind?.behind,
                     hash: item.HEAD,
-                    remoteRef: hasRemote ? remoteBranchName : void 0,
+                    remoteRef,
+                    remote,
                 };
             }),
         );
@@ -300,21 +313,21 @@ export const checkoutBranch = (cwd: string, branchName: string, ...args: string[
     return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
 };
 
-export const pullBranch = (remoteName: string, branchName: string, cwd?: string) => {
+export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         localize('cmd.pullWorkTree'),
-        () => executeGitCommandAuto(cwd, ['pull', remoteName, `${branchName}:${branchName}`], token.token),
+        () => executeGitCommandAuto(cwd, ['pull', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
     );
 };
 
-export const pushBranch = (remoteName: string, branchName: string, cwd?: string) => {
+export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         localize('cmd.pushWorkTree'),
-        () => executeGitCommandAuto(cwd, ['push', remoteName, `${branchName}:${branchName}`], token.token),
+        () => executeGitCommandAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
     );
@@ -342,8 +355,6 @@ export const checkExist = (path: string) => {
         .catch(() => false);
 };
 
-export const pullOrPushAction = async (action: 'pull' | 'push', refName: string, cwd: string) => {
-    const [remoteName, ...remoteBranchNameArgs] = refName.split('/');
-    const branchName = remoteBranchNameArgs.join('/');
-    return action === 'pull' ? pullBranch(remoteName, branchName, cwd) : pushBranch(remoteName, branchName, cwd);
+export const pullOrPushAction = async (action: 'pull' | 'push', options: PullPushArgs) => {
+    return action === 'pull' ? pullBranch(options) : pushBranch(options);
 };

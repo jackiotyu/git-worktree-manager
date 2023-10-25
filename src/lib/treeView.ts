@@ -25,6 +25,7 @@ export class WorkTreeItem extends vscode.TreeItem {
     readonly type = TreeItemKind.worktree;
     parent?: GitFolderItem;
     remoteRef?: string;
+    remote?: string;
     constructor(item: IWorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
         let finalName = item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
         super(finalName, collapsible);
@@ -57,6 +58,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.path = item.path;
         this.name = item.name;
         this.remoteRef = item.remoteRef;
+        this.remote = item.remote;
 
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
