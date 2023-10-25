@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { formatTime, getWorkTreeList, checkGitValid, getAllRefList } from '@/utils';
+import { formatTime, getWorkTreeList, checkGitValid, getAllRefList, judgeIsCurrentFolder } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { IWorkTreeCacheItem } from '@/types';
 import localize from '@/localize';
@@ -115,7 +115,9 @@ export const pickBranch = async (
             return {
                 label: item['refname'].replace('refs/remotes/', ''),
                 iconPath: new vscode.ThemeIcon('cloud'),
-                description: `${localize('remoteBranch')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`,
+                description: `${localize('remoteBranch')} $(git-commit) ${
+                    item['objectname:short']
+                } $(circle-small-filled) ${formatTime(item.authordate)}`,
                 hash: item['objectname:short'],
             };
         });
@@ -124,7 +126,9 @@ export const pickBranch = async (
             return {
                 label: item['refname'].replace('refs/tags/', ''),
                 iconPath: new vscode.ThemeIcon('tag'),
-                description:`${localize('tag')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`,
+                description: `${localize('tag')} $(git-commit) ${
+                    item['objectname:short']
+                } $(circle-small-filled) ${formatTime(item.authordate)}`,
                 hash: item['objectname:short'],
             };
         });
@@ -152,7 +156,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             description: `⇄ ${row.label}`,
             path: row.path,
             key: row.label,
-            iconPath: new vscode.ThemeIcon('repo'),
+            iconPath: judgeIsCurrentFolder(row.path) ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('repo'),
             buttons: [
                 {
                     iconPath: new vscode.ThemeIcon('arrow-right'),
