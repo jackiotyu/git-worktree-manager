@@ -67,10 +67,7 @@ const executeGitCommand = (args?: string[], token?: vscode.CancellationToken): P
 };
 
 const executeGitCommandAuto = (cwd: string = '', args?: string[], token?: vscode.CancellationToken) => {
-    if (!cwd) {
-        return executeGitCommand(args, token);
-    }
-
+    if (!cwd) return executeGitCommand(args, token);
     return executeGitCommandBase(cwd, args, token);
 };
 
@@ -111,12 +108,8 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
             .split('\n')
             .reduce<string[][]>(
                 (list, textLine) => {
-                    if (textLine) {
-                        list[list.length - 1].push(textLine);
-                    } else {
-                        list.push([]);
-                    }
-
+                    if (textLine) list[list.length - 1].push(textLine);
+                    else list.push([]);
                     return list;
                 },
                 [[]],

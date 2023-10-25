@@ -83,7 +83,7 @@ export const pickBranch = async (
             {
                 label: `HEAD ${defaultBranch?.['objectname:short'] || ''}`,
                 description: localize('msg.pickItem.useCurrentBranch'),
-                iconPath: new vscode.ThemeIcon('source-control'),
+                iconPath: new vscode.ThemeIcon('git-commit'),
                 hash: defaultBranch?.['objectname:short'],
             },
             {
@@ -100,7 +100,8 @@ export const pickBranch = async (
                         description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
                             item.authordate,
                         )}`,
-                        iconPath: new vscode.ThemeIcon('source-control'),
+                        iconPath:
+                            item.HEAD === '*' ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('source-control'),
                         hash: item['objectname:short'],
                         branch: shortName,
                     };
