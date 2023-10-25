@@ -99,7 +99,7 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
             executeGitCommandBase(cwd, ['worktree', 'list', '--porcelain']),
             executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
             skipRemote ? Promise.resolve('') : executeGitCommandBase(cwd, ['remote']),
-            skipRemote ? Promise.resolve([]) : getAllRefList(['refname']),
+            skipRemote ? Promise.resolve([]) : getAllRefList(['refname'], cwd),
         ]);
 
         const mainFolder = mainFolderFull.replace('/.git', '');
