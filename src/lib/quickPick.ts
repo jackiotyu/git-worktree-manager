@@ -40,6 +40,7 @@ export const pickBranch = async (
             resolve();
             quickPick.dispose();
         });
+        // TODO 按名称排序
         quickPick.show();
         quickPick.busy = true;
         // 使用 git for-each-ref 获取所有分支和tag
@@ -64,31 +65,31 @@ export const pickBranch = async (
             quickPick.hide();
             return;
         }
-        const branchItems: BranchForWorkTree[] = branchList
-            .filter((i) => !i.worktreepath && i.HEAD !== '*')
-            .map((item) => {
-                const shortRefName = item['refname'].replace('refs/heads/', '');
-                return {
-                    label: shortRefName,
-                    description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
-                        item.authordate,
-                    )}`,
-                    iconPath: new vscode.ThemeIcon('source-control'),
-                    hash: item['objectname:short'],
-                    branch: shortRefName,
-                };
-            });
+        const branchItems: BranchForWorkTree[] = [
+            { label: localize('branch'), kind: vscode.QuickPickItemKind.Separator },
+            ...branchList
+                .filter((i) => !i.worktreepath && i.HEAD !== '*')
+                .map((item) => {
+                    const shortRefName = item['refname'].replace('refs/heads/', '');
+                    return {
+                        label: shortRefName,
+                        description: `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
+                            item.authordate,
+                        )}`,
+                        iconPath: new vscode.ThemeIcon('source-control'),
+                        hash: item['objectname:short'],
+                        branch: shortRefName,
+                    };
+                }),
+        ];
         const defaultBranch = branchList.find((i) => i.HEAD === '*');
-        const defaultBranchItems: BranchForWorkTree[] = [
+        const worktreeBranchItems: BranchForWorkTree[] = [
+            { label: 'worktree', kind: vscode.QuickPickItemKind.Separator },
             {
                 label: `HEAD ${defaultBranch?.['objectname:short'] || ''}`,
                 description: localize('msg.pickItem.useCurrentBranch'),
                 iconPath: new vscode.ThemeIcon('git-commit'),
                 hash: defaultBranch?.['objectname:short'],
-            },
-            {
-                label: '',
-                kind: vscode.QuickPickItemKind.Separator,
             },
             // worktree branch list
             ...branchList
@@ -106,36 +107,37 @@ export const pickBranch = async (
                         branch: shortName,
                     };
                 }),
-            {
-                label: '',
-                kind: vscode.QuickPickItemKind.Separator,
-            },
         ];
 
-        const remoteBranchItems: BranchForWorkTree[] = remoteBranchList.map((item) => {
-            return {
-                label: item['refname'].replace('refs/remotes/', ''),
-                iconPath: new vscode.ThemeIcon('cloud'),
-                description: `${localize('remoteBranch')} $(git-commit) ${
-                    item['objectname:short']
-                } $(circle-small-filled) ${formatTime(item.authordate)}`,
-                hash: item['objectname:short'],
-            };
-        });
+        const remoteBranchItems: BranchForWorkTree[] = [
+            { label: localize('remoteBranch'), kind: vscode.QuickPickItemKind.Separator },
+            ...remoteBranchList.map((item) => {
+                return {
+                    label: item['refname'].replace('refs/remotes/', ''),
+                    iconPath: new vscode.ThemeIcon('cloud'),
+                    description: `${localize('remoteBranch')} $(git-commit) ${
+                        item['objectname:short']
+                    } $(circle-small-filled) ${formatTime(item.authordate)}`,
+                    hash: item['objectname:short'],
+                };
+            }),
+        ];
 
-        const tagItems: BranchForWorkTree[] = tagList.map((item) => {
-            return {
-                label: item['refname'].replace('refs/tags/', ''),
-                iconPath: new vscode.ThemeIcon('tag'),
-                description: `${localize('tag')} $(git-commit) ${
-                    item['objectname:short']
-                } $(circle-small-filled) ${formatTime(item.authordate)}`,
-                hash: item['objectname:short'],
-            };
-        });
+        const tagItems: BranchForWorkTree[] = [
+            { label: localize('tag'), kind: vscode.QuickPickItemKind.Separator },
+            ...tagList.map((item) => {
+                return {
+                    label: item['refname'].replace('refs/tags/', ''),
+                    iconPath: new vscode.ThemeIcon('tag'),
+                    description: `${localize('tag')} $(git-commit) ${
+                        item['objectname:short']
+                    } $(circle-small-filled) ${formatTime(item.authordate)}`,
+                    hash: item['objectname:short'],
+                };
+            }),
+        ];
 
-        quickPick.items = [...defaultBranchItems, ...branchItems, ...remoteBranchItems, ...tagItems];
-
+        quickPick.items = [...worktreeBranchItems, ...branchItems, ...remoteBranchItems, ...tagItems];
         quickPick.busy = false;
 
         return await waiting;
