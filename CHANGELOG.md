@@ -1,3 +1,10 @@
+## [0.2.3] 2023-11-02
+
+### Change
+
+- Show current folder in quick pick.
+- Fixed refresh worktree branch ahead/behind after checkout branch.
+
 ## [0.2.0] 2023-10-23
 
 ### Change
