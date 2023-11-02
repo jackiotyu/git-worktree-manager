@@ -148,9 +148,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            globalStateEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
-            updateTreeDataEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
-            updateFolderEvent.event(throttle(() => this.refresh(), 300, { leading: true, trailing: true })),
+            globalStateEvent.event(throttle(this.refresh, 300, { leading: true, trailing: true })),
+            treeDataEvent.event(throttle(() => process.nextTick(this.refresh), 300, { leading: true, trailing: true })),
+            updateFolderEvent.event(throttle(this.refresh, 300, { leading: true, trailing: true })),
             toggleGitFolderViewAsEvent.event(
                 debounce((viewAsTree: boolean) => {
                     this.viewAsTree = viewAsTree;
@@ -169,11 +169,11 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         this.viewAsTree = viewAsTree;
     }
 
-    refresh() {
+    refresh = () => {
         this.data = GlobalState.get('gitFolders', []);
         this.data.sort((a, b) => a.name.localeCompare(b.name));
         this._onDidChangeTreeData.fire();
-    }
+    };
 
     async getChildren(element?: CommonWorkTreeItem | undefined): Promise<CommonWorkTreeItem[] | undefined> {
         if (!element) {
