@@ -58,6 +58,7 @@
     "msg.info.createWorkTree": "创建 Worktree",
     "msg.placeholder.createWorkTree": "选择用来创建 worktree 的分支",
     "msg.info.checkoutBranch": "签出分支 ( {0} )",
+    "msg.progress.checkoutBranch": "签出分支 ( {0} ) 于 {1}",
     "msg.placeholder.checkoutBranch": "选择签出的分支",
     "msg.placeholder.pickWorktree": "选中以在新窗口打开",
     "msg.pickItem.useCurrentBranch": "当前提交的hash",
