@@ -103,6 +103,8 @@
     "msg.success.save": "保存成功",
     "msg.success.copy": "复制成功：{0}",
     "msg.success.remove": "删除成功",
+    "msg.progress.pull": "拉取提交 {0} → {1} 于 {2}",
+    "msg.progress.push": "推送提交 {0} → {1} 于 {2}",
     "treeView.tooltip.ahead": "$(arrow-up) 可推送提交 {0}\n\n",
     "treeView.tooltip.behind": "$(arrow-down) 可拉取提交 {0}\n\n",
     "treeView.tooltip.click": "*点击用新窗口打开该worktree*\n\n",

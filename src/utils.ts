@@ -316,7 +316,7 @@ export const checkoutBranch = (cwd: string, branchName: string, ...args: string[
 export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
-        localize('cmd.pullWorkTree'),
+        localize('msg.progress.pull', `${remote}/${remoteRef}`, branch, cwd),
         () => executeGitCommandAuto(cwd, ['pull', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
@@ -326,7 +326,7 @@ export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
 export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
-        localize('cmd.pushWorkTree'),
+        localize('msg.progress.push', branch, `${remote}/${remoteRef}`, cwd),
         () => executeGitCommandAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
