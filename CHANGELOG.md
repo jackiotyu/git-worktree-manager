@@ -1,3 +1,10 @@
+## [0.2.4] 2023-11-07
+
+### Change
+
+- Auto create tracking branch while checkout branch or create worktree.
+- Improve checkout/pull/push progress tips.
+
 ## [0.2.3] 2023-11-02
 
 ### Change
