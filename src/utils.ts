@@ -310,7 +310,7 @@ export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath 
     }
 }
 
-export const checkoutBranch = async (cwd: string, branchName: string, isBranch: boolean, ...args: string[]) => {
+export const checkoutBranch = async (cwd: string, branchName: string, isBranch: boolean) => {
     const refList = await getAllRefList(
         ['refname', 'upstream:remoteref', 'refname:short', 'upstream:remotename'],
         cwd,
@@ -330,7 +330,7 @@ export const checkoutBranch = async (cwd: string, branchName: string, isBranch: 
         if (trackingBranch) {
             // 需要使用本地分支名
             const localBranchName = trackingBranch['refname:short'];
-            const list = [...args, localBranchName].filter((i) => i);
+            const list = [isBranch ? '' : '--detach', localBranchName].filter((i) => i);
             return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
         } else {
             // FIXME 自动新建关联远程分支
