@@ -45,7 +45,7 @@ export const pickBranch = async (
         quickPick.busy = true;
         // 使用 git for-each-ref 获取所有分支和tag
         const allRefList = await getAllRefList(
-            ['refname', 'objectname:short', 'worktreepath', 'authordate', 'HEAD'],
+            ['refname', 'objectname:short', 'worktreepath', 'authordate', 'HEAD', 'refname:short'],
             cwd,
         );
         type RefList = typeof allRefList;
@@ -113,12 +113,12 @@ export const pickBranch = async (
             { label: localize('remoteBranch'), kind: vscode.QuickPickItemKind.Separator },
             ...remoteBranchList.map((item) => {
                 return {
-                    label: item['refname'].replace('refs/remotes/', ''),
+                    label: item['refname:short'],
                     iconPath: new vscode.ThemeIcon('cloud'),
                     description: `${localize('remoteBranch')} $(git-commit) ${
                         item['objectname:short']
                     } $(circle-small-filled) ${formatTime(item.authordate)}`,
-                    hash: item['objectname:short'],
+                    branch: item['refname:short'],
                 };
             }),
         ];
