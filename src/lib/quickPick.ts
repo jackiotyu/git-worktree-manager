@@ -55,7 +55,7 @@ export const pickBranch = async (
         allRefList.forEach((item) => {
             if (item.refname.startsWith('refs/heads/')) {
                 branchList.push(item);
-            } else if (item.refname.startsWith('refs/remotes/')) {
+            } else if (item.refname.startsWith('refs/remotes/') && !item.refname.endsWith('/HEAD')) {
                 remoteBranchList.push(item);
             } else if (item.refname.startsWith('refs/tags/')) {
                 tagList.push(item);
