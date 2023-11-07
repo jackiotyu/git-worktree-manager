@@ -201,13 +201,14 @@ export function parseOutput<T extends string>(output: string, keyList: T[]): Rec
     return workTrees;
 }
 
-export async function getAllRefList<T extends string>(keys: T[], cwd?: string) {
+export async function getAllRefList<T extends string>(keys: T[], cwd?: string, args?: string[]) {
     try {
         let output = await executeGitCommandAuto(cwd, [
             'for-each-ref',
             `--format=${formatQuery(keys)}`,
             '--sort=-refname:lstrip=2',
             '--sort=-committerdate',
+            ...(args || []),
         ]);
         return parseOutput(output, keys);
     } catch {
@@ -224,9 +225,10 @@ export async function getRemoteList(cwd: string) {
     }
 }
 
-export async function addWorkTree(path: string, branch: string, cwd?: string) {
+export async function addWorkTree(path: string, branch: string, isBranch: boolean, cwd?: string) {
     try {
         await executeGitCommandAuto(cwd, [WORK_TREE, 'add', '-f', '--guess-remote', path, branch]);
+        await checkoutBranch(path, branch, isBranch);
         return true;
     } catch (error: any) {
         Alert.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
@@ -308,15 +310,42 @@ export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath 
     }
 }
 
-export const checkoutBranch = (cwd: string, branchName: string, ...args: string[]) => {
-    let list = [...args, branchName].filter((i) => i);
-    return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
+export const checkoutBranch = async (cwd: string, branchName: string, isBranch: boolean, ...args: string[]) => {
+    const refList = await getAllRefList(
+        ['refname', 'upstream:remoteref', 'refname:short', 'upstream:remotename'],
+        cwd,
+        ['--sort=-upstream'],
+    );
+    const remoteBranchList = refList.filter((i) => /^refs\/remotes/.test(i.refname));
+    // 当前为远程分支名
+    if (remoteBranchList.some((i) => i['refname:short'] === branchName)) {
+        const trackingBranch = refList.find((branch) => {
+            if (!branch['upstream:remoteref']) return false;
+            const remoteName = branch['upstream:remotename'];
+            const refname = branch['refname:short'];
+            // 已有本地分支与远程分支关联
+            return `${remoteName}/${refname}` === branchName;
+        });
+        // 判断是否已建立该分支
+        if (trackingBranch) {
+            // 需要使用本地分支名
+            const localBranchName = trackingBranch['refname:short'];
+            const list = [...args, localBranchName].filter((i) => i);
+            return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
+        } else {
+            // FIXME 自动新建关联远程分支
+            return executeGitCommandAuto(cwd, ['checkout', '-q', '--track', branchName]);
+        }
+    } else {
+        const list = [isBranch ? '' : '--detach', branchName].filter((i) => i);
+        return executeGitCommandAuto(cwd, ['switch', '--ignore-other-worktrees', ...list]);
+    }
 };
 
 export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
-        localize('cmd.pullWorkTree'),
+        localize('msg.progress.pull', `${remote}/${remoteRef}`, branch, cwd),
         () => executeGitCommandAuto(cwd, ['pull', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
@@ -326,7 +355,7 @@ export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
 export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
-        localize('cmd.pushWorkTree'),
+        localize('msg.progress.push', branch, `${remote}/${remoteRef}`, cwd),
         () => executeGitCommandAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,

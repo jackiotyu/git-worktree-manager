@@ -81,8 +81,8 @@ export const refreshWorkTreeCmd = () => {
     updateTreeDataEvent.fire();
 };
 
-const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string }) => {
-    const { folderPath, name, label } = info;
+const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string, isBranch: boolean }) => {
+    const { folderPath, name, label, isBranch } = info;
     let confirmCreate = await confirmModal(
         localize('msg.modal.title.createWorkTree'),
         localize('msg.modal.detail.createWorkTree', folderPath, label, name),
@@ -90,7 +90,7 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
     if (!confirmCreate) {
         return;
     }
-    let created = await addWorkTree(folderPath, name || '');
+    let created = await addWorkTree(folderPath, name, isBranch);
     if (!created) {
         return;
     }
@@ -132,6 +132,7 @@ export const addWorkTreeCmd = async () => {
         name: branch || hash || '',
         label,
         folderPath,
+        isBranch: !!branch
     });
 };
 
@@ -173,6 +174,7 @@ const addWorkTreeFromBranchCmd = async (item?: WorkTreeItem) => {
         name: item.name,
         label: '分支',
         folderPath,
+        isBranch: !!item.isBranch
     });
 };
 
@@ -548,10 +550,10 @@ const checkoutBranchCmd = async (item?: WorkTreeItem) => {
     );
     if (!branchItem) return;
     const checkoutText = branchItem.branch || branchItem.hash || '';
-    const prefix = checkoutText === branchItem.hash ? '--detach' : '';
+    const isBranch = !!branchItem.branch;
     actionProgressWrapper(
-        localize('msg.info.checkoutBranch', checkoutText),
-        () => checkoutBranch(item.path, checkoutText, prefix),
+        localize('msg.progress.checkoutBranch', checkoutText, item.path),
+        () => checkoutBranch(item.path, checkoutText, isBranch),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
     );
 };
