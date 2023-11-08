@@ -36,7 +36,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.parent = parent;
 
         const isCurrent = judgeIsCurrentFolder(item.path);
-        const themeColor = isCurrent ? new vscode.ThemeColor('activityBarBadge.background') : void 0;
+        const themeColor = isCurrent ? new vscode.ThemeColor('statusBarItem.remoteBackground') : void 0;
 
         switch (true) {
             case item.prunable:
