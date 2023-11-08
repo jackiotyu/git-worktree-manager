@@ -12,14 +12,13 @@
     "SCM Providers"
   ],
   "keywords": [
-    "git",
-    "worktree",
-    "git worktree",
-    "manager",
+    "git worktree manager",
+    "git project manager",
     "switch branch",
     "switch folder",
     "run command",
     "git 工作树",
+    "git 项目管理",
     "切换分支",
     "切换文件夹",
     "运行命令"
