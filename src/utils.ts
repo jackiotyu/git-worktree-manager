@@ -142,7 +142,7 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
                 const hasRemote = item.branch ? remoteBranchMap.has(item.branch) : false;
                 const [aheadBehind, nameRev] = await Promise.all([
                     !skipRemote && branchName && remoteName && hasRemote
-                        ? getAheadBehindCommitCount(branchName, `refs/remotes/${remoteBranchName}`, item.worktree)
+                        ? getAheadBehindCommitCount(item.branch || '', `refs/remotes/${remoteBranchName}`, item.worktree)
                         : Promise.resolve(void 0),
                     !branchName ? getNameRev(item.worktree) : Promise.resolve(''),
                 ]);

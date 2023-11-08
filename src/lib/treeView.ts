@@ -262,7 +262,7 @@ type RecentFolderItem = FolderLoadMore | FolderItem;
 export class RecentFoldersDataProvider implements vscode.TreeDataProvider<RecentFolderItem> {
     static readonly id = ViewId.folderList;
     private pageNo = 1;
-    private pageSize = 40;
+    private pageSize = 20;
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
@@ -288,8 +288,8 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     async getChildren(element?: RecentFolderItem | undefined): Promise<RecentFolderItem[]> {
         let folders = await getRecentFolders();
         let itemList = folders
-            .slice(0, this.pageNo * this.pageSize)
-            .map<IRecentFolderConfig>((item) => {
+        .slice(0, this.pageNo * this.pageSize)
+        .map<IRecentFolderConfig>((item) => {
                 return {
                     name: item.label || path.basename(item.folderUri.fsPath),
                     path: item.folderUri.fsPath,

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/lib/events';
 import folderRoot from '@/lib/folderRoot';
-import { getWorkTreeList } from '@/utils';
+import { getWorkTreeList, getRecentFolders } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
 import { init } from 'vscode-nls-i18n';
 import { setupGitEvents } from '@/lib/gitExtension';
@@ -27,6 +27,8 @@ export function activate(context: vscode.ExtensionContext) {
     setupGitEvents(context);
     collectEvent(context);
     context.subscriptions.push(folderRoot, updateHandler, logger);
+    // HACK 强制获取一次最近的文件夹，加快访问速度
+    getRecentFolders();
 }
 
 export function deactivate() {}
