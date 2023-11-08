@@ -41,6 +41,8 @@ export enum Commands {
     viewHistory = 'git-worktree-manager.viewHistory',
 }
 
+export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';
+
 export enum TreeItemKind {
     worktree = 'worktree',
     gitFolder = 'gitFolder',

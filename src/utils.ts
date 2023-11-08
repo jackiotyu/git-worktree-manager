@@ -88,8 +88,8 @@ export function comparePath(path1: string = '', path2: string = '') {
 
 export function getFolderIcon(path: string, color?: vscode.ThemeColor) {
     return comparePath(folderRoot.uri?.fsPath, path)
-        ? new vscode.ThemeIcon('folder-active', color)
-        : new vscode.ThemeIcon('folder', color);
+        ? new vscode.ThemeIcon('check', color)
+        : new vscode.ThemeIcon('window', color);
 }
 
 export function getNameRev(cwd: string) {
@@ -386,4 +386,11 @@ export const checkExist = (path: string) => {
 
 export const pullOrPushAction = async (action: 'pull' | 'push', options: PullPushArgs) => {
     return action === 'pull' ? pullBranch(options) : pushBranch(options);
+};
+
+export const getWorktreeStatus = (item: IWorkTreeDetail) => {
+    if (item.ahead && item.behind) return 'diverged';
+    if (item.ahead) return 'ahead';
+    if (item.behind) return 'behind';
+    return 'upToDate';
 };

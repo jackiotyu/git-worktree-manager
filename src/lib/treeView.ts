@@ -10,8 +10,8 @@ import {
     revealTreeItemEvent,
 } from '@/lib/events';
 import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
-import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders } from '@/utils';
-import { TreeItemKind, APP_NAME, Commands, ViewId } from '@/constants';
+import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
+import { TreeItemKind, APP_NAME, Commands, ViewId, WORK_TREE_SCHEME } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import localize from '@/localize';
 import throttle from 'lodash/throttle';
@@ -36,7 +36,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.parent = parent;
 
         const isCurrent = judgeIsCurrentFolder(item.path);
-        const themeColor = isCurrent ? new vscode.ThemeColor('charts.blue') : void 0;
+        const themeColor = isCurrent ? new vscode.ThemeColor('activityBarBadge.background') : void 0;
 
         switch (true) {
             case item.prunable:
@@ -88,6 +88,10 @@ export class WorkTreeItem extends vscode.TreeItem {
             command: 'vscode.openFolder',
             arguments: [vscode.Uri.file(item.path), { forceNewWindow: true }],
         };
+
+        if(item.isBranch) {
+            this.resourceUri = vscode.Uri.parse(`${WORK_TREE_SCHEME}://status/worktree/${getWorktreeStatus(item)}`);
+        }
     }
 }
 

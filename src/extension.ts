@@ -11,6 +11,7 @@ import { TreeViewManager } from '@/lib/treeView';
 // import { StatusBarItemManager } from '@/lib/statusBarItem';
 import throttle from 'lodash/throttle';
 import logger from '@/lib/logger';
+import { WorkTreeDecorator } from '@/lib/fileDecorator';
 
 export function activate(context: vscode.ExtensionContext) {
     logger.log('git-worktree-manager is now active!');
@@ -18,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
     init(context.extensionPath);
     Alert.init(context);
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
+    vscode.window.registerFileDecorationProvider(new WorkTreeDecorator());
     // StatusBarItemManager.register(context);
     const updateHandler = updateTreeDataEvent.event(
         throttle(async () => treeDataEvent.fire((await getWorkTreeList())), 300, { trailing: true, leading: true }),
