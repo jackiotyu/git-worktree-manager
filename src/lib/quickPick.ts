@@ -158,7 +158,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             description: `⇄ ${row.label}`,
             path: row.path,
             key: row.label,
-            iconPath: judgeIsCurrentFolder(row.path) ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('repo'),
+            iconPath: judgeIsCurrentFolder(row.path) ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
             buttons: [
                 {
                     iconPath: new vscode.ThemeIcon('arrow-right'),

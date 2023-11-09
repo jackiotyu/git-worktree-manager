@@ -152,10 +152,11 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
+        this.refresh = throttle(this.refresh, 1000, { leading: true, trailing: true });
         context.subscriptions.push(
-            globalStateEvent.event(throttle(this.refresh, 1000, { leading: true, trailing: true })),
-            treeDataEvent.event(throttle(() => process.nextTick(this.refresh), 1000, { leading: true, trailing: true })),
-            updateFolderEvent.event(throttle(this.refresh, 1000, { leading: true, trailing: true })),
+            globalStateEvent.event(this.refresh),
+            treeDataEvent.event(() => process.nextTick(this.refresh)),
+            updateFolderEvent.event(this.refresh),
             toggleGitFolderViewAsEvent.event(
                 debounce((viewAsTree: boolean) => {
                     this.viewAsTree = viewAsTree;
@@ -269,15 +270,16 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
+        this.refresh = throttle(this.refresh, 1000, { leading: true, trailing: true });
         context.subscriptions.push(
-            updateRecentEvent.event(throttle(this.refresh, 1000, { leading: true, trailing: true })),
+            updateRecentEvent.event(this.refresh),
             vscode.commands.registerCommand(Commands.loadMoreRecentFolder, this.loadMoreFolder),
             loadAllTreeDataEvent.event(this.loadAllCheck),
         );
         // HACK 强制获取一次最近的文件夹，加快访问速度
         vscode.commands.executeCommand('_workbench.getRecentlyOpened');
     }
-    refresh = async () => {
+    refresh = () => {
         this._onDidChangeTreeData.fire();
     };
     loadAllCheck = (viewId: ViewId) => {
