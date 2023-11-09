@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
 import { treeDataEvent, updateTreeDataEvent } from '@/lib/events';
 import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened } from '@/types';
-import localize from '@/localize';
 import * as cp from 'child_process';
 // 加载dayjs中文语言包
 import 'dayjs/locale/zh-cn';
@@ -231,7 +230,9 @@ export async function addWorkTree(path: string, branch: string, isBranch: boolea
         await checkoutBranch(path, branch, isBranch);
         return true;
     } catch (error: any) {
-        Alert.showErrorMessage(localize('msg.error.addWorkTree', String(error)));
+        Alert.showErrorMessage(
+            vscode.l10n.t('Failed to create Worktree\n{0}', String(error))
+        );
         return false;
     }
 }
@@ -345,7 +346,7 @@ export const checkoutBranch = async (cwd: string, branchName: string, isBranch: 
 export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
-        localize('msg.progress.pull', `${remote}/${remoteRef}`, branch, cwd),
+        vscode.l10n.t('Pull commit ( {0} → {1} ) on {2}', `${remote}/${remoteRef}`, branch, cwd),
         () => executeGitCommandAuto(cwd, ['pull', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,
@@ -355,7 +356,7 @@ export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
 export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => {
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
-        localize('msg.progress.push', branch, `${remote}/${remoteRef}`, cwd),
+        vscode.l10n.t('Push commit ( {0} → {1} ) on {2}', branch, `${remote}/${remoteRef}`, cwd),
         () => executeGitCommandAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
         token,

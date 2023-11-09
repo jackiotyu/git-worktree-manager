@@ -1,7 +1,6 @@
-import { workspace, extensions, commands, Uri, MarkdownString } from 'vscode';
+import { workspace, extensions, commands, Uri, MarkdownString, l10n } from 'vscode';
 import { APP_NAME } from '@/constants';
 import { Alert } from '@/lib/adaptor/window';
-import localize from '@/localize';
 
 export enum GitHistoryExtension {
     gitHistory = 'donjayamanne.githistory',
@@ -28,7 +27,7 @@ export class GitHistory {
         if (!extension) {
             const args = encodeURIComponent(JSON.stringify([[this.extensionName]]));
             const commandUri = Uri.parse(`command:workbench.extensions.action.showExtensionsWithIds?${args}`);
-            const tips = localize('msg.error.installExtension', `📦 [${this.extensionName}](${commandUri})`);
+            const tips = l10n.t('Please install extension, click to search {0}', `📦 [${this.extensionName}](${commandUri})`);
             const contents = new MarkdownString(tips, true);
             throw Error(contents.value);
         }

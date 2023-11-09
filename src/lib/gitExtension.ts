@@ -37,10 +37,10 @@ export const setupGitEvents = async (context: vscode.ExtensionContext) => {
             () => {
                 updateTreeDataEvent.fire();
             },
-            800,
+            1000,
             throttleOptions,
         );
-        const onDidChangeState = throttle(checkRepos, 800, throttleOptions);
+        const onDidChangeState = throttle(checkRepos, 1000, throttleOptions);
         checkRepos();
         context.subscriptions.push(builtinGit.onDidChangeState(onDidChangeState));
     }

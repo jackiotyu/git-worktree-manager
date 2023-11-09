@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { formatTime, getWorkTreeList, checkGitValid, getAllRefList, judgeIsCurrentFolder } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { IWorkTreeCacheItem } from '@/types';
-import localize from '@/localize';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
 
@@ -12,8 +11,8 @@ interface BranchForWorkTree extends vscode.QuickPickItem {
 }
 
 export const pickBranch = async (
-    title: string = localize('msg.info.createWorkTree'),
-    placeholder: string = localize('msg.placeholder.createWorkTree'),
+    title: string = vscode.l10n.t('Create Worktree for'),
+    placeholder: string = vscode.l10n.t('Choose a branch to create new worktree for'),
     cwd?: string,
 ): Promise<BranchForWorkTree | void> => {
     let resolve: (value?: BranchForWorkTree | void) => void = () => {};
@@ -25,7 +24,7 @@ export const pickBranch = async (
     try {
         let isValidGit = await checkGitValid(cwd);
         if (!isValidGit) {
-            Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
+            Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
             return;
         }
         const quickPick = vscode.window.createQuickPick();
@@ -66,7 +65,7 @@ export const pickBranch = async (
             return;
         }
         const branchItems: BranchForWorkTree[] = [
-            { label: localize('branch'), kind: vscode.QuickPickItemKind.Separator },
+            { label: vscode.l10n.t('branch'), kind: vscode.QuickPickItemKind.Separator },
             ...branchList
                 .filter((i) => !i.worktreepath && i.HEAD !== '*')
                 .map((item) => {
@@ -87,7 +86,7 @@ export const pickBranch = async (
             { label: 'worktree', kind: vscode.QuickPickItemKind.Separator },
             {
                 label: `HEAD ${defaultBranch?.['objectname:short'] || ''}`,
-                description: localize('msg.pickItem.useCurrentBranch'),
+                description: vscode.l10n.t('Current commit hash'),
                 iconPath: new vscode.ThemeIcon('git-commit'),
                 hash: defaultBranch?.['objectname:short'],
             },
@@ -110,12 +109,12 @@ export const pickBranch = async (
         ];
 
         const remoteBranchItems: BranchForWorkTree[] = [
-            { label: localize('remoteBranch'), kind: vscode.QuickPickItemKind.Separator },
+            { label: vscode.l10n.t('remote branch'), kind: vscode.QuickPickItemKind.Separator },
             ...remoteBranchList.map((item) => {
                 return {
                     label: item['refname:short'],
                     iconPath: new vscode.ThemeIcon('cloud'),
-                    description: `${localize('remoteBranch')} $(git-commit) ${
+                    description: `${vscode.l10n.t('remote branch')} $(git-commit) ${
                         item['objectname:short']
                     } $(circle-small-filled) ${formatTime(item.authordate)}`,
                     branch: item['refname:short'],
@@ -124,12 +123,12 @@ export const pickBranch = async (
         ];
 
         const tagItems: BranchForWorkTree[] = [
-            { label: localize('tag'), kind: vscode.QuickPickItemKind.Separator },
+            { label: vscode.l10n.t('tag'), kind: vscode.QuickPickItemKind.Separator },
             ...tagList.map((item) => {
                 return {
                     label: item['refname'].replace('refs/tags/', ''),
                     iconPath: new vscode.ThemeIcon('tag'),
-                    description: `${localize('tag')} $(git-commit) ${
+                    description: `${vscode.l10n.t('tag')} $(git-commit) ${
                         item['objectname:short']
                     } $(circle-small-filled) ${formatTime(item.authordate)}`,
                     hash: item['objectname:short'],
@@ -163,7 +162,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             buttons: [
                 {
                     iconPath: new vscode.ThemeIcon('arrow-right'),
-                    tooltip: localize('cmd.switchToSelectFolder'),
+                    tooltip: vscode.l10n.t('Switch the current window to this folder.'),
                 },
             ],
         };
@@ -186,13 +185,13 @@ export const pickWorktree = async () => {
     try {
         let list: IWorkTreeCacheItem[] = [];
         const quickPick = vscode.window.createQuickPick<WorkTreePick>();
-        quickPick.placeholder = localize('msg.placeholder.pickWorktree');
+        quickPick.placeholder = vscode.l10n.t('Select to open in new window');
         quickPick.canSelectMany = false;
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
         quickPick.keepScrollPosition = true;
-        const sortByNameTips = localize('msg.modal.button.sortByName');
-        const sortByRepoTips = localize('msg.modal.button.sortByRepo');
+        const sortByNameTips = vscode.l10n.t('Sort by branch name');
+        const sortByRepoTips = vscode.l10n.t('Sort by repository');
         const baseButtons: vscode.QuickInputButton[] = [
             { iconPath: new vscode.ThemeIcon('case-sensitive'), tooltip: sortByNameTips },
         ];
@@ -219,7 +218,7 @@ export const pickWorktree = async () => {
             if (!selectedItem.path) {
                 return;
             }
-            if (event.button.tooltip === localize('cmd.switchToSelectFolder')) {
+            if (event.button.tooltip === vscode.l10n.t('Switch the current window to this folder.')) {
                 if (selectedItem) {
                     vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
                         forceNewWindow: false,

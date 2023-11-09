@@ -33,6 +33,7 @@
   "icon": "images/icon.png",
   "activationEvents": [],
   "main": "./dist/extension.js",
+  "l10n": "./l10n",
   "contributes": {
     "commands": [
       {
@@ -220,7 +221,7 @@
         {
           "id": "git-worktree-manager",
           "icon": "images/icon.svg",
-          "title": "%sizeBar.git-worktree-manager%"
+          "title": "%activitybar.git-worktree-manager%"
         }
       ]
     },
@@ -754,7 +755,6 @@
   "dependencies": {
     "dayjs": "^1.11.9",
     "lodash": "^4.17.21",
-    "tree-kill": "^1.2.2",
-    "vscode-nls-i18n": "^0.2.4"
+    "tree-kill": "^1.2.2"
   }
 }

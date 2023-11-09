@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { Commands } from '@/constants';
-import localize from '@/localize';
 
 export class StatusBarItemManager {
     static register(context: vscode.ExtensionContext) {
@@ -10,8 +9,8 @@ export class StatusBarItemManager {
             1,
         );
         searchWorktreeItem.command = Commands.searchAllWorktree;
-        searchWorktreeItem.text = `$(root-folder)`; //localize('cmd.searchAllWorktree');
-        searchWorktreeItem.tooltip = localize('cmd.searchAllWorktree');
+        searchWorktreeItem.text = `$(root-folder)`;
+        searchWorktreeItem.tooltip = vscode.l10n.t('Find Worktree');
         searchWorktreeItem.show();
         searchWorktreeItem.name = 'search worktree';
 

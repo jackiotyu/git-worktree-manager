@@ -13,7 +13,6 @@ import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig 
 import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
 import { TreeItemKind, APP_NAME, Commands, ViewId, WORK_TREE_SCHEME } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
-import localize from '@/localize';
 import throttle from 'lodash/throttle';
 import debounce from 'lodash/debounce';
 import path from 'path';
@@ -63,25 +62,25 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.isBranch = item.isBranch;
 
         this.tooltip = new vscode.MarkdownString('', true);
-        this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
+        this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
         let sourceIcon = 'git-commit';
-        let sourceName = localize('commit');
+        let sourceName = vscode.l10n.t('commit');
         if (item.isBranch) {
             sourceIcon = 'source-control';
-            sourceName = localize('branch');
+            sourceName = vscode.l10n.t('branch');
         } else if (item.isTag) {
             sourceIcon = 'tag';
-            sourceName = localize('tag');
+            sourceName = vscode.l10n.t('tag');
         }
         this.tooltip.appendMarkdown(`$(${sourceIcon}) ${sourceName}  ${item.name}\n\n`);
         sourceIcon !== 'git-commit' &&
-            this.tooltip.appendMarkdown(`$(git-commit) ${localize('commit')}  ${item.hash.slice(0, 8)}\n\n`);
-        item.prunable && this.tooltip.appendMarkdown(localize('treeView.tooltip.error'));
-        item.locked && this.tooltip.appendMarkdown(localize('treeView.tooltip.lock'));
-        item.isMain && this.tooltip.appendMarkdown(localize('treeView.tooltip.main'));
-        item.ahead && this.tooltip.appendMarkdown(localize('treeView.tooltip.ahead', item.ahead + ''));
-        item.behind && this.tooltip.appendMarkdown(localize('treeView.tooltip.behind', item.behind + ''));
-        !isCurrent && this.tooltip.appendMarkdown(localize('treeView.tooltip.click'));
+            this.tooltip.appendMarkdown(`$(git-commit) ${vscode.l10n.t('commit')}  ${item.hash.slice(0, 8)}\n\n`);
+        item.prunable && this.tooltip.appendMarkdown(vscode.l10n.t('$(error) Detached from the git version\n\n'));
+        item.locked && this.tooltip.appendMarkdown(vscode.l10n.t('$(lock) The worktree is locked to prevent accidental purging\n\n'));
+        item.isMain && this.tooltip.appendMarkdown(vscode.l10n.t('✨ Worktree main folder, cannot be cleared and locked\n\n'));
+        item.ahead && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', item.ahead + ''));
+        item.behind && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', item.behind + ''));
+        !isCurrent && this.tooltip.appendMarkdown(vscode.l10n.t('*Click to open new window for this worktree*\n\n'));
 
         this.command = {
             title: 'open worktree',
@@ -140,7 +139,7 @@ export class GitFolderItem extends vscode.TreeItem {
         this.iconPath = new vscode.ThemeIcon('repo');
         this.contextValue = `git-worktree-manager.gitFolderItem.${this.defaultOpen ? 'defaultOpen' : 'defaultClose'}`;
         this.tooltip = new vscode.MarkdownString('', true);
-        this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
+        this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
     }
 }
 
@@ -154,9 +153,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            globalStateEvent.event(throttle(this.refresh, 300, { leading: true, trailing: true })),
-            treeDataEvent.event(throttle(() => process.nextTick(this.refresh), 300, { leading: true, trailing: true })),
-            updateFolderEvent.event(throttle(this.refresh, 300, { leading: true, trailing: true })),
+            globalStateEvent.event(throttle(this.refresh, 1000, { leading: true, trailing: true })),
+            treeDataEvent.event(throttle(() => process.nextTick(this.refresh), 1000, { leading: true, trailing: true })),
+            updateFolderEvent.event(throttle(this.refresh, 1000, { leading: true, trailing: true })),
             toggleGitFolderViewAsEvent.event(
                 debounce((viewAsTree: boolean) => {
                     this.viewAsTree = viewAsTree;
@@ -166,7 +165,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
                         viewAsTree,
                     );
                     GlobalState.update('gitFolderViewAsTree', viewAsTree);
-                }, 300),
+                }, 1000),
             ),
         );
         this.refresh();
@@ -239,7 +238,7 @@ export class FolderItem extends vscode.TreeItem {
         this.path = item.path;
         this.description = item.path;
         this.tooltip = new vscode.MarkdownString('', true);
-        this.tooltip.appendMarkdown(localize('treeView.tooltip.folder', item.path));
+        this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
         this.resourceUri = item.uri;
         this.command = {
             title: 'open folder',
@@ -251,11 +250,11 @@ export class FolderItem extends vscode.TreeItem {
 
 export class FolderLoadMore extends vscode.TreeItem implements ILoadMoreItem {
     readonly viewId = ViewId.folderList;
-    constructor(public name = localize('treeView.item.loadMore')) {
+    constructor(public name = vscode.l10n.t('Load More...')) {
         super(name, vscode.TreeItemCollapsibleState.None);
         this.contextValue = 'git-worktree-manager.loadMore';
         this.command = {
-            title: localize('treeView.item.loadMore'),
+            title: vscode.l10n.t('Load More...'),
             command: Commands.loadMoreRecentFolder,
         };
     }
@@ -271,10 +270,12 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            updateRecentEvent.event(throttle(this.refresh, 300)),
+            updateRecentEvent.event(throttle(this.refresh, 1000, { leading: true, trailing: true })),
             vscode.commands.registerCommand(Commands.loadMoreRecentFolder, this.loadMoreFolder),
             loadAllTreeDataEvent.event(this.loadAllCheck),
         );
+        // HACK 强制获取一次最近的文件夹，加快访问速度
+        vscode.commands.executeCommand('_workbench.getRecentlyOpened');
     }
     refresh = async () => {
         this._onDidChangeTreeData.fire();
@@ -306,7 +307,7 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
         if (itemList.length < folders.length) {
             itemList.push(new FolderLoadMore());
         }
-        return Promise.resolve(itemList);
+        return itemList;
     }
     getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;

@@ -7,7 +7,6 @@ import {
     loadAllTreeDataEvent,
     revealTreeItemEvent,
 } from '@/lib/events';
-import localize from '@/localize';
 import {
     getFolderIcon,
     getWorkTreeList,
@@ -46,7 +45,7 @@ interface CmdItem extends vscode.QuickPickItem {
 const checkFolderExist = async (path: string) => {
     let exist = await checkExist(path);
     if (!exist) {
-        Alert.showErrorMessage(localize('msg.error.folderNotExist'), { modal: true });
+        Alert.showErrorMessage(vscode.l10n.t('The folder does not exist'), { modal: true });
         return false;
     }
     return true;
@@ -63,8 +62,8 @@ export const switchWorkTreeCmd = async () => {
     });
     const options: vscode.QuickPickOptions = {
         canPickMany: false,
-        placeHolder: localize('msg.placeHolder.switchWorkTree'),
-        title: localize('msg.title.switchWorkTree'),
+        placeHolder: vscode.l10n.t('Please select the directory to switch'),
+        title: vscode.l10n.t('Worktree switch'),
     };
     vscode.window.showQuickPick(items, options).then((workTree) => {
         if (!workTree) {
@@ -84,8 +83,8 @@ export const refreshWorkTreeCmd = () => {
 const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string, isBranch: boolean }) => {
     const { folderPath, name, label, isBranch } = info;
     let confirmCreate = await confirmModal(
-        localize('msg.modal.title.createWorkTree'),
-        localize('msg.modal.detail.createWorkTree', folderPath, label, name),
+        vscode.l10n.t('Create worktree'),
+        vscode.l10n.t('A worktree with {1} {2} is created under {0}', folderPath, label, name),
     );
     if (!confirmCreate) {
         return;
@@ -96,8 +95,8 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
     }
     updateTreeDataEvent.fire();
     let confirmOpen = await confirmModal(
-        localize('msg.modal.title.openFolder'),
-        localize('msg.modal.detail.openFolder'),
+        vscode.l10n.t('Open folder'),
+        vscode.l10n.t('Whether to open the new worktree in a new window?'),
     );
     if (!confirmOpen) {
         return;
@@ -119,15 +118,15 @@ export const addWorkTreeCmd = async () => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri,
-        openLabel: localize('msg.modal.title.pickFolder'),
-        title: localize('msg.modal.detail.pickFolder'),
+        openLabel: vscode.l10n.t('Select the folder'),
+        title: vscode.l10n.t('Select the folder where you want to create the worktree?'),
     });
     if (!uriList?.length) {
         return;
     }
     let folderUri = uriList[0];
     let folderPath = folderUri.fsPath;
-    let label = branch ? localize('branch') : localize('commitHash');
+    let label = branch ? vscode.l10n.t('branch') : vscode.l10n.t('commit hash');
     await createWorkTreeFromInfo({
         name: branch || hash || '',
         label,
@@ -140,16 +139,16 @@ const removeWorkTreeCmd = async (item?: WorkTreeItem) => {
     if (!item) return;
     try {
         const confirm = await confirmModal(
-            localize('msg.modal.title.deleteWorkTree'),
-            localize('msg.modal.detail.deleteWorkTree', item.path),
+            vscode.l10n.t('Delete worktree'),
+            vscode.l10n.t('The worktree for the {0} folder will be deleted', item.path),
         );
         if (!confirm) {
             return;
         }
         await removeWorkTree(item.path, item.parent?.path);
-        Alert.showInformationMessage(localize('msg.success.deleteWorkTree', item.path));
+        Alert.showInformationMessage(vscode.l10n.t('Successfully deleted the worktree for the {0} folder', item.path));
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.deleteWorkTree', String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Worktree removal failed\n\n {0}', String(error)));
         logger.error(error);
     }
     updateTreeDataEvent.fire();
@@ -162,8 +161,8 @@ const addWorkTreeFromBranchCmd = async (item?: WorkTreeItem) => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri,
-        openLabel: localize('msg.modal.title.pickFolder'),
-        title: localize('msg.modal.detail.pickFolder'),
+        openLabel: vscode.l10n.t('Select the folder'),
+        title: vscode.l10n.t('Select the folder where you want to create the worktree?'),
     });
     if (!uriList?.length) {
         return;
@@ -193,25 +192,25 @@ const revealInSystemExplorerCmd = async (item?: AllViewItem, needRevealTreeItem 
 };
 
 const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {
-    let cmdName = localize('operation');
+    let cmdName = vscode.l10n.t('operation');
     try {
         switch (cmd) {
             case Commands.lockWorkTree:
                 await lockWorkTree(path, cwd);
-                cmdName = localize('lock');
+                cmdName = vscode.l10n.t('lock');
                 break;
             case Commands.unlockWorkTree:
                 await unlockWorkTree(path, cwd);
-                cmdName = localize('unlock');
+                cmdName = vscode.l10n.t('unlock');
                 break;
             case Commands.repairWorkTree:
                 await repairWorkTree(path, cwd);
-                cmdName = localize('repair');
+                cmdName = vscode.l10n.t('repair');
                 break;
         }
-        Alert.showInformationMessage(localize('msg.success.commonAction', cmdName));
+        Alert.showInformationMessage(vscode.l10n.t('Worktree {0} successfully', cmdName));
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.commonAction', cmdName, util.inspect(error, false, 1, true)));
+        Alert.showErrorMessage(vscode.l10n.t('Worktree {0} failed {1}', cmdName, util.inspect(error, false, 1, true)));
         logger.error(error);
     }
     updateTreeDataEvent.fire();
@@ -240,17 +239,17 @@ const moveWorkTreeCmd = async (item?: WorkTreeItem) => {
             canSelectFolders: true,
             canSelectMany: false,
             defaultUri: folderRoot.uri,
-            openLabel: localize('msg.modal.title.pickFolder'),
-            title: localize('msg.modal.detail.moveToFolder', item.path),
+            openLabel: vscode.l10n.t('Select the folder'),
+            title: vscode.l10n.t(`Select the new location to move the Worktree's folder from {0}`, item.path),
         });
         if (!uriList?.length) {
             return;
         }
         let folderUri = uriList[0];
         await moveWorkTree(item.path, folderUri.fsPath, item.parent?.path);
-        Alert.showInformationMessage(localize('msg.success.moveWorkTree'));
+        Alert.showInformationMessage(vscode.l10n.t('Worktree moved successfully'));
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.moveWorkTree', String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Worktree move failed \n\n {0}', String(error)));
         logger.error(error);
     }
     updateTreeDataEvent.fire();
@@ -264,7 +263,7 @@ const switchToSelectFolderCmd = async (item?: WorkTreeItem) => {
             forceReuseWindow: true,
         });
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.switchWorkTree', String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Switching worktree failed \n\n {0}', String(error)));
         logger.error(error);
     }
 };
@@ -275,9 +274,9 @@ const pruneWorkTreeCmd = async () => {
         if (!output?.length) {
             return;
         }
-        let ok = localize('ok');
+        let ok = vscode.l10n.t('ok');
         let confirm = await Alert.showInformationMessage(
-            localize('msg.modal.title.pruneWorkTree'),
+            vscode.l10n.t('The following Worktree folder will be deleted'),
             {
                 detail: output.join('  \n'),
                 modal: true,
@@ -288,9 +287,9 @@ const pruneWorkTreeCmd = async () => {
             return;
         }
         await pruneWorkTree();
-        Alert.showInformationMessage(localize('msg.success.pruneWorkTree'));
+        Alert.showInformationMessage(vscode.l10n.t('Prune worktree succeeded'));
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.pruneWorkTree'));
+        Alert.showErrorMessage(vscode.l10n.t('Failed to prune worktree'));
         logger.error(error);
     }
     updateTreeDataEvent.fire();
@@ -324,7 +323,7 @@ async function updateFolderItem(config: IFolderItemConfig) {
     if (~index) {
         allFolders[index] = config;
         await updateFolderConfig(allFolders);
-        Alert.showInformationMessage(localize('msg.success.save'));
+        Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
     }
 }
 
@@ -334,30 +333,30 @@ const addToGitFolder = async (folderPath: string) => {
     }
     let existFolders = getFolderConfig();
     if (!(await checkGitValid(folderPath))) {
-        return Alert.showErrorMessage(localize('msg.error.invalidGitFolder'));
+        return Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
     }
     const worktreeList = await getWorkTreeList(folderPath, true);
     const mainFolder = worktreeList.find((i) => i.isMain);
     const mainFolderPath = mainFolder?.path ? vscode.Uri.file(mainFolder.path).fsPath : '';
     if (mainFolderPath && mainFolderPath !== folderPath) {
         let ok = await confirmModal(
-            localize('msg.modal.title.pickMainFolder'),
-            localize('msg.modal.placeholder.pickMainFolder', folderPath, mainFolderPath),
+            vscode.l10n.t('Select main folder?'),
+            vscode.l10n.t('The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}', folderPath, mainFolderPath),
         );
         if (ok) {
             folderPath = mainFolderPath;
         }
     }
     if (existFolders.some((i) => i.path === folderPath)) {
-        return Alert.showErrorMessage(localize('msg.error.gitFolderExistInSetting'));
+        return Alert.showErrorMessage(vscode.l10n.t('The git repository folder already exists in the settings'));
     }
     let folderName = await vscode.window.showInputBox({
-        title: localize('msg.modal.title.inputGitFolderName'),
-        placeHolder: localize('msg.modal.placeholder.inputGitFolderName'),
+        title: vscode.l10n.t('Enter the name of the repository for the showcase'),
+        placeHolder: vscode.l10n.t('Please enter a name for the presentation'),
         value: folderPath,
         validateInput: (value) => {
             if (!value) {
-                return localize('msg.modal.placeholder.inputGitFolderName');
+                return vscode.l10n.t('Please enter a name for the presentation');
             }
         },
     });
@@ -366,7 +365,7 @@ const addToGitFolder = async (folderPath: string) => {
     }
     existFolders.push({ name: folderName, path: folderPath });
     await updateFolderConfig(existFolders);
-    Alert.showInformationMessage(localize('msg.success.save'));
+    Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
 };
 
 const addGitFolderCmd = async () => {
@@ -375,8 +374,8 @@ const addGitFolderCmd = async () => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
-        openLabel: localize('msg.modal.title.addGitFolder'),
-        title: localize('msg.modal.detail.addGitFolder'),
+        openLabel: vscode.l10n.t('Add a git repository folder path'),
+        title: vscode.l10n.t('Please select the git repository folder path'),
     });
     if (!uriList?.length) {
         return;
@@ -402,15 +401,15 @@ const removeGitFolderCmd = async (item: GitFolderItem) => {
         return;
     }
     let ok = await confirmModal(
-        localize('msg.modal.title.removeGitFolder'),
-        localize('msg.modal.placeholder.removeGitFolder', item.path, item.name),
+        vscode.l10n.t('Remove the git repository reference in list'),
+        vscode.l10n.t('Are you sure to delete this repository reference with path {0} and alias {1}?', item.path, item.name),
     );
     if (!ok) {
         return;
     }
     folders = folders.filter((f) => f.path !== path);
     await updateFolderConfig(folders);
-    Alert.showInformationMessage(localize('msg.success.remove'));
+    Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
 };
 
 const renameGitFolderCmd = async (item?: GitFolderItem) => {
@@ -421,12 +420,12 @@ const renameGitFolderCmd = async (item?: GitFolderItem) => {
     }
     const path = folder.path;
     let name = await vscode.window.showInputBox({
-        title: localize('msg.modal.title.renameGitFolder'),
-        placeHolder: localize('msg.modal.title.inputGitFolderName'),
+        title: vscode.l10n.t('Rename the git repository alias'),
+        placeHolder: vscode.l10n.t('Enter the name of the repository for the showcase'),
         value: folder.name,
         validateInput(value) {
             if (!value) {
-                return localize('msg.modal.title.inputGitFolderName');
+                return vscode.l10n.t('Enter the name of the repository for the showcase');
             }
         },
     });
@@ -439,7 +438,7 @@ const renameGitFolderCmd = async (item?: GitFolderItem) => {
     if (~index) {
         allFolders[index].name = name;
         await updateFolderConfig(allFolders);
-        Alert.showInformationMessage(localize('msg.success.save'));
+        Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
     }
 };
 
@@ -488,8 +487,8 @@ const openTerminalCmd = async (item?: AllViewItem) => {
         let item = await vscode.window.showQuickPick(
             items,
             {
-                title: localize('msg.modal.title.selectCmd'),
-                placeHolder: localize('msg.modal.placeholder.selectCmd'),
+                title: vscode.l10n.t('Select command'),
+                placeHolder: vscode.l10n.t('Select the command you need to execute in the terminal'),
                 canPickMany: false,
             },
             cancelToken.token,
@@ -510,7 +509,7 @@ const openExternalTerminalCmd = async (item?: AllViewItem, needRevealTreeItem = 
         if (needRevealTreeItem) await revealTreeItem(item);
         await openExternalTerminal(`${item.path}`);
     } catch (error) {
-        Alert.showErrorMessage(localize('msg.fail.invokeExternalTerminal', String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Opening External Terminal failed\n\n {0}', String(error)));
     }
 };
 
@@ -524,7 +523,7 @@ const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
 const copyFilePathCmd = (item?: AllViewItem) => {
     if (!item) return;
     vscode.env.clipboard.writeText(item.path).then(() => {
-        Alert.showInformationMessage(localize('msg.success.copy', item.path));
+        Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', item.path));
     });
 };
 
@@ -544,15 +543,15 @@ const addToGitFolderCmd = (item?: FolderItem) => {
 const checkoutBranchCmd = async (item?: WorkTreeItem) => {
     if (!item) return;
     let branchItem = await pickBranch(
-        localize('msg.info.checkoutBranch', `${item.name} ⇄ ...${item.path.slice(-24)}`),
-        localize('msg.placeholder.checkoutBranch'),
+        vscode.l10n.t('Checkout branch ( {0} )', `${item.name} ⇄ ...${item.path.slice(-24)}`),
+        vscode.l10n.t('Select branch for checkout'),
         item.path,
     );
     if (!branchItem) return;
     const checkoutText = branchItem.branch || branchItem.hash || '';
     const isBranch = !!branchItem.branch;
     actionProgressWrapper(
-        localize('msg.progress.checkoutBranch', checkoutText, item.path),
+        vscode.l10n.t('Checkout branch ( {0} ) on {1}', checkoutText, item.path),
         () => checkoutBranch(item.path, checkoutText, isBranch),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
     );
