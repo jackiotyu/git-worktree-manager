@@ -13,13 +13,13 @@ This extension aims to provide convenient switching between multiple workspaces,
 
 <details>
   <summary>Overview 概览</summary>
-  <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/overview.png" height="500" width="800" />
+  <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/overview.png" width="800" />
 </details>
 
 <details>
   <summary>How Git Worktree Works. git worktree 工作原理</summary>
   <section>
-    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/how-worktree-works.png" height="500" width="800" />
+    <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/how-worktree-works.png" width="800" />
     <p>Git worktree is a feature of the Git version control system that allows you to work on multiple branches or commits within the same repository.
 
 With git worktree, you can create an additional working directory that can be linked to different branches or commits of the original repository. The benefit of this is that you can work on multiple tasks without switching branches, making it convenient for developers to handle different versions of the code.
@@ -84,9 +84,9 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 1. Worktree manager. 管理 worktree
 
 ![create-worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/create-worktree.png)
-- Click the `Add worktree` icon, then following the tips to make a new worktree.
+- Click on the "Add worktree" icon and follow the prompts to add a new worktree.
 点击 `添加 worktree` 图标，跟随提示进行操作，添加新的 worktree。
-- It provides some useful command in context menu. You can open a new window for a worktree when click worktree item.
+- The right-click context menu provides the following convenient commands. You can click on the worktree item to directly open the worktree in a new window.
 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
 ![open-terminal](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/open-terminal.png)
 - Using VSCode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
@@ -137,7 +137,7 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 - [x] Switch any branch, use `git switch --ignore-other-worktrees`.
 - [x] Change message prompts level.
 - [x] Quick view git history.
-- [ ] Display git branch status.
+- [x] Display git branch status.
 - [x] Quick pull/push branch.
 - [ ] Git repository snapshot.
 - [ ] Multi-language Support.
