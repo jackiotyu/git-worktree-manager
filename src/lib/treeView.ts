@@ -33,6 +33,7 @@ export class WorkTreeItem extends vscode.TreeItem {
             item.behind ? `${item.behind}↓ ` : ''
         }${item.path}`;
         this.parent = parent;
+        this.id = item.path;
 
         const isCurrent = judgeIsCurrentFolder(item.path);
         const themeColor = isCurrent ? new vscode.ThemeColor('statusBarItem.remoteBackground') : void 0;
@@ -133,6 +134,7 @@ export class GitFolderItem extends vscode.TreeItem {
     readonly parent = void 0;
     constructor(item: IFolderItemConfig, collapsible: vscode.TreeItemCollapsibleState) {
         super(item.name, collapsible);
+        this.id = item.name + ' ~~ ' + item.path;
         this.name = item.name;
         this.path = item.path;
         this.defaultOpen = !!item.defaultOpen;
@@ -153,7 +155,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     _onDidChangeTreeData = new vscode.EventEmitter<GitFolderItem | void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
-        this.refresh = throttle(this.refresh, 8000, { leading: true, trailing: true });
+        this.refresh = throttle(this.refresh, 1500, { leading: true, trailing: true });
         context.subscriptions.push(
             globalStateEvent.event(this.refresh),
             treeDataEvent.event(() => process.nextTick(this.refresh)),
@@ -171,7 +173,6 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             ),
             this,
         );
-        this.refresh();
         let viewAsTree = GlobalState.get('gitFolderViewAsTree', true);
         vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
         this.viewAsTree = viewAsTree;
