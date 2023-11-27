@@ -14,6 +14,7 @@ async function getBuiltInGitApi(): Promise<GitAPI | undefined> {
     } catch {}
 }
 
+// TODO 手动监听 git index 文件变动
 export const setupGitEvents = async (context: vscode.ExtensionContext) => {
     const builtinGit = await getBuiltInGitApi();
     if (builtinGit) {
@@ -37,10 +38,10 @@ export const setupGitEvents = async (context: vscode.ExtensionContext) => {
             () => {
                 updateTreeDataEvent.fire();
             },
-            1000,
+            30000,
             throttleOptions,
         );
-        const onDidChangeState = throttle(checkRepos, 1000, throttleOptions);
+        const onDidChangeState = throttle(checkRepos, 30000, throttleOptions);
         checkRepos();
         context.subscriptions.push(builtinGit.onDidChangeState(onDidChangeState));
     }

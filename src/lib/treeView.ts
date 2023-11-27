@@ -145,14 +145,15 @@ export class GitFolderItem extends vscode.TreeItem {
 
 type CommonWorkTreeItem = GitFolderItem | WorkTreeItem;
 
-export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorkTreeItem> {
+export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorkTreeItem>, vscode.Disposable {
     static readonly id = ViewId.gitFolderList;
     private data: IFolderItemConfig[] = [];
     private viewAsTree: boolean;
-    _onDidChangeTreeData = new vscode.EventEmitter<void>();
+    private loadedMap: Map<string, boolean> = new Map();
+    _onDidChangeTreeData = new vscode.EventEmitter<GitFolderItem | void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
-        this.refresh = throttle(this.refresh, 1000, { leading: true, trailing: true });
+        this.refresh = throttle(this.refresh, 8000, { leading: true, trailing: true });
         context.subscriptions.push(
             globalStateEvent.event(this.refresh),
             treeDataEvent.event(() => process.nextTick(this.refresh)),
@@ -166,13 +167,18 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
                         viewAsTree,
                     );
                     GlobalState.update('gitFolderViewAsTree', viewAsTree);
-                }, 1000),
+                }, 300),
             ),
+            this,
         );
         this.refresh();
         let viewAsTree = GlobalState.get('gitFolderViewAsTree', true);
         vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
         this.viewAsTree = viewAsTree;
+    }
+
+    dispose() {
+        this.loadedMap.clear();
     }
 
     refresh = () => {
@@ -213,7 +219,15 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             );
         }
         if (element.type === TreeItemKind.gitFolder) {
-            let list = await getWorkTreeList(element.path);
+            // 延迟获取pull/push提交数
+            const loaded = this.loadedMap.has(element.path);
+            let list = await getWorkTreeList(element.path, !loaded);
+            if(!loaded) {
+                this.loadedMap.set(element.path, true);
+                setImmediate(() => {
+                    this._onDidChangeTreeData.fire(element);
+                });
+            }
             return Promise.resolve(
                 list.map((item) => {
                     return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
