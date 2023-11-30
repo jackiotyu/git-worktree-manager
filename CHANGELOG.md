@@ -1,3 +1,10 @@
+## [0.2.7] 2023-11-30
+
+### Change
+
+- Improve first processing worktree list by ignore commit diff.
+- More action icons in worktree quick pick.
+
 ## [0.2.6] 2023-11-10
 
 ### Change
