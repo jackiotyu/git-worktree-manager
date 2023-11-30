@@ -4,6 +4,7 @@ import { updateTreeDataEvent } from '@/lib/events';
 class WorkspaceFolderRoot implements vscode.Disposable {
     private _uri?: vscode.Uri;
     private _workspaceWatcher: vscode.Disposable;
+    private _folderSet: Set<string> = new Set();
     constructor() {
         this._workspaceWatcher = vscode.workspace.onDidChangeWorkspaceFolders(() => {
             this.checkUri();
@@ -14,6 +15,7 @@ class WorkspaceFolderRoot implements vscode.Disposable {
     private checkUri() {
         const folders = vscode.workspace.workspaceFolders;
         const workspaceFile = vscode.workspace.workspaceFile;
+        this._folderSet = new Set(folders?.map(i => i.uri.fsPath.toLocaleLowerCase().replace(/\\/g, '/')));
         if(workspaceFile) {
             this._uri = workspaceFile;
         } else if(folders?.length === 1) {
@@ -24,6 +26,9 @@ class WorkspaceFolderRoot implements vscode.Disposable {
     }
     get uri() {
         return this._uri;
+    }
+    get folderPathSet() {
+        return this._folderSet;
     }
     dispose() {
         this._workspaceWatcher.dispose();

@@ -81,6 +81,11 @@ export function judgeIsCurrentFolder(path: string) {
     return comparePath(folderRoot.uri?.fsPath, path);
 }
 
+export function judgeIncludeFolder(path: string) {
+    const normalizePath = path.toLocaleLowerCase().replace(/\\/g, '/');
+    return folderRoot.folderPathSet.has(normalizePath);
+}
+
 export function comparePath(path1: string = '', path2: string = '') {
     return path1.toLocaleLowerCase().replace(/\\/g, '/') === path2.toLocaleLowerCase().replace(/\\/g, '/');
 }

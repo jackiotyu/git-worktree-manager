@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { formatTime, getWorkTreeList, checkGitValid, getAllRefList, judgeIsCurrentFolder } from '@/utils';
+import { formatTime, getWorkTreeList, checkGitValid, getAllRefList, judgeIncludeFolder } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { IWorkTreeCacheItem } from '@/types';
 import { Commands } from '@/constants';
@@ -31,14 +31,19 @@ const openTerminalQuickInputButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Open in VSCode built-in Terminal'),
 };
 
+const addToWorkspaceQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('multiple-windows'),
+    tooltip: vscode.l10n.t('Add to workspace'),
+};
+
 const sortByBranchQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('case-sensitive'),
-    tooltip: vscode.l10n.t('Sort by branch name')
+    tooltip: vscode.l10n.t('Sort by branch name'),
 };
 
 const sortByRepoQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('case-sensitive'),
-    tooltip: vscode.l10n.t('Sort by repository')
+    tooltip: vscode.l10n.t('Sort by repository'),
 };
 
 export const pickBranch = async (
@@ -183,19 +188,22 @@ interface WorkTreePick extends vscode.QuickPickItem {
 
 const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     let items = list.map((row) => {
+        const isCurrent = judgeIncludeFolder(row.path);
+        const buttons: vscode.QuickInputButton[] = [
+            openExternalTerminalQuickInputButton,
+            openTerminalQuickInputButton,
+            revealInSystemExplorerQuickInputButton,
+        ];
+        if (!isCurrent) buttons.push(addToWorkspaceQuickInputButton);
+        buttons.push(openInNewWindowQuickInputButton);
         return {
             label: row.name,
             detail: `${row.path}`,
             description: `⇄ ${row.label}`,
             path: row.path,
             key: row.label,
-            iconPath: judgeIsCurrentFolder(row.path) ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
-            buttons: [
-                openExternalTerminalQuickInputButton,
-                openTerminalQuickInputButton,
-                revealInSystemExplorerQuickInputButton,
-                openInNewWindowQuickInputButton,
-            ],
+            iconPath: isCurrent ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
+            buttons: buttons,
         };
     });
     let groupMap = groupBy(items, 'key');
@@ -221,12 +229,8 @@ export const pickWorktree = async () => {
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
         quickPick.keepScrollPosition = true;
-        const baseButtons: vscode.QuickInputButton[] = [
-            sortByBranchQuickInputButton
-        ];
-        const resetButtons: vscode.QuickInputButton[] = [
-            sortByRepoQuickInputButton
-        ];
+        const baseButtons: vscode.QuickInputButton[] = [sortByBranchQuickInputButton];
+        const resetButtons: vscode.QuickInputButton[] = [sortByRepoQuickInputButton];
         quickPick.buttons = baseButtons;
         quickPick.onDidTriggerButton((event) => {
             if (event === sortByBranchQuickInputButton) {
@@ -248,33 +252,32 @@ export const pickWorktree = async () => {
             if (!selectedItem.path) {
                 return;
             }
-            if (button === openInNewWindowQuickInputButton) {
-                vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
-                    forceNewWindow: false,
-                    forceReuseWindow: true,
-                });
-                resolve(selectedItem);
-                return;
-            }
             const vieItem = {
                 name: selectedItem.label,
                 path: selectedItem.path,
             };
-            if(button === openExternalTerminalQuickInputButton) {
-                vscode.commands.executeCommand(Commands.openExternalTerminal, vieItem);
-                resolve(selectedItem);
-                return;
+            switch (button) {
+                case openInNewWindowQuickInputButton:
+                    vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+                        forceNewWindow: false,
+                        forceReuseWindow: true,
+                    });
+                    break;
+                case openExternalTerminalQuickInputButton:
+                    vscode.commands.executeCommand(Commands.openExternalTerminal, vieItem);
+                    break;
+                case openTerminalQuickInputButton:
+                    vscode.commands.executeCommand(Commands.openTerminal, vieItem);
+                    break;
+                case revealInSystemExplorerQuickInputButton:
+                    vscode.commands.executeCommand(Commands.revealInSystemExplorer, vieItem);
+                    break;
+                case addToWorkspaceQuickInputButton:
+                    quickPick.hide();
+                    vscode.commands.executeCommand(Commands.addToWorkspace, vieItem);
+                    break;
             }
-            if(button === openTerminalQuickInputButton) {
-                vscode.commands.executeCommand(Commands.openTerminal, vieItem);
-                resolve(selectedItem);
-                return;
-            }
-            if(button === revealInSystemExplorerQuickInputButton) {
-                vscode.commands.executeCommand(Commands.revealInSystemExplorer, vieItem);
-                resolve(selectedItem);
-                return;
-            }
+            resolve(selectedItem);
         });
         quickPick.onDidAccept(() => {
             let selectedItem = quickPick.selectedItems[0];

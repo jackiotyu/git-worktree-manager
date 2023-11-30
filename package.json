@@ -371,6 +371,11 @@
           "group": "file-action@0"
         },
         {
+          "command": "git-worktree-manager.renameGitFolder",
+          "when": "viewItem =~ /git-worktree-manager\\.(gitFolderItem)/",
+          "group": "file-action@1"
+        },
+        {
           "command": "git-worktree-manager.switchToSelectFolder",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "inline@100"
@@ -477,7 +482,7 @@
         },
         {
           "group": "worktree-action",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
           "submenu": "worktree-action"
         },
         {
@@ -499,17 +504,17 @@
         },
         {
           "command": "git-worktree-manager.removeWorkTree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "worktree-delete"
         },
         {
           "command": "git-worktree-manager.lockWorkTree",
-          "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.unlock/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.unlock/",
           "group": "worktree-lock"
         },
         {
           "command": "git-worktree-manager.unlockWorkTree",
-          "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.lock/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.main/)",
+          "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.lock/",
           "group": "worktree-lock"
         }
       ],

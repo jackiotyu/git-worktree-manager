@@ -3,6 +3,7 @@
     "Reveal in the system explorer": "在系统文件管理器中展示",
     "Open in External Terminal": "在外部终端中打开",
     "Open in VSCode built-in Terminal": "在vscode内置终端中打开",
+    "Add to workspace": "添加到工作区",
     "Delete worktree": "删除worktree",
     "Prune worktree": "清理 worktree",
     "Find Worktree": "查找 Worktree",

@@ -10,7 +10,7 @@ import {
     revealTreeItemEvent,
 } from '@/lib/events';
 import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
-import { getFolderIcon, judgeIsCurrentFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
+import { getFolderIcon, judgeIncludeFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
 import { TreeItemKind, APP_NAME, Commands, ViewId, WORK_TREE_SCHEME } from '@/constants';
 import { GlobalState } from '@/lib/globalState';
 import throttle from 'lodash/throttle';
@@ -35,7 +35,7 @@ export class WorkTreeItem extends vscode.TreeItem {
         this.parent = parent;
         this.id = item.path;
 
-        const isCurrent = judgeIsCurrentFolder(item.path);
+        const isCurrent = judgeIncludeFolder(item.path);
         const themeColor = isCurrent ? new vscode.ThemeColor('statusBarItem.remoteBackground') : void 0;
 
         switch (true) {
