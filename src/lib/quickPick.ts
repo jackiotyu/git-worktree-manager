@@ -42,7 +42,7 @@ const sortByBranchQuickInputButton: vscode.QuickInputButton = {
 };
 
 const sortByRepoQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('case-sensitive'),
+    iconPath: new vscode.ThemeIcon('list-flat'),
     tooltip: vscode.l10n.t('Sort by repository'),
 };
 
