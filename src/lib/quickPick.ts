@@ -46,6 +46,11 @@ const sortByRepoQuickInputButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Sort by repository'),
 };
 
+const settingQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('gear'),
+    tooltip: vscode.l10n.t('Open Settings'),
+};
+
 export const pickBranch = async (
     title: string = vscode.l10n.t('Create Worktree for'),
     placeholder: string = vscode.l10n.t('Choose a branch to create new worktree for'),
@@ -229,8 +234,14 @@ export const pickWorktree = async () => {
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
         quickPick.keepScrollPosition = true;
-        const baseButtons: vscode.QuickInputButton[] = [sortByBranchQuickInputButton];
-        const resetButtons: vscode.QuickInputButton[] = [sortByRepoQuickInputButton];
+        const baseButtons: vscode.QuickInputButton[] = [
+            settingQuickInputButton,
+            sortByBranchQuickInputButton,
+        ];
+        const resetButtons: vscode.QuickInputButton[] = [
+            settingQuickInputButton,
+            sortByRepoQuickInputButton,
+        ];
         quickPick.buttons = baseButtons;
         quickPick.onDidTriggerButton((event) => {
             if (event === sortByBranchQuickInputButton) {
@@ -243,6 +254,11 @@ export const pickWorktree = async () => {
             if (event === sortByRepoQuickInputButton) {
                 quickPick.items = mapWorkTreePickItems(list);
                 quickPick.buttons = baseButtons;
+                return;
+            }
+            if (event === settingQuickInputButton) {
+                vscode.commands.executeCommand(Commands.openSetting);
+                quickPick.hide();
                 return;
             }
         });
