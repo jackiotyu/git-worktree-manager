@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { formatTime, getWorkTreeList, checkGitValid, getAllRefList, judgeIsCurrentFolder } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { IWorkTreeCacheItem } from '@/types';
+import { Commands } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
 
@@ -9,6 +10,31 @@ interface BranchForWorkTree extends vscode.QuickPickItem {
     branch?: string;
     hash?: string;
 }
+
+const openInNewWindowQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('arrow-right'),
+    tooltip: vscode.l10n.t('Switch the current window to this folder.'),
+};
+
+const openExternalTerminalQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('terminal-bash'),
+    tooltip: vscode.l10n.t('Open in External Terminal'),
+};
+
+const openTerminalQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('terminal'),
+    tooltip: vscode.l10n.t('Open in VSCode built-in Terminal'),
+};
+
+const sortByBranchQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('case-sensitive'),
+    tooltip: vscode.l10n.t('Sort by branch name')
+};
+
+const sortByRepoQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('case-sensitive'),
+    tooltip: vscode.l10n.t('Sort by repository')
+};
 
 export const pickBranch = async (
     title: string = vscode.l10n.t('Create Worktree for'),
@@ -160,10 +186,9 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             key: row.label,
             iconPath: judgeIsCurrentFolder(row.path) ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
             buttons: [
-                {
-                    iconPath: new vscode.ThemeIcon('arrow-right'),
-                    tooltip: vscode.l10n.t('Switch the current window to this folder.'),
-                },
+                openExternalTerminalQuickInputButton,
+                openTerminalQuickInputButton,
+                openInNewWindowQuickInputButton,
             ],
         };
     });
@@ -190,24 +215,22 @@ export const pickWorktree = async () => {
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
         quickPick.keepScrollPosition = true;
-        const sortByNameTips = vscode.l10n.t('Sort by branch name');
-        const sortByRepoTips = vscode.l10n.t('Sort by repository');
         const baseButtons: vscode.QuickInputButton[] = [
-            { iconPath: new vscode.ThemeIcon('case-sensitive'), tooltip: sortByNameTips },
+            sortByBranchQuickInputButton
         ];
         const resetButtons: vscode.QuickInputButton[] = [
-            { iconPath: new vscode.ThemeIcon('list-flat'), tooltip: sortByRepoTips },
+            sortByRepoQuickInputButton
         ];
         quickPick.buttons = baseButtons;
         quickPick.onDidTriggerButton((event) => {
-            if (event.tooltip === sortByNameTips) {
+            if (event === sortByBranchQuickInputButton) {
                 quickPick.items = [...quickPick.items]
                     .sort((a, b) => a.label.localeCompare(b.label))
                     .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
                 quickPick.buttons = resetButtons;
                 return;
             }
-            if (event.tooltip === sortByRepoTips) {
+            if (event === sortByRepoQuickInputButton) {
                 quickPick.items = mapWorkTreePickItems(list);
                 quickPick.buttons = baseButtons;
                 return;
@@ -218,14 +241,27 @@ export const pickWorktree = async () => {
             if (!selectedItem.path) {
                 return;
             }
-            if (event.button.tooltip === vscode.l10n.t('Switch the current window to this folder.')) {
-                if (selectedItem) {
-                    vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
-                        forceNewWindow: false,
-                        forceReuseWindow: true,
-                    });
-                }
+            if (event.button === openInNewWindowQuickInputButton) {
+                vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+                    forceNewWindow: false,
+                    forceReuseWindow: true,
+                });
                 resolve(selectedItem);
+                return;
+            }
+            const vieItem = {
+                name: selectedItem.label,
+                path: selectedItem.path,
+            };
+            if(event.button === openExternalTerminalQuickInputButton) {
+                vscode.commands.executeCommand(Commands.openExternalTerminal, vieItem);
+                resolve(selectedItem);
+                return;
+            }
+            if(event.button === openTerminalQuickInputButton) {
+                vscode.commands.executeCommand(Commands.openTerminal, vieItem);
+                resolve(selectedItem);
+                return;
             }
         });
         quickPick.onDidAccept(() => {

@@ -1,5 +1,7 @@
 {
     "Switch the current window to this folder.": "当前窗口切换到这个文件夹",
+    "Open in External Terminal": "在外部终端中打开",
+    "Open in VSCode built-in Terminal": "在vscode内置终端中打开",
     "Delete worktree": "删除worktree",
     "Prune worktree": "清理 worktree",
     "Find Worktree": "查找 Worktree",
