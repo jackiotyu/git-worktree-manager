@@ -16,6 +16,11 @@ const openInNewWindowQuickInputButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Switch the current window to this folder.'),
 };
 
+const revealInSystemExplorerQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('folder-opened'),
+    tooltip: vscode.l10n.t('Reveal in the system explorer'),
+};
+
 const openExternalTerminalQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('terminal-bash'),
     tooltip: vscode.l10n.t('Open in External Terminal'),
@@ -188,6 +193,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             buttons: [
                 openExternalTerminalQuickInputButton,
                 openTerminalQuickInputButton,
+                revealInSystemExplorerQuickInputButton,
                 openInNewWindowQuickInputButton,
             ],
         };
@@ -237,11 +243,12 @@ export const pickWorktree = async () => {
             }
         });
         quickPick.onDidTriggerItemButton((event) => {
-            let selectedItem = event.item;
+            const selectedItem = event.item;
+            const button = event.button;
             if (!selectedItem.path) {
                 return;
             }
-            if (event.button === openInNewWindowQuickInputButton) {
+            if (button === openInNewWindowQuickInputButton) {
                 vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
                     forceNewWindow: false,
                     forceReuseWindow: true,
@@ -253,13 +260,18 @@ export const pickWorktree = async () => {
                 name: selectedItem.label,
                 path: selectedItem.path,
             };
-            if(event.button === openExternalTerminalQuickInputButton) {
+            if(button === openExternalTerminalQuickInputButton) {
                 vscode.commands.executeCommand(Commands.openExternalTerminal, vieItem);
                 resolve(selectedItem);
                 return;
             }
-            if(event.button === openTerminalQuickInputButton) {
+            if(button === openTerminalQuickInputButton) {
                 vscode.commands.executeCommand(Commands.openTerminal, vieItem);
+                resolve(selectedItem);
+                return;
+            }
+            if(button === revealInSystemExplorerQuickInputButton) {
+                vscode.commands.executeCommand(Commands.revealInSystemExplorer, vieItem);
                 resolve(selectedItem);
                 return;
             }
