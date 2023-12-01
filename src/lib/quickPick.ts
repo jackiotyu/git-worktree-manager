@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { formatTime, getWorkTreeList, checkGitValid, getAllRefList, judgeIncludeFolder } from '@/utils';
 import { GlobalState } from '@/lib/globalState';
 import { IWorkTreeCacheItem } from '@/types';
-import { Commands } from '@/constants';
+import { Commands, APP_NAME } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
 
@@ -197,6 +197,10 @@ interface WorkTreePick extends vscode.QuickPickItem {
 }
 
 const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
+    // 是否置顶当前仓库的分支
+    const pinCurrentRepo = vscode.workspace
+        .getConfiguration(APP_NAME)
+        .get<boolean>('worktreePick.pinCurrentRepo', false);
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
         const buttons: vscode.QuickInputButton[] = [
@@ -218,8 +222,13 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     });
     let groupMap = groupBy(items, 'key');
     return Object.keys(groupMap).reduce<WorkTreePick[]>((list, key) => {
-        list.push(...groupMap[key]);
-        list.push({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+        if (pinCurrentRepo && groupMap[key].some((item) => judgeIncludeFolder(item.path))) {
+            list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+            list.unshift(...groupMap[key]);
+        } else {
+            list.push(...groupMap[key]);
+            list.push({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+        }
         return list;
     }, []);
 };

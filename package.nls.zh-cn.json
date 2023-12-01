@@ -52,5 +52,6 @@
     "config.showCheckoutInWorktreeItem.description": "在worktree树视图上显示“切换分支”按钮",
     "config.showExternalTerminalInTreeItem.description": "在树视图上显示“外部终端”按钮",
     "config.showTerminalInTreeItem.description": "在树视图上显示vscode终端按钮",
-    "submenus.worktree-action": "worktree操作"
+    "config.pinCurrentRepo.description": "在 \"查找 Worktree\" 的结果中置顶当前 git 仓库的 worktree",
+    "submenus.worktree-action": "worktree 操作"
 }

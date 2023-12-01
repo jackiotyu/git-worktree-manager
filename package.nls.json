@@ -52,5 +52,6 @@
     "config.showCheckoutInWorktreeItem.description": "Show the \"Checkout Branch\" icon on the Worktree treeView",
     "config.showExternalTerminalInTreeItem.description": "Show the the \"External Terminal\" icon on the treeView",
     "config.showTerminalInTreeItem.description": "Show the the \"VSCode Terminal\" icon on the treeView",
+    "config.pinCurrentRepo.description": "Pin the current git repository's worktree in the results of \"Find Worktree\" ",
     "submenus.worktree-action": "Worktree Action"
 }
