@@ -64,7 +64,8 @@
       {
         "command": "git-worktree-manager.addWorkTree",
         "title": "%cmd.addWorkTree%",
-        "icon": "$(add)"
+        "icon": "$(add)",
+        "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.addGitFolder",
@@ -170,7 +171,8 @@
       {
         "command": "git-worktree-manager.checkoutBranch",
         "title": "%cmd.checkoutBranch%",
-        "icon": "$(source-control)"
+        "icon": "$(source-control)",
+        "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.gitFolderViewAsTree",
@@ -198,8 +200,7 @@
         "command": "git-worktree-manager.searchAllWorktree",
         "title": "%cmd.searchAllWorktree%",
         "icon": "$(search)",
-        "category": "Worktree",
-        "shortTitle": "search worktree"
+        "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.loadAllTreeData",
@@ -538,10 +539,6 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.addWorkTree",
-          "when": "false"
-        },
-        {
           "command": "git-worktree-manager.gitFolderViewAsTree",
           "when": "false"
         },
@@ -619,10 +616,6 @@
         },
         {
           "command": "git-worktree-manager.addToGitFolder",
-          "when": "false"
-        },
-        {
-          "command": "git-worktree-manager.checkoutBranch",
           "when": "false"
         },
         {

@@ -57,3 +57,8 @@ export interface IFolderItemConfig {
 export interface IRecentFolderConfig extends Pick<IFolderItemConfig, 'name' | 'path'> {
     uri: URI;
 }
+
+export interface IWorktreeLess {
+    name: string;
+    path: string;
+}

@@ -23,6 +23,7 @@ import {
     openExternalTerminal,
     addToWorkspace,
     checkExist,
+    getNameRev,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -34,7 +35,7 @@ import * as util from 'util';
 import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
 import { GitHistory } from '@/lib/adaptor/gitHistory';
-import { ILoadMoreItem, IFolderItemConfig } from '@/types';
+import { ILoadMoreItem, IFolderItemConfig, IWorktreeLess } from '@/types';
 import { actionProgressWrapper } from '@/lib/progress';
 import logger from '@/lib/logger';
 
@@ -80,7 +81,7 @@ export const refreshWorkTreeCmd = () => {
     updateTreeDataEvent.fire();
 };
 
-const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string, isBranch: boolean }) => {
+const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string; isBranch: boolean }) => {
     const { folderPath, name, label, isBranch } = info;
     let confirmCreate = await confirmModal(
         vscode.l10n.t('Create worktree'),
@@ -131,7 +132,7 @@ export const addWorkTreeCmd = async () => {
         name: branch || hash || '',
         label,
         folderPath,
-        isBranch: !!branch
+        isBranch: !!branch,
     });
 };
 
@@ -173,7 +174,7 @@ const addWorkTreeFromBranchCmd = async (item?: WorkTreeItem) => {
         name: item.name,
         label: '分支',
         folderPath,
-        isBranch: !!item.isBranch
+        isBranch: !!item.isBranch,
     });
 };
 
@@ -341,7 +342,11 @@ const addToGitFolder = async (folderPath: string) => {
     if (mainFolderPath && mainFolderPath !== folderPath) {
         let ok = await confirmModal(
             vscode.l10n.t('Select main folder?'),
-            vscode.l10n.t('The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}', folderPath, mainFolderPath),
+            vscode.l10n.t(
+                'The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}',
+                folderPath,
+                mainFolderPath,
+            ),
         );
         if (ok) {
             folderPath = mainFolderPath;
@@ -402,7 +407,11 @@ const removeGitFolderCmd = async (item: GitFolderItem) => {
     }
     let ok = await confirmModal(
         vscode.l10n.t('Remove the git repository reference in list'),
-        vscode.l10n.t('Are you sure to delete this repository reference with path {0} and alias {1}?', item.path, item.name),
+        vscode.l10n.t(
+            'Are you sure to delete this repository reference with path {0} and alias {1}?',
+            item.path,
+            item.name,
+        ),
     );
     if (!ok) {
         return;
@@ -520,7 +529,7 @@ const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
     return addToWorkspace(item.path);
 };
 
-const copyFilePathCmd = (item?: AllViewItem) => {
+const copyFilePathCmd = (item?: IWorktreeLess) => {
     if (!item) return;
     vscode.env.clipboard.writeText(item.path).then(() => {
         Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', item.path));
@@ -536,19 +545,34 @@ const addToGitFolderCmd = (item?: FolderItem) => {
     return addToGitFolder(item.path);
 };
 
-const checkoutBranchCmd = async (item?: WorkTreeItem) => {
-    if (!item) return;
+const checkoutBranchCmd = async (item?: IWorktreeLess) => {
+    let selectedItem: { name: string; path: string } | undefined = item;
+    if (!item) {
+        let isValidGit = await checkGitValid();
+        if (!isValidGit) {
+            Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
+            return;
+        }
+        selectedItem = {
+            path: folderRoot.uri?.fsPath || '',
+            name: (await getNameRev(folderRoot.uri?.fsPath || ''))
+                .replace(/^tags\//, '')
+                .replace(/^heads\//, '')
+                .trim(),
+        };
+    }
+    if (!selectedItem) return;
     let branchItem = await pickBranch(
-        vscode.l10n.t('Checkout branch ( {0} )', `${item.name} ⇄ ...${item.path.slice(-24)}`),
+        vscode.l10n.t('Checkout branch ( {0} )', `${selectedItem.name} ⇄ ...${selectedItem.path.slice(-24)}`),
         vscode.l10n.t('Select branch for checkout'),
-        item.path,
+        selectedItem.path,
     );
     if (!branchItem) return;
     const checkoutText = branchItem.branch || branchItem.hash || '';
     const isBranch = !!branchItem.branch;
     actionProgressWrapper(
-        vscode.l10n.t('Checkout branch ( {0} ) on {1}', checkoutText, item.path),
-        () => checkoutBranch(item.path, checkoutText, isBranch),
+        vscode.l10n.t('Checkout branch ( {0} ) on {1}', checkoutText, selectedItem.path),
+        () => checkoutBranch(selectedItem!.path, checkoutText, isBranch),
         updateTreeDataEvent.fire.bind(updateTreeDataEvent),
     );
 };
