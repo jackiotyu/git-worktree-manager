@@ -5,6 +5,7 @@ import { IWorkTreeCacheItem } from '@/types';
 import { Commands, APP_NAME } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
+import folderRoot from '@/lib/folderRoot';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
     branch?: string;
@@ -198,7 +199,7 @@ interface WorkTreePick extends vscode.QuickPickItem {
 
 const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     // 是否置顶当前仓库的分支
-    const pinCurrentRepo = vscode.workspace
+    const pinCurRepo = vscode.workspace
         .getConfiguration(APP_NAME)
         .get<boolean>('worktreePick.pinCurrentRepo', false);
     let items = list.map((row) => {
@@ -221,10 +222,12 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
         };
     });
     let groupMap = groupBy(items, 'key');
+    let pathSize = folderRoot.folderPathSet.size;
     return Object.keys(groupMap).reduce<WorkTreePick[]>((list, key) => {
-        if (pinCurrentRepo && groupMap[key].some((item) => judgeIncludeFolder(item.path))) {
+        if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.path))) {
             list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '' });
             list.unshift(...groupMap[key]);
+            pathSize--;
         } else {
             list.push(...groupMap[key]);
             list.push({ kind: vscode.QuickPickItemKind.Separator, label: '' });

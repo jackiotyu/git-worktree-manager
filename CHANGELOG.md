@@ -1,3 +1,11 @@
+## [0.2.8] 2023-12-01
+
+### Change
+
+- Pin the current git repository's worktree in the results of "Find Worktree".
+- Show `Add git repository` and `Open Settings` in worktree quick pick.
+- Update icon and README.
+
 ## [0.2.7] 2023-11-30
 
 ### Change
