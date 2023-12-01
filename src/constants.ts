@@ -28,7 +28,6 @@ export enum Commands {
     addToWorkspace = 'git-worktree-manager.addToWorkspace',
     copyFilePath = 'git-worktree-manager.copyFilePath',
     refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',
-    openRecent = 'git-worktree-manager.openRecent',
     addToGitFolder = 'git-worktree-manager.addToGitFolder',
     checkoutBranch = 'git-worktree-manager.checkoutBranch',
     gitFolderViewAsTree = 'git-worktree-manager.gitFolderViewAsTree',

@@ -64,11 +64,13 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 ## Getting Started 快速开始
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
-在VSCode[扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
-1. Find the `Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/icon.png"> panel in activitybar.
-在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/icon.png"> 面板
-1. Performing various quick operations of git worktree on the panel
-在面板上执行各种 git worktree 快速操作
+在 VSCode [扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
+1. Run `Worktree: Add git repository` to add an existing git repository.
+运行 `Worktree: 添加 git 仓库` 添加一个已存在的 git 仓库.
+1. Press `Ctrl + Shift + R` to open the worktree list.
+按下 `Ctrl + Shift + R` 打开 worktree 列表。
+1. Find the `Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/icon.png"> panel in activitybar then perform other operations.
+在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/icon.png"> 面板进行其他操作
 
 ### Requirements 要求
 
@@ -112,8 +114,8 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 - 右键上下文菜单和行内图标也可以执行一下快速操作。
 - List all worktree in every repository.
 - 每个仓库都会列出所有 worktree。
-- Open all worktree quick pick by press `ctrl + shift + r`.
-- 按下 `ctrl + shift + r` 打开 worktree 列表。
+- Press `Ctrl + Shift + R` to open the worktree list.
+- 按下 `Ctrl + Shift + R` 打开 worktree 列表。
 
 3. Setting. 设置
 ![open-setting](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/open-setting.png)

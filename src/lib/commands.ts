@@ -531,10 +531,6 @@ const refreshRecentFolderCmd = () => {
     updateRecentEvent.fire();
 };
 
-const openRecentCmd = () => {
-    return vscode.commands.executeCommand('workbench.action.openRecent');
-};
-
 const addToGitFolderCmd = (item?: FolderItem) => {
     if (!item) return;
     return addToGitFolder(item.path);
@@ -641,7 +637,6 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
             vscode.commands.registerCommand(Commands.copyFilePath, copyFilePathCmd),
             vscode.commands.registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),
-            vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
             vscode.commands.registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
             vscode.commands.registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
             vscode.commands.registerCommand(Commands.gitFolderSetOpen, toggleGitFolderOpenCmd),

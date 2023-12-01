@@ -51,6 +51,11 @@ const settingQuickInputButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Open Settings'),
 };
 
+const addWorktreeQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('add'),
+    tooltip: vscode.l10n.t('Add a git repository folder path'),
+};
+
 export const pickBranch = async (
     title: string = vscode.l10n.t('Create Worktree for'),
     placeholder: string = vscode.l10n.t('Choose a branch to create new worktree for'),
@@ -220,6 +225,17 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
 };
 
 export const pickWorktree = async () => {
+    const worktreeButtons = [addWorktreeQuickInputButton, settingQuickInputButton, sortByBranchQuickInputButton];
+
+    const exchangeButton = (
+        btn1: vscode.QuickInputButton,
+        btn2: vscode.QuickInputButton,
+    ): vscode.QuickInputButton[] => {
+        const index = worktreeButtons.findIndex((btn) => btn === btn1);
+        if (~~index) worktreeButtons[index] = btn2;
+        return worktreeButtons;
+    };
+
     let resolve: (value?: any) => void = () => {};
     let reject: (value?: any) => void = () => {};
     let waiting = new Promise<WorkTreePick | void>((_resolve, _reject) => {
@@ -234,31 +250,27 @@ export const pickWorktree = async () => {
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
         quickPick.keepScrollPosition = true;
-        const baseButtons: vscode.QuickInputButton[] = [
-            settingQuickInputButton,
-            sortByBranchQuickInputButton,
-        ];
-        const resetButtons: vscode.QuickInputButton[] = [
-            settingQuickInputButton,
-            sortByRepoQuickInputButton,
-        ];
-        quickPick.buttons = baseButtons;
+        quickPick.buttons = worktreeButtons;
         quickPick.onDidTriggerButton((event) => {
             if (event === sortByBranchQuickInputButton) {
                 quickPick.items = [...quickPick.items]
                     .sort((a, b) => a.label.localeCompare(b.label))
                     .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
-                quickPick.buttons = resetButtons;
+                quickPick.buttons = exchangeButton(sortByBranchQuickInputButton, sortByRepoQuickInputButton);
                 return;
             }
             if (event === sortByRepoQuickInputButton) {
                 quickPick.items = mapWorkTreePickItems(list);
-                quickPick.buttons = baseButtons;
+                quickPick.buttons = exchangeButton(sortByRepoQuickInputButton, sortByBranchQuickInputButton);
                 return;
             }
             if (event === settingQuickInputButton) {
                 vscode.commands.executeCommand(Commands.openSetting);
                 quickPick.hide();
+                return;
+            }
+            if (event === addWorktreeQuickInputButton) {
+                vscode.commands.executeCommand(Commands.addGitFolder);
                 return;
             }
         });
