@@ -53,5 +53,11 @@
     "config.showExternalTerminalInTreeItem.description": "Show the the \"External Terminal\" icon on the treeView",
     "config.showTerminalInTreeItem.description": "Show the the \"VSCode Terminal\" icon on the treeView",
     "config.pinCurrentRepo.description": "Pin the current git repository's worktree in the results of \"Find Worktree\" ",
+    "config.worktreePick.showTerminal.description": "Show the the \"VSCode Terminal\" button on the results of \"Find Worktree\"",
+    "config.worktreePick.showExternalTerminal.description": "Show the the \"External Terminal\" button on the results of \"Find Worktree\"",
+    "config.worktreePick.showRevealInSystemExplorer.description": "Show the the \"Reveal in the system explorer\" button on the results of \"Find Worktree\"",
+    "config.worktreePick.showCopyBranch.description": "Show the the \"Copy branch name\" button on the results of \"Find Worktree\"",
+    "config.worktreePick.showCopyFilepath.description": "Show the the \"Copy filepath\" button on the results of \"Find Worktree\"",
+    "config.worktreePick.showAddToWorkspace.description": "Show the the \"Add to workspace\" button on the results of \"Find Worktree\"",
     "submenus.worktree-action": "Worktree Action"
 }

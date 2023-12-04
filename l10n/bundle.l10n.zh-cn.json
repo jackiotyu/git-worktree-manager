@@ -76,5 +76,7 @@
     "operation": "操作",
     "lock": "锁定",
     "unlock": "解锁",
-    "repair": "修复"
+    "repair": "修复",
+    "Copy branch name": "复制分支名称",
+    "Copy filepath": "复制文件路径"
 }

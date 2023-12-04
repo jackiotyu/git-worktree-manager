@@ -722,6 +722,42 @@
           "type": "boolean",
           "default": true,
           "description": "%config.pinCurrentRepo.description%"
+        },
+        "git-worktree-manager.worktreePick.showTerminal": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.worktreePick.showTerminal.description%"
+        },
+        "git-worktree-manager.worktreePick.showExternalTerminal": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.worktreePick.showExternalTerminal.description%"
+        },
+        "git-worktree-manager.worktreePick.showRevealInSystemExplorer": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.worktreePick.showRevealInSystemExplorer.description%"
+        },
+        "git-worktree-manager.worktreePick.showCopyBranch": {
+          "scope": "application",
+          "type": "boolean",
+          "default": false,
+          "description": "%config.worktreePick.showCopyBranch.description%"
+        },
+        "git-worktree-manager.worktreePick.showCopyFilepath": {
+          "scope": "application",
+          "type": "boolean",
+          "default": false,
+          "description": "%config.worktreePick.showCopyFilepath.description%"
+        },
+        "git-worktree-manager.worktreePick.showAddToWorkspace": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "description": "%config.worktreePick.showAddToWorkspace.description%"
         }
       }
     }

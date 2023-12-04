@@ -65,6 +65,8 @@ export const switchWorkTreeCmd = async () => {
         canPickMany: false,
         placeHolder: vscode.l10n.t('Please select the directory to switch'),
         title: vscode.l10n.t('Worktree switch'),
+        matchOnDetail: true,
+        matchOnDescription: true,
     };
     vscode.window.showQuickPick(items, options).then((workTree) => {
         if (!workTree) {

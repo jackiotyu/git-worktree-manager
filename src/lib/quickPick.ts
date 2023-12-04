@@ -57,6 +57,16 @@ const addWorktreeQuickInputButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Add a git repository folder path'),
 };
 
+const copyBranchQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('copy'),
+    tooltip: vscode.l10n.t('Copy branch name'),
+};
+
+const copyFilepathQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('copy'),
+    tooltip: vscode.l10n.t('Copy filepath'),
+};
+
 export const pickBranch = async (
     title: string = vscode.l10n.t('Create Worktree for'),
     placeholder: string = vscode.l10n.t('Choose a branch to create new worktree for'),
@@ -199,18 +209,43 @@ interface WorkTreePick extends vscode.QuickPickItem {
 
 const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     // 是否置顶当前仓库的分支
-    const pinCurRepo = vscode.workspace
-        .getConfiguration(APP_NAME)
-        .get<boolean>('worktreePick.pinCurrentRepo', false);
+    const config = vscode.workspace.getConfiguration(APP_NAME);
+    const pinCurRepo = config.get<boolean>('worktreePick.pinCurrentRepo', false);
+
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
-        const buttons: vscode.QuickInputButton[] = [
-            openExternalTerminalQuickInputButton,
-            openTerminalQuickInputButton,
-            revealInSystemExplorerQuickInputButton,
+        const list: { button: vscode.QuickInputButton; show: boolean }[] = [
+            {
+                button: openExternalTerminalQuickInputButton,
+                show: config.get<boolean>('worktreePick.showExternalTerminal', false),
+            },
+            {
+                button: openTerminalQuickInputButton,
+                show: config.get<boolean>('worktreePick.showTerminal', false),
+            },
+            {
+                button: revealInSystemExplorerQuickInputButton,
+                show: config.get<boolean>('worktreePick.showRevealInSystemExplorer', false),
+            },
+            {
+                button: copyBranchQuickInputButton,
+                show: config.get<boolean>('worktreePick.showCopyBranch', false),
+            },
+            {
+                button: copyFilepathQuickInputButton,
+                show: config.get<boolean>('worktreePick.showCopyFilepath', false),
+            },
+            {
+                button: addToWorkspaceQuickInputButton,
+                show: !isCurrent && config.get<boolean>('worktreePick.showAddToWorkspace', false),
+            },
+            {
+                button: openInNewWindowQuickInputButton,
+                show: true,
+            },
         ];
-        if (!isCurrent) buttons.push(addToWorkspaceQuickInputButton);
-        buttons.push(openInNewWindowQuickInputButton);
+
+        const buttons: vscode.QuickInputButton[] = list.filter((i) => i.show).map((i) => i.button);
         return {
             label: row.name,
             detail: `${row.path}`,
@@ -315,6 +350,16 @@ export const pickWorktree = async () => {
                 case addToWorkspaceQuickInputButton:
                     quickPick.hide();
                     vscode.commands.executeCommand(Commands.addToWorkspace, vieItem);
+                    break;
+                case copyBranchQuickInputButton:
+                    vscode.env.clipboard.writeText(vieItem.name).then(() => {
+                        Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', vieItem.name));
+                    });
+                    break;
+                case copyFilepathQuickInputButton:
+                    vscode.env.clipboard.writeText(vieItem.path).then(() => {
+                        Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', vieItem.path));
+                    });
                     break;
             }
             resolve(selectedItem);
