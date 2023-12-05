@@ -324,8 +324,8 @@ const updateWorkspaceListCache = async () => {
 export const pickWorktree = async () => {
     const config = vscode.workspace.getConfiguration(APP_NAME);
     let checkList =
-    config.get<DefaultDisplayList>('worktreePick.defaultDisplayList', DefaultDisplayList.all) ===
-    DefaultDisplayList.all;
+        config.get<DefaultDisplayList>('worktreePick.defaultDisplayList', DefaultDisplayList.all) ===
+        DefaultDisplayList.all;
 
     const worktreeButtons = [
         addWorktreeQuickInputButton,
@@ -450,7 +450,7 @@ export const pickWorktree = async () => {
                     const template = vscode.workspace
                         .getConfiguration(APP_NAME)
                         .get<string>('worktreePick.copyTemplate', '$LABEL');
-                    getLashCommitHash(vieItem.path)
+                    (/\$HASH/.test(template) ? getLashCommitHash(vieItem.path) : Promise.resolve(''))
                         .then((hash) => {
                             const text = template
                                 .replace(/\$HASH/g, hash)
