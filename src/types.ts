@@ -62,3 +62,8 @@ export interface IWorktreeLess {
     name: string;
     path: string;
 }
+
+export enum DefaultDisplayList {
+    workspace = 'workspace',
+    all = 'all',
+}

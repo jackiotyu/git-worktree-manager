@@ -6,9 +6,10 @@ import {
     getAllRefList,
     judgeIncludeFolder,
     getLashCommitHash,
+    getMainFolder,
 } from '@/utils';
-import { GlobalState } from '@/lib/globalState';
-import { IWorkTreeCacheItem } from '@/types';
+import { GlobalState, WorkspaceState } from '@/lib/globalState';
+import { IWorkTreeCacheItem, IFolderItemConfig, DefaultDisplayList } from '@/types';
 import { Commands, APP_NAME } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
@@ -68,6 +69,16 @@ const addWorktreeQuickInputButton: vscode.QuickInputButton = {
 const copyItemQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('copy'),
     tooltip: vscode.l10n.t('Copy'),
+};
+
+const useAllWorktreeQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('folder-active'),
+    tooltip: vscode.l10n.t('Click to display all worktree list'),
+};
+
+const useWorkspaceWorktreeQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('folder-library'),
+    tooltip: vscode.l10n.t('Click to display worktree list in workspace'),
 };
 
 export const pickBranch = async (
@@ -278,8 +289,50 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     }, []);
 };
 
+const updateWorkTreeCache = async () => {
+    const gitFolders = GlobalState.get('gitFolders', []);
+    let list: IWorkTreeCacheItem[] = await gitFolderToCaches(gitFolders);
+    GlobalState.update('workTreeCache', list);
+};
+
+const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorkTreeCacheItem[]> => {
+    const worktreeList = await Promise.all(
+        gitFolders.map(async (item) => {
+            const list = await getWorkTreeList(item.path, true);
+            return [list, item] as const;
+        }),
+    );
+    return worktreeList
+        .map(([list, config]) => {
+            return list.map<IWorkTreeCacheItem>((row) => {
+                return { ...row, label: config.name };
+            });
+        })
+        .flat();
+};
+
+const updateWorkspaceListCache = async () => {
+    const list = await Promise.all([...folderRoot.folderPathSet].map(async (folder) => await getMainFolder(folder)));
+    const folders = [...new Set(list.filter((i) => i))].map((folder) => ({
+        name: path.basename(folder),
+        path: folder,
+    }));
+    const cache = await gitFolderToCaches(folders);
+    WorkspaceState.update('workTreeCache', cache);
+};
+
 export const pickWorktree = async () => {
-    const worktreeButtons = [addWorktreeQuickInputButton, settingQuickInputButton, sortByBranchQuickInputButton];
+    const config = vscode.workspace.getConfiguration(APP_NAME);
+    let checkList =
+    config.get<DefaultDisplayList>('worktreePick.defaultDisplayList', DefaultDisplayList.all) ===
+    DefaultDisplayList.all;
+
+    const worktreeButtons = [
+        addWorktreeQuickInputButton,
+        checkList ? useWorkspaceWorktreeQuickInputButton : useAllWorktreeQuickInputButton,
+        settingQuickInputButton,
+        sortByBranchQuickInputButton,
+    ];
 
     const exchangeButton = (
         btn1: vscode.QuickInputButton,
@@ -298,6 +351,23 @@ export const pickWorktree = async () => {
     });
     try {
         let list: IWorkTreeCacheItem[] = [];
+        let workspaceList: IWorkTreeCacheItem[] = [];
+        let listLoading: boolean = true;
+        let workspaceListLoading: boolean = true;
+        let checkSortByBranch = false;
+
+        const updateList = () => {
+            let items = checkList ? mapWorkTreePickItems(list) : mapWorkTreePickItems(workspaceList);
+            const busy = checkList ? listLoading : workspaceListLoading;
+            if (checkSortByBranch) {
+                items = items
+                    .sort((a, b) => a.label.localeCompare(b.label))
+                    .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
+            }
+            quickPick.busy = busy;
+            quickPick.items = items;
+        };
+
         const quickPick = vscode.window.createQuickPick<WorkTreePick>();
         quickPick.placeholder = vscode.l10n.t('Select to open in new window');
         quickPick.canSelectMany = false;
@@ -307,14 +377,14 @@ export const pickWorktree = async () => {
         quickPick.buttons = worktreeButtons;
         quickPick.onDidTriggerButton((event) => {
             if (event === sortByBranchQuickInputButton) {
-                quickPick.items = [...quickPick.items]
-                    .sort((a, b) => a.label.localeCompare(b.label))
-                    .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
+                checkSortByBranch = true;
+                updateList();
                 quickPick.buttons = exchangeButton(sortByBranchQuickInputButton, sortByRepoQuickInputButton);
                 return;
             }
             if (event === sortByRepoQuickInputButton) {
-                quickPick.items = mapWorkTreePickItems(list);
+                checkSortByBranch = false;
+                updateList();
                 quickPick.buttons = exchangeButton(sortByRepoQuickInputButton, sortByBranchQuickInputButton);
                 return;
             }
@@ -325,6 +395,24 @@ export const pickWorktree = async () => {
             }
             if (event === addWorktreeQuickInputButton) {
                 vscode.commands.executeCommand(Commands.addGitFolder);
+                return;
+            }
+            if (event === useAllWorktreeQuickInputButton) {
+                checkList = true;
+                updateList();
+                quickPick.buttons = exchangeButton(
+                    useAllWorktreeQuickInputButton,
+                    useWorkspaceWorktreeQuickInputButton,
+                );
+                return;
+            }
+            if (event === useWorkspaceWorktreeQuickInputButton) {
+                checkList = false;
+                updateList();
+                quickPick.buttons = exchangeButton(
+                    useWorkspaceWorktreeQuickInputButton,
+                    useAllWorktreeQuickInputButton,
+                );
                 return;
             }
         });
@@ -369,7 +457,6 @@ export const pickWorktree = async () => {
                                 .replace(/\$FULL_PATH/g, vieItem.path)
                                 .replace(/\$BASE_NAME/g, path.basename(vieItem.path))
                                 .replace(/\$LABEL/g, vieItem.name);
-                            console.log(text, 'text');
                             vscode.env.clipboard.writeText(text).then(() => {
                                 Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', text));
                             });
@@ -398,29 +485,20 @@ export const pickWorktree = async () => {
         quickPick.busy = true;
         quickPick.show();
         list = GlobalState.get('workTreeCache', []);
-        quickPick.items = mapWorkTreePickItems(list);
+        workspaceList = WorkspaceState.get('workTreeCache', []);
+        updateList();
         // 先展示出缓存的数据
         await new Promise<void>((resolve) => setTimeout(resolve, 0));
-        const gitFolders = GlobalState.get('gitFolders', []);
-        const worktreeList = await Promise.all(
-            gitFolders.map(async (item) => {
-                const list = await getWorkTreeList(item.path, true);
-                return [list, item] as const;
-            }),
-        );
-        list = worktreeList
-            .map(([list, config]) => {
-                return list.map<IWorkTreeCacheItem>((row) => {
-                    return { ...row, label: config.name };
-                });
-            })
-            .flat();
-        // 添加缓存
-        GlobalState.update('workTreeCache', list);
-        const items: WorkTreePick[] = mapWorkTreePickItems(list);
-        quickPick.items = items;
-        quickPick.busy = false;
-
+        updateWorkspaceListCache().then(() => {
+            workspaceList = WorkspaceState.get('workTreeCache', []);
+            workspaceListLoading = false;
+            updateList();
+        });
+        updateWorkTreeCache().then(() => {
+            list = GlobalState.get('workTreeCache', []);
+            listLoading = false;
+            updateList();
+        });
         return waiting;
     } catch {
         reject();

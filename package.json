@@ -723,6 +723,19 @@
           "default": true,
           "description": "%config.pinCurrentRepo.description%"
         },
+        "git-worktree-manager.worktreePick.defaultDisplayList": {
+          "scope": "application",
+          "enum": [
+            "workspace",
+            "all"
+          ],
+          "enumDescriptions": [
+            "%config.defaultDisplayList.enum.workspace%",
+            "%config.defaultDisplayList.enum.all%"
+          ],
+          "default": "all",
+          "description": "%config.defaultDisplayList.description%"
+        },
         "git-worktree-manager.worktreePick.showTerminal": {
           "scope": "application",
           "type": "boolean",

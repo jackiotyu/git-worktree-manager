@@ -59,5 +59,8 @@
     "config.worktreePick.showCopy.description": "在 \"查找 Worktree\" 列表中展示 \"复制\" 按钮",
     "config.worktreePick.showAddToWorkspace.description": "在 \"查找 Worktree\" 列表中展示 \"添加到工作区\" 按钮",
     "config.worktreePick.copyTemplate.description": "在 \"查找 Worktree\" 列表中用于复制操作的模板\n\n可用变量为\n- `$HASH` worktree当前提交的hash值\n- `$FULL_PATH` worktree的完整路径\n- `$BASE_NAME` worktree的文件夹名称\n- `$LABEL` worktree展示的名称, 分支名或者标记等\n\n例: `git merge $LABEL`, 默认为 `$LABEl`",
+    "config.defaultDisplayList.description": "默认展示列表",
+    "config.defaultDisplayList.enum.workspace": "展示工作区内的 worktree 列表",
+    "config.defaultDisplayList.enum.all": "展示所有的 worktree 列表",
     "submenus.worktree-action": "worktree 操作"
 }

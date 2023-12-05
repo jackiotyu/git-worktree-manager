@@ -318,6 +318,15 @@ export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath 
     }
 }
 
+export const getMainFolder = async (cwd: string) => {
+    try {
+        const mainFolderFull = await executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']);
+        return mainFolderFull.trim().replace(/\/.git$/, '');
+    } catch {
+        return '';
+    }
+};
+
 export const checkoutBranch = async (cwd: string, branchName: string, isBranch: boolean) => {
     const refList = await getAllRefList(
         ['refname', 'upstream:remoteref', 'refname:short', 'upstream:remotename'],
