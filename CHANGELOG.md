@@ -1,3 +1,11 @@
+## [0.2.9] 2023-12-05
+
+### Change
+
+- Show `Copy` button in worktree quick pick, configure the template in setting `git-worktree-manager.worktreePick.copyTemplate`.
+- Display worktree list of workspace or all git repository in worktree quick pick, configure in setting `git-worktree-manager.worktreePick.defaultDisplayList`.
+- Update icon.
+
 ## [0.2.8] 2023-12-01
 
 ### Change
