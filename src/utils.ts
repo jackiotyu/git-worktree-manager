@@ -146,7 +146,11 @@ export async function getWorkTreeList(root?: string, skipRemote?: boolean): Prom
                 const hasRemote = item.branch ? remoteBranchMap.has(item.branch) : false;
                 const [aheadBehind, nameRev] = await Promise.all([
                     !skipRemote && branchName && remoteName && hasRemote
-                        ? getAheadBehindCommitCount(item.branch || '', `refs/remotes/${remoteBranchName}`, item.worktree)
+                        ? getAheadBehindCommitCount(
+                              item.branch || '',
+                              `refs/remotes/${remoteBranchName}`,
+                              item.worktree,
+                          )
                         : Promise.resolve(void 0),
                     !branchName ? getNameRev(item.worktree) : Promise.resolve(''),
                 ]);
@@ -235,9 +239,7 @@ export async function addWorkTree(path: string, branch: string, isBranch: boolea
         await checkoutBranch(path, branch, isBranch);
         return true;
     } catch (error: any) {
-        Alert.showErrorMessage(
-            vscode.l10n.t('Failed to create Worktree\n{0}', String(error))
-        );
+        Alert.showErrorMessage(vscode.l10n.t('Failed to create Worktree\n{0}', String(error)));
         return false;
     }
 }
@@ -392,6 +394,10 @@ export const checkExist = (path: string) => {
 
 export const pullOrPushAction = async (action: 'pull' | 'push', options: PullPushArgs) => {
     return action === 'pull' ? pullBranch(options) : pushBranch(options);
+};
+
+export const getLashCommitHash = (cwd: string) => {
+    return executeGitCommandAuto(cwd, ['log', '-1', `--pretty=format:%H`]);
 };
 
 export const getWorktreeStatus = (item: IWorkTreeDetail) => {

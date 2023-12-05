@@ -741,23 +741,23 @@
           "default": true,
           "description": "%config.worktreePick.showRevealInSystemExplorer.description%"
         },
-        "git-worktree-manager.worktreePick.showCopyBranch": {
+        "git-worktree-manager.worktreePick.showCopy": {
           "scope": "application",
           "type": "boolean",
           "default": false,
-          "description": "%config.worktreePick.showCopyBranch.description%"
-        },
-        "git-worktree-manager.worktreePick.showCopyFilepath": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.worktreePick.showCopyFilepath.description%"
+          "description": "%config.worktreePick.showCopy.description%"
         },
         "git-worktree-manager.worktreePick.showAddToWorkspace": {
           "scope": "application",
           "type": "boolean",
           "default": true,
           "description": "%config.worktreePick.showAddToWorkspace.description%"
+        },
+        "git-worktree-manager.worktreePick.copyTemplate": {
+          "scope": "application",
+          "type": "string",
+          "default": "$LABEL",
+          "markdownDescription": "%config.worktreePick.copyTemplate.description%"
         }
       }
     }
