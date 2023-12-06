@@ -434,13 +434,13 @@ export const pickWorktree = async () => {
                     });
                     break;
                 case openExternalTerminalQuickInputButton:
-                    vscode.commands.executeCommand(Commands.openExternalTerminal, vieItem, false);
+                    vscode.commands.executeCommand(Commands.openExternalTerminalContext, vieItem);
                     break;
                 case openTerminalQuickInputButton:
-                    vscode.commands.executeCommand(Commands.openTerminal, vieItem, false);
+                    vscode.commands.executeCommand(Commands.openTerminal, vieItem);
                     break;
                 case revealInSystemExplorerQuickInputButton:
-                    vscode.commands.executeCommand(Commands.revealInSystemExplorer, vieItem, false);
+                    vscode.commands.executeCommand(Commands.revealInSystemExplorerContext, vieItem);
                     break;
                 case addToWorkspaceQuickInputButton:
                     quickPick.hide();
