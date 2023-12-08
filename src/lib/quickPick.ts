@@ -30,6 +30,7 @@ import {
     sortByBranchQuickInputButton,
     sortByRepoQuickInputButton,
     checkoutBranchQuickInputButton,
+    backButton,
 } from './quickPick.button';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
@@ -58,6 +59,7 @@ export const pickBranch = async (
         quickPick.title = title;
         quickPick.placeholder = placeholder;
         quickPick.canSelectMany = false;
+        quickPick.buttons = [backButton];
         quickPick.onDidAccept(() => {
             resolve(quickPick.selectedItems[0]);
             quickPick.hide();
@@ -65,6 +67,11 @@ export const pickBranch = async (
         quickPick.onDidHide(() => {
             resolve();
             quickPick.dispose();
+        });
+        quickPick.onDidTriggerButton((event) => {
+            if(event === backButton) {
+                quickPick.hide();
+            }
         });
         // TODO 按名称排序
         quickPick.show();
@@ -317,7 +324,6 @@ export const pickWorktree = async () => {
         let workspaceListLoading: boolean = true;
         let checkSortByBranch = false;
         let canClose = true;
-        let initEvent: vscode.Disposable | null = null;
 
         const updateList = () => {
             let items = checkList ? mapWorkTreePickItems(list) : mapWorkTreePickItems(workspaceList);
@@ -342,9 +348,9 @@ export const pickWorktree = async () => {
                 listLoading = false;
                 updateList();
             });
-            initEvent?.dispose();
-            initEvent = null;
         };
+
+        const initEvent: vscode.Disposable = updateTreeDataEvent.event(initList);
 
         const quickPick = vscode.window.createQuickPick<WorkTreePick>();
         quickPick.placeholder = vscode.l10n.t('Select to open in new window');
@@ -445,7 +451,6 @@ export const pickWorktree = async () => {
                     break;
                 case checkoutBranchQuickInputButton:
                     canClose = false;
-                    initEvent = updateTreeDataEvent.event(initList);
                     vscode.commands.executeCommand(Commands.checkoutBranch, vieItem).then(() => {
                         canClose = true;
                         // 需要重新渲染列表数据

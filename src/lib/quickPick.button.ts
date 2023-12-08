@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 
+export const backButton = vscode.QuickInputButtons.Back;
+
 export const openInNewWindowQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('arrow-right'),
     tooltip: vscode.l10n.t('Switch the current window to this folder.'),
