@@ -13,6 +13,7 @@
     "Choose a branch to create new worktree for": "选择用来创建 worktree 的分支",
     "Checkout branch ( {0} )": "签出分支 ( {0} )",
     "Checkout branch ( {0} ) on {1}": "签出分支 ( {0} ) 于 {1}",
+    "Checkout": "签出分支",
     "Select branch for checkout": "选择签出的分支",
     "Select to open in new window": "选中以在新窗口打开",
     "Current commit hash": "当前提交的hash",

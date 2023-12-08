@@ -771,6 +771,12 @@
           "type": "string",
           "default": "$LABEL",
           "markdownDescription": "%config.worktreePick.copyTemplate.description%"
+        },
+        "git-worktree-manager.worktreePick.showCheckout": {
+          "scope": "application",
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%config.worktreePick.showCheckout.description%"
         }
       }
     }

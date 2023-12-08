@@ -14,72 +14,28 @@ import { Commands, APP_NAME } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
 import folderRoot from '@/lib/folderRoot';
+import { updateTreeDataEvent } from '@/lib/events';
 import path from 'path';
+import {
+    openExternalTerminalQuickInputButton,
+    openTerminalQuickInputButton,
+    revealInSystemExplorerQuickInputButton,
+    copyItemQuickInputButton,
+    addToWorkspaceQuickInputButton,
+    openInNewWindowQuickInputButton,
+    addWorktreeQuickInputButton,
+    useWorkspaceWorktreeQuickInputButton,
+    useAllWorktreeQuickInputButton,
+    settingQuickInputButton,
+    sortByBranchQuickInputButton,
+    sortByRepoQuickInputButton,
+    checkoutBranchQuickInputButton,
+} from './quickPick.button';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
     branch?: string;
     hash?: string;
 }
-
-const openInNewWindowQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('arrow-right'),
-    tooltip: vscode.l10n.t('Switch the current window to this folder.'),
-};
-
-const revealInSystemExplorerQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('folder-opened'),
-    tooltip: vscode.l10n.t('Reveal in the system explorer'),
-};
-
-const openExternalTerminalQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('terminal-bash'),
-    tooltip: vscode.l10n.t('Open in External Terminal'),
-};
-
-const openTerminalQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('terminal'),
-    tooltip: vscode.l10n.t('Open in VSCode built-in Terminal'),
-};
-
-const addToWorkspaceQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('multiple-windows'),
-    tooltip: vscode.l10n.t('Add to workspace'),
-};
-
-const sortByBranchQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('case-sensitive'),
-    tooltip: vscode.l10n.t('Sort by branch name'),
-};
-
-const sortByRepoQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('list-flat'),
-    tooltip: vscode.l10n.t('Sort by repository'),
-};
-
-const settingQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('gear'),
-    tooltip: vscode.l10n.t('Open Settings'),
-};
-
-const addWorktreeQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('add'),
-    tooltip: vscode.l10n.t('Add a git repository folder path'),
-};
-
-const copyItemQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('copy'),
-    tooltip: vscode.l10n.t('Copy'),
-};
-
-const useAllWorktreeQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('folder-active'),
-    tooltip: vscode.l10n.t('Click to display all worktree list'),
-};
-
-const useWorkspaceWorktreeQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('folder-library'),
-    tooltip: vscode.l10n.t('Click to display worktree list in workspace'),
-};
 
 export const pickBranch = async (
     title: string = vscode.l10n.t('Create Worktree for'),
@@ -233,6 +189,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     const showRevealInSystemExplorer = config.get<boolean>('worktreePick.showRevealInSystemExplorer', false);
     const showCopy = config.get<boolean>('worktreePick.showCopy', false);
     const showAddToWorkspace = config.get<boolean>('worktreePick.showAddToWorkspace', false);
+    const showCheckout = config.get<boolean>('worktreePick.showCheckout', true);
 
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
@@ -252,6 +209,10 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             {
                 button: Object.assign(copyItemQuickInputButton, { tooltip: copyTooltip }),
                 show: showCopy,
+            },
+            {
+                button: checkoutBranchQuickInputButton,
+                show: showCheckout,
             },
             {
                 button: addToWorkspaceQuickInputButton,
@@ -355,6 +316,8 @@ export const pickWorktree = async () => {
         let listLoading: boolean = true;
         let workspaceListLoading: boolean = true;
         let checkSortByBranch = false;
+        let canClose = true;
+        let initEvent: vscode.Disposable | null = null;
 
         const updateList = () => {
             let items = checkList ? mapWorkTreePickItems(list) : mapWorkTreePickItems(workspaceList);
@@ -366,6 +329,21 @@ export const pickWorktree = async () => {
             }
             quickPick.busy = busy;
             quickPick.items = items;
+        };
+
+        const initList = () => {
+            updateWorkspaceListCache().then(() => {
+                workspaceList = WorkspaceState.get('workTreeCache', []);
+                workspaceListLoading = false;
+                updateList();
+            });
+            updateWorkTreeCache().then(() => {
+                list = GlobalState.get('workTreeCache', []);
+                listLoading = false;
+                updateList();
+            });
+            initEvent?.dispose();
+            initEvent = null;
         };
 
         const quickPick = vscode.window.createQuickPick<WorkTreePick>();
@@ -465,6 +443,16 @@ export const pickWorktree = async () => {
                             Alert.showErrorMessage(err);
                         });
                     break;
+                case checkoutBranchQuickInputButton:
+                    canClose = false;
+                    initEvent = updateTreeDataEvent.event(initList);
+                    vscode.commands.executeCommand(Commands.checkoutBranch, vieItem).then(() => {
+                        canClose = true;
+                        // 需要重新渲染列表数据
+                        updateList();
+                        quickPick.show();
+                    });
+                    break;
             }
             resolve(selectedItem);
         });
@@ -479,6 +467,7 @@ export const pickWorktree = async () => {
             quickPick.hide();
         });
         quickPick.onDidHide(() => {
+            if (!canClose) return;
             resolve();
             quickPick.dispose();
         });
@@ -489,16 +478,7 @@ export const pickWorktree = async () => {
         updateList();
         // 先展示出缓存的数据
         await new Promise<void>((resolve) => setTimeout(resolve, 0));
-        updateWorkspaceListCache().then(() => {
-            workspaceList = WorkspaceState.get('workTreeCache', []);
-            workspaceListLoading = false;
-            updateList();
-        });
-        updateWorkTreeCache().then(() => {
-            list = GlobalState.get('workTreeCache', []);
-            listLoading = false;
-            updateList();
-        });
+        initList();
         return waiting;
     } catch {
         reject();
