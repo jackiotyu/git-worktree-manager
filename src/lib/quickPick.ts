@@ -470,6 +470,7 @@ export const pickWorktree = async () => {
             if (!canClose) return;
             resolve();
             quickPick.dispose();
+            initEvent?.dispose();
         });
         quickPick.busy = true;
         quickPick.show();
