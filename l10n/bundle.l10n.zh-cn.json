@@ -35,8 +35,6 @@
     "Remove the git repository reference in list": "删除git仓库引用",
     "Are you sure to delete this repository reference with path {0} and alias {1}?": "确定删除 路径为 {0} , 别名为 {1} 的这个仓库引用?",
     "Please enter a name for the presentation": "请输入展示用的名称",
-    "Select main folder?": "是否选择主目录？",
-    "The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}": "当前选择的目录 {0} 不是主目录，\n是否切换到主目录 {1}",
     "Select command": "选择命令",
     "Select the command you need to execute in the terminal": "选择在终端中需要执行的命令",
     "Sort by branch name": "根据分支名称排序",

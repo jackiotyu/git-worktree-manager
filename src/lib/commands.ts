@@ -24,6 +24,8 @@ import {
     addToWorkspace,
     checkExist,
     getNameRev,
+    getMainFolder,
+    comparePath,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -338,23 +340,8 @@ const addToGitFolder = async (folderPath: string) => {
     if (!(await checkGitValid(folderPath))) {
         return Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
     }
-    const worktreeList = await getWorkTreeList(folderPath, true);
-    const mainFolder = worktreeList.find((i) => i.isMain);
-    const mainFolderPath = mainFolder?.path ? vscode.Uri.file(mainFolder.path).fsPath : '';
-    if (mainFolderPath && mainFolderPath !== folderPath) {
-        let ok = await confirmModal(
-            vscode.l10n.t('Select main folder?'),
-            vscode.l10n.t(
-                'The currently selected folder {0} is not the main folder,\nwhether to switch to the main folder {1}',
-                folderPath,
-                mainFolderPath,
-            ),
-        );
-        if (ok) {
-            folderPath = mainFolderPath;
-        }
-    }
-    if (existFolders.some((i) => i.path === folderPath)) {
+    folderPath = await getMainFolder(folderPath);
+    if (existFolders.some((i) => comparePath(i.path, folderPath))) {
         return Alert.showErrorMessage(vscode.l10n.t('The git repository folder already exists in the settings'));
     }
     let folderName = await vscode.window.showInputBox({
