@@ -1,3 +1,9 @@
+## [0.3.0] 2023-12-08
+
+### Change
+
+- Show `Checkout` button in worktree quick pick for checkout branch/tag quickly.
+
 ## [0.2.9] 2023-12-05
 
 ### Change
