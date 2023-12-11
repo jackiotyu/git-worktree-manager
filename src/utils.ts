@@ -324,7 +324,11 @@ export async function checkGitValid(folderPath: string = folderRoot.uri?.fsPath 
 
 export const getMainFolder = async (cwd: string) => {
     try {
-        const mainFolderFull = await executeGitCommandBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']);
+        const mainFolderFull = await executeGitCommandBase(cwd, [
+            'rev-parse',
+            '--path-format=absolute',
+            '--git-common-dir',
+        ]);
         return mainFolderFull.trim().replace(/\/.git$/, '');
     } catch {
         return '';
@@ -413,16 +417,15 @@ export const getLashCommitHash = (cwd: string) => {
     return executeGitCommandAuto(cwd, ['log', '-1', `--pretty=format:%H`]);
 };
 
-export const getLashCommitDetail = async <T extends string>(cwd: string, keys: T[]): Promise<Record<T, string | undefined>> => {
+export const getLashCommitDetail = async <T extends string>(
+    cwd: string,
+    keys: T[],
+): Promise<Record<T, string | void>> => {
     try {
-        let output = await executeGitCommandAuto(cwd, [
-            'log',
-            '-1',
-            `--pretty=format:${formatSimpleQuery(keys)}`,
-        ]);
+        let output = await executeGitCommandAuto(cwd, ['log', '-1', `--pretty=format:${formatSimpleQuery(keys)}`]);
         return parseOutput(output, keys)[0];
     } catch {
-        return Object.create({});
+        return {} as Record<T, void>;
     }
 };
 

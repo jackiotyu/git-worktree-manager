@@ -58,7 +58,7 @@ export const checkoutBranchQuickInputButton: vscode.QuickInputButton = {
 
 export const addWorktreeQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('repo-clone'),
-    tooltip: vscode.l10n.t('Add a git worktree'),
+    tooltip: vscode.l10n.t('Create Worktree for'),
 };
 
 export const moreQuickInputButton: vscode.QuickInputButton = {

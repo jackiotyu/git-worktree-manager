@@ -409,6 +409,7 @@ export const pickWorktree = async () => {
             }
             if (event === addWorktreeQuickInputButton) {
                 vscode.commands.executeCommand(Commands.addWorkTree);
+                quickPick.hide();
                 return;
             }
         });
@@ -418,7 +419,7 @@ export const pickWorktree = async () => {
             if (!selectedItem.path) {
                 return;
             }
-            const vieItem: IWorktreeLess = {
+            const viewItem: IWorktreeLess = {
                 name: selectedItem.label,
                 path: selectedItem.path,
             };
@@ -430,29 +431,33 @@ export const pickWorktree = async () => {
                     });
                     break;
                 case openExternalTerminalQuickInputButton:
-                    vscode.commands.executeCommand(Commands.openExternalTerminalContext, vieItem);
+                    vscode.commands.executeCommand(Commands.openExternalTerminalContext, viewItem);
                     break;
                 case openTerminalQuickInputButton:
-                    vscode.commands.executeCommand(Commands.openTerminal, vieItem);
+                    vscode.commands.executeCommand(Commands.openTerminal, viewItem);
                     break;
                 case revealInSystemExplorerQuickInputButton:
-                    vscode.commands.executeCommand(Commands.revealInSystemExplorerContext, vieItem);
+                    vscode.commands.executeCommand(Commands.revealInSystemExplorerContext, viewItem);
                     break;
                 case addToWorkspaceQuickInputButton:
                     quickPick.hide();
-                    vscode.commands.executeCommand(Commands.addToWorkspace, vieItem);
+                    vscode.commands.executeCommand(Commands.addToWorkspace, viewItem);
                     break;
                 case copyItemQuickInputButton:
                     const template = vscode.workspace
                         .getConfiguration(APP_NAME)
                         .get<string>('worktreePick.copyTemplate', '$LABEL');
-                    (/\$HASH/.test(template) ? getLashCommitHash(vieItem.path) : Promise.resolve(''))
-                        .then((hash) => {
+                    (/\$HASH|\$MESSAGE/.test(template)
+                        ? getLashCommitDetail(viewItem.path, ['s', 'H'])
+                        : Promise.resolve({} as Record<string, void>)
+                    )
+                        .then((commitDetail) => {
                             const text = template
-                                .replace(/\$HASH/g, hash)
-                                .replace(/\$FULL_PATH/g, vieItem.path)
-                                .replace(/\$BASE_NAME/g, path.basename(vieItem.path))
-                                .replace(/\$LABEL/g, vieItem.name);
+                                .replace(/\$HASH/g, commitDetail.H || '')
+                                .replace(/\$MESSAGE/g, commitDetail.s || '')
+                                .replace(/\$FULL_PATH/g, viewItem.path)
+                                .replace(/\$BASE_NAME/g, path.basename(viewItem.path))
+                                .replace(/\$LABEL/g, viewItem.name);
                             vscode.env.clipboard.writeText(text).then(() => {
                                 Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', text));
                             });
@@ -463,7 +468,7 @@ export const pickWorktree = async () => {
                     break;
                 case checkoutBranchQuickInputButton:
                     canClose = false;
-                    vscode.commands.executeCommand(Commands.checkoutBranch, vieItem).then(() => {
+                    vscode.commands.executeCommand(Commands.checkoutBranch, viewItem).then(() => {
                         canClose = true;
                         // 需要重新渲染列表数据
                         updateList();
@@ -472,7 +477,7 @@ export const pickWorktree = async () => {
                     break;
                 case moreQuickInputButton:
                     canClose = false;
-                    pickAction(vieItem)
+                    pickAction(viewItem)
                         .then(() => {
                             canClose = true;
                             updateList();
@@ -535,7 +540,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
     try {
         const quickPick = vscode.window.createQuickPick<QuickPickAction>();
         quickPick.title = `${viewItem.name} ⇄ ${
-            viewItem.path.length >= 22 ? '...' + viewItem.path.slice(-35) : viewItem.path
+            viewItem.path.length > 35 ? '...' + viewItem.path.slice(-34) : viewItem.path
         }`;
         quickPick.placeholder = vscode.l10n.t('Please select an action');
         quickPick.buttons = [backButton];
@@ -587,7 +592,18 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
         quickPick.show();
         await Promise.resolve();
         const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.path, ['s', 'H'])]);
+        const template = vscode.workspace.getConfiguration(APP_NAME).get<string>('worktreePick.copyTemplate', '$LABEL');
         const items: QuickPickAction[] = [
+            {
+                iconPath: new vscode.ThemeIcon('copy'),
+                label: template
+                    .replace(/\$HASH/g, commitDetail.H || '')
+                    .replace(/\$MESSAGE/g, commitDetail.s || '')
+                    .replace(/\$FULL_PATH/g, viewItem.path)
+                    .replace(/\$BASE_NAME/g, path.basename(viewItem.path))
+                    .replace(/\$LABEL/g, viewItem.name),
+                action: 'copy',
+            },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
                 label: viewItem.name,
@@ -604,6 +620,11 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
                 action: 'copy',
             },
             {
+                iconPath: new vscode.ThemeIcon('copy'),
+                label: viewItem.path,
+                action: 'copy',
+            },
+            {
                 iconPath: new vscode.ThemeIcon('terminal-bash'),
                 label: vscode.l10n.t('Open in External Terminal'),
                 action: Commands.openExternalTerminalContext,
@@ -611,7 +632,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
             {
                 iconPath: new vscode.ThemeIcon('terminal'),
                 label: vscode.l10n.t('Open in VSCode built-in Terminal'),
-                action: Commands.openExternalTerminalContext,
+                action: Commands.openTerminal,
             },
             {
                 iconPath: new vscode.ThemeIcon('multiple-windows'),
