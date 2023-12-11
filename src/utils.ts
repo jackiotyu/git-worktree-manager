@@ -194,6 +194,10 @@ export function formatQuery<T extends string>(keyList: T[]) {
     return [...new Set(keyList)].map((key) => `${key}="%(${key})"`).join(' ');
 }
 
+export function formatSimpleQuery<T extends string>(keyList: T[]) {
+    return [...new Set(keyList)].map((key) => `${key}="%${key}"`).join(' ');
+}
+
 export function parseOutput<T extends string>(output: string, keyList: T[]): Record<T, string>[] {
     let tokenList = [...new Set(keyList)];
     let regex = tokenList.map((key) => `${key}="(.*)"`).join(' ');
@@ -407,6 +411,19 @@ export const pullOrPushAction = async (action: 'pull' | 'push', options: PullPus
 
 export const getLashCommitHash = (cwd: string) => {
     return executeGitCommandAuto(cwd, ['log', '-1', `--pretty=format:%H`]);
+};
+
+export const getLashCommitDetail = async <T extends string>(cwd: string, keys: T[]): Promise<Record<T, string | undefined>> => {
+    try {
+        let output = await executeGitCommandAuto(cwd, [
+            'log',
+            '-1',
+            `--pretty=format:${formatSimpleQuery(keys)}`,
+        ]);
+        return parseOutput(output, keys)[0];
+    } catch {
+        return Object.create({});
+    }
 };
 
 export const getWorktreeStatus = (item: IWorkTreeDetail) => {

@@ -34,7 +34,7 @@ export const settingQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('gear'),
     tooltip: vscode.l10n.t('Open Settings'),
 };
-export const addWorktreeQuickInputButton: vscode.QuickInputButton = {
+export const addGitRepoQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('add'),
     tooltip: vscode.l10n.t('Add a git repository folder path'),
 };
@@ -54,4 +54,14 @@ export const useWorkspaceWorktreeQuickInputButton: vscode.QuickInputButton = {
 export const checkoutBranchQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('source-control'),
     tooltip: vscode.l10n.t('Checkout'),
+};
+
+export const addWorktreeQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('repo-clone'),
+    tooltip: vscode.l10n.t('Add a git worktree'),
+};
+
+export const moreQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('three-bars'),
+    tooltip: vscode.l10n.t('More actions...'),
 };

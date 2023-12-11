@@ -4,6 +4,7 @@
     "Open in External Terminal": "在外部终端中打开",
     "Open in VSCode built-in Terminal": "在vscode内置终端中打开",
     "Add to workspace": "添加到工作区",
+    "Add a git worktree": "添加 worktree",
     "Open Settings": "打开设置",
     "Delete worktree": "删除worktree",
     "Prune worktree": "清理 worktree",
@@ -71,6 +72,7 @@
     "$(lock) The worktree is locked to prevent accidental purging\n\n": "$(lock) 已锁定该 worktree, 防止被意外清除\n\n",
     "✨ Worktree main folder, cannot be cleared and locked\n\n": "✨ worktree 主文件夹, 无法被清除和锁定\n\n",
     "Load More...": "加载更多...",
+    "More actions...": "更多操作...",
     "ok": "确认",
     "operation": "操作",
     "lock": "锁定",
@@ -78,5 +80,6 @@
     "repair": "修复",
     "Copy": "复制",
     "Click to display worktree list in workspace": "点击以展示工作区内的 worktree 列表",
-    "Click to display all worktree list": "点击以展示全部的 worktree 列表"
+    "Click to display all worktree list": "点击以展示全部的 worktree 列表",
+    "Please select an action": "请选择一个操作"
 }
