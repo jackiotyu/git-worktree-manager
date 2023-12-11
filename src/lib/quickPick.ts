@@ -62,7 +62,7 @@ export const pickBranch = async (
         quickPick.title = title;
         quickPick.placeholder = placeholder;
         quickPick.canSelectMany = false;
-        // quickPick.buttons = [backButton];
+        quickPick.buttons = [backButton];
         quickPick.onDidAccept(() => {
             resolve(quickPick.selectedItems[0]);
             quickPick.hide();
@@ -71,11 +71,11 @@ export const pickBranch = async (
             resolve();
             quickPick.dispose();
         });
-        // quickPick.onDidTriggerButton((event) => {
-        //     if (event === backButton) {
-        //         quickPick.hide();
-        //     }
-        // });
+        quickPick.onDidTriggerButton((event) => {
+            if (event === backButton) {
+                quickPick.hide();
+            }
+        });
         // TODO 按名称排序
         quickPick.show();
         quickPick.busy = true;
