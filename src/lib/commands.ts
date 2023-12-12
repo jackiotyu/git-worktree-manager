@@ -114,9 +114,9 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
 
 export const addWorkTreeCmd = async () => {
     let branchItem = await pickBranch();
-    if (!branchItem) {
-        return;
-    }
+    // FIXME 改造quickPick
+    if(branchItem === void 0) return;
+    if (!branchItem) return false;
     let { branch, hash } = branchItem;
     let uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
@@ -540,7 +540,7 @@ const checkoutBranchCmd = async (item?: IWorktreeLess) => {
         let isValidGit = await checkGitValid();
         if (!isValidGit) {
             Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
-            return;
+            return false;
         }
         selectedItem = {
             path: folderRoot.uri?.fsPath || '',
@@ -550,13 +550,15 @@ const checkoutBranchCmd = async (item?: IWorktreeLess) => {
                 .trim(),
         };
     }
-    if (!selectedItem) return;
+    if (!selectedItem) return false;
     let branchItem = await pickBranch(
         vscode.l10n.t('Checkout branch ( {0} )', `${selectedItem.name} ⇄ ${selectedItem.path.length > 35 ? '...' + selectedItem.path.slice(-34) : selectedItem.path}`),
         vscode.l10n.t('Select branch for checkout'),
         selectedItem.path,
     );
-    if (!branchItem) return;
+    // FIXME 改造quickPick
+    if(branchItem === void 0) return;
+    if (!branchItem) return false;
     const checkoutText = branchItem.branch || branchItem.hash || '';
     const isBranch = !!branchItem.branch;
     actionProgressWrapper(
