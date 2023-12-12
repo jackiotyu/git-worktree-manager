@@ -17,6 +17,7 @@
     "Select branch for checkout": "选择签出的分支",
     "Select to open in new window": "选中以在新窗口打开",
     "Current commit hash": "当前提交的hash",
+    "Current commit message": "当前提交的消息",
     "Worktree switch": "worktree切换",
     "Please select the directory to switch": "请选择切换的文件夹",
     "Create worktree": "创建worktree",
@@ -80,5 +81,7 @@
     "Copy": "复制",
     "Click to display worktree list in workspace": "点击以展示工作区内的 worktree 列表",
     "Click to display all worktree list": "点击以展示全部的 worktree 列表",
-    "Please select an action": "请选择一个操作"
+    "Please select an action": "请选择一个操作",
+    "Template content": "模板内容",
+    "Path": "路径"
 }
