@@ -413,10 +413,6 @@ export const pullOrPushAction = async (action: 'pull' | 'push', options: PullPus
     return action === 'pull' ? pullBranch(options) : pushBranch(options);
 };
 
-export const getLashCommitHash = (cwd: string) => {
-    return executeGitCommandAuto(cwd, ['log', '-1', `--pretty=format:%H`]);
-};
-
 export const getLashCommitDetail = async <T extends string>(
     cwd: string,
     keys: T[],

@@ -5,7 +5,6 @@ import {
     checkGitValid,
     getAllRefList,
     judgeIncludeFolder,
-    getLashCommitHash,
     getLashCommitDetail,
     getMainFolder,
 } from '@/utils';
