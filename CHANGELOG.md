@@ -1,3 +1,10 @@
+## [0.3.1] 2023-12-12
+
+### Change
+
+- Show `More Actions...` button in worktree quick pick for quick actions.
+- Update README.
+
 ## [0.3.0] 2023-12-08
 
 ### Change

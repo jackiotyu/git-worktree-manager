@@ -65,12 +65,8 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
 在 VSCode [扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
-1. Run `Worktree: Add git repository` to add an existing git repository.
-运行 `Worktree: 添加 git 仓库` 添加一个已存在的 git 仓库.
-1. Press `Ctrl + Shift + R` to open the worktree list.
-按下 `Ctrl + Shift + R` 打开 worktree 列表。
-1. Find the `Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/icon.png"> panel in activitybar then perform other operations.
-在侧栏上找到`Git Worktree Manager` <image width="16" height="16" src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/icon.png"> 面板进行其他操作
+1. Press `Ctrl + Shift + R` to start.
+按下 `Ctrl + Shift + R` 开始操作
 
 ### Requirements 要求
 
@@ -89,10 +85,10 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 - Click on the "Add worktree" icon and follow the prompts to add a new worktree.
 点击 `添加 worktree` 图标，跟随提示进行操作，添加新的 worktree。
 - The right-click context menu provides the following convenient commands. You can click on the worktree item to directly open the worktree in a new window.
-右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
+- 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
 ![open-terminal](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/open-terminal.png)
 - Using VSCode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
-使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
+- 使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
 ```json
 {
   "terminal.external.osxExec": "iTerm.app",
@@ -101,9 +97,9 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 ```
 ![pull-commit](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/pull-commit.png)
 - Quick pull/push commits in remote branch.
-快速在远程分支上pull/push提交。
+- 快速在远程分支上pull/push提交。
 - Quick view git history. (current use extension [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
-快速查看git提交历史. (当前使用扩展 [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
+- 快速查看git提交历史. (当前使用扩展 [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
 
 
 2. Git repository manger.  git 仓库管理

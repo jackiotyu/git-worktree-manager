@@ -650,6 +650,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
                 iconPath: new vscode.ThemeIcon('copy'),
                 label: formatCopyText(viewItem.name),
                 action: 'copy',
+                description: vscode.l10n.t('Ref name'),
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),

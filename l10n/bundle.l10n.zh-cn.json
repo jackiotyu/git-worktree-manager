@@ -83,5 +83,6 @@
     "Click to display all worktree list": "点击以展示全部的 worktree 列表",
     "Please select an action": "请选择一个操作",
     "Template content": "模板内容",
-    "Path": "路径"
+    "Path": "路径",
+    "Ref name": "引用名称"
 }
