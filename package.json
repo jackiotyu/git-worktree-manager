@@ -2,7 +2,7 @@
   "publisher": "jackiotyu",
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
-  "description": "Switch git worktree easily🚀. 快速切换git工作树",
+  "description": "Convenient multi-workspace, fast git project copying, running projects in multiple directories. 便捷多工作区操作，快速复制git项目，多目录同时运行项目",
   "version": "0.3.1",
   "engines": {
     "vscode": "^1.60.0"
@@ -13,12 +13,14 @@
   ],
   "keywords": [
     "git worktree manager",
-    "git project manager",
+    "git project manager/copying",
+    "multi-workspace",
     "switch branch",
     "switch folder",
     "run command",
     "git 工作树",
-    "git 项目管理",
+    "git 项目管理/复制",
+    "多工作区",
     "切换分支",
     "切换文件夹",
     "运行命令"
