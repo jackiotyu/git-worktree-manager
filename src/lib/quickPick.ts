@@ -554,15 +554,6 @@ interface QuickPickAction extends vscode.QuickPickItem {
         | Commands.addToWorkspace;
 }
 
-const formatCopyText = (text: string = '') => {
-    return `${vscode.l10n.t('Copy')} ⇄ ${text}`;
-};
-
-const copyTextReg = new RegExp(`${formatCopyText(`([\\s\\S]*)`)}`);
-const resolveCopyText = (text: string) => {
-    return text.match(copyTextReg)?.[1] || '';
-};
-
 export const pickAction = async (viewItem: IWorktreeLess) => {
     const disposables: vscode.Disposable[] = [];
     let resolve: (value: QuickPickAction | void | false) => void = () => {};
@@ -595,7 +586,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
                 }
                 switch (item.action) {
                     case 'copy':
-                        const detail = resolveCopyText(item.label);
+                        const detail = item.description || '';
                         await vscode.env.clipboard.writeText(detail).then(() => {
                             Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', detail));
                         });
@@ -635,40 +626,38 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
         const items: QuickPickAction[] = [
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: formatCopyText(
-                    template
-                        .replace(/\$HASH/g, commitDetail.H || '')
-                        .replace(/\$MESSAGE/g, commitDetail.s || '')
-                        .replace(/\$FULL_PATH/g, viewItem.path)
-                        .replace(/\$BASE_NAME/g, path.basename(viewItem.path))
-                        .replace(/\$LABEL/g, viewItem.name),
-                ),
+                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('template content')),
+                description: template
+                    .replace(/\$HASH/g, commitDetail.H || '')
+                    .replace(/\$MESSAGE/g, commitDetail.s || '')
+                    .replace(/\$FULL_PATH/g, viewItem.path)
+                    .replace(/\$BASE_NAME/g, path.basename(viewItem.path))
+                    .replace(/\$LABEL/g, viewItem.name),
                 action: 'copy',
-                description: vscode.l10n.t('Template content'),
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: formatCopyText(viewItem.name),
+                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('ref name')),
+                description: viewItem.name,
                 action: 'copy',
-                description: vscode.l10n.t('Ref name'),
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: formatCopyText(commitDetail.H || ''),
+                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('commit hash')),
+                description: commitDetail.H || '',
                 action: 'copy',
-                description: vscode.l10n.t('Current commit hash'),
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: formatCopyText(commitDetail.s || ''),
+                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('commit message')),
+                description: commitDetail.s || '',
                 action: 'copy',
-                description: vscode.l10n.t('Current commit message'),
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: formatCopyText(viewItem.path),
+                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('folder Path')),
+                description: viewItem.path,
                 action: 'copy',
-                description: vscode.l10n.t('Path'),
             },
             {
                 iconPath: new vscode.ThemeIcon('terminal-bash'),
