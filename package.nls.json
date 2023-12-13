@@ -38,7 +38,7 @@
     "view.git-worktree-manager-recent": "recently opened folders",
     "view.git-worktree-manager-setting": "git worktree setting",
     "viewsWelcome.addWorkTree": "Add Worktree",
-    "config.title": "Git Worktree Manager Setting",
+    "config.general.title": "General settings",
     "config.terminalLocationInEditor.description": "Whether to open the built-in terminal in the editor, it opens in the panel by default",
     "config.terminalCmdList.description": "Send command text when opening the terminal, such as node -v",
     "config.externalTerminalInvoke.description": "Evoke External Terminal",

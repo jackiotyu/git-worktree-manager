@@ -645,143 +645,155 @@
         "label": "%submenus.worktree-action%"
       }
     ],
-    "configuration": {
-      "title": "%config.title%",
-      "properties": {
-        "git-worktree-manager.terminalLocationInEditor": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.terminalLocationInEditor.description%"
-        },
-        "git-worktree-manager.terminalCmdList": {
-          "scope": "application",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
+    "configuration": [
+      {
+        "title": "%config.general.title%",
+        "properties": {
+          "git-worktree-manager.terminalLocationInEditor": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.terminalLocationInEditor.description%"
           },
-          "description": "%config.terminalCmdList.description%"
-        },
-        "git-worktree-manager.alertLevel": {
-          "scope": "application",
-          "enum": [
-            "info",
-            "warn",
-            "error"
-          ],
-          "enumDescriptions": [
-            "%config.alertLevel.enum.info%",
-            "%config.alertLevel.enum.warn%",
-            "%config.alertLevel.enum.error%"
-          ],
-          "default": "error",
-          "description": "%config.alertLevel.description%"
-        },
-        "git-worktree-manager.gitHistoryExtension": {
-          "scope": "application",
-          "enum": [
-            "mhutchie.git-graph"
-          ],
-          "enumDescriptions": [
-            "git graph ⇄ https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph"
-          ],
-          "default": "mhutchie.git-graph",
-          "description": "%config.gitHistoryExtension.description%"
-        },
-        "git-worktree-manager.treeView.showLockInWorktreeItem": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.showLockInWorktreeItem.description%"
-        },
-        "git-worktree-manager.treeView.showOpenExplorerInTreeItem": {
-          "scope": "application",
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showOpenExplorerInTreeItem.description%"
-        },
-        "git-worktree-manager.treeView.showCheckoutInWorktreeItem": {
-          "scope": "application",
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showCheckoutInWorktreeItem.description%"
-        },
-        "git-worktree-manager.treeView.showExternalTerminalInTreeItem": {
-          "scope": "application",
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showExternalTerminalInTreeItem.description%"
-        },
-        "git-worktree-manager.treeView.showTerminalInTreeItem": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.showTerminalInTreeItem.description%"
-        },
-        "git-worktree-manager.worktreePick.pinCurrentRepo": {
-          "scope": "application",
-          "type": "boolean",
-          "default": true,
-          "description": "%config.pinCurrentRepo.description%"
-        },
-        "git-worktree-manager.worktreePick.defaultDisplayList": {
-          "scope": "application",
-          "enum": [
-            "workspace",
-            "all"
-          ],
-          "enumDescriptions": [
-            "%config.defaultDisplayList.enum.workspace%",
-            "%config.defaultDisplayList.enum.all%"
-          ],
-          "default": "all",
-          "description": "%config.defaultDisplayList.description%"
-        },
-        "git-worktree-manager.worktreePick.showTerminal": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.worktreePick.showTerminal.description%"
-        },
-        "git-worktree-manager.worktreePick.showExternalTerminal": {
-          "scope": "application",
-          "type": "boolean",
-          "default": true,
-          "description": "%config.worktreePick.showExternalTerminal.description%"
-        },
-        "git-worktree-manager.worktreePick.showRevealInSystemExplorer": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.worktreePick.showRevealInSystemExplorer.description%"
-        },
-        "git-worktree-manager.worktreePick.showCopy": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.worktreePick.showCopy.description%"
-        },
-        "git-worktree-manager.worktreePick.showAddToWorkspace": {
-          "scope": "application",
-          "type": "boolean",
-          "default": false,
-          "description": "%config.worktreePick.showAddToWorkspace.description%"
-        },
-        "git-worktree-manager.worktreePick.copyTemplate": {
-          "scope": "application",
-          "type": "string",
-          "default": "$LABEL",
-          "markdownDescription": "%config.worktreePick.copyTemplate.description%"
-        },
-        "git-worktree-manager.worktreePick.showCheckout": {
-          "scope": "application",
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "%config.worktreePick.showCheckout.description%"
+          "git-worktree-manager.terminalCmdList": {
+            "scope": "application",
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "description": "%config.terminalCmdList.description%"
+          },
+          "git-worktree-manager.alertLevel": {
+            "scope": "application",
+            "enum": [
+              "info",
+              "warn",
+              "error"
+            ],
+            "enumDescriptions": [
+              "%config.alertLevel.enum.info%",
+              "%config.alertLevel.enum.warn%",
+              "%config.alertLevel.enum.error%"
+            ],
+            "default": "error",
+            "description": "%config.alertLevel.description%"
+          },
+          "git-worktree-manager.gitHistoryExtension": {
+            "scope": "application",
+            "enum": [
+              "mhutchie.git-graph"
+            ],
+            "enumDescriptions": [
+              "git graph ⇄ https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph"
+            ],
+            "default": "mhutchie.git-graph",
+            "description": "%config.gitHistoryExtension.description%"
+          }
+        }
+      },
+      {
+        "title": "Tree View",
+        "properties": {
+          "git-worktree-manager.treeView.showLockInWorktreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.showLockInWorktreeItem.description%"
+          },
+          "git-worktree-manager.treeView.showOpenExplorerInTreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.showOpenExplorerInTreeItem.description%"
+          },
+          "git-worktree-manager.treeView.showCheckoutInWorktreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.showCheckoutInWorktreeItem.description%"
+          },
+          "git-worktree-manager.treeView.showExternalTerminalInTreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.showExternalTerminalInTreeItem.description%"
+          },
+          "git-worktree-manager.treeView.showTerminalInTreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.showTerminalInTreeItem.description%"
+          }
+        }
+      },
+      {
+        "title": "Find Worktree",
+        "properties": {
+          "git-worktree-manager.worktreePick.pinCurrentRepo": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.pinCurrentRepo.description%"
+          },
+          "git-worktree-manager.worktreePick.defaultDisplayList": {
+            "scope": "application",
+            "enum": [
+              "workspace",
+              "all"
+            ],
+            "enumDescriptions": [
+              "%config.defaultDisplayList.enum.workspace%",
+              "%config.defaultDisplayList.enum.all%"
+            ],
+            "default": "all",
+            "description": "%config.defaultDisplayList.description%"
+          },
+          "git-worktree-manager.worktreePick.showTerminal": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.worktreePick.showTerminal.description%"
+          },
+          "git-worktree-manager.worktreePick.showExternalTerminal": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.worktreePick.showExternalTerminal.description%"
+          },
+          "git-worktree-manager.worktreePick.showRevealInSystemExplorer": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.worktreePick.showRevealInSystemExplorer.description%"
+          },
+          "git-worktree-manager.worktreePick.showCopy": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.worktreePick.showCopy.description%"
+          },
+          "git-worktree-manager.worktreePick.showAddToWorkspace": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.worktreePick.showAddToWorkspace.description%"
+          },
+          "git-worktree-manager.worktreePick.copyTemplate": {
+            "scope": "application",
+            "type": "string",
+            "default": "$LABEL",
+            "markdownDescription": "%config.worktreePick.copyTemplate.description%"
+          },
+          "git-worktree-manager.worktreePick.showCheckout": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "%config.worktreePick.showCheckout.description%"
+          }
         }
       }
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",

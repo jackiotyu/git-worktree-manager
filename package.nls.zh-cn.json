@@ -38,7 +38,7 @@
     "view.git-worktree-manager-recent": "最近使用的文件夹",
     "view.git-worktree-manager-setting": "git worktree 设置",
     "viewsWelcome.addWorkTree": "新建 worktree",
-    "config.title": "Git Worktree Manager 设置",
+    "config.general.title": "通用设置",
     "config.terminalLocationInEditor.description": "是否在编辑器中打开内置终端, 默认在面板中打开",
     "config.terminalCmdList.description": "打开终端时传入指令, 例如 node -v",
     "config.externalTerminalInvoke.description": "唤起外部终端",
