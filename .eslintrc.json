@@ -5,20 +5,22 @@
         "ecmaVersion": 6,
         "sourceType": "module"
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "rules": {
         "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/semi": "warn",
-		"curly": ["error", "multi-line", "consistent"],
+        "curly": ["error", "multi-line", "consistent"],
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
-        "semi": "off"
+        "semi": "off",
+        // 禁止使用 \ 串联多行字符串
+        "no-multi-str": "error",
+        // 推荐使用字符串模板连接字符串
+        "prefer-template": "warn",
+        // 模板字符串中的花括号内不使用空格
+        "template-curly-spacing": "error",
+        // 禁用不必要的转义
+        "no-useless-escape": "error"
     },
-    "ignorePatterns": [
-        "out",
-        "dist",
-        "**/*.d.ts"
-    ]
+    "ignorePatterns": ["out", "dist", "**/*.d.ts"]
 }

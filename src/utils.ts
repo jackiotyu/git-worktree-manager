@@ -28,7 +28,7 @@ const WORK_TREE = 'worktree';
 const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
     return new Promise((resolve, reject) => {
         logger.log(`'Running in' ${cwd}`);
-        logger.log('> ' + ['git'].concat(args || []).join(' '));
+        logger.log(`> ${['git'].concat(args || []).join(' ')}`);
         const proc = cp.spawn('git', args, {
             cwd,
         });

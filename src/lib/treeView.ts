@@ -79,8 +79,8 @@ export class WorkTreeItem extends vscode.TreeItem {
         item.prunable && this.tooltip.appendMarkdown(vscode.l10n.t('$(error) Detached from the git version\n\n'));
         item.locked && this.tooltip.appendMarkdown(vscode.l10n.t('$(lock) The worktree is locked to prevent accidental purging\n\n'));
         item.isMain && this.tooltip.appendMarkdown(vscode.l10n.t('✨ Worktree main folder, cannot be cleared and locked\n\n'));
-        item.ahead && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', item.ahead + ''));
-        item.behind && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', item.behind + ''));
+        item.ahead && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${item.ahead}`));
+        item.behind && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${item.behind}`));
         !isCurrent && this.tooltip.appendMarkdown(vscode.l10n.t('*Click to open new window for this worktree*\n\n'));
 
         this.command = {
@@ -134,7 +134,7 @@ export class GitFolderItem extends vscode.TreeItem {
     readonly parent = void 0;
     constructor(item: IFolderItemConfig, collapsible: vscode.TreeItemCollapsibleState) {
         super(item.name, collapsible);
-        this.id = item.name + ' ~~ ' + item.path;
+        this.id = `${item.name} ~~ ${item.path}`;
         this.name = item.name;
         this.path = item.path;
         this.defaultOpen = !!item.defaultOpen;

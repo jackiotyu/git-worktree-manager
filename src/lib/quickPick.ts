@@ -197,7 +197,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     const config = vscode.workspace.getConfiguration(APP_NAME);
     const pinCurRepo = config.get<boolean>('worktreePick.pinCurrentRepo', false);
     const copyTemplate = config.get<string>('worktreePick.copyTemplate', '$LABEL');
-    const copyTooltip = vscode.l10n.t('Copy') + `: ${copyTemplate}`;
+    const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
     const showExternalTerminal = config.get<boolean>('worktreePick.showExternalTerminal', false);
     const showTerminal = config.get<boolean>('worktreePick.showTerminal', false);
@@ -565,7 +565,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
     try {
         const quickPick = vscode.window.createQuickPick<QuickPickAction>();
         quickPick.title = `${viewItem.name} ⇄ ${
-            viewItem.path.length > 35 ? '...' + viewItem.path.slice(-34) : viewItem.path
+            viewItem.path.length > 35 ? `...${viewItem.path.slice(-34)}` : viewItem.path
         }`;
         quickPick.placeholder = vscode.l10n.t('Please select an action');
         quickPick.buttons = [backButton];
@@ -620,13 +620,13 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
             }),
         );
         quickPick.show();
-        await Promise.resolve();
+        await new Promise(r => process.nextTick(r));
         const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.path, ['s', 'H'])]);
         const template = vscode.workspace.getConfiguration(APP_NAME).get<string>('worktreePick.copyTemplate', '$LABEL');
         const items: QuickPickAction[] = [
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('template content')),
+                label: vscode.l10n.t('Copy • {0}', vscode.l10n.t('template content')),
                 description: template
                     .replace(/\$HASH/g, commitDetail.H || '')
                     .replace(/\$MESSAGE/g, commitDetail.s || '')
@@ -637,25 +637,25 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('ref name')),
+                label: vscode.l10n.t('Copy • {0}', vscode.l10n.t('ref name')),
                 description: viewItem.name,
                 action: 'copy',
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('commit hash')),
+                label: vscode.l10n.t('Copy • {0}', vscode.l10n.t('commit hash')),
                 description: commitDetail.H || '',
                 action: 'copy',
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('commit message')),
+                label: vscode.l10n.t('Copy • {0}', vscode.l10n.t('commit message')),
                 description: commitDetail.s || '',
                 action: 'copy',
             },
             {
                 iconPath: new vscode.ThemeIcon('copy'),
-                label: vscode.l10n.t('Copy {0}', vscode.l10n.t('folder Path')),
+                label: vscode.l10n.t('Copy • {0}', vscode.l10n.t('folder Path')),
                 description: viewItem.path,
                 action: 'copy',
             },

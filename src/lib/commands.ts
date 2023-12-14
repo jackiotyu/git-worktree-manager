@@ -552,7 +552,7 @@ const checkoutBranchCmd = async (item?: IWorktreeLess) => {
     }
     if (!selectedItem) return false;
     let branchItem = await pickBranch(
-        vscode.l10n.t('Checkout branch ( {0} )', `${selectedItem.name} ⇄ ${selectedItem.path.length > 35 ? '...' + selectedItem.path.slice(-34) : selectedItem.path}`),
+        vscode.l10n.t('Checkout branch ( {0} )', `${selectedItem.name} ⇄ ${selectedItem.path.length > 35 ? `...${selectedItem.path.slice(-34)}` : selectedItem.path}`),
         vscode.l10n.t('Select branch for checkout'),
         selectedItem.path,
     );
