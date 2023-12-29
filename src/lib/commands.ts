@@ -616,6 +616,10 @@ const viewHistoryCmd = (item?: GitFolderItem) => {
     uri && GitHistory.openHistory(uri);
 };
 
+const openRecentCmd = () => {
+    vscode.commands.executeCommand('workbench.action.openRecent');
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -667,6 +671,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.pullWorkTree, pullWorkTreeCmd),
             vscode.commands.registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
             vscode.commands.registerCommand(Commands.viewHistory, viewHistoryCmd),
+            vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
         );
     }
 }

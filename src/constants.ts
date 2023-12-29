@@ -38,6 +38,7 @@ export enum Commands {
     loadMoreRecentFolder = 'git-worktree-manager.loadMoreRecentFolder',
     loadAllTreeData = 'git-worktree-manager.loadAllTreeData',
     viewHistory = 'git-worktree-manager.viewHistory',
+    openRecent = 'git-worktree-manager.openRecent'
 }
 
 export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';

@@ -162,7 +162,7 @@
         "title": "%cmd.copyFilePath%"
       },
       {
-        "command": "workbench.action.openRecent",
+        "command": "git-worktree-manager.openRecent",
         "title": "%cmd.openRecent%",
         "icon": "$(search)"
       },
@@ -349,7 +349,7 @@
           "group": "navigation@2"
         },
         {
-          "command": "workbench.action.openRecent",
+          "command": "git-worktree-manager.openRecent",
           "when": "view === git-worktree-manager-recent",
           "group": "navigation@1"
         }
