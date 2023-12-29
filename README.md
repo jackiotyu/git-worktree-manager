@@ -42,9 +42,6 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#requirements">Requirements</a></li>

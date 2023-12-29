@@ -1,3 +1,9 @@
+## [0.3.1] 2023-12-29
+
+### Change
+
+- Update README and some text.
+
 ## [0.3.1] 2023-12-12
 
 ### Change
