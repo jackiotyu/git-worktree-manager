@@ -1,4 +1,10 @@
-## [0.3.1] 2023-12-29
+## [0.3.3] 2024-01-02
+
+### Change
+
+- Improve refresh by watch .git folder's special file change.
+
+## [0.3.2] 2023-12-29
 
 ### Change
 
