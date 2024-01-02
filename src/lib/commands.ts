@@ -98,7 +98,6 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
     if (!created) {
         return;
     }
-    updateTreeDataEvent.fire();
     let confirmOpen = await confirmModal(
         vscode.l10n.t('Open folder'),
         vscode.l10n.t('Whether to open the new worktree in a new window?'),
@@ -156,7 +155,6 @@ const removeWorkTreeCmd = async (item?: WorkTreeItem) => {
         Alert.showErrorMessage(vscode.l10n.t('Worktree removal failed\n\n {0}', String(error)));
         logger.error(error);
     }
-    updateTreeDataEvent.fire();
 };
 
 const addWorkTreeFromBranchCmd = async (item?: WorkTreeItem) => {
@@ -218,7 +216,6 @@ const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {
         Alert.showErrorMessage(vscode.l10n.t('Worktree {0} failed {1}', cmdName, util.inspect(error, false, 1, true)));
         logger.error(error);
     }
-    updateTreeDataEvent.fire();
 };
 
 const repairWorkTreeCmd = (item?: WorkTreeItem) => {
@@ -257,7 +254,6 @@ const moveWorkTreeCmd = async (item?: WorkTreeItem) => {
         Alert.showErrorMessage(vscode.l10n.t('Worktree move failed \n\n {0}', String(error)));
         logger.error(error);
     }
-    updateTreeDataEvent.fire();
 };
 
 const switchToSelectFolderCmd = async (item?: WorkTreeItem) => {
@@ -297,7 +293,6 @@ const pruneWorkTreeCmd = async () => {
         Alert.showErrorMessage(vscode.l10n.t('Failed to prune worktree'));
         logger.error(error);
     }
-    updateTreeDataEvent.fire();
 };
 
 function openSettingCmd() {
@@ -564,7 +559,7 @@ const checkoutBranchCmd = async (item?: IWorktreeLess) => {
     actionProgressWrapper(
         vscode.l10n.t('Checkout branch ( {0} ) on {1}', checkoutText, selectedItem.path),
         () => checkoutBranch(selectedItem!.path, checkoutText, isBranch),
-        updateTreeDataEvent.fire.bind(updateTreeDataEvent),
+        () => {},
     );
 };
 

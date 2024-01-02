@@ -190,6 +190,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     async getChildren(element?: CommonWorkTreeItem | undefined): Promise<CommonWorkTreeItem[] | undefined> {
         if (!element) {
+            // TODO 使用worktreeEvent刷新数据
             if (!this.viewAsTree) {
                 let itemList = await Promise.all(
                     this.data.map(async (item) => {

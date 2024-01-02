@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { updateTreeDataEvent } from '@/lib/events';
 
 class WorkspaceFolderRoot implements vscode.Disposable {
     private _uri?: vscode.Uri;
@@ -8,7 +7,6 @@ class WorkspaceFolderRoot implements vscode.Disposable {
     constructor() {
         this._workspaceWatcher = vscode.workspace.onDidChangeWorkspaceFolders(() => {
             this.checkUri();
-            updateTreeDataEvent.fire();
         });
         this.checkUri();
     }

@@ -11,7 +11,12 @@ export const updateRecentEvent = new vscode.EventEmitter<void>();
 export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
 export const loadAllTreeDataEvent = new vscode.EventEmitter<ViewId>();
 export const revealTreeItemEvent = new vscode.EventEmitter<AllViewItem>();
+export const worktreeChangeEvent = new vscode.EventEmitter<vscode.Uri>();
 
+// TODO 需要精确到指定仓库
+worktreeChangeEvent.event(() => {
+    updateTreeDataEvent.fire();
+});
 
 export const collectEvent = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(
@@ -23,5 +28,6 @@ export const collectEvent = (context: vscode.ExtensionContext) => {
         toggleGitFolderViewAsEvent,
         loadAllTreeDataEvent,
         revealTreeItemEvent,
+        worktreeChangeEvent,
     );
 };

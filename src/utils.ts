@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
-import { treeDataEvent, updateTreeDataEvent } from '@/lib/events';
+import { treeDataEvent } from '@/lib/events';
 import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened } from '@/types';
 import * as cp from 'child_process';
 // 加载dayjs中文语言包
@@ -372,7 +372,7 @@ export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
     actionProgressWrapper(
         vscode.l10n.t('Pull commit ( {0} → {1} ) on {2}', `${remote}/${remoteRef}`, branch, cwd),
         () => executeGitCommandAuto(cwd, ['pull', remote, `${remoteRef}:${branch}`], token.token),
-        updateTreeDataEvent.fire.bind(updateTreeDataEvent),
+        () => {},
         token,
     );
 };
@@ -382,7 +382,7 @@ export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
     actionProgressWrapper(
         vscode.l10n.t('Push commit ( {0} → {1} ) on {2}', branch, `${remote}/${remoteRef}`, cwd),
         () => executeGitCommandAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
-        updateTreeDataEvent.fire.bind(updateTreeDataEvent),
+        () => {},
         token,
     );
 };
