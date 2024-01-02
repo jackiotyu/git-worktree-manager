@@ -3,7 +3,7 @@ import { worktreeChangeEvent } from '@/lib/events';
 import logger from '@/lib/logger';
 
 const worktreeGlob = 'worktrees/*/index,worktrees/*/HEAD,worktree/*/*_HEAD';
-const watcherGlob = `{config,index,HEAD,*_HEAD,${worktreeGlob}}`;
+const watcherGlob = `{config,index,refs/**,HEAD,*_HEAD,${worktreeGlob}}`;
 
 class WorktreeEvent implements vscode.Disposable {
     disposables: vscode.Disposable[] = [];
