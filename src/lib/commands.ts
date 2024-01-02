@@ -40,6 +40,7 @@ import { GitHistory } from '@/lib/adaptor/gitHistory';
 import { ILoadMoreItem, IFolderItemConfig, IWorktreeLess } from '@/types';
 import { actionProgressWrapper } from '@/lib/progress';
 import logger from '@/lib/logger';
+import { worktreeEventRegister } from '@/lib/gitEvent';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -354,6 +355,7 @@ const addToGitFolder = async (folderPath: string) => {
     }
     existFolders.push({ name: folderName, path: folderPath });
     await updateFolderConfig(existFolders);
+    worktreeEventRegister.add(vscode.Uri.file(folderPath));
     Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
 };
 
@@ -402,6 +404,7 @@ const removeGitFolderCmd = async (item: GitFolderItem) => {
     }
     folders = folders.filter((f) => f.path !== path);
     await updateFolderConfig(folders);
+    worktreeEventRegister.remove(vscode.Uri.file(path));
     Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
 };
 
