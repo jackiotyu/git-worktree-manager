@@ -108,7 +108,6 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeIte
                 this._onDidChangeTreeData.fire();
             }),
         );
-        this.refresh();
     }
     refresh() {
         updateTreeDataEvent.fire();

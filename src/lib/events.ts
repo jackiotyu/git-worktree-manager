@@ -13,7 +13,7 @@ export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
 export const loadAllTreeDataEvent = new vscode.EventEmitter<ViewId>();
 export const revealTreeItemEvent = new vscode.EventEmitter<AllViewItem>();
 export const worktreeChangeEvent = new vscode.EventEmitter<vscode.Uri>();
-export const changeUIVisibleEvent = new vscode.EventEmitter<{ type: TreeItemKind | QuickPickKind, visible: boolean }>();
+export const changeUIVisibleEvent = new vscode.EventEmitter<{ type: TreeItemKind | QuickPickKind; visible: boolean }>();
 
 // TODO 需要精确到指定仓库
 worktreeChangeEvent.event(() => {
@@ -24,6 +24,14 @@ const visibleSet = new Set();
 changeUIVisibleEvent.event((event) => {
     if (event.visible) visibleSet.add(event.type);
     else visibleSet.delete(event.type);
+
+    if (
+        event.visible &&
+        visibleSet.size === 1 &&
+        (event.type === TreeItemKind.worktree || event.type === TreeItemKind.gitFolder)
+    ) {
+        updateTreeDataEvent.fire();
+    }
 
     if (visibleSet.size === 0) {
         vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
