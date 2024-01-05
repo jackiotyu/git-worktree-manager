@@ -34,7 +34,7 @@ class WorktreeEventRegister implements vscode.Disposable {
             const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
             const folderPath = finalUri.fsPath;
             if (this.eventMap.has(folderPath)) return;
-            if(!fs.existsSync(folderPath)) return;
+            if (!fs.existsSync(folderPath)) return;
             logger.log(`'watching repository' ${folderPath}`);
             const worktreeEvent = new WorktreeEvent(finalUri);
             this.eventMap.set(folderPath, worktreeEvent);
@@ -48,7 +48,7 @@ class WorktreeEventRegister implements vscode.Disposable {
         success && logger.log(`'unwatch repository' ${folderPath}`);
     }
     dispose() {
-        this.eventMap.forEach(event => event.dispose());
+        this.eventMap.forEach((event) => event.dispose());
         this.eventMap.clear();
     }
 }

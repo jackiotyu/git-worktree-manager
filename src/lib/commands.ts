@@ -618,6 +618,19 @@ const openRecentCmd = () => {
     vscode.commands.executeCommand('workbench.action.openRecent');
 };
 
+const watchWorktreeEventCmd = () => {
+    // 手动打开监听
+    queueMicrotask(() => {
+        GlobalState.get('gitFolders', []).forEach((config) => {
+            worktreeEventRegister.add(vscode.Uri.file(config.path));
+        });
+    });
+};
+
+const unwatchWorktreeEventCmd = () => {
+    worktreeEventRegister.dispose();
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -670,6 +683,8 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
             vscode.commands.registerCommand(Commands.viewHistory, viewHistoryCmd),
             vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
+            vscode.commands.registerCommand(Commands.watchWorktreeEvent, watchWorktreeEventCmd),
+            vscode.commands.registerCommand(Commands.unwatchWorktreeEvent, unwatchWorktreeEventCmd),
         );
     }
 }

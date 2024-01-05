@@ -15,12 +15,6 @@ export function activate(context: vscode.ExtensionContext) {
     logger.log('git-worktree-manager is now active!');
     GlobalState.init(context);
     WorkspaceState.init(context);
-    // TODO 手动打开监听
-    process.nextTick(() => {
-        GlobalState.get('gitFolders', []).forEach((config) => {
-            worktreeEventRegister.add(vscode.Uri.file(config.path));
-        });
-    });
     Alert.init(context);
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
     vscode.window.registerFileDecorationProvider(new WorkTreeDecorator());

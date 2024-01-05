@@ -38,7 +38,10 @@ export enum Commands {
     loadMoreRecentFolder = 'git-worktree-manager.loadMoreRecentFolder',
     loadAllTreeData = 'git-worktree-manager.loadAllTreeData',
     viewHistory = 'git-worktree-manager.viewHistory',
-    openRecent = 'git-worktree-manager.openRecent'
+    openRecent = 'git-worktree-manager.openRecent',
+
+    watchWorktreeEvent = 'git-worktree-manager.internal.watchWorktreeEvent',
+    unwatchWorktreeEvent = 'git-worktree-manager.internal.unwatchWorktreeEvent',
 }
 
 export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';
@@ -47,6 +50,10 @@ export enum TreeItemKind {
     worktree = 'worktree',
     gitFolder = 'gitFolder',
     folder = 'folder',
+}
+
+export enum QuickPickKind {
+    pickWorktree = 'pickWorktree',
 }
 
 export type AlertLevel = 'warn' | 'info' | 'error';
