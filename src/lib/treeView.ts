@@ -8,7 +8,7 @@ import {
     toggleGitFolderViewAsEvent,
     loadAllTreeDataEvent,
     revealTreeItemEvent,
-    uiVisibleEvent,
+    changeUIVisibleEvent,
 } from '@/lib/events';
 import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
 import { getFolderIcon, judgeIncludeFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
@@ -370,10 +370,10 @@ export class TreeViewManager {
             gitFolderView,
             recentFolderView,
             worktreeView.onDidChangeVisibility(event => {
-                uiVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
+                changeUIVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
             }),
             gitFolderView.onDidChangeVisibility(event => {
-                uiVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
+                changeUIVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
             }),
         );
     }
