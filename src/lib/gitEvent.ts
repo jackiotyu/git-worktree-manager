@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { worktreeChangeEvent } from '@/lib/events';
 import logger from '@/lib/logger';
+import fs from 'fs';
 
 const worktreeGlob = 'worktrees/*/index';
 const watcherGlob = `{config,index,refs/remotes/**,${worktreeGlob}}`;
@@ -29,12 +30,15 @@ class WorktreeEvent implements vscode.Disposable {
 class WorktreeEventRegister implements vscode.Disposable {
     private eventMap: Map<string, WorktreeEvent> = new Map();
     add(uri: vscode.Uri) {
-        const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
-        const folderPath = finalUri.fsPath;
-        if (this.eventMap.has(folderPath)) return;
-        logger.log(`'watching repository' ${folderPath}`);
-        const worktreeEvent = new WorktreeEvent(finalUri);
-        this.eventMap.set(folderPath, worktreeEvent);
+        try {
+            const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
+            const folderPath = finalUri.fsPath;
+            if (this.eventMap.has(folderPath)) return;
+            if (!fs.existsSync(folderPath)) return;
+            logger.log(`'watching repository' ${folderPath}`);
+            const worktreeEvent = new WorktreeEvent(finalUri);
+            this.eventMap.set(folderPath, worktreeEvent);
+        } catch {}
     }
     remove(uri: vscode.Uri) {
         const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
@@ -44,7 +48,7 @@ class WorktreeEventRegister implements vscode.Disposable {
         success && logger.log(`'unwatch repository' ${folderPath}`);
     }
     dispose() {
-        this.eventMap.forEach(event => event.dispose());
+        this.eventMap.forEach((event) => event.dispose());
         this.eventMap.clear();
     }
 }

@@ -10,11 +10,11 @@ import {
 } from '@/utils';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import { IWorkTreeCacheItem, IFolderItemConfig, DefaultDisplayList, IWorktreeLess } from '@/types';
-import { Commands, APP_NAME } from '@/constants';
+import { Commands, APP_NAME, QuickPickKind } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
 import folderRoot from '@/lib/folderRoot';
-import { updateTreeDataEvent } from '@/lib/events';
+import { updateTreeDataEvent, changeUIVisibleEvent } from '@/lib/events';
 import path from 'path';
 import {
     openExternalTerminalQuickInputButton,
@@ -529,10 +529,12 @@ export const pickWorktree = async () => {
             disposables.forEach((i) => i.dispose());
             disposables.length = 0;
             quickPick.dispose();
+            changeUIVisibleEvent.fire({ type: QuickPickKind.pickWorktree, visible: false });
         });
         disposables.push(onDidAccept, onDidHide, onDidTriggerButton, onDidTriggerItemButton, initEvent);
         quickPick.busy = true;
         quickPick.show();
+        changeUIVisibleEvent.fire({ type: QuickPickKind.pickWorktree, visible: true });
         list = GlobalState.get('workTreeCache', []);
         workspaceList = WorkspaceState.get('workTreeCache', []);
         updateList();

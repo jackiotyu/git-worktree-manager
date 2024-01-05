@@ -8,6 +8,7 @@ import {
     toggleGitFolderViewAsEvent,
     loadAllTreeDataEvent,
     revealTreeItemEvent,
+    changeUIVisibleEvent,
 } from '@/lib/events';
 import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
 import { getFolderIcon, judgeIncludeFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
@@ -107,7 +108,6 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeIte
                 this._onDidChangeTreeData.fire();
             }),
         );
-        this.refresh();
     }
     refresh() {
         updateTreeDataEvent.fire();
@@ -350,6 +350,8 @@ export class TreeViewManager {
         const recentFolderView = vscode.window.createTreeView(RecentFoldersDataProvider.id, {
             treeDataProvider: new RecentFoldersDataProvider(context),
         });
+
+
         // FIXME 需要选中treeItem才能保证`revealFileInOS`和`openInTerminal`成功执行
         revealTreeItemEvent.event((item) => {
             switch (item.type) {
@@ -362,6 +364,16 @@ export class TreeViewManager {
                     return worktreeView.reveal(item, { focus: true, select: true });
             }
         });
-        context.subscriptions.push(worktreeView, gitFolderView, recentFolderView);
+        context.subscriptions.push(
+            worktreeView,
+            gitFolderView,
+            recentFolderView,
+            worktreeView.onDidChangeVisibility(event => {
+                changeUIVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
+            }),
+            gitFolderView.onDidChangeVisibility(event => {
+                changeUIVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
+            }),
+        );
     }
 }
