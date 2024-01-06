@@ -8,7 +8,7 @@ const watcherGlob = `{config,index,refs/remotes/**,${worktreeGlob}}`;
 
 class WorktreeEvent implements vscode.Disposable {
     disposables: vscode.Disposable[] = [];
-    constructor(private readonly uri: vscode.Uri) {
+    constructor(readonly uri: vscode.Uri) {
         const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(this.uri, watcherGlob));
         this.disposables.push(
             watcher,
@@ -48,7 +48,7 @@ class WorktreeEventRegister implements vscode.Disposable {
         success && logger.log(`'unwatch repository' ${folderPath}`);
     }
     dispose() {
-        this.eventMap.forEach((event) => event.dispose());
+        this.eventMap.forEach((event) => this.remove(event.uri));
         this.eventMap.clear();
     }
 }
