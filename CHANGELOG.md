@@ -1,3 +1,9 @@
+## [0.3.4] 2024-01-08
+
+### Change
+
+- Clean up file watcher when idle to reduce memory footprint.
+
 ## [0.3.3] 2024-01-02
 
 ### Change
