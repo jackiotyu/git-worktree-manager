@@ -7,7 +7,7 @@ const worktreeGlob = 'worktrees/*/index';
 const watcherGlob = `{config,index,refs/remotes/**,${worktreeGlob}}`;
 
 class WorktreeEvent implements vscode.Disposable {
-    disposables: vscode.Disposable[] = [];
+    private disposables: vscode.Disposable[] = [];
     constructor(readonly uri: vscode.Uri) {
         const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(this.uri, watcherGlob));
         this.disposables.push(
@@ -16,6 +16,7 @@ class WorktreeEvent implements vscode.Disposable {
             watcher.onDidCreate(this.onChange),
             watcher.onDidDelete(this.onChange),
         );
+        logger.log(`'watching repository' ${this.uri.fsPath}`);
     }
     onChange(event: vscode.Uri) {
         logger.log(`'repository change' ${event.fsPath}`);
@@ -24,6 +25,7 @@ class WorktreeEvent implements vscode.Disposable {
     dispose() {
         this.disposables.forEach((i) => i.dispose());
         this.disposables.length = 0;
+        logger.log(`'unwatch repository' ${this.uri.fsPath}`);
     }
 }
 
@@ -35,7 +37,6 @@ class WorktreeEventRegister implements vscode.Disposable {
             const folderPath = finalUri.fsPath;
             if (this.eventMap.has(folderPath)) return;
             if (!fs.existsSync(folderPath)) return;
-            logger.log(`'watching repository' ${folderPath}`);
             const worktreeEvent = new WorktreeEvent(finalUri);
             this.eventMap.set(folderPath, worktreeEvent);
         } catch {}
@@ -44,11 +45,10 @@ class WorktreeEventRegister implements vscode.Disposable {
         const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
         const folderPath = finalUri.fsPath;
         this.eventMap.get(folderPath)?.dispose();
-        const success = this.eventMap.delete(folderPath);
-        success && logger.log(`'unwatch repository' ${folderPath}`);
+        this.eventMap.delete(folderPath);
     }
     dispose() {
-        this.eventMap.forEach((event) => this.remove(event.uri));
+        this.eventMap.forEach((event) => event.dispose());
         this.eventMap.clear();
     }
 }
