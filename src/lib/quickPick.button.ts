@@ -65,3 +65,8 @@ export const moreQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('three-bars'),
     tooltip: vscode.l10n.t('More actions...'),
 };
+
+export const viewHistoryQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('history'),
+    tooltip: vscode.l10n.t('View git history'),
+};

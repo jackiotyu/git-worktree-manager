@@ -790,6 +790,12 @@
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.worktreePick.showCheckout.description%"
+          },
+          "git-worktree-manager.worktreePick.showViewHistory": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "%config.worktreePick.showViewHistory.description%"
           }
         }
       }

@@ -33,6 +33,7 @@ import {
     backButton,
     addWorktreeQuickInputButton,
     moreQuickInputButton,
+    viewHistoryQuickInputButton,
 } from './quickPick.button';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
@@ -205,6 +206,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     const showCopy = config.get<boolean>('worktreePick.showCopy', false);
     const showAddToWorkspace = config.get<boolean>('worktreePick.showAddToWorkspace', false);
     const showCheckout = config.get<boolean>('worktreePick.showCheckout', true);
+    const showViewHistory = config.get<boolean>('worktreePick.showViewHistory', true);
 
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
@@ -232,6 +234,10 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             {
                 button: addToWorkspaceQuickInputButton,
                 show: !isCurrent && showAddToWorkspace,
+            },
+            {
+                button: viewHistoryQuickInputButton,
+                show: showViewHistory,
             },
             {
                 button: moreQuickInputButton,
@@ -460,6 +466,10 @@ export const pickWorktree = async () => {
                     quickPick.hide();
                     vscode.commands.executeCommand(Commands.addToWorkspace, viewItem);
                     break;
+                case viewHistoryQuickInputButton:
+                    quickPick.hide();
+                    vscode.commands.executeCommand(Commands.viewHistory, viewItem);
+                    break;
                 case copyItemQuickInputButton:
                     const template = vscode.workspace
                         .getConfiguration(APP_NAME)
@@ -553,7 +563,8 @@ interface QuickPickAction extends vscode.QuickPickItem {
         | Commands.openTerminal
         | Commands.openExternalTerminalContext
         | Commands.revealInSystemExplorerContext
-        | Commands.addToWorkspace;
+        | Commands.addToWorkspace
+        | Commands.viewHistory;
 }
 
 export const pickAction = async (viewItem: IWorktreeLess) => {
@@ -596,6 +607,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
                     case Commands.openExternalTerminalContext:
                     case Commands.openTerminal:
                     case Commands.revealInSystemExplorerContext:
+                    case Commands.viewHistory:
                         await vscode.commands.executeCommand(item.action, viewItem);
                         break;
                     case Commands.addToWorkspace:
@@ -660,6 +672,11 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
                 label: vscode.l10n.t('Copy • {0}', vscode.l10n.t('folder Path')),
                 description: viewItem.path,
                 action: 'copy',
+            },
+            {
+                iconPath: new vscode.ThemeIcon('history'),
+                label: vscode.l10n.t('View git history'),
+                action: Commands.viewHistory,
             },
             {
                 iconPath: new vscode.ThemeIcon('terminal-bash'),
