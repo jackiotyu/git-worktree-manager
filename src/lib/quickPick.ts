@@ -253,7 +253,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
         return {
             label: row.name,
             detail: `${row.path}`,
-            description: `⇄ ${row.label}`,
+            description: `⇄ ${row.label}${row.isMain ? ' ✨' : ''}`,
             path: row.path,
             key: row.label,
             iconPath: isCurrent ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
