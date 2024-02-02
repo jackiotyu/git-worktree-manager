@@ -1,3 +1,10 @@
+## [0.3.5] 2024-02-02
+
+### Change
+
+- Show `View git history` button in worktree quick pick for quick actions.
+- Show main folder emoji(✨) in worktree quick pick items.
+
 ## [0.3.4] 2024-01-08
 
 ### Change
