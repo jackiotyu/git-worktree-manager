@@ -621,6 +621,10 @@
           "when": "false"
         },
         {
+          "command": "git-worktree-manager.addToWorkspace",
+          "when": "false"
+        },
+        {
           "command": "git-worktree-manager.loadAllTreeData",
           "when": "false"
         },
