@@ -154,8 +154,8 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
             });
         }
     }
-    getParent(element: WorkTreeItem): vscode.ProviderResult<WorkTreeItem> {
-        return void 0;
+    getParent(element: WorkTreeItem): vscode.ProviderResult<WorkspaceMainGitFolderItem> {
+        return element.parent as WorkspaceMainGitFolderItem;
     }
 }
 

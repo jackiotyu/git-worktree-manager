@@ -256,7 +256,7 @@ const moveWorkTreeCmd = async (item?: WorkTreeItem) => {
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
-            defaultUri: folderRoot.uri,
+            defaultUri: vscode.Uri.file(path.dirname(item.path)),
             openLabel: vscode.l10n.t('Select the folder'),
             title: vscode.l10n.t(`Select the new location to move the Worktree's folder from {0}`, item.path),
         });
