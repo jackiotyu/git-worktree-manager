@@ -24,11 +24,15 @@ export class WorkTreeItem extends vscode.TreeItem {
     path: string;
     name: string;
     readonly type = TreeItemKind.worktree;
-    parent?: GitFolderItem;
+    parent?: GitFolderItem | WorkspaceMainGitFolderItem;
     remoteRef?: string;
     remote?: string;
     isBranch?: boolean;
-    constructor(item: IWorkTreeDetail, collapsible: vscode.TreeItemCollapsibleState, parent?: GitFolderItem) {
+    constructor(
+        item: IWorkTreeDetail,
+        collapsible: vscode.TreeItemCollapsibleState,
+        parent?: GitFolderItem | WorkspaceMainGitFolderItem,
+    ) {
         let finalName = item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
         super(finalName, collapsible);
         this.description = `${item.isMain ? '✨ ' : ''}${item.ahead ? `${item.ahead}↑ ` : ''}${
@@ -98,8 +102,13 @@ export class WorkTreeItem extends vscode.TreeItem {
 }
 
 export class WorkspaceMainGitFolderItem extends vscode.TreeItem {
-   readonly type = TreeItemKind.workspaceGitMainFolder;
-   label?: string;
+    readonly type = TreeItemKind.workspaceGitMainFolder;
+    label?: string;
+    path: string;
+    constructor(label: string, collapsible: vscode.TreeItemCollapsibleState) {
+        super(label, collapsible);
+        this.path = label;
+    }
 }
 
 export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkspaceMainGitFolderItem | WorkTreeItem> {
@@ -120,26 +129,28 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
         return element;
     }
 
-    async getChildren(element?: WorkspaceMainGitFolderItem | undefined): Promise<WorkspaceMainGitFolderItem[] | WorkTreeItem[] | null | undefined> {
+    async getChildren(
+        element?: WorkspaceMainGitFolderItem | undefined,
+    ): Promise<WorkspaceMainGitFolderItem[] | WorkTreeItem[] | null | undefined> {
         if (!element) {
             const workspaceFolderNum = folderRoot.folderPathSet.size;
             const mainFolders = WorkspaceState.get('mainFolders', []);
-            if(workspaceFolderNum === 1 || mainFolders.length === 1) {
+            if (workspaceFolderNum === 1 || mainFolders.length === 1) {
                 const data = await getWorkTreeList(mainFolders[0]?.path);
-                return data.map(item => {
+                return data.map((item) => {
                     return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
                 });
             } else {
-                return mainFolders.map(item => {
+                return mainFolders.map((item) => {
                     return new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded);
                 });
             }
         }
 
-        if(element.type === TreeItemKind.workspaceGitMainFolder) {
+        if (element.type === TreeItemKind.workspaceGitMainFolder) {
             const data = await getWorkTreeList(element.label);
-            return data.map(item => {
-                return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
+            return data.map((item) => {
+                return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
             });
         }
     }
@@ -246,7 +257,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             // 延迟获取pull/push提交数
             const loaded = this.loadedMap.has(element.path);
             let list = await getWorkTreeList(element.path, !loaded);
-            if(!loaded) {
+            if (!loaded) {
                 this.loadedMap.set(element.path, true);
                 setImmediate(() => {
                     this._onDidChangeTreeData.fire(element);
@@ -263,7 +274,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         return element;
     }
     getParent(element: CommonWorkTreeItem): vscode.ProviderResult<CommonWorkTreeItem> {
-        return element.parent;
+        return element.parent as GitFolderItem;
     }
 }
 
@@ -333,8 +344,8 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     async getChildren(element?: RecentFolderItem | undefined): Promise<RecentFolderItem[]> {
         let folders = await getRecentFolders();
         let itemList = folders
-        .slice(0, this.pageNo * this.pageSize)
-        .map<IRecentFolderConfig>((item) => {
+            .slice(0, this.pageNo * this.pageSize)
+            .map<IRecentFolderConfig>((item) => {
                 return {
                     name: item.label || path.basename(item.folderUri.fsPath),
                     path: item.folderUri.fsPath,
@@ -373,7 +384,6 @@ export class TreeViewManager {
             treeDataProvider: new RecentFoldersDataProvider(context),
         });
 
-
         // FIXME 需要选中treeItem才能保证`revealFileInOS`和`openInTerminal`成功执行
         revealTreeItemEvent.event((item) => {
             switch (item.type) {
@@ -382,7 +392,8 @@ export class TreeViewManager {
                 case TreeItemKind.gitFolder:
                     return gitFolderView.reveal(item, { focus: true, select: true });
                 case TreeItemKind.worktree:
-                    if (item.parent) return gitFolderView.reveal(item, { focus: true, select: true });
+                    if (item.parent?.type === TreeItemKind.gitFolder)
+                        {return gitFolderView.reveal(item, { focus: true, select: true });}
                     return worktreeView.reveal(item, { focus: true, select: true });
             }
         });
@@ -390,10 +401,10 @@ export class TreeViewManager {
             worktreeView,
             gitFolderView,
             recentFolderView,
-            worktreeView.onDidChangeVisibility(event => {
+            worktreeView.onDidChangeVisibility((event) => {
                 changeUIVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
             }),
-            gitFolderView.onDidChangeVisibility(event => {
+            gitFolderView.onDidChangeVisibility((event) => {
                 changeUIVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
             }),
         );
