@@ -105,12 +105,16 @@ export class WorkspaceMainGitFolderItem extends vscode.TreeItem {
     readonly type = TreeItemKind.workspaceGitMainFolder;
     label?: string;
     path: string;
+    name: string;
     constructor(label: string, collapsible: vscode.TreeItemCollapsibleState) {
-        super(path.basename(label), collapsible);
+        const name = path.basename(label);
+        super(name, collapsible);
         this.path = label;
+        this.name = name;
         this.description = label;
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', label));
+        this.contextValue = `git-worktree-manager.workspaceGitMainFolder`;
     }
 }
 

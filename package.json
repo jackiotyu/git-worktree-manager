@@ -385,6 +385,11 @@
           "group": "file-action@1"
         },
         {
+          "command": "git-worktree-manager.addWorkTree",
+          "when": "viewItem =~ /git-worktree-manager\\.(workspaceGitMainFolder|gitFolderItem)/",
+          "group": "inline@2"
+        },
+        {
           "command": "git-worktree-manager.switchToSelectFolder",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "inline@100"
