@@ -1,3 +1,10 @@
+## [0.3.6] 2024-02-18
+
+### Change
+
+- Quick add/remove worktree in workspace.
+- Update list after workspace folders change.
+
 ## [0.3.5] 2024-02-02
 
 ### Change

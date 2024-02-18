@@ -134,6 +134,7 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 - [x] Quick view git history.
 - [x] Display git branch status.
 - [x] Quick pull/push branch.
+- [x] Quick add/remove worktree in workspace.
 - [ ] Git repository snapshot.
 - [ ] Multi-language Support.
     - [x] Chinese.
