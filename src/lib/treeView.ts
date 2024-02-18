@@ -106,8 +106,11 @@ export class WorkspaceMainGitFolderItem extends vscode.TreeItem {
     label?: string;
     path: string;
     constructor(label: string, collapsible: vscode.TreeItemCollapsibleState) {
-        super(label, collapsible);
+        super(path.basename(label), collapsible);
         this.path = label;
+        this.description = label;
+        this.tooltip = new vscode.MarkdownString('', true);
+        this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', label));
     }
 }
 
@@ -148,7 +151,7 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
         }
 
         if (element.type === TreeItemKind.workspaceGitMainFolder) {
-            const data = await getWorkTreeList(element.label);
+            const data = await getWorkTreeList(element.path);
             return data.map((item) => {
                 return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None, element);
             });
