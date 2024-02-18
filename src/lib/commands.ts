@@ -33,7 +33,7 @@ import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
 import type { WorkTreeItem, GitFolderItem, FolderItem, AllViewItem } from '@/lib/treeView';
-import { GlobalState } from '@/lib/globalState';
+import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
@@ -636,8 +636,14 @@ const openRecentCmd = () => {
 const watchWorktreeEventCmd = () => {
     // 手动打开监听
     queueMicrotask(() => {
-        GlobalState.get('gitFolders', []).forEach((config) => {
-            worktreeEventRegister.add(vscode.Uri.file(config.path));
+        const folders = [
+            ...new Set([
+                ...WorkspaceState.get('mainFolders', []).map((i) => i.path),
+                ...GlobalState.get('gitFolders', []).map((i) => i.path),
+            ]),
+        ];
+        folders.forEach((folderPath) => {
+            worktreeEventRegister.add(vscode.Uri.file(folderPath));
         });
     });
 };
