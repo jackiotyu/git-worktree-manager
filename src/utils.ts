@@ -442,6 +442,6 @@ export const pickGitFolder = async (): Promise<string | undefined> => {
         });
         return folderPath;
     } else {
-        folderRoot.uri?.fsPath;
+        return folderRoot.uri?.fsPath;
     }
 };
