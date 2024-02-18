@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/lib/events';
 import folderRoot from '@/lib/folderRoot';
-import { getWorkTreeList } from '@/utils';
+import { updateWorkspaceMainFolders } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import { Alert } from '@/lib/adaptor/window';
@@ -19,12 +19,16 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
     vscode.window.registerFileDecorationProvider(new WorkTreeDecorator());
     const updateHandler = updateTreeDataEvent.event(
-        throttle(async () => treeDataEvent.fire((await getWorkTreeList())), 1000, { trailing: true, leading: true }),
+        throttle(async () => {
+            await updateWorkspaceMainFolders();
+            treeDataEvent.fire();
+        }, 1000, { trailing: true, leading: true }),
     );
+    const workspaceFoldersChangeEvent = vscode.workspace.onDidChangeWorkspaceFolders(() => updateTreeDataEvent.fire());
     CommandsManger.register(context);
     TreeViewManager.register(context);
     collectEvent(context);
-    context.subscriptions.push(folderRoot, updateHandler, logger, worktreeEventRegister);
+    context.subscriptions.push(folderRoot, updateHandler, logger, worktreeEventRegister, workspaceFoldersChangeEvent);
 }
 
 export function deactivate() {}

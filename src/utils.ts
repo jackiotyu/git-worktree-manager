@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import folderRoot from '@/lib/folderRoot';
 import { treeDataEvent } from '@/lib/events';
-import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened } from '@/types';
+import { IWorkTreeOutputItem, IWorkTreeDetail, IRecentlyOpened, IFolderItemConfig, IWorkTreeCacheItem } from '@/types';
 import * as cp from 'child_process';
 // 加载dayjs中文语言包
 import 'dayjs/locale/zh-cn';
@@ -9,10 +9,12 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as util from 'util';
 import fs from 'fs/promises';
+import path from 'path';
 import { Alert } from '@/lib/adaptor/window';
 import { actionProgressWrapper } from '@/lib/progress';
 import treeKill = require('tree-kill');
 import logger from './lib/logger';
+import { GlobalState, WorkspaceState } from '@/lib/globalState';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -393,7 +395,7 @@ export const addToWorkspace = (path: string) => {
         name: path,
     });
     if (success) {
-        treeDataEvent.fire([]);
+        treeDataEvent.fire();
     }
 };
 
@@ -432,16 +434,61 @@ export const getWorktreeStatus = (item: IWorkTreeDetail) => {
     return 'upToDate';
 };
 
+const getWorkspaceMainFolders = async (): Promise<IFolderItemConfig[]> => {
+    const list = await Promise.all([...folderRoot.folderPathSet].map(async (folder) => await getMainFolder(folder)));
+    const folders = [...new Set(list.filter((i) => i))].map((folder) => ({
+        name: path.basename(folder),
+        path: folder,
+    }));
+    return folders;
+};
+
 export const pickGitFolder = async (): Promise<string | undefined> => {
-    const folderPathSet = folderRoot.folderPathSet;
-    if(folderPathSet.size > 1) {
-        const items = [...folderPathSet.values()];
+    const mainFolders = WorkspaceState.get('mainFolders', []).map(i => i.path);
+    if(mainFolders.length > 1) {
+        const items = [...mainFolders];
         const folderPath = await vscode.window.showQuickPick(items, {
             title: vscode.l10n.t('Select git repository for create worktree'),
             canPickMany: false,
         });
         return folderPath;
     } else {
-        return folderRoot.uri?.fsPath;
+        return mainFolders[0];
     }
+};
+
+export const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorkTreeCacheItem[]> => {
+    const worktreeList = await Promise.all(
+        gitFolders.map(async (item) => {
+            const list = await getWorkTreeList(item.path, true);
+            return [list, item] as const;
+        }),
+    );
+    return worktreeList
+        .map(([list, config]) => {
+            return list.map<IWorkTreeCacheItem>((row) => {
+                return { ...row, label: config.name };
+            });
+        })
+        .flat();
+};
+
+export const updateWorkspaceMainFolders = async () => {
+    const folders = await getWorkspaceMainFolders();
+    WorkspaceState.update('mainFolders', folders);
+};
+
+export const updateWorkTreeCache = async () => {
+    const gitFolders = GlobalState.get('gitFolders', []);
+    let list: IWorkTreeCacheItem[] = await gitFolderToCaches(gitFolders);
+    GlobalState.update('workTreeCache', list);
+};
+
+export const updateWorkspaceListCache = async () => {
+    if(WorkspaceState.get('mainFolders', []).length === 0) {
+        await updateWorkspaceMainFolders();
+    }
+    const mainFolders = WorkspaceState.get('mainFolders', []);
+    const cache = await gitFolderToCaches(mainFolders);
+    WorkspaceState.update('workTreeCache', cache);
 };

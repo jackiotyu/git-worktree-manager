@@ -46,10 +46,12 @@ export class WorkspaceState {
         });
     }
     static get(key: 'workTreeCache', defaultValue: IWorkTreeCacheItem[]): IWorkTreeCacheItem[];
+    static get(key: 'mainFolders', defaultValue: IFolderItemConfig[]): IFolderItemConfig[];
     static get<T>(key: string, defaultValue: T): T {
         return this.state.get<T>(key, defaultValue);
     }
     static update(key: 'workTreeCache', value: IWorkTreeCacheItem[]): Thenable<void>;
+    static update(key: 'mainFolders', value: IFolderItemConfig[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {
             globalStateEvent.fire();

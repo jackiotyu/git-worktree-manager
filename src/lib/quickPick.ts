@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import {
     formatTime,
-    getWorkTreeList,
     checkGitValid,
     getAllRefList,
     judgeIncludeFolder,
     getLashCommitDetail,
-    getMainFolder,
+    updateWorkTreeCache,
+    updateWorkspaceListCache,
 } from '@/utils';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import { IWorkTreeCacheItem, IFolderItemConfig, DefaultDisplayList, IWorktreeLess } from '@/types';
@@ -273,38 +273,6 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
         }
         return list;
     }, []);
-};
-
-const updateWorkTreeCache = async () => {
-    const gitFolders = GlobalState.get('gitFolders', []);
-    let list: IWorkTreeCacheItem[] = await gitFolderToCaches(gitFolders);
-    GlobalState.update('workTreeCache', list);
-};
-
-const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorkTreeCacheItem[]> => {
-    const worktreeList = await Promise.all(
-        gitFolders.map(async (item) => {
-            const list = await getWorkTreeList(item.path, true);
-            return [list, item] as const;
-        }),
-    );
-    return worktreeList
-        .map(([list, config]) => {
-            return list.map<IWorkTreeCacheItem>((row) => {
-                return { ...row, label: config.name };
-            });
-        })
-        .flat();
-};
-
-const updateWorkspaceListCache = async () => {
-    const list = await Promise.all([...folderRoot.folderPathSet].map(async (folder) => await getMainFolder(folder)));
-    const folders = [...new Set(list.filter((i) => i))].map((folder) => ({
-        name: path.basename(folder),
-        path: folder,
-    }));
-    const cache = await gitFolderToCaches(folders);
-    WorkspaceState.update('workTreeCache', cache);
 };
 
 export const pickWorktree = async () => {

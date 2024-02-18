@@ -48,6 +48,7 @@ export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';
 
 export enum TreeItemKind {
     worktree = 'worktree',
+    workspaceGitMainFolder = 'workspaceGitMainFolder',
     gitFolder = 'gitFolder',
     folder = 'folder',
 }

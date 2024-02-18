@@ -13,7 +13,8 @@ import {
 import { IWorkTreeDetail, ILoadMoreItem, IFolderItemConfig, IRecentFolderConfig } from '@/types';
 import { getFolderIcon, judgeIncludeFolder, getWorkTreeList, getRecentFolders, getWorktreeStatus } from '@/utils';
 import { TreeItemKind, APP_NAME, Commands, ViewId, WORK_TREE_SCHEME } from '@/constants';
-import { GlobalState } from '@/lib/globalState';
+import { GlobalState, WorkspaceState } from '@/lib/globalState';
+import folderRoot from '@/lib/folderRoot';
 import throttle from 'lodash/throttle';
 import debounce from 'lodash/debounce';
 import path from 'path';
@@ -96,15 +97,18 @@ export class WorkTreeItem extends vscode.TreeItem {
     }
 }
 
-export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeItem> {
+export class WorkspaceMainGitFolderItem extends vscode.TreeItem {
+   readonly type = TreeItemKind.workspaceGitMainFolder;
+   label?: string;
+}
+
+export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkspaceMainGitFolderItem | WorkTreeItem> {
     static readonly id = ViewId.worktreeList;
-    private data: IWorkTreeDetail[] = [];
     private _onDidChangeTreeData = new vscode.EventEmitter<void>();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
     constructor(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            treeDataEvent.event((treeList) => {
-                this.data = treeList;
+            treeDataEvent.event(() => {
                 this._onDidChangeTreeData.fire();
             }),
         );
@@ -112,14 +116,32 @@ export class WorkTreeDataProvider implements vscode.TreeDataProvider<WorkTreeIte
     refresh() {
         updateTreeDataEvent.fire();
     }
-    getTreeItem(element: WorkTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    getTreeItem(element: WorkspaceMainGitFolderItem | WorkTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
 
-    getChildren(element?: WorkTreeItem | undefined): vscode.ProviderResult<WorkTreeItem[]> {
-        return this.data.map((item) => {
-            return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
-        });
+    async getChildren(element?: WorkspaceMainGitFolderItem | undefined): Promise<WorkspaceMainGitFolderItem[] | WorkTreeItem[] | null | undefined> {
+        if (!element) {
+            const workspaceFolderNum = folderRoot.folderPathSet.size;
+            const mainFolders = WorkspaceState.get('mainFolders', []);
+            if(workspaceFolderNum === 1 || mainFolders.length === 1) {
+                const data = await getWorkTreeList(mainFolders[0]?.path);
+                return data.map(item => {
+                    return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
+                });
+            } else {
+                return mainFolders.map(item => {
+                    return new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded);
+                });
+            }
+        }
+
+        if(element.type === TreeItemKind.workspaceGitMainFolder) {
+            const data = await getWorkTreeList(element.label);
+            return data.map(item => {
+                return new WorkTreeItem(item, vscode.TreeItemCollapsibleState.None);
+            });
+        }
     }
     getParent(element: WorkTreeItem): vscode.ProviderResult<WorkTreeItem> {
         return void 0;

@@ -121,7 +121,7 @@ const createWorkTreeFromInfo = async (info: {
 
 export const addWorkTreeCmd = async () => {
     const gitFolder = await pickGitFolder();
-    if (!gitFolder) return;
+    if (!gitFolder) return false;
     let branchItem = await pickBranch(
         vscode.l10n.t('Create Worktree for'),
         vscode.l10n.t('Choose a branch to create new worktree for'),

@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
-import { IWorkTreeDetail } from '@/types';
 import { ViewId, TreeItemKind, QuickPickKind } from '@/constants';
 import type { AllViewItem } from '@/lib/treeView';
 import { Commands } from '@/constants';
 
-export const treeDataEvent = new vscode.EventEmitter<IWorkTreeDetail[]>();
+export const treeDataEvent = new vscode.EventEmitter<void>();
 export const updateTreeDataEvent = new vscode.EventEmitter<void>();
 export const updateFolderEvent = new vscode.EventEmitter<void>();
 export const globalStateEvent = new vscode.EventEmitter<void>();
