@@ -26,6 +26,7 @@ import {
     getNameRev,
     getMainFolder,
     comparePath,
+    pickGitFolder,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -86,8 +87,14 @@ export const refreshWorkTreeCmd = () => {
     updateTreeDataEvent.fire();
 };
 
-const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; label: string; isBranch: boolean }) => {
-    const { folderPath, name, label, isBranch } = info;
+const createWorkTreeFromInfo = async (info: {
+    folderPath: string;
+    name: string;
+    label: string;
+    isBranch: boolean;
+    cwd?: string;
+}) => {
+    const { folderPath, name, label, isBranch, cwd } = info;
     let confirmCreate = await confirmModal(
         vscode.l10n.t('Create worktree'),
         vscode.l10n.t('A worktree with {1} {2} is created under {0}', folderPath, label, name),
@@ -95,7 +102,7 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
     if (!confirmCreate) {
         return;
     }
-    let created = await addWorkTree(folderPath, name, isBranch);
+    let created = await addWorkTree(folderPath, name, isBranch, cwd);
     if (!created) {
         return;
     }
@@ -113,16 +120,22 @@ const createWorkTreeFromInfo = async (info: { folderPath: string; name: string; 
 };
 
 export const addWorkTreeCmd = async () => {
-    let branchItem = await pickBranch();
+    const gitFolder = await pickGitFolder();
+    if (!gitFolder) return;
+    let branchItem = await pickBranch(
+        vscode.l10n.t('Create Worktree for'),
+        vscode.l10n.t('Choose a branch to create new worktree for'),
+        gitFolder,
+    );
     // FIXME 改造quickPick
-    if(branchItem === void 0) return;
+    if (branchItem === void 0) return;
     if (!branchItem) return false;
     let { branch, hash } = branchItem;
     let uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
-        defaultUri: folderRoot.uri,
+        defaultUri: vscode.Uri.file(gitFolder),
         openLabel: vscode.l10n.t('Select the folder'),
         title: vscode.l10n.t('Select the folder where you want to create the worktree?'),
     });
@@ -137,6 +150,7 @@ export const addWorkTreeCmd = async () => {
         label,
         folderPath,
         isBranch: !!branch,
+        cwd: gitFolder,
     });
 };
 
@@ -152,6 +166,7 @@ const removeWorkTreeCmd = async (item?: WorkTreeItem) => {
         }
         await removeWorkTree(item.path, item.parent?.path);
         Alert.showInformationMessage(vscode.l10n.t('Successfully deleted the worktree for the {0} folder', item.path));
+        vscode.commands.executeCommand(Commands.refreshWorkTree);
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Worktree removal failed\n\n {0}', String(error)));
         logger.error(error);
@@ -555,7 +570,7 @@ const checkoutBranchCmd = async (item?: IWorktreeLess) => {
         selectedItem.path,
     );
     // FIXME 改造quickPick
-    if(branchItem === void 0) return;
+    if (branchItem === void 0) return;
     if (!branchItem) return false;
     const checkoutText = branchItem.branch || branchItem.hash || '';
     const isBranch = !!branchItem.branch;

@@ -86,5 +86,6 @@
     "template content": "模板内容",
     "folder Path": "目录路径",
     "ref name": "引用名称",
-    "View git history": "查看 git 历史"
+    "View git history": "查看 git 历史",
+    "Select git repository for create worktree": "请选择用于创建 worktree 的 git 仓库"
 }

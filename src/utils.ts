@@ -431,3 +431,17 @@ export const getWorktreeStatus = (item: IWorkTreeDetail) => {
     if (item.behind) return 'behind';
     return 'upToDate';
 };
+
+export const pickGitFolder = async (): Promise<string | undefined> => {
+    const folderPathSet = folderRoot.folderPathSet;
+    if(folderPathSet.size > 1) {
+        const items = [...folderPathSet.values()];
+        const folderPath = await vscode.window.showQuickPick(items, {
+            title: vscode.l10n.t('Select git repository for create worktree'),
+            canPickMany: false,
+        });
+        return folderPath;
+    } else {
+        folderRoot.uri?.fsPath;
+    }
+};

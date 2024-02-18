@@ -42,8 +42,8 @@ interface BranchForWorkTree extends vscode.QuickPickItem {
 }
 
 export const pickBranch = async (
-    title: string = vscode.l10n.t('Create Worktree for'),
-    placeholder: string = vscode.l10n.t('Choose a branch to create new worktree for'),
+    title: string,
+    placeholder: string,
     cwd?: string,
 ): Promise<BranchForWorkTree | void | false> => {
     let resolve: (value: BranchForWorkTree | void | false) => void = () => {};
