@@ -158,8 +158,12 @@
         "title": "%cmd.addToWorkspace%"
       },
       {
-        "command": "git-worktree-manager.copyFilePath",
-        "title": "%cmd.copyFilePath%"
+        "command": "git-worktree-manager.removeFromWorkspace",
+        "title": "%cmd.removeFromWorkspace%"
+      },
+      {
+        "command": "git-worktree-manager.copyFolderPath",
+        "title": "%cmd.copyFolderPath%"
       },
       {
         "command": "git-worktree-manager.openRecent",
@@ -458,27 +462,32 @@
         {
           "command": "git-worktree-manager.addToWorkspace",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
-          "group": "workspace"
+          "group": "workspace@1"
         },
         {
-          "command": "git-worktree-manager.copyFilePath",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
-          "group": "workspace"
+          "command": "git-worktree-manager.removeFromWorkspace",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/",
+          "group": "workspace@1"
+        },
+        {
+          "command": "git-worktree-manager.copyFolderPath",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "workspace@2"
         },
         {
           "command": "git-worktree-manager.addToWorkspace",
           "when": "viewItem =~ /git-worktree-manager.folderItem/",
-          "group": "workspace"
+          "group": "workspace@2"
         },
         {
-          "command": "git-worktree-manager.copyFilePath",
+          "command": "git-worktree-manager.copyFolderPath",
           "when": "viewItem =~ /git-worktree-manager.folderItem/",
-          "group": "workspace"
+          "group": "workspace@3"
         },
         {
           "command": "git-worktree-manager.addToGitFolder",
           "when": "viewItem =~ /git-worktree-manager.folderItem/",
-          "group": "workspace"
+          "group": "workspace@1"
         },
         {
           "command": "git-worktree-manager.switchToSelectFolder",
@@ -613,7 +622,7 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.copyFilePath",
+          "command": "git-worktree-manager.copyFolderPath",
           "when": "false"
         },
         {
@@ -622,6 +631,10 @@
         },
         {
           "command": "git-worktree-manager.addToWorkspace",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.removeFromWorkspace",
           "when": "false"
         },
         {

@@ -22,6 +22,7 @@ import {
     checkoutBranch,
     openExternalTerminal,
     addToWorkspace,
+    removeFromWorkspace,
     checkExist,
     getNameRev,
     getMainFolder,
@@ -531,7 +532,11 @@ const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
     return addToWorkspace(item.path);
 };
 
-const copyFilePathCmd = (item?: IWorktreeLess) => {
+const removeFromWorkspaceCmd = async (item: WorkTreeItem) => {
+    return removeFromWorkspace(item.path);
+};
+
+const copyFolderPathCmd = (item?: IWorktreeLess) => {
     if (!item) return;
     vscode.env.clipboard.writeText(item.path).then(() => {
         Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', item.path));
@@ -686,7 +691,8 @@ export class CommandsManger {
                 openExternalTerminalCmd(item, false),
             ),
             vscode.commands.registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
-            vscode.commands.registerCommand(Commands.copyFilePath, copyFilePathCmd),
+            vscode.commands.registerCommand(Commands.removeFromWorkspace, removeFromWorkspaceCmd),
+            vscode.commands.registerCommand(Commands.copyFolderPath, copyFolderPathCmd),
             vscode.commands.registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),
             vscode.commands.registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
             vscode.commands.registerCommand(Commands.checkoutBranch, checkoutBranchCmd),

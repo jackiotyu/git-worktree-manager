@@ -399,6 +399,12 @@ export const addToWorkspace = (path: string) => {
     }
 };
 
+export const removeFromWorkspace = (path: string) => {
+    if(!vscode.workspace.workspaceFolders)  return;
+    let index = vscode.workspace.workspaceFolders.findIndex(item => comparePath(item.uri.fsPath, path));
+    if(index >= 0) { vscode.workspace.updateWorkspaceFolders(index, 1); }
+};
+
 export const getRecentFolders = async () => {
     let data = (await vscode.commands.executeCommand('_workbench.getRecentlyOpened')) as IRecentlyOpened;
     return data.workspaces.filter((item) => item.folderUri && item.folderUri.scheme === 'file');
