@@ -50,22 +50,18 @@ export const useWorkspaceWorktreeQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('folder-library'),
     tooltip: vscode.l10n.t('Click to display worktree list in workspace'),
 };
-
 export const checkoutBranchQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('source-control'),
     tooltip: vscode.l10n.t('Checkout'),
 };
-
 export const addWorktreeQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('repo-clone'),
     tooltip: vscode.l10n.t('Create Worktree'),
 };
-
 export const moreQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('three-bars'),
     tooltip: vscode.l10n.t('More actions...'),
 };
-
 export const viewHistoryQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('history'),
     tooltip: vscode.l10n.t('View git history'),

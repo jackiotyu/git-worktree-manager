@@ -9,7 +9,7 @@ import {
     updateWorkspaceListCache,
 } from '@/utils';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
-import { IWorkTreeCacheItem, IFolderItemConfig, DefaultDisplayList, IWorktreeLess } from '@/types';
+import { IWorkTreeCacheItem, DefaultDisplayList, IWorktreeLess } from '@/types';
 import { Commands, APP_NAME, QuickPickKind } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';

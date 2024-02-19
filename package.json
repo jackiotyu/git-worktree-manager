@@ -446,7 +446,7 @@
         },
         {
           "command": "git-worktree-manager.viewHistory",
-          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
+          "when": "viewItem =~ /git-worktree-manager.(gitFolderItem|workspaceGitMainFolder)/",
           "group": "inline@1"
         },
         {
