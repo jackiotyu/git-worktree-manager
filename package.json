@@ -66,7 +66,7 @@
       {
         "command": "git-worktree-manager.addWorkTree",
         "title": "%cmd.addWorkTree%",
-        "icon": "$(add)",
+        "icon": "$(file-submodule)",
         "category": "Worktree"
       },
       {
@@ -83,7 +83,7 @@
       {
         "command": "git-worktree-manager.addWorkTreeFromBranch",
         "title": "%cmd.addWorkTreeFromBranch%",
-        "icon": "$(add)"
+        "icon": "$(file-submodule)"
       },
       {
         "command": "git-worktree-manager.revealInSystemExplorer",
@@ -261,7 +261,7 @@
     "viewsWelcome": [
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(add) 新建 worktree ](command:git-worktree-manager.addWorkTree)",
+        "contents": "[ $(file-submodule) 新建 worktree ](command:git-worktree-manager.addWorkTree)",
         "when": "git-worktree-manager.locale == zh-cn"
       },
       {
@@ -281,7 +281,7 @@
       },
       {
         "view": "git-worktree-manager-setting",
-        "contents": "[ $(add) Add Worktree ](command:git-worktree-manager.addWorkTree)",
+        "contents": "[ $(file-submodule) Add Worktree ](command:git-worktree-manager.addWorkTree)",
         "when": "git-worktree-manager.locale != zh-cn"
       },
       {
