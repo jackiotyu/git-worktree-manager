@@ -449,8 +449,9 @@ const getWorkspaceMainFolders = async (): Promise<IFolderItemConfig[]> => {
     return folders;
 };
 
-export const pickGitFolder = async (): Promise<string | undefined> => {
+export const pickGitFolder = async (): Promise<string | undefined | null> => {
     const mainFolders = WorkspaceState.get('mainFolders', []).map((i) => i.path);
+    if (mainFolders.length === 0) return null;
     if (mainFolders.length > 1) {
         const items: vscode.QuickPickItem[] = [
             ...mainFolders.map<vscode.QuickPickItem>((folderPath) => {
@@ -499,7 +500,7 @@ export const updateWorkTreeCache = async () => {
 };
 
 export const updateWorkspaceListCache = async () => {
-    if(WorkspaceState.get('mainFolders', []).length === 0) {
+    if (WorkspaceState.get('mainFolders', []).length === 0) {
         await updateWorkspaceMainFolders();
     }
     const mainFolders = WorkspaceState.get('mainFolders', []);
