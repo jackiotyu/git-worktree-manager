@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/lib/events';
 import folderRoot from '@/lib/folderRoot';
-import { updateWorkspaceMainFolders } from '@/utils';
+import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/utils';
 import { CommandsManger } from '@/lib/commands';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import { Alert } from '@/lib/adaptor/window';
@@ -24,7 +24,12 @@ export function activate(context: vscode.ExtensionContext) {
             treeDataEvent.fire();
         }, 1000, { trailing: true, leading: true }),
     );
-    const workspaceFoldersChangeEvent = vscode.workspace.onDidChangeWorkspaceFolders(() => updateTreeDataEvent.fire());
+    const workspaceFoldersChangeEvent = vscode.workspace.onDidChangeWorkspaceFolders(async () => {
+        await new Promise(resolve => process.nextTick(resolve));
+        await updateWorkspaceMainFolders();
+        await updateWorkspaceListCache();
+        treeDataEvent.fire();
+    });
     CommandsManger.register(context);
     TreeViewManager.register(context);
     collectEvent(context);

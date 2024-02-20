@@ -20,7 +20,11 @@ export const openTerminalQuickInputButton: vscode.QuickInputButton = {
 };
 export const addToWorkspaceQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('multiple-windows'),
-    tooltip: vscode.l10n.t('Add to workspace'),
+    tooltip: vscode.l10n.t('Add folder to workspace'),
+};
+export const removeFromWorkspaceQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: vscode.l10n.t('Remove folder from workspace'),
 };
 export const sortByBranchQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('case-sensitive'),

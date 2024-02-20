@@ -58,7 +58,7 @@
     "config.worktreePick.showExternalTerminal.description": "Show the \"External Terminal\" button on the results of \"Find Worktree\"",
     "config.worktreePick.showRevealInSystemExplorer.description": "Show the \"Reveal in the system explorer\" button on the results of \"Find Worktree\"",
     "config.worktreePick.showCopy.description": "Show the \"Copy\" button on the results of \"Find Worktree\"",
-    "config.worktreePick.showAddToWorkspace.description": "Show the \"Add to workspace\" button on the results of \"Find Worktree\"",
+    "config.worktreePick.showAddToWorkspace.description": "Show the \"Add folder to workspace\" button on the results of \"Find Worktree\"",
     "config.worktreePick.copyTemplate.description": "The template used for the copy operation in the \"Find Worktree\" list\n\nAvailable variables are\n- `$HASH` the hash of the current commit in the worktree\n- `$MESSAGE` the commit message in the worktree\n- `$FULL_PATH` the full path of the worktree\n- `$BASE_NAME` the folder name of the worktree\n- `$LABEL` the display name of the worktree, such as branch name or tag\n\neg: `git merge $LABEL`. Default is `$LABEL`.",
     "config.worktreePick.showCheckout.description": "Show the \"Checkout\" button on the results of \"Find Worktree\"",
     "config.worktreePick.showViewHistory.description": "Show the \"View git history\" button on the results of \"Find Worktree\"",
