@@ -1,3 +1,10 @@
+## [0.3.7] 2024-02-20
+
+### Change
+
+- Improve add/remove worktree action.
+- Change `Add worktree` icon.
+
 ## [0.3.6] 2024-02-18
 
 ### Change
