@@ -465,12 +465,10 @@ const openWalkthroughsCmd = () => {
 
 const openTerminalCmd = async (item?: AllViewItem) => {
     if (!item) return;
-    if (!(await checkFolderExist(item.path))) {
-        return;
-    }
+    if (!(await checkFolderExist(item.path))) return;
     const terminal = vscode.window.createTerminal({
         cwd: item.path,
-        name: item.name,
+        name: `${item.name} ⇄ ${item.path}`,
         iconPath: new vscode.ThemeIcon('terminal-bash'),
         isTransient: false,
         hideFromUser: false,
@@ -478,25 +476,31 @@ const openTerminalCmd = async (item?: AllViewItem) => {
     });
     terminal.show();
     const cmdList = getTerminalCmdListConfig();
-    if (!cmdList.length) {
-        return;
-    }
-    let cmdText = cmdList[0];
-    let cancelToken = new vscode.CancellationTokenSource();
-    let disposable = vscode.window.onDidCloseTerminal(async (t) => {
+    if (!cmdList.length) return;
+    const watchOpenTerminal = vscode.window.onDidOpenTerminal(async t => {
         let [pid, currentPid] = await Promise.all([t.processId, terminal.processId]);
-        if (pid === currentPid) {
+        if(pid !== currentPid) return;
+        let cmdText = cmdList[0];
+        watchOpenTerminal.dispose();
+        // 单个
+        if(cmdList.length <= 1) {
+            cmdText && terminal.sendText(cmdText, true);
+            return;
+        }
+        const close = () => {
             cancelToken.cancel();
             disposable.dispose();
-        }
-    });
-    if (cmdList.length > 1) {
-        const items: CmdItem[] = cmdList.map((text) => {
-            return {
-                label: text,
-                iconPath: new vscode.ThemeIcon('terminal-bash'),
-            };
+        };
+        // 多选
+        let cancelToken = new vscode.CancellationTokenSource();
+        let disposable = vscode.window.onDidCloseTerminal(async (t) => {
+            if((await t.processId) !== currentPid) return;
+            close();
         });
+        const items: CmdItem[] = cmdList.map((text) => ({
+            label: text,
+            iconPath: new vscode.ThemeIcon('terminal-bash'),
+        }));
         let item = await vscode.window.showQuickPick(
             items,
             {
@@ -506,11 +510,10 @@ const openTerminalCmd = async (item?: AllViewItem) => {
             },
             cancelToken.token,
         );
+        close();
         cmdText = item && item.use !== 'close' ? item.label : '';
-    }
-    // FIXME delay for prevent terminal dirty data
-    await new Promise<void>((resolve) => setTimeout(resolve, 300));
-    cmdText && terminal.sendText(cmdText, true);
+        cmdText && terminal.sendText(cmdText, true);
+    });
 };
 
 const openExternalTerminalCmd = async (item?: AllViewItem, needRevealTreeItem = true) => {
