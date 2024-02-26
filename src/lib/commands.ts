@@ -440,12 +440,12 @@ const addGitFolderCmd = async () => {
     const multiLabel = vscode.l10n.t('Multiple repositories');
     const singleLabel = vscode.l10n.t('Single repository');
     let options: vscode.QuickPickItem[] = [
-        { label: multiLabel },
-        { label: singleLabel }
+        { label: multiLabel, iconPath: new vscode.ThemeIcon('checklist') },
+        { label: singleLabel, iconPath: new vscode.ThemeIcon('repo') }
     ];
     let selected = await vscode.window.showQuickPick(options, {
         canPickMany: false,
-        title: vscode.l10n.t('Add for'),
+        title: vscode.l10n.t('Add git repository'),
     });
     if(!selected) return;
     if(selected.label === multiLabel) addMultiGitFolder();
