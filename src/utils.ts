@@ -83,13 +83,17 @@ export function judgeIsCurrentFolder(path: string) {
     return comparePath(folderRoot.uri?.fsPath, path);
 }
 
+export function toSimplePath(path: string) {
+    return path.toLocaleLowerCase().replace(/\\/g, '/');
+}
+
 export function judgeIncludeFolder(path: string) {
-    const normalizePath = path.toLocaleLowerCase().replace(/\\/g, '/');
+    const normalizePath = toSimplePath(path);
     return folderRoot.folderPathSet.has(normalizePath);
 }
 
 export function comparePath(path1: string = '', path2: string = '') {
-    return path1.toLocaleLowerCase().replace(/\\/g, '/') === path2.toLocaleLowerCase().replace(/\\/g, '/');
+    return toSimplePath(path1) === toSimplePath(path2);
 }
 
 export function getFolderIcon(path: string, color?: vscode.ThemeColor) {

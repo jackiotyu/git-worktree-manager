@@ -28,6 +28,7 @@ import {
     getMainFolder,
     comparePath,
     pickGitFolder,
+    toSimplePath,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -37,6 +38,7 @@ import type { WorkTreeItem, GitFolderItem, FolderItem, AllViewItem } from '@/lib
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
+import fs from 'fs/promises';
 import { Alert } from '@/lib/adaptor/window';
 import { GitHistory } from '@/lib/adaptor/gitHistory';
 import { ILoadMoreItem, IFolderItemConfig, IWorktreeLess } from '@/types';
@@ -376,21 +378,78 @@ const addToGitFolder = async (folderPath: string) => {
     Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
 };
 
-const addGitFolderCmd = async () => {
+const addMultiGitFolder = async () => {
     let uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
-        openLabel: vscode.l10n.t('Add a git repository folder path'),
+        title: vscode.l10n.t('Please select the root directory of multiple git repositories'),
+    });
+    if (!uriList?.length) return;
+    let folderUri = uriList[0];
+    let folderPath = folderUri.fsPath;
+    const files = await fs
+        .readdir(folderPath, { encoding: 'utf-8' })
+        .then((files) => files.map((fileName) => path.join(folderPath, fileName)))
+        .catch(() => []);
+    if(!files.length) return;
+    const folders = await Promise.all(
+        files.map(async (filePath) => {
+            try {
+                return toSimplePath((await getMainFolder(filePath)));
+            } catch {
+                return null;
+            }
+        }),
+    );
+    const existFolders = getFolderConfig();
+    const distinctFolders = [...new Set(folders)];
+    const existFoldersMap = new Map(existFolders.map((i) => [toSimplePath(i.path), true]));
+    const gitFolders = distinctFolders.filter((i) => i && !existFoldersMap.has(i)) as string[];
+    if (!gitFolders.length) return;
+    const options: vscode.QuickPickItem[] = gitFolders.map((folderPath) => ({ label: folderPath }));
+    const selected = await vscode.window.showQuickPick(options, {
+        canPickMany: true,
+        title: vscode.l10n.t('Select folder(s)'),
+    });
+    if (!selected) return;
+    const selectGitFolders = selected.map((item) => item.label);
+    const newFolders = getFolderConfig();
+    newFolders.push(...selectGitFolders.map((i) => ({ name: i, path: i })));
+    await updateFolderConfig(newFolders);
+    selectGitFolders.forEach((folderPath) => worktreeEventRegister.add(vscode.Uri.file(folderPath)));
+    Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
+};
+
+const addSingleGitFolder = async () => {
+    let uriList = await vscode.window.showOpenDialog({
+        canSelectFiles: false,
+        canSelectFolders: true,
+        canSelectMany: false,
+        defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
         title: vscode.l10n.t('Please select the git repository folder path'),
     });
-    if (!uriList?.length) {
-        return;
-    }
+    if (!uriList?.length) return;
     let folderUri = uriList[0];
     let folderPath = folderUri.fsPath;
     await addToGitFolder(folderPath);
+};
+
+const addGitFolderCmd = async () => {
+    const multiLabel = vscode.l10n.t('Multiple repositories');
+    const singleLabel = vscode.l10n.t('Single repository');
+    let options: vscode.QuickPickItem[] = [
+        { label: multiLabel },
+        { label: singleLabel }
+    ];
+    let selected = await vscode.window.showQuickPick(options, {
+        canPickMany: false,
+        title: vscode.l10n.t('Add for'),
+    });
+    if(!selected) return;
+    if(selected.label === multiLabel) addMultiGitFolder();
+    else addSingleGitFolder();
 };
 
 const refreshGitFolderCmd = () => {
