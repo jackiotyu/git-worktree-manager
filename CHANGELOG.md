@@ -1,3 +1,9 @@
+## [0.3.8] 2024-02-26
+
+### Change
+
+- Action for add multiple repositories.
+
 ## [0.3.7] 2024-02-20
 
 ### Change
