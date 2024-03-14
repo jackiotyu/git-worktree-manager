@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { ViewId, TreeItemKind, QuickPickKind } from '@/constants';
-import type { AllViewItem } from '@/lib/treeView';
+import type { AllViewItem } from '@/lib/treeItem';
 import { Commands } from '@/constants';
 
 export const treeDataEvent = new vscode.EventEmitter<void>();
@@ -15,7 +15,7 @@ export const worktreeChangeEvent = new vscode.EventEmitter<vscode.Uri>();
 export const changeUIVisibleEvent = new vscode.EventEmitter<{ type: TreeItemKind | QuickPickKind; visible: boolean }>();
 
 // TODO 需要精确到指定仓库
-worktreeChangeEvent.event(() => {
+worktreeChangeEvent.event((uri) => {
     updateTreeDataEvent.fire();
 });
 

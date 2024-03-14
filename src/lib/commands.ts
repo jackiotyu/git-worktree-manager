@@ -34,7 +34,7 @@ import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
 import { Commands, APP_NAME } from '@/constants';
 import folderRoot from '@/lib/folderRoot';
-import type { WorkTreeItem, GitFolderItem, FolderItem, AllViewItem } from '@/lib/treeView';
+import type { WorkTreeItem, GitFolderItem, FolderItem, AllViewItem } from '@/lib/treeItem';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import * as util from 'util';
 import path from 'path';
