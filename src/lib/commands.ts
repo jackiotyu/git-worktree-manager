@@ -29,6 +29,7 @@ import {
     comparePath,
     pickGitFolder,
     toSimplePath,
+    revealFolderInOS,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -211,7 +212,9 @@ const revealInSystemExplorerCmd = async (item?: AllViewItem, needRevealTreeItem 
         return;
     }
     if (needRevealTreeItem) await revealTreeItem(item);
-    vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
+    const openInsideFolder = vscode.workspace.getConfiguration(APP_NAME).get<boolean>('openInsideFolder', false);
+    if(openInsideFolder) revealFolderInOS(path.resolve(item.path));
+    else vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
 
 const commonWorkTreeCmd = async (path: string, cmd: Commands, cwd?: string) => {

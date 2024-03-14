@@ -711,6 +711,12 @@
             ],
             "default": "mhutchie.git-graph",
             "description": "%config.gitHistoryExtension.description%"
+          },
+          "git-worktree-manager.openInsideFolder": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "%config.openInsideFolder.description%"
           }
         }
       },
@@ -854,6 +860,7 @@
   "dependencies": {
     "dayjs": "^1.11.9",
     "lodash": "^4.17.21",
+    "open": "^10.1.0",
     "tree-kill": "^1.2.2"
   }
 }

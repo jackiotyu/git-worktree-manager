@@ -10,6 +10,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import * as util from 'util';
 import fs from 'fs/promises';
 import path from 'path';
+import open from 'open';
 import { Alert } from '@/lib/adaptor/window';
 import { actionProgressWrapper } from '@/lib/progress';
 import treeKill = require('tree-kill');
@@ -510,4 +511,8 @@ export const updateWorkspaceListCache = async () => {
     const mainFolders = WorkspaceState.get('mainFolders', []);
     const cache = await gitFolderToCaches(mainFolders);
     WorkspaceState.update('workTreeCache', cache);
+};
+
+export const revealFolderInOS = (folder: string) => {
+    open(folder);
 };

@@ -48,6 +48,7 @@
     "config.alertLevel.enum.warn": "警告",
     "config.alertLevel.enum.error": "错误",
     "config.gitHistoryExtension.description": "选择用于查看git历史的扩展",
+    "config.openInsideFolder.description": "打开文件夹时，是否直接打开文件夹内部",
     "config.showLockInWorktreeItem.description": "在worktree树视图上显示“锁定/解锁worktree”按钮",
     "config.showOpenExplorerInTreeItem.description": "在树视图上显示“在系统文件管理器中展示”按钮",
     "config.showCheckoutInWorktreeItem.description": "在worktree树视图上显示“切换分支”按钮",
