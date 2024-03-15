@@ -46,6 +46,7 @@ import { ILoadMoreItem, IFolderItemConfig, IWorktreeLess } from '@/types';
 import { actionProgressWrapper } from '@/lib/progress';
 import logger from '@/lib/logger';
 import { worktreeEventRegister } from '@/lib/gitEvent';
+import { Config } from '@/lib/adaptor/config';
 
 interface CmdItem extends vscode.QuickPickItem {
     use?: 'close';
@@ -212,7 +213,7 @@ const revealInSystemExplorerCmd = async (item?: AllViewItem, needRevealTreeItem 
         return;
     }
     if (needRevealTreeItem) await revealTreeItem(item);
-    const openInsideFolder = vscode.workspace.getConfiguration(APP_NAME).get<boolean>('openInsideFolder', false);
+    const openInsideFolder = Config.get('openInsideFolder', false);
     if(openInsideFolder) revealFolderInOS(path.resolve(item.path));
     else vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.path));
 };
@@ -327,13 +328,13 @@ function getFolderConfig() {
 }
 
 function getTerminalLocationConfig() {
-    return vscode.workspace.getConfiguration(APP_NAME).get<string>('terminalLocationInEditor')
+    return Config.get('terminalLocationInEditor', false)
         ? vscode.TerminalLocation.Editor
         : vscode.TerminalLocation.Panel;
 }
 
 function getTerminalCmdListConfig() {
-    return vscode.workspace.getConfiguration(APP_NAME).get<string[]>('terminalCmdList', []);
+    return Config.get('terminalCmdList', []);
 }
 
 function updateFolderConfig(value: IFolderItemConfig[]) {

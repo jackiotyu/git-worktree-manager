@@ -1,5 +1,6 @@
 import { window, ExtensionContext, workspace } from 'vscode';
 import { APP_NAME, AlertLevel } from '@/constants';
+import { Config } from '@/lib/adaptor/config';
 
 enum LevelNum {
     'info' = 1,
@@ -20,7 +21,7 @@ export class Alert {
         this.updateLevel();
     }
     static updateLevel() {
-        this.level = workspace.getConfiguration(APP_NAME).get<AlertLevel>('alertLevel') || 'error';
+        this.level = Config.get('alertLevel', 'error');
     }
     static get levelNum() {
         return LevelNum[this.level];

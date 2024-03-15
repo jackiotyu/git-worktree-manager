@@ -1,18 +1,12 @@
 import { workspace, extensions, commands, Uri, MarkdownString, l10n } from 'vscode';
 import { APP_NAME } from '@/constants';
 import { Alert } from '@/lib/adaptor/window';
-
-export enum GitHistoryExtension {
-    gitHistory = 'donjayamanne.githistory',
-    gitGraph = 'mhutchie.git-graph',
-}
+import { Config } from '@/lib/adaptor/config';
+import { GitHistoryExtension } from '@/types';
 
 export class GitHistory {
     static get extensionName() {
-        return (
-            workspace.getConfiguration(APP_NAME).get<GitHistoryExtension>('gitHistoryExtension') ||
-            GitHistoryExtension.gitGraph
-        );
+        return Config.get('gitHistoryExtension', GitHistoryExtension.gitGraph);
     }
     static openHistory(uri: Uri) {
         try {

@@ -10,9 +10,10 @@ import {
 } from '@/utils';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
 import { IWorkTreeCacheItem, DefaultDisplayList, IWorktreeLess } from '@/types';
-import { Commands, APP_NAME, QuickPickKind } from '@/constants';
+import { Commands, QuickPickKind } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
+import { Config } from '@/lib/adaptor/config';
 import folderRoot from '@/lib/folderRoot';
 import { updateTreeDataEvent, changeUIVisibleEvent } from '@/lib/events';
 import path from 'path';
@@ -196,18 +197,17 @@ interface WorkTreePick extends vscode.QuickPickItem {
 
 const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     // 是否置顶当前仓库的分支
-    const config = vscode.workspace.getConfiguration(APP_NAME);
-    const pinCurRepo = config.get<boolean>('worktreePick.pinCurrentRepo', false);
-    const copyTemplate = config.get<string>('worktreePick.copyTemplate', '$LABEL');
+    const pinCurRepo = Config.get('worktreePick.pinCurrentRepo', false);
+    const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
     const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
-    const showExternalTerminal = config.get<boolean>('worktreePick.showExternalTerminal', false);
-    const showTerminal = config.get<boolean>('worktreePick.showTerminal', false);
-    const showRevealInSystemExplorer = config.get<boolean>('worktreePick.showRevealInSystemExplorer', false);
-    const showCopy = config.get<boolean>('worktreePick.showCopy', false);
-    const showAddToWorkspace = config.get<boolean>('worktreePick.showAddToWorkspace', false);
-    const showCheckout = config.get<boolean>('worktreePick.showCheckout', true);
-    const showViewHistory = config.get<boolean>('worktreePick.showViewHistory', true);
+    const showExternalTerminal = Config.get('worktreePick.showExternalTerminal', false);
+    const showTerminal = Config.get('worktreePick.showTerminal', false);
+    const showRevealInSystemExplorer = Config.get('worktreePick.showRevealInSystemExplorer', false);
+    const showCopy = Config.get('worktreePick.showCopy', false);
+    const showAddToWorkspace = Config.get('worktreePick.showAddToWorkspace', false);
+    const showCheckout = Config.get('worktreePick.showCheckout', true);
+    const showViewHistory = Config.get('worktreePick.showViewHistory', true);
 
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
@@ -281,10 +281,9 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
 };
 
 export const pickWorktree = async () => {
-    const config = vscode.workspace.getConfiguration(APP_NAME);
     const disposables: vscode.Disposable[] = [];
     let checkList =
-        config.get<DefaultDisplayList>('worktreePick.defaultDisplayList', DefaultDisplayList.all) ===
+        Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all) ===
         DefaultDisplayList.all;
 
     const worktreeButtons = [
@@ -448,9 +447,7 @@ export const pickWorktree = async () => {
                     vscode.commands.executeCommand(Commands.viewHistory, viewItem);
                     break;
                 case copyItemQuickInputButton:
-                    const template = vscode.workspace
-                        .getConfiguration(APP_NAME)
-                        .get<string>('worktreePick.copyTemplate', '$LABEL');
+                    const template = Config.get('worktreePick.copyTemplate', '$LABEL');
                     (/\$HASH|\$MESSAGE/.test(template)
                         ? getLashCommitDetail(viewItem.path, ['s', 'H'])
                         : Promise.resolve({} as Record<string, void>)
@@ -548,7 +545,7 @@ interface QuickPickAction extends vscode.QuickPickItem {
 
 const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
     const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.path, ['s', 'H'])]);
-        const template = vscode.workspace.getConfiguration(APP_NAME).get<string>('worktreePick.copyTemplate', '$LABEL');
+        const template = Config.get('worktreePick.copyTemplate', '$LABEL');
         const isCurrent = judgeIncludeFolder(viewItem.path);
         const items: QuickPickAction[] = [
             {

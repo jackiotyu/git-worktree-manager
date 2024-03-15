@@ -67,3 +67,8 @@ export enum DefaultDisplayList {
     workspace = 'workspace',
     all = 'all',
 }
+
+export enum GitHistoryExtension {
+    gitHistory = 'donjayamanne.githistory',
+    gitGraph = 'mhutchie.git-graph',
+}
