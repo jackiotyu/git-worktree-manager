@@ -1,3 +1,9 @@
+## [0.3.9] 2024-03-15
+
+### Change
+
+- Add configuration `git-worktree-manager.openInsideFolder` for open the inside of the folder directly.
+
 ## [0.3.8] 2024-02-26
 
 ### Change
