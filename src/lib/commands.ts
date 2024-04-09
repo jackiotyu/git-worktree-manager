@@ -30,6 +30,7 @@ import {
     pickGitFolder,
     toSimplePath,
     revealFolderInOS,
+    judgeIncludeFolder,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -532,6 +533,7 @@ const openTerminalCmd = async (item?: AllViewItem) => {
     const terminal = vscode.window.createTerminal({
         cwd: item.path,
         name: `${item.name} ⇄ ${item.path}`,
+        color: judgeIncludeFolder(item.path) ? new vscode.ThemeColor('terminal.ansiBlue') : void 0,
         iconPath: new vscode.ThemeIcon('terminal-bash'),
         isTransient: false,
         hideFromUser: false,
