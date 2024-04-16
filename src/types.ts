@@ -1,5 +1,6 @@
 import { Uri as URI, TreeItem } from 'vscode';
-import { ViewId } from '@/constants';
+import { Commands, ViewId } from '@/constants';
+import * as vscode from "vscode";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IWorkTreeDetail {
@@ -71,4 +72,15 @@ export enum DefaultDisplayList {
 export enum GitHistoryExtension {
     gitHistory = 'donjayamanne.githistory',
     gitGraph = 'mhutchie.git-graph',
+}
+
+export interface QuickPickAction extends vscode.QuickPickItem {
+    action: 'copy' |
+    Commands.openTerminal |
+    Commands.openExternalTerminalContext |
+    Commands.revealInSystemExplorerContext |
+    Commands.addToWorkspace |
+    Commands.removeFromWorkspace |
+    Commands.viewHistory;
+    hide?: boolean;
 }

@@ -9,7 +9,7 @@ import {
     updateWorkspaceListCache,
 } from '@/utils';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
-import { IWorkTreeCacheItem, DefaultDisplayList, IWorktreeLess } from '@/types';
+import { IWorkTreeCacheItem, DefaultDisplayList, IWorktreeLess, QuickPickAction } from '@/types';
 import { Commands, QuickPickKind } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/lib/adaptor/window';
@@ -282,14 +282,14 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
 
 export const pickWorktree = async () => {
     const disposables: vscode.Disposable[] = [];
-    let checkList =
+    let displayAll =
         Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all) ===
         DefaultDisplayList.all;
 
     const worktreeButtons = [
         addGitRepoQuickInputButton,
         addWorktreeQuickInputButton,
-        checkList ? useWorkspaceWorktreeQuickInputButton : useAllWorktreeQuickInputButton,
+        displayAll ? useWorkspaceWorktreeQuickInputButton : useAllWorktreeQuickInputButton,
         settingQuickInputButton,
         sortByBranchQuickInputButton,
     ];
@@ -318,8 +318,8 @@ export const pickWorktree = async () => {
         let canClose = true;
 
         const updateList = () => {
-            let items = checkList ? mapWorkTreePickItems(list) : mapWorkTreePickItems(workspaceList);
-            const busy = checkList ? listLoading : workspaceListLoading;
+            let items = displayAll ? mapWorkTreePickItems(list) : mapWorkTreePickItems(workspaceList);
+            const busy = displayAll ? listLoading : workspaceListLoading;
             if (checkSortByBranch) {
                 items = items
                     .sort((a, b) => a.label.localeCompare(b.label))
@@ -374,7 +374,7 @@ export const pickWorktree = async () => {
                 return;
             }
             if (event === useAllWorktreeQuickInputButton) {
-                checkList = true;
+                displayAll = true;
                 updateList();
                 quickPick.buttons = exchangeButton(
                     useAllWorktreeQuickInputButton,
@@ -383,7 +383,7 @@ export const pickWorktree = async () => {
                 return;
             }
             if (event === useWorkspaceWorktreeQuickInputButton) {
-                checkList = false;
+                displayAll = false;
                 updateList();
                 quickPick.buttons = exchangeButton(
                     useWorkspaceWorktreeQuickInputButton,
@@ -530,18 +530,6 @@ export const pickWorktree = async () => {
         reject();
     }
 };
-
-interface QuickPickAction extends vscode.QuickPickItem {
-    action:
-        | 'copy'
-        | Commands.openTerminal
-        | Commands.openExternalTerminalContext
-        | Commands.revealInSystemExplorerContext
-        | Commands.addToWorkspace
-        | Commands.removeFromWorkspace
-        | Commands.viewHistory;
-    hide?: boolean;
-}
 
 const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
     const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.path, ['s', 'H'])]);
