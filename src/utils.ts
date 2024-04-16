@@ -16,6 +16,7 @@ import { actionProgressWrapper } from '@/lib/progress';
 import treeKill = require('tree-kill');
 import logger from './lib/logger';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
+import { Config } from '@/lib/adaptor/config';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -304,7 +305,15 @@ export async function pruneWorkTree(dryRun: boolean = false, cwd?: string) {
 // Fork from https://github.com/gitkraken/vscode-gitlens/blob/2fd2bbbe328fbe66f879b78a61cab6df65181452/src/env/node/git/git.ts#L1660
 export async function getAheadBehindCommitCount(ref1: string, ref2: string, cwd: string) {
     try {
-        let data = await executeGitCommandBase(cwd, ['rev-list', '--left-right', '--count', `${ref1}...${ref2}`, '--']);
+        const closeAheadBehindNumber = Config.get('closeAheadBehindNumber', false);
+        let data = await executeGitCommandBase(cwd, [
+            'rev-list',
+            '--left-right',
+            '--count',
+            closeAheadBehindNumber ? `--max-count=${1}` : '',
+            `${ref1}...${ref2}`,
+            '--',
+        ].filter(i => i));
         if (data.length === 0) return undefined;
         const parts = data.split('\t');
         if (parts.length !== 2) return undefined;
@@ -405,9 +414,11 @@ export const addToWorkspace = (path: string) => {
 };
 
 export const removeFromWorkspace = (path: string) => {
-    if(!vscode.workspace.workspaceFolders)  return;
-    let index = vscode.workspace.workspaceFolders.findIndex(item => comparePath(item.uri.fsPath, path));
-    if(index >= 0) { vscode.workspace.updateWorkspaceFolders(index, 1); }
+    if (!vscode.workspace.workspaceFolders) return;
+    let index = vscode.workspace.workspaceFolders.findIndex((item) => comparePath(item.uri.fsPath, path));
+    if (index >= 0) {
+        vscode.workspace.updateWorkspaceFolders(index, 1);
+    }
 };
 
 export const getRecentFolders = async () => {

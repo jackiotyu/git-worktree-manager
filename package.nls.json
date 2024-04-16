@@ -49,6 +49,7 @@
     "config.alertLevel.enum.error": "Error",
     "config.gitHistoryExtension.description": "Select the extension for viewing git history",
     "config.openInsideFolder.description": "When open a folder, whether to open the inside of the folder directly",
+    "config.closeAheadBehindNumber.description": "Set to true to disable the calculation of pull/push request commit count, speeding up list display.",
     "config.showLockInWorktreeItem.description": "Show the \"Lock/Unlock Worktree\" icon on the worktree treeView",
     "config.showOpenExplorerInTreeItem.description": "Show the \"Reveal in the system explorer\" icon on the treeView",
     "config.showCheckoutInWorktreeItem.description": "Show the \"Checkout Branch\" icon on the Worktree treeView",

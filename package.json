@@ -717,6 +717,12 @@
             "type": "boolean",
             "default": false,
             "markdownDescription": "%config.openInsideFolder.description%"
+          },
+          "git-worktree-manager.closeAheadBehindNumber": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "%config.closeAheadBehindNumber.description%"
           }
         }
       },

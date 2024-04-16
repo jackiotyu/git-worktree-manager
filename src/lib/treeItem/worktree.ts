@@ -4,6 +4,7 @@ import { getFolderIcon, judgeIncludeFolder, getWorktreeStatus } from '@/utils';
 import { IWorkTreeDetail } from '@/types';
 import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
+import { Config } from '@/lib/adaptor/config';
 
 export class WorkTreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon;
@@ -19,11 +20,15 @@ export class WorkTreeItem extends vscode.TreeItem {
         collapsible: vscode.TreeItemCollapsibleState,
         parent?: GitFolderItem | WorkspaceMainGitFolderItem,
     ) {
+        const closeCount = Config.get('closeAheadBehindNumber', false);
         let finalName = item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
         super(finalName, collapsible);
-        this.description = `${item.isMain ? '✨ ' : ''}${item.ahead ? `${item.ahead}↑ ` : ''}${
-            item.behind ? `${item.behind}↓ ` : ''
-        }${item.path}`;
+        this.description = [
+            item.isMain ? '✨' : '',
+            item.ahead ? `${closeCount ? '' : item.ahead}↑` : '',
+            item.behind ? `${closeCount ? '' : item.behind}↓` : '',
+            item.path,
+        ].join(' ');
         this.parent = parent;
         this.id = item.path;
 
@@ -71,8 +76,8 @@ export class WorkTreeItem extends vscode.TreeItem {
         item.prunable && this.tooltip.appendMarkdown(vscode.l10n.t('$(error) Detached from the git version\n\n'));
         item.locked && this.tooltip.appendMarkdown(vscode.l10n.t('$(lock) The worktree is locked to prevent accidental purging\n\n'));
         item.isMain && this.tooltip.appendMarkdown(vscode.l10n.t('✨ Worktree main folder, cannot be cleared and locked\n\n'));
-        item.ahead && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${item.ahead}`));
-        item.behind && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${item.behind}`));
+        item.ahead && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${closeCount ? '' : item.ahead}`));
+        item.behind && this.tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${closeCount ? '' : item.behind}`));
         !isCurrent && this.tooltip.appendMarkdown(vscode.l10n.t('*Click to open new window for this worktree*\n\n'));
 
         this.command = {
