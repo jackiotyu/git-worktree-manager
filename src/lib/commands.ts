@@ -31,6 +31,8 @@ import {
     toSimplePath,
     revealFolderInOS,
     judgeIncludeFolder,
+    fetchRemoteRef,
+    fetchRepo,
 } from '@/utils';
 import { pickBranch, pickWorktree } from '@/lib/quickPick';
 import { confirmModal } from '@/lib/modal';
@@ -726,6 +728,16 @@ const unwatchWorktreeEventCmd = () => {
     worktreeEventRegister.dispose();
 };
 
+const fetchWorkTreeCmd = (item: WorkTreeItem) => {
+    const { path: cwd, remote, remoteRef } = item;
+    if(!remote || !remoteRef) return;
+    fetchRemoteRef({ cwd, remote, remoteRef });
+};
+
+const fetchRepoCmd = (item: GitFolderItem) => {
+    fetchRepo(item.path);
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -781,6 +793,8 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
             vscode.commands.registerCommand(Commands.watchWorktreeEvent, watchWorktreeEventCmd),
             vscode.commands.registerCommand(Commands.unwatchWorktreeEvent, unwatchWorktreeEventCmd),
+            vscode.commands.registerCommand(Commands.fetchWorkTree, fetchWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.fetchRepo, fetchRepoCmd),
         );
     }
 }

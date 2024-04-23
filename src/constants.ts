@@ -40,6 +40,8 @@ export enum Commands {
     loadAllTreeData = 'git-worktree-manager.loadAllTreeData',
     viewHistory = 'git-worktree-manager.viewHistory',
     openRecent = 'git-worktree-manager.openRecent',
+    fetchWorkTree = 'git-worktree-manager.fetchWorkTree',
+    fetchRepo = 'git-worktree-manager.fetchRepo',
 
     watchWorktreeEvent = 'git-worktree-manager.internal.watchWorktreeEvent',
     unwatchWorktreeEvent = 'git-worktree-manager.internal.unwatchWorktreeEvent',

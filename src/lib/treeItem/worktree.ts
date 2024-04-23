@@ -46,7 +46,8 @@ export class WorkTreeItem extends vscode.TreeItem {
         let currentPost = isCurrent ? '.current' : '';
         let aheadPost = item.ahead ? '.ahead' : '';
         let behindPost = item.behind ? '.behind' : '';
-        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}`;
+        let fetchPost = item.remote && item.remoteRef ? '.fetch' : '';
+        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}${fetchPost}`;
 
         this.path = item.path;
         this.name = item.name;

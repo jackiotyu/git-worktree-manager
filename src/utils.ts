@@ -26,6 +26,12 @@ type PullPushArgs = {
     cwd: string;
 };
 
+type FetchArgs = {
+    remote: string;
+    remoteRef: string;
+    cwd: string;
+};
+
 const WORK_TREE = 'worktree';
 
 const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
@@ -389,6 +395,26 @@ export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
     actionProgressWrapper(
         vscode.l10n.t('Push commit ( {0} → {1} ) on {2}', branch, `${remote}/${remoteRef}`, cwd),
         () => executeGitCommandAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
+        () => {},
+        token,
+    );
+};
+
+export const fetchRemoteRef = ({ remote, remoteRef, cwd }: FetchArgs) => {
+    const token = new vscode.CancellationTokenSource();
+    actionProgressWrapper(
+        vscode.l10n.t('Fetch remote ( {0} ) on {1}', `${remote}/${remoteRef}`, cwd),
+        () => executeGitCommandAuto(cwd, ['fetch', remote, remoteRef], token.token),
+        () => {},
+        token,
+    );
+};
+
+export const fetchRepo = (cwd: string) => {
+    const token = new vscode.CancellationTokenSource();
+    actionProgressWrapper(
+        vscode.l10n.t('Fetch all remote commit on {1}', cwd),
+        () => executeGitCommandAuto(cwd, ['fetch', '--all'], token.token),
         () => {},
         token,
     );

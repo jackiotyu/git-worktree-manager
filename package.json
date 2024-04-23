@@ -217,6 +217,16 @@
         "command": "git-worktree-manager.viewHistory",
         "title": "%cmd.viewHistory%",
         "icon": "$(history)"
+      },
+      {
+        "command": "git-worktree-manager.fetchWorkTree",
+        "title": "%cmd.fetchWorkTree%",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "git-worktree-manager.fetchRepo",
+        "title": "%cmd.fetchRepo%",
+        "icon": "$(sync)"
       }
     ],
     "keybindings": [
@@ -395,6 +405,11 @@
           "group": "inline@100"
         },
         {
+          "command": "git-worktree-manager.fetchWorkTree",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.fetch/ && config.git-worktree-manager.treeView.showFetchInTreeItem",
+          "group": "inline@9"
+        },
+        {
           "command": "git-worktree-manager.pushWorkTree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.ahead/",
           "group": "inline@10"
@@ -438,6 +453,11 @@
           "command": "git-worktree-manager.checkoutBranch",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "git-action"
+        },
+        {
+          "command": "git-worktree-manager.fetchRepo",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/ && config.git-worktree-manager.treeView.showFetchInTreeItem",
+          "group": "inline@1"
         },
         {
           "command": "git-worktree-manager.renameGitFolder",
@@ -752,6 +772,12 @@
             "type": "boolean",
             "default": false,
             "description": "%config.showTerminalInTreeItem.description%"
+          },
+          "git-worktree-manager.treeView.showFetchInTreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.showFetchInTreeItem.description%"
           }
         }
       },
