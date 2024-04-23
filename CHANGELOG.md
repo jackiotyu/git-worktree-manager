@@ -1,3 +1,10 @@
+## [0.4.0] 2024-04-23
+
+### Change
+
+- Add `Fetch` action.
+- Add color for terminal open with current workspace folder.
+
 ## [0.3.9] 2024-03-15
 
 ### Change
