@@ -19,6 +19,7 @@ export class Config {
     static get(key: 'terminalCmdList', defaultValue: []): string[];
     static get(key: 'terminalLocationInEditor', defaultValue: false): boolean;
     static get(key: 'openInsideFolder', defaultValue: false): boolean;
+    static get(key: 'httpProxy', defaultValue: ''): string;
     static get<T>(key: string, defaultValue: T): T {
         return vscode.workspace.getConfiguration(APP_NAME).get(key, defaultValue);
     }

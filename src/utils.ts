@@ -16,6 +16,7 @@ import { actionProgressWrapper } from '@/lib/progress';
 import treeKill = require('tree-kill');
 import logger from './lib/logger';
 import { GlobalState, WorkspaceState } from '@/lib/globalState';
+import { Config } from '@/lib/adaptor/config';
 dayjs.extend(relativeTime);
 dayjs.locale(vscode.env.language); // 全局使用
 
@@ -38,8 +39,13 @@ const executeGitCommandBase = (cwd: string, args?: string[], token?: vscode.Canc
     return new Promise((resolve, reject) => {
         logger.log(`'Running in' ${cwd}`);
         logger.log(`> ${['git'].concat(args || []).join(' ')}`);
+        const httpProxy = Config.get('httpProxy', '');
+        let env = process.env;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        if (httpProxy) Object.assign(env, { http_proxy: httpProxy, https_proxy: httpProxy });
         const proc = cp.spawn('git', args, {
             cwd,
+            env,
         });
         let out: Buffer = Buffer.from('', 'utf-8');
         let err: Buffer = Buffer.from('', 'utf-8');
@@ -431,9 +437,9 @@ export const addToWorkspace = (path: string) => {
 };
 
 export const removeFromWorkspace = (path: string) => {
-    if(!vscode.workspace.workspaceFolders)  return;
-    let index = vscode.workspace.workspaceFolders.findIndex(item => comparePath(item.uri.fsPath, path));
-    if(index >= 0) { vscode.workspace.updateWorkspaceFolders(index, 1); }
+    if (!vscode.workspace.workspaceFolders) return;
+    let index = vscode.workspace.workspaceFolders.findIndex((item) => comparePath(item.uri.fsPath, path));
+    if (index >= 0) vscode.workspace.updateWorkspaceFolders(index, 1);
 };
 
 export const getRecentFolders = async () => {

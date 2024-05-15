@@ -227,6 +227,11 @@
         "command": "git-worktree-manager.fetchRepo",
         "title": "%cmd.fetchRepo%",
         "icon": "$(sync)"
+      },
+      {
+        "command": "git-worktree-manager.toggleLog",
+        "title": "%cmd.toggleLog%",
+        "icon": "$(list-unordered)"
       }
     ],
     "keybindings": [
@@ -331,6 +336,11 @@
           "command": "git-worktree-manager.pruneWorkTree",
           "when": "view === git-worktree-manager-list",
           "group": "navigation@2"
+        },
+        {
+          "command": "git-worktree-manager.toggleLog",
+          "when": "view === git-worktree-manager-list",
+          "group": "navigation@3"
         },
         {
           "command": "git-worktree-manager.addGitFolder",
@@ -737,6 +747,12 @@
             "type": "boolean",
             "default": false,
             "markdownDescription": "%config.openInsideFolder.description%"
+          },
+          "git-worktree-manager.httpProxy": {
+            "scope": "machine",
+            "type": "string",
+            "default": "",
+            "markdownDescription": "%config.httpProxy.description%"
           }
         }
       },

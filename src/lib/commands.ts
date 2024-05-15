@@ -738,6 +738,10 @@ const fetchRepoCmd = (item: GitFolderItem) => {
     fetchRepo(item.path);
 };
 
+const toggleLogCmd = () => {
+    logger.toggle();
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -795,6 +799,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.unwatchWorktreeEvent, unwatchWorktreeEventCmd),
             vscode.commands.registerCommand(Commands.fetchWorkTree, fetchWorkTreeCmd),
             vscode.commands.registerCommand(Commands.fetchRepo, fetchRepoCmd),
+            vscode.commands.registerCommand(Commands.toggleLog, toggleLogCmd),
         );
     }
 }
