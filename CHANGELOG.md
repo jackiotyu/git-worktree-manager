@@ -1,3 +1,10 @@
+## [0.4.1] 2024-05-15
+
+### Change
+
+- Add `Toggle output log display` action.
+- Add `git-worktree-manager.httpProxy` configuration.
+
 ## [0.4.0] 2024-04-23
 
 ### Change
