@@ -70,7 +70,7 @@
     "config.worktreePick.copyTemplate.description": "在 \"查找 Worktree\" 列表中用于复制操作的模板\n\n可用变量为\n- `$HASH` worktree当前提交的哈希\n- `$MESSAGE` worktree当前提交的信息\n- `$FULL_PATH` worktree的完整路径\n- `$BASE_NAME` worktree的文件夹名称\n- `$LABEL` worktree展示的名称, 分支名或者标记等\n\n例: `git merge $LABEL`, 默认为 `$LABEL`",
     "config.worktreePick.showCheckout.description": "在 \"查找 Worktree\" 列表中展示 \"签出分支\" 按钮",
     "config.worktreePick.showViewHistory.description": "在 \"查找 Worktree\" 列表中展示 \"查看 git 历史\" 按钮",
-    "git-worktree-manager.worktreePick.showOpenRepository": "在 \"查找 Worktree\" 列表中展示 \"在源代码管理中打开该仓库\" 按钮",
+    "config.worktreePick.showOpenRepository.description": "在 \"查找 Worktree\" 列表中展示 \"在源代码管理中打开该仓库\" 按钮",
     "config.defaultDisplayList.description": "默认展示列表",
     "config.defaultDisplayList.enum.workspace": "展示工作区内的 worktree 列表",
     "config.defaultDisplayList.enum.all": "展示所有的 worktree 列表",
