@@ -43,6 +43,7 @@ export enum Commands {
     fetchWorkTree = 'git-worktree-manager.fetchWorkTree',
     fetchRepo = 'git-worktree-manager.fetchRepo',
     toggleLog = 'git-worktree-manager.toggleLog',
+    openRepository = 'git-worktree-manager.openRepository',
 
     watchWorktreeEvent = 'git-worktree-manager.internal.watchWorktreeEvent',
     unwatchWorktreeEvent = 'git-worktree-manager.internal.unwatchWorktreeEvent',

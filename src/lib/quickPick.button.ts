@@ -70,3 +70,7 @@ export const viewHistoryQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('history'),
     tooltip: vscode.l10n.t('View git history'),
 };
+export const openRepositoryQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('repo'),
+    tooltip: vscode.l10n.t('Open the repository in Source Control view'),
+};

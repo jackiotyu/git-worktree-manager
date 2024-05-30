@@ -81,6 +81,7 @@ export interface QuickPickAction extends vscode.QuickPickItem {
     Commands.revealInSystemExplorerContext |
     Commands.addToWorkspace |
     Commands.removeFromWorkspace |
-    Commands.viewHistory;
+    Commands.viewHistory |
+    Commands.openRepository;
     hide?: boolean;
 }

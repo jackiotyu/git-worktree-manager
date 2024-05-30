@@ -742,6 +742,10 @@ const toggleLogCmd = () => {
     logger.toggle();
 };
 
+const openRepositoryCmd = (item: IWorktreeLess) => {
+    vscode.commands.executeCommand('git.openRepository', item.path);
+};
+
 export class CommandsManger {
     static register(context: vscode.ExtensionContext) {
         context.subscriptions.push(
@@ -800,6 +804,7 @@ export class CommandsManger {
             vscode.commands.registerCommand(Commands.fetchWorkTree, fetchWorkTreeCmd),
             vscode.commands.registerCommand(Commands.fetchRepo, fetchRepoCmd),
             vscode.commands.registerCommand(Commands.toggleLog, toggleLogCmd),
+            vscode.commands.registerCommand(Commands.openRepository, openRepositoryCmd),
         );
     }
 }

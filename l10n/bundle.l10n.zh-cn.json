@@ -97,5 +97,6 @@
     "Please select the root directory of multiple git repositories": "请选择多个git仓库的根目录",
     "Select folder(s)": "选择目录",
     "Fetch all remote commit on {1}": "抓取全部远程提交于 {0}",
-    "Fetch remote ( {0} ) on {1}": "抓取 ( {0} ) 的远程提交于 {1}"
+    "Fetch remote ( {0} ) on {1}": "抓取 ( {0} ) 的远程提交于 {1}",
+    "Open the repository in Source Control view": "在源代码管理中打开该仓库"
 }

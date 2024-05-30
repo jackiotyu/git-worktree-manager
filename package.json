@@ -232,6 +232,11 @@
         "command": "git-worktree-manager.toggleLog",
         "title": "%cmd.toggleLog%",
         "icon": "$(list-unordered)"
+      },
+      {
+        "command": "git-worktree-manager.openRepository",
+        "title": "%cmd.openRepository%",
+        "icon": "$(repo)"
       }
     ],
     "keybindings": [
@@ -448,6 +453,11 @@
           "command": "git-worktree-manager.checkoutBranch",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.treeView.showCheckoutInWorktreeItem",
           "group": "inline@15"
+        },
+        {
+          "command": "git-worktree-manager.openRepository",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.treeView.showOpenRepositoryInTreeItem",
+          "group": "inline@16"
         },
         {
           "command": "git-worktree-manager.lockWorkTree",
@@ -687,6 +697,10 @@
         {
           "command": "git-worktree-manager.pushWorkTree",
           "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.openRepository",
+          "when": "false"
         }
       ]
     },
@@ -794,6 +808,12 @@
             "type": "boolean",
             "default": true,
             "description": "%config.showFetchInTreeItem.description%"
+          },
+          "git-worktree-manager.treeView.showOpenRepositoryInTreeItem": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "description": "%config.showOpenRepositoryInTreeItem.description%"
           }
         }
       },
@@ -866,6 +886,12 @@
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.worktreePick.showViewHistory.description%"
+          },
+          "git-worktree-manager.worktreePick.showOpenRepository": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "%config.worktreePick.showOpenRepository.description%"
           }
         }
       }

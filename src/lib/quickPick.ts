@@ -36,6 +36,7 @@ import {
     addWorktreeQuickInputButton,
     moreQuickInputButton,
     viewHistoryQuickInputButton,
+    openRepositoryQuickInputButton,
 } from './quickPick.button';
 
 interface BranchForWorkTree extends vscode.QuickPickItem {
@@ -208,6 +209,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     const showAddToWorkspace = Config.get('worktreePick.showAddToWorkspace', false);
     const showCheckout = Config.get('worktreePick.showCheckout', true);
     const showViewHistory = Config.get('worktreePick.showViewHistory', true);
+    const showOpenRepository = Config.get('worktreePick.showOpenRepository', true);
 
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
@@ -243,6 +245,10 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
             {
                 button: viewHistoryQuickInputButton,
                 show: showViewHistory,
+            },
+            {
+                button: openRepositoryQuickInputButton,
+                show: showOpenRepository,
             },
             {
                 button: moreQuickInputButton,
@@ -446,6 +452,9 @@ export const pickWorktree = async () => {
                     quickPick.hide();
                     vscode.commands.executeCommand(Commands.viewHistory, viewItem);
                     break;
+                case openRepositoryQuickInputButton:
+                    vscode.commands.executeCommand(Commands.openRepository, viewItem);
+                    break;
                 case copyItemQuickInputButton:
                     const template = Config.get('worktreePick.copyTemplate', '$LABEL');
                     (/\$HASH|\$MESSAGE/.test(template)
@@ -603,6 +612,11 @@ const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
                 label: vscode.l10n.t('Reveal in the system explorer'),
                 action: Commands.revealInSystemExplorerContext,
             },
+            {
+                iconPath: new vscode.ThemeIcon('repo'),
+                label: vscode.l10n.t('Open the repository in Source Control view'),
+                action: Commands.openRepository,
+            },
         ];
         return items.filter(i => !i.hide);
 };
@@ -648,6 +662,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
                     case Commands.openTerminal:
                     case Commands.revealInSystemExplorerContext:
                     case Commands.viewHistory:
+                    case Commands.openRepository:
                         await vscode.commands.executeCommand(item.action, viewItem);
                         break;
                     case Commands.removeFromWorkspace:
