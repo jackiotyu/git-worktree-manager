@@ -1,3 +1,10 @@
+## [0.4.2] 2024-05-30
+
+### Change
+
+- Add `Open the repository in Source Control view` action.
+- Add `git-worktree-manager.worktreePick.showOpenRepository` and `git-worktree-manager.treeView.showOpenRepositoryInTreeItem` configuration.
+
 ## [0.4.1] 2024-05-15
 
 ### Change
