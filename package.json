@@ -475,6 +475,11 @@
           "group": "git-action"
         },
         {
+          "command": "git-worktree-manager.openRepository",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "git-action"
+        },
+        {
           "command": "git-worktree-manager.fetchRepo",
           "when": "viewItem =~ /git-worktree-manager.gitFolderItem/ && config.git-worktree-manager.treeView.showFetchInTreeItem",
           "group": "inline@1"
