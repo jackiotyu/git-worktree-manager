@@ -12,6 +12,7 @@ export class Logger implements vscode.Disposable {
     }
     toggle = () => {
         this.visible = !this.visible;
+        this.output.show();
         if(this.visible) this.output.show();
         else this.output.hide();
     };
