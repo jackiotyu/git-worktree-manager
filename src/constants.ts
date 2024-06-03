@@ -56,6 +56,7 @@ export enum TreeItemKind {
     workspaceGitMainFolder = 'workspaceGitMainFolder',
     gitFolder = 'gitFolder',
     folder = 'folder',
+    setting = 'setting',
 }
 
 export enum QuickPickKind {
@@ -68,4 +69,5 @@ export enum ViewId {
     folderList = 'git-worktree-manager-recent',
     worktreeList = 'git-worktree-manager-list',
     gitFolderList = 'git-worktree-manager-folders',
+    settingList = 'git-worktree-manager-setting',
 }

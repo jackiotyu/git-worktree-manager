@@ -278,48 +278,6 @@
         }
       ]
     },
-    "viewsWelcome": [
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(file-submodule) 新建 worktree ](command:git-worktree-manager.addWorkTree)",
-        "when": "git-worktree-manager.locale == zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(search) 搜索 worktree ](command:git-worktree-manager.searchAllWorktree)",
-        "when": "git-worktree-manager.locale == zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(gear) 打开扩展设置 ](command:git-worktree-manager.openSetting)",
-        "when": "git-worktree-manager.locale == zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(issues) 反馈扩展问题 ](https://github.com/jackiotyu/git-worktree-manager/issues)",
-        "when": "git-worktree-manager.locale == zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(file-submodule) Add Worktree ](command:git-worktree-manager.addWorkTree)",
-        "when": "git-worktree-manager.locale != zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(search) Find Worktree ](command:git-worktree-manager.searchAllWorktree)",
-        "when": "git-worktree-manager.locale != zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(gear) Open Setting ](command:git-worktree-manager.openSetting)",
-        "when": "git-worktree-manager.locale != zh-cn"
-      },
-      {
-        "view": "git-worktree-manager-setting",
-        "contents": "[ $(issues) Report Issue ](https://github.com/jackiotyu/git-worktree-manager/issues)",
-        "when": "git-worktree-manager.locale != zh-cn"
-      }
-    ],
     "menus": {
       "view/title": [
         {
