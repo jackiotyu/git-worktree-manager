@@ -85,3 +85,16 @@ export interface QuickPickAction extends vscode.QuickPickItem {
     Commands.openRepository;
     hide?: boolean;
 }
+
+export type PullPushArgs = {
+    remote: string;
+    branch: string;
+    remoteRef: string;
+    cwd: string;
+};
+
+export type FetchArgs = {
+    remote: string;
+    remoteRef: string;
+    cwd: string;
+};

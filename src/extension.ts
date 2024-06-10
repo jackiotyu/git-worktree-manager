@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/lib/events';
-import folderRoot from '@/lib/folderRoot';
-import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/utils';
-import { CommandsManger } from '@/lib/commands';
-import { GlobalState, WorkspaceState } from '@/lib/globalState';
-import { Alert } from '@/lib/adaptor/window';
-import { TreeViewManager } from '@/lib/treeView';
+import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/core/event/events';
+import folderRoot from '@/core/folderRoot';
+import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/core/util/cache';
+import { registerCommands } from '@/core/command';
+import { GlobalState, WorkspaceState } from '@/core/state';
+import { Alert } from '@/core/ui/message';
+import { TreeViewManager } from '@/core/treeView/views';
 import throttle from 'lodash/throttle';
-import logger from '@/lib/logger';
-import { WorkTreeDecorator } from '@/lib/fileDecorator';
-import { worktreeEventRegister } from '@/lib/gitEvent';
+import logger from '@/core/log/logger';
+import { WorkTreeDecorator } from '@/core/util/worktree';
+import { worktreeEventRegister } from '@/core/event/git';
 
 export function activate(context: vscode.ExtensionContext) {
     logger.log('git-worktree-manager is now active!');
@@ -30,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
         await updateWorkspaceListCache();
         treeDataEvent.fire();
     });
-    CommandsManger.register(context);
+    registerCommands(context);
     TreeViewManager.register(context);
     collectEvent(context);
     context.subscriptions.push(folderRoot, updateHandler, logger, worktreeEventRegister, workspaceFoldersChangeEvent);
