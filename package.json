@@ -177,7 +177,7 @@
       {
         "command": "git-worktree-manager.checkoutBranch",
         "title": "%cmd.checkoutBranch%",
-        "icon": "$(source-control)",
+        "icon": "$(target)",
         "category": "Worktree"
       },
       {
