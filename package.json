@@ -66,7 +66,7 @@
       {
         "command": "git-worktree-manager.addWorkTree",
         "title": "%cmd.addWorkTree%",
-        "icon": "$(file-submodule)",
+        "icon": "$(new-folder)",
         "category": "Worktree"
       },
       {
@@ -83,7 +83,7 @@
       {
         "command": "git-worktree-manager.addWorkTreeFromBranch",
         "title": "%cmd.addWorkTreeFromBranch%",
-        "icon": "$(file-submodule)"
+        "icon": "$(new-folder)"
       },
       {
         "command": "git-worktree-manager.revealInSystemExplorer",
@@ -116,12 +116,12 @@
       {
         "command": "git-worktree-manager.pullWorkTree",
         "title": "%cmd.pullWorkTree%",
-        "icon": "$(arrow-down)"
+        "icon": "$(repo-pull)"
       },
       {
         "command": "git-worktree-manager.pushWorkTree",
         "title": "%cmd.pushWorkTree%",
-        "icon": "$(arrow-up)"
+        "icon": "$(repo-push)"
       },
       {
         "command": "git-worktree-manager.pruneWorkTree",
@@ -221,12 +221,12 @@
       {
         "command": "git-worktree-manager.fetchWorkTree",
         "title": "%cmd.fetchWorkTree%",
-        "icon": "$(sync)"
+        "icon": "$(repo-fetch)"
       },
       {
         "command": "git-worktree-manager.fetchRepo",
         "title": "%cmd.fetchRepo%",
-        "icon": "$(sync)"
+        "icon": "$(repo-fetch)"
       },
       {
         "command": "git-worktree-manager.toggleLog",

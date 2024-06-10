@@ -10,7 +10,7 @@ export class SettingDataProvider implements vscode.TreeDataProvider<vscode.TreeI
         return [
             {
                 label: vscode.l10n.t('Add Worktree'),
-                iconPath: new vscode.ThemeIcon('file-submodule'),
+                iconPath: new vscode.ThemeIcon('new-folder'),
                 command: {
                     command: Commands.addWorkTree,
                     title: vscode.l10n.t('Add Worktree'),
