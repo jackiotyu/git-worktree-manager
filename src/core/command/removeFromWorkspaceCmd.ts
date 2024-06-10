@@ -1,6 +1,6 @@
 import { removeFromWorkspace } from '@/core/util/workspace';
-import { WorkTreeItem } from '@/core/treeView/items';
+import { WorktreeItem } from '@/core/treeView/items';
 
-export const removeFromWorkspaceCmd = async (item: WorkTreeItem) => {
+export const removeFromWorkspaceCmd = async (item: WorktreeItem) => {
     return removeFromWorkspace(item.path);
 };

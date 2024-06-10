@@ -39,8 +39,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "git-worktree-manager.switchWorkTree",
-        "title": "%cmd.switchWorkTree%",
+        "command": "git-worktree-manager.switchWorktree",
+        "title": "%cmd.switchWorktree%",
         "category": "Worktree"
       },
       {
@@ -49,8 +49,8 @@
         "icon": "$(arrow-right)"
       },
       {
-        "command": "git-worktree-manager.refreshWorkTree",
-        "title": "%cmd.freshWorkTree%",
+        "command": "git-worktree-manager.refreshWorktree",
+        "title": "%cmd.freshWorktree%",
         "icon": "$(refresh)"
       },
       {
@@ -64,8 +64,8 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "git-worktree-manager.addWorkTree",
-        "title": "%cmd.addWorkTree%",
+        "command": "git-worktree-manager.addWorktree",
+        "title": "%cmd.addWorktree%",
         "icon": "$(new-folder)",
         "category": "Worktree"
       },
@@ -76,13 +76,13 @@
         "category": "Worktree"
       },
       {
-        "command": "git-worktree-manager.removeWorkTree",
-        "title": "%cmd.removeWorkTree%",
+        "command": "git-worktree-manager.removeWorktree",
+        "title": "%cmd.removeWorktree%",
         "icon": "$(close)"
       },
       {
-        "command": "git-worktree-manager.addWorkTreeFromBranch",
-        "title": "%cmd.addWorkTreeFromBranch%",
+        "command": "git-worktree-manager.addWorktreeFromBranch",
+        "title": "%cmd.addWorktreeFromBranch%",
         "icon": "$(new-folder)"
       },
       {
@@ -96,36 +96,36 @@
         "icon": "$(folder-opened)"
       },
       {
-        "command": "git-worktree-manager.repairWorkTree",
-        "title": "%cmd.repairWorkTree%"
+        "command": "git-worktree-manager.repairWorktree",
+        "title": "%cmd.repairWorktree%"
       },
       {
-        "command": "git-worktree-manager.moveWorkTree",
-        "title": "%cmd.moveWorkTree%"
+        "command": "git-worktree-manager.moveWorktree",
+        "title": "%cmd.moveWorktree%"
       },
       {
-        "command": "git-worktree-manager.lockWorkTree",
-        "title": "%cmd.lockWorkTree%",
+        "command": "git-worktree-manager.lockWorktree",
+        "title": "%cmd.lockWorktree%",
         "icon": "$(lock)"
       },
       {
-        "command": "git-worktree-manager.unlockWorkTree",
-        "title": "%cmd.unlockWorkTree%",
+        "command": "git-worktree-manager.unlockWorktree",
+        "title": "%cmd.unlockWorktree%",
         "icon": "$(unlock)"
       },
       {
-        "command": "git-worktree-manager.pullWorkTree",
-        "title": "%cmd.pullWorkTree%",
+        "command": "git-worktree-manager.pullWorktree",
+        "title": "%cmd.pullWorktree%",
         "icon": "$(repo-pull)"
       },
       {
-        "command": "git-worktree-manager.pushWorkTree",
-        "title": "%cmd.pushWorkTree%",
+        "command": "git-worktree-manager.pushWorktree",
+        "title": "%cmd.pushWorktree%",
         "icon": "$(repo-push)"
       },
       {
-        "command": "git-worktree-manager.pruneWorkTree",
-        "title": "%cmd.pruneWorkTree%",
+        "command": "git-worktree-manager.pruneWorktree",
+        "title": "%cmd.pruneWorktree%",
         "icon": "$(wand)"
       },
       {
@@ -219,8 +219,8 @@
         "icon": "$(history)"
       },
       {
-        "command": "git-worktree-manager.fetchWorkTree",
-        "title": "%cmd.fetchWorkTree%",
+        "command": "git-worktree-manager.fetchWorktree",
+        "title": "%cmd.fetchWorktree%",
         "icon": "$(repo-fetch)"
       },
       {
@@ -281,7 +281,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "git-worktree-manager.refreshWorkTree",
+          "command": "git-worktree-manager.refreshWorktree",
           "when": "view == git-worktree-manager-list",
           "group": "navigation@100"
         },
@@ -291,12 +291,12 @@
           "group": "navigation@20"
         },
         {
-          "command": "git-worktree-manager.addWorkTree",
+          "command": "git-worktree-manager.addWorktree",
           "when": "view === git-worktree-manager-list",
           "group": "navigation@1"
         },
         {
-          "command": "git-worktree-manager.pruneWorkTree",
+          "command": "git-worktree-manager.pruneWorktree",
           "when": "view === git-worktree-manager-list",
           "group": "navigation@2"
         },
@@ -353,7 +353,7 @@
           "group": "terminal@1"
         },
         {
-          "command": "git-worktree-manager.addWorkTreeFromBranch",
+          "command": "git-worktree-manager.addWorktreeFromBranch",
           "when": "view === git-worktree-manager-list && viewItem == git-worktree-manager.branchItem",
           "group": "worktree-action"
         },
@@ -368,7 +368,7 @@
           "group": "file-action@1"
         },
         {
-          "command": "git-worktree-manager.addWorkTree",
+          "command": "git-worktree-manager.addWorktree",
           "when": "viewItem =~ /git-worktree-manager\\.(workspaceGitMainFolder|gitFolderItem)/",
           "group": "inline@2"
         },
@@ -378,17 +378,17 @@
           "group": "inline@100"
         },
         {
-          "command": "git-worktree-manager.fetchWorkTree",
+          "command": "git-worktree-manager.fetchWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.fetch/ && config.git-worktree-manager.treeView.showFetchInTreeItem",
           "group": "inline@9"
         },
         {
-          "command": "git-worktree-manager.pushWorkTree",
+          "command": "git-worktree-manager.pushWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.ahead/",
           "group": "inline@10"
         },
         {
-          "command": "git-worktree-manager.pullWorkTree",
+          "command": "git-worktree-manager.pullWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem(.*)\\.behind/",
           "group": "inline@10"
         },
@@ -418,12 +418,12 @@
           "group": "inline@16"
         },
         {
-          "command": "git-worktree-manager.lockWorkTree",
+          "command": "git-worktree-manager.lockWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
-          "command": "git-worktree-manager.unlockWorkTree",
+          "command": "git-worktree-manager.unlockWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
           "group": "inline@20"
         },
@@ -515,27 +515,27 @@
       ],
       "worktree-action": [
         {
-          "command": "git-worktree-manager.repairWorkTree",
+          "command": "git-worktree-manager.repairWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "worktree-action"
         },
         {
-          "command": "git-worktree-manager.moveWorkTree",
+          "command": "git-worktree-manager.moveWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "worktree-action"
         },
         {
-          "command": "git-worktree-manager.removeWorkTree",
+          "command": "git-worktree-manager.removeWorktree",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "worktree-delete"
         },
         {
-          "command": "git-worktree-manager.lockWorkTree",
+          "command": "git-worktree-manager.lockWorktree",
           "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.unlock/",
           "group": "worktree-lock"
         },
         {
-          "command": "git-worktree-manager.unlockWorkTree",
+          "command": "git-worktree-manager.unlockWorktree",
           "when": "viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.lock/",
           "group": "worktree-lock"
         }
@@ -546,7 +546,7 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.refreshWorkTree",
+          "command": "git-worktree-manager.refreshWorktree",
           "when": "false"
         },
         {
@@ -566,11 +566,11 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.removeWorkTree",
+          "command": "git-worktree-manager.removeWorktree",
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.addWorkTreeFromBranch",
+          "command": "git-worktree-manager.addWorktreeFromBranch",
           "when": "false"
         },
         {
@@ -582,23 +582,23 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.repairWorkTree",
+          "command": "git-worktree-manager.repairWorktree",
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.moveWorkTree",
+          "command": "git-worktree-manager.moveWorktree",
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.lockWorkTree",
+          "command": "git-worktree-manager.lockWorktree",
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.unlockWorkTree",
+          "command": "git-worktree-manager.unlockWorktree",
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.pruneWorkTree",
+          "command": "git-worktree-manager.pruneWorktree",
           "when": "false"
         },
         {
@@ -654,11 +654,11 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.pullWorkTree",
+          "command": "git-worktree-manager.pullWorktree",
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.pushWorkTree",
+          "command": "git-worktree-manager.pushWorktree",
           "when": "false"
         },
         {

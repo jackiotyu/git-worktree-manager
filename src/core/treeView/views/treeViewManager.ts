@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import { GitFoldersDataProvider, RecentFoldersDataProvider, WorkTreeDataProvider, SettingDataProvider } from '@/core/treeView/views';
+import { GitFoldersDataProvider, RecentFoldersDataProvider, WorktreeDataProvider, SettingDataProvider } from '@/core/treeView/views';
 import { TreeItemKind } from '@/constants';
 import { revealTreeItemEvent, changeUIVisibleEvent } from '@/core/event/events';
 
 export class TreeViewManager {
     static register (context: vscode.ExtensionContext) {
         vscode.window.registerTreeDataProvider(SettingDataProvider.id, new SettingDataProvider());
-        const worktreeView = vscode.window.createTreeView(WorkTreeDataProvider.id, {
-            treeDataProvider: new WorkTreeDataProvider(context),
+        const worktreeView = vscode.window.createTreeView(WorktreeDataProvider.id, {
+            treeDataProvider: new WorktreeDataProvider(context),
             showCollapseAll: false,
         });
         const gitFolderView = vscode.window.createTreeView(GitFoldersDataProvider.id, {

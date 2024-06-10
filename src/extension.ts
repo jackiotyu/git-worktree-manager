@@ -8,7 +8,7 @@ import { Alert } from '@/core/ui/message';
 import { TreeViewManager } from '@/core/treeView/views';
 import throttle from 'lodash/throttle';
 import logger from '@/core/log/logger';
-import { WorkTreeDecorator } from '@/core/util/worktree';
+import { WorktreeDecorator } from '@/core/util/worktree';
 import { worktreeEventRegister } from '@/core/event/git';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
     WorkspaceState.init(context);
     Alert.init(context);
     vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
-    vscode.window.registerFileDecorationProvider(new WorkTreeDecorator());
+    vscode.window.registerFileDecorationProvider(new WorktreeDecorator());
     const updateHandler = updateTreeDataEvent.event(
         throttle(async () => {
             await updateWorkspaceMainFolders();

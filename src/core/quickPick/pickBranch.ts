@@ -5,7 +5,7 @@ import { getAllRefList } from '@/core/git/getAllRefList';
 import { Alert } from '@/core/ui/message';
 import { backButton } from './quickPick.button';
 
-interface BranchForWorkTree extends vscode.QuickPickItem {
+interface BranchForWorktree extends vscode.QuickPickItem {
     branch?: string;
     hash?: string;
 }
@@ -14,10 +14,10 @@ export const pickBranch = async (
     title: string,
     placeholder: string,
     cwd?: string,
-): Promise<BranchForWorkTree | void | false> => {
-    let resolve: (value: BranchForWorkTree | void | false) => void = () => {};
+): Promise<BranchForWorktree | void | false> => {
+    let resolve: (value: BranchForWorktree | void | false) => void = () => {};
     let reject: (value?: any) => void = () => {};
-    let waiting = new Promise<BranchForWorkTree | void | false>((_resolve, _reject) => {
+    let waiting = new Promise<BranchForWorktree | void | false>((_resolve, _reject) => {
         resolve = _resolve;
         reject = _reject;
     });
@@ -76,7 +76,7 @@ export const pickBranch = async (
             quickPick.hide();
             return;
         }
-        const branchItems: BranchForWorkTree[] = [
+        const branchItems: BranchForWorktree[] = [
             { label: vscode.l10n.t('branch'), kind: vscode.QuickPickItemKind.Separator },
             ...branchList
                 .filter((i) => !i.worktreepath && i.HEAD !== '*')
@@ -94,7 +94,7 @@ export const pickBranch = async (
                 }),
         ];
         const defaultBranch = branchList.find((i) => i.HEAD === '*');
-        const worktreeBranchItems: BranchForWorkTree[] = [
+        const worktreeBranchItems: BranchForWorktree[] = [
             { label: 'worktree', kind: vscode.QuickPickItemKind.Separator },
             {
                 label: `HEAD ${defaultBranch?.['objectname:short'] || ''}`,
@@ -120,7 +120,7 @@ export const pickBranch = async (
                 }),
         ];
 
-        const remoteBranchItems: BranchForWorkTree[] = [
+        const remoteBranchItems: BranchForWorktree[] = [
             { label: vscode.l10n.t('remote branch'), kind: vscode.QuickPickItemKind.Separator },
             ...remoteBranchList.map((item) => {
                 return {
@@ -134,7 +134,7 @@ export const pickBranch = async (
             }),
         ];
 
-        const tagItems: BranchForWorkTree[] = [
+        const tagItems: BranchForWorktree[] = [
             { label: vscode.l10n.t('tag'), kind: vscode.QuickPickItemKind.Separator },
             ...tagList.map((item) => {
                 return {

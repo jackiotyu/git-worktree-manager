@@ -1,18 +1,18 @@
-import { getWorkTreeList } from '@/core/git/getWorkTreeList';
+import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { getWorkspaceMainFolders } from '@/core/util/workspace';
 import { WorkspaceState, GlobalState } from '@/core/state';
-import type { IFolderItemConfig, IWorkTreeCacheItem } from '@/types';
+import type { IFolderItemConfig, IWorktreeCacheItem } from '@/types';
 
-export const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorkTreeCacheItem[]> => {
+export const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorktreeCacheItem[]> => {
     const worktreeList = await Promise.all(
         gitFolders.map(async (item) => {
-            const list = await getWorkTreeList(item.path, true);
+            const list = await getWorktreeList(item.path, true);
             return [list, item] as const;
         }),
     );
     return worktreeList
         .map(([list, config]) => {
-            return list.map<IWorkTreeCacheItem>((row) => {
+            return list.map<IWorktreeCacheItem>((row) => {
                 return { ...row, label: config.name };
             });
         })
@@ -24,9 +24,9 @@ export const updateWorkspaceMainFolders = async () => {
     WorkspaceState.update('mainFolders', folders);
 };
 
-export const updateWorkTreeCache = async () => {
+export const updateWorktreeCache = async () => {
     const gitFolders = GlobalState.get('gitFolders', []);
-    let list: IWorkTreeCacheItem[] = await gitFolderToCaches(gitFolders);
+    let list: IWorktreeCacheItem[] = await gitFolderToCaches(gitFolders);
     GlobalState.update('workTreeCache', list);
 };
 

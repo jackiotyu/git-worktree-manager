@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
-import { refreshWorkTreeCmd } from '@/core/command/refreshWorkTreeCmd';
-import { switchWorkTreeCmd } from '@/core/command/switchWorkTreeCmd';
-import { addWorkTreeCmd } from '@/core/command/addWorkTreeCmd';
-import { repairWorkTreeCmd } from '@/core/command/repairWorkTreeCmd';
-import { removeWorkTreeCmd } from '@/core/command/removeWorkTreeCmd';
-import { moveWorkTreeCmd } from '@/core/command/moveWorkTreeCmd';
-import { lockWorkTreeCmd } from '@/core/command/lockWorkTreeCmd';
-import { unlockWorkTreeCmd } from '@/core/command/unlockWorkTreeCmd';
+import { refreshWorktreeCmd } from '@/core/command/refreshWorktreeCmd';
+import { switchWorktreeCmd } from '@/core/command/switchWorktreeCmd';
+import { addWorktreeCmd } from '@/core/command/addWorktreeCmd';
+import { repairWorktreeCmd } from '@/core/command/repairWorktreeCmd';
+import { removeWorktreeCmd } from '@/core/command/removeWorktreeCmd';
+import { moveWorktreeCmd } from '@/core/command/moveWorktreeCmd';
+import { lockWorktreeCmd } from '@/core/command/lockWorktreeCmd';
+import { unlockWorktreeCmd } from '@/core/command/unlockWorktreeCmd';
 import { switchToSelectFolderCmd } from '@/core/command/switchToSelectFolderCmd';
 import { revealInSystemExplorerCmd } from '@/core/command/revealInSystemExplorerCmd';
-import { addWorkTreeFromBranchCmd } from '@/core/command/addWorkTreeFromBranchCmd';
-import { pruneWorkTreeCmd } from '@/core/command/pruneWorkTreeCmd';
+import { addWorktreeFromBranchCmd } from '@/core/command/addWorktreeFromBranchCmd';
+import { pruneWorktreeCmd } from '@/core/command/pruneWorktreeCmd';
 import { openSettingCmd } from '@/core/command/openSettingCmd';
 import { addGitFolderCmd } from '@/core/command/addGitFolderCmd';
 import { refreshGitFolderCmd } from '@/core/command/refreshGitFolderCmd';
@@ -28,14 +28,14 @@ import { checkoutBranchCmd } from '@/core/command/checkoutBranchCmd';
 import { toggleGitFolderOpenCmd } from '@/core/command/toggleGitFolderOpenCmd';
 import { searchAllWorktreeCmd } from '@/core/command/searchAllWorktreeCmd';
 import { toggleGitFolderViewAs } from '@/core/command/toggleGitFolderViewAs';
-import { pushWorkTreeCmd } from '@/core/command/pushWorkTreeCmd';
-import { pullWorkTreeCmd } from '@/core/command/pullWorkTreeCmd';
+import { pushWorktreeCmd } from '@/core/command/pushWorktreeCmd';
+import { pullWorktreeCmd } from '@/core/command/pullWorktreeCmd';
 import { loadAllTreeDataCmd } from '@/core/command/loadAllTreeDataCmd';
 import { viewHistoryCmd } from '@/core/command/viewHistoryCmd';
 import { openRecentCmd } from '@/core/command/openRecentCmd';
 import { watchWorktreeEventCmd } from '@/core/command/watchWorktreeEventCmd';
 import { unwatchWorktreeEventCmd } from '@/core/command/unwatchWorktreeEventCmd';
-import { fetchWorkTreeCmd } from '@/core/command/fetchWorkTreeCmd';
+import { fetchWorktreeCmd } from '@/core/command/fetchWorktreeCmd';
 import { fetchRepoCmd } from '@/core/command/fetchRepoCmd';
 import { toggleLogCmd } from '@/core/command/toggleLogCmd';
 import { openRepositoryCmd } from '@/core/command/openRepositoryCmd';
@@ -44,23 +44,23 @@ import { AllViewItem } from '@/core/treeView/items';
 
 export function registerCommands(context: vscode.ExtensionContext) {
     context.subscriptions.push(
-        vscode.commands.registerCommand(Commands.refreshWorkTree, refreshWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.switchWorkTree, switchWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.addWorkTree, addWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.repairWorkTree, repairWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.removeWorkTree, removeWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.moveWorkTree, moveWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.lockWorkTree, lockWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.unlockWorkTree, unlockWorkTreeCmd),
+        vscode.commands.registerCommand(Commands.refreshWorktree, refreshWorktreeCmd),
+            vscode.commands.registerCommand(Commands.switchWorktree, switchWorktreeCmd),
+            vscode.commands.registerCommand(Commands.addWorktree, addWorktreeCmd),
+            vscode.commands.registerCommand(Commands.repairWorktree, repairWorktreeCmd),
+            vscode.commands.registerCommand(Commands.removeWorktree, removeWorktreeCmd),
+            vscode.commands.registerCommand(Commands.moveWorktree, moveWorktreeCmd),
+            vscode.commands.registerCommand(Commands.lockWorktree, lockWorktreeCmd),
+            vscode.commands.registerCommand(Commands.unlockWorktree, unlockWorktreeCmd),
             vscode.commands.registerCommand(Commands.switchToSelectFolder, switchToSelectFolderCmd),
-            vscode.commands.registerCommand(Commands.addWorkTreeFromBranch, addWorkTreeFromBranchCmd),
+            vscode.commands.registerCommand(Commands.addWorktreeFromBranch, addWorktreeFromBranchCmd),
             vscode.commands.registerCommand(Commands.revealInSystemExplorer, (item: AllViewItem) =>
                 revealInSystemExplorerCmd(item),
             ),
             vscode.commands.registerCommand(Commands.revealInSystemExplorerContext, (item: AllViewItem) =>
                 revealInSystemExplorerCmd(item, false),
             ),
-            vscode.commands.registerCommand(Commands.pruneWorkTree, pruneWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.pruneWorktree, pruneWorktreeCmd),
             vscode.commands.registerCommand(Commands.openSetting, openSettingCmd),
             vscode.commands.registerCommand(Commands.addGitFolder, addGitFolderCmd),
             vscode.commands.registerCommand(Commands.refreshGitFolder, refreshGitFolderCmd),
@@ -89,14 +89,14 @@ export function registerCommands(context: vscode.ExtensionContext) {
             vscode.commands.registerCommand(Commands.gitFolderViewAsList, () => {
                 toggleGitFolderViewAs(true);
             }),
-            vscode.commands.registerCommand(Commands.pushWorkTree, pushWorkTreeCmd),
-            vscode.commands.registerCommand(Commands.pullWorkTree, pullWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.pushWorktree, pushWorktreeCmd),
+            vscode.commands.registerCommand(Commands.pullWorktree, pullWorktreeCmd),
             vscode.commands.registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
             vscode.commands.registerCommand(Commands.viewHistory, viewHistoryCmd),
             vscode.commands.registerCommand(Commands.openRecent, openRecentCmd),
             vscode.commands.registerCommand(Commands.watchWorktreeEvent, watchWorktreeEventCmd),
             vscode.commands.registerCommand(Commands.unwatchWorktreeEvent, unwatchWorktreeEventCmd),
-            vscode.commands.registerCommand(Commands.fetchWorkTree, fetchWorkTreeCmd),
+            vscode.commands.registerCommand(Commands.fetchWorktree, fetchWorktreeCmd),
             vscode.commands.registerCommand(Commands.fetchRepo, fetchRepoCmd),
             vscode.commands.registerCommand(Commands.toggleLog, toggleLogCmd),
             vscode.commands.registerCommand(Commands.openRepository, openRepositoryCmd),

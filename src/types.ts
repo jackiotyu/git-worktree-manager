@@ -3,7 +3,7 @@ import { Commands, ViewId } from '@/constants';
 import * as vscode from "vscode";
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface IWorkTreeDetail {
+export interface IWorktreeDetail {
     name: string;
     path: string;
     hash: string;
@@ -20,7 +20,7 @@ export interface IWorkTreeDetail {
     remote?: string;
 }
 
-export interface IWorkTreeOutputItem {
+export interface IWorktreeOutputItem {
     worktree: string;
     HEAD: string;
     detached: void;
@@ -28,7 +28,7 @@ export interface IWorkTreeOutputItem {
     branch?: string;
 }
 
-export interface IWorkTreeCacheItem extends IWorkTreeDetail {
+export interface IWorktreeCacheItem extends IWorktreeDetail {
     label: string;
 }
 

@@ -4,6 +4,6 @@ export * from './worktree';
 
 import { FolderItem } from './folder';
 import { GitFolderItem } from './gitFolder';
-import { WorkTreeItem } from './worktree';
+import { WorktreeItem } from './worktree';
 
-export type AllViewItem = WorkTreeItem | GitFolderItem | FolderItem;
+export type AllViewItem = WorktreeItem | GitFolderItem | FolderItem;

@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { updateWorkTreeCache, updateWorkspaceListCache } from '@/core/util/cache';
+import { updateWorktreeCache, updateWorkspaceListCache } from '@/core/util/cache';
 import { GlobalState, WorkspaceState } from '@/core/state';
-import { IWorkTreeCacheItem, DefaultDisplayList, IWorktreeLess } from '@/types';
+import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess } from '@/types';
 import { Commands, QuickPickKind } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/core/ui/message';
@@ -33,11 +33,11 @@ import {
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
 
-interface WorkTreePick extends vscode.QuickPickItem {
+interface WorktreePick extends vscode.QuickPickItem {
     path?: string;
 }
 
-const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
+const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     // 是否置顶当前仓库的分支
     const pinCurRepo = Config.get('worktreePick.pinCurrentRepo', false);
     const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
@@ -114,7 +114,7 @@ const mapWorkTreePickItems = (list: IWorkTreeCacheItem[]): WorkTreePick[] => {
     });
     let groupMap = groupBy(items, 'key');
     let pathSize = folderRoot.folderPathSet.size;
-    return Object.keys(groupMap).reduce<WorkTreePick[]>((list, key) => {
+    return Object.keys(groupMap).reduce<WorktreePick[]>((list, key) => {
         if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.path))) {
             list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '' });
             list.unshift(...groupMap[key]);
@@ -150,20 +150,20 @@ export const pickWorktree = async () => {
 
     let resolve: (value?: any) => void = () => {};
     let reject: (value?: any) => void = () => {};
-    let waiting = new Promise<WorkTreePick | void>((_resolve, _reject) => {
+    let waiting = new Promise<WorktreePick | void>((_resolve, _reject) => {
         resolve = _resolve;
         reject = _reject;
     });
     try {
-        let list: IWorkTreeCacheItem[] = [];
-        let workspaceList: IWorkTreeCacheItem[] = [];
+        let list: IWorktreeCacheItem[] = [];
+        let workspaceList: IWorktreeCacheItem[] = [];
         let listLoading: boolean = true;
         let workspaceListLoading: boolean = true;
         let checkSortByBranch = false;
         let canClose = true;
 
         const updateList = () => {
-            let items = displayAll ? mapWorkTreePickItems(list) : mapWorkTreePickItems(workspaceList);
+            let items = displayAll ? mapWorktreePickItems(list) : mapWorktreePickItems(workspaceList);
             const busy = displayAll ? listLoading : workspaceListLoading;
             if (checkSortByBranch) {
                 items = items
@@ -180,7 +180,7 @@ export const pickWorktree = async () => {
                 workspaceListLoading = false;
                 updateList();
             });
-            updateWorkTreeCache().then(() => {
+            updateWorktreeCache().then(() => {
                 list = GlobalState.get('workTreeCache', []);
                 listLoading = false;
                 updateList();
@@ -189,7 +189,7 @@ export const pickWorktree = async () => {
 
         const initEvent: vscode.Disposable = updateTreeDataEvent.event(initList);
 
-        const quickPick = vscode.window.createQuickPick<WorkTreePick>();
+        const quickPick = vscode.window.createQuickPick<WorktreePick>();
         quickPick.placeholder = vscode.l10n.t('Select to open in new window');
         quickPick.canSelectMany = false;
         quickPick.matchOnDescription = true;
@@ -239,7 +239,7 @@ export const pickWorktree = async () => {
             if (event === addWorktreeQuickInputButton) {
                 // FIXME 改造quickPick
                 canClose = false;
-                vscode.commands.executeCommand(Commands.addWorkTree).then((res) => {
+                vscode.commands.executeCommand(Commands.addWorktree).then((res) => {
                     canClose = true;
                     if (res === false) {
                         quickPick.hide();

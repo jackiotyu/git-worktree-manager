@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 import { TreeItemKind, WORK_TREE_SCHEME } from '@/constants';
 import { judgeIncludeFolder, getFolderIcon } from '@/core/util/folder';
 import { getWorktreeStatus } from '@/core/util/worktree';
-import { IWorkTreeDetail } from '@/types';
+import { IWorktreeDetail } from '@/types';
 import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
 
-export class WorkTreeItem extends vscode.TreeItem {
+export class WorktreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon;
     path: string;
     name: string;
@@ -16,7 +16,7 @@ export class WorkTreeItem extends vscode.TreeItem {
     remote?: string;
     isBranch?: boolean;
     constructor(
-        item: IWorkTreeDetail,
+        item: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
         parent?: GitFolderItem | WorkspaceMainGitFolderItem,
     ) {

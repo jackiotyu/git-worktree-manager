@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { IFolderItemConfig, IWorkTreeCacheItem } from '@/types';
+import { IFolderItemConfig, IWorktreeCacheItem } from '@/types';
 import { globalStateEvent } from '@/core/event/events';
 
 export class GlobalState {
@@ -17,14 +17,14 @@ export class GlobalState {
     }
     static get(key: 'gitFolderViewAsTree', defaultValue: boolean): boolean;
     static get(key: 'gitFolders', defaultValue: IFolderItemConfig[]): IFolderItemConfig[];
-    static get(key: 'workTreeCache', defaultValue: IWorkTreeCacheItem[]): IWorkTreeCacheItem[];
+    static get(key: 'workTreeCache', defaultValue: IWorktreeCacheItem[]): IWorktreeCacheItem[];
     static get<T>(key: string, defaultValue: T): T {
         return this.state.get<T>(key, defaultValue);
     }
 
     static update(key: 'gitFolderViewAsTree', value: boolean): Thenable<void>;
     static update(key: 'gitFolders', value: IFolderItemConfig[]): Thenable<void>;
-    static update(key: 'workTreeCache', value: IWorkTreeCacheItem[]): Thenable<void>;
+    static update(key: 'workTreeCache', value: IWorktreeCacheItem[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {
             globalStateEvent.fire();
@@ -45,12 +45,12 @@ export class WorkspaceState {
             },
         });
     }
-    static get(key: 'workTreeCache', defaultValue: IWorkTreeCacheItem[]): IWorkTreeCacheItem[];
+    static get(key: 'workTreeCache', defaultValue: IWorktreeCacheItem[]): IWorktreeCacheItem[];
     static get(key: 'mainFolders', defaultValue: IFolderItemConfig[]): IFolderItemConfig[];
     static get<T>(key: string, defaultValue: T): T {
         return this.state.get<T>(key, defaultValue);
     }
-    static update(key: 'workTreeCache', value: IWorkTreeCacheItem[]): Thenable<void>;
+    static update(key: 'workTreeCache', value: IWorktreeCacheItem[]): Thenable<void>;
     static update(key: 'mainFolders', value: IFolderItemConfig[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {

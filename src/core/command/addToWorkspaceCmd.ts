@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { checkFolderExist } from '@/core/util/file';
 import { treeDataEvent } from '@/core/event/events';
-import { WorkTreeItem, FolderItem } from '@/core/treeView/items';
+import { WorktreeItem, FolderItem } from '@/core/treeView/items';
 
 export const addToWorkspace = (path: string) => {
     let success = vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
@@ -13,7 +13,7 @@ export const addToWorkspace = (path: string) => {
     }
 };
 
-export const addToWorkspaceCmd = async (item: WorkTreeItem | FolderItem) => {
+export const addToWorkspaceCmd = async (item: WorktreeItem | FolderItem) => {
     if (!(await checkFolderExist(item.path))) {
         return;
     }
