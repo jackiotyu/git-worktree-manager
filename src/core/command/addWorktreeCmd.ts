@@ -4,14 +4,18 @@ import type { IWorktreeLess } from '@/types';
 import { Alert } from '@/core/ui/message';
 import { pickBranch } from '@/core/quickPick/pickBranch';
 import { createWorktreeFromInfo } from '@/core/command/createWorktreeFromInfo';
+import { getMainFolder } from '@/core/git/getMainFolder';
 
 export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     let gitFolder = item?.path || (await pickGitFolder());
     if (gitFolder === null) Alert.showErrorMessage(vscode.l10n.t('Please open a git repository in workspace'));
     if (!gitFolder) return false;
+    const mainFolder = await getMainFolder(gitFolder);
+    if(!mainFolder) return false;
     let branchItem = await pickBranch(
         vscode.l10n.t('Create Worktree ({0})', gitFolder.length > 35 ? `...${gitFolder.slice(-34)}` : gitFolder),
         vscode.l10n.t('Choose a branch to create new worktree for'),
+        mainFolder,
         gitFolder,
     );
     // FIXME 改造quickPick

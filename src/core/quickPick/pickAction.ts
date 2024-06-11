@@ -89,6 +89,90 @@ const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
     return items.filter((i) => !i.hide);
 };
 
+interface HandlerArgs {
+    resolve: Function;
+    reject: Function;
+    quickPick: vscode.QuickPick<QuickPickAction>;
+}
+
+async function handleAccept({
+    quickPick,
+    resolve,
+    reject,
+    viewItem,
+}: HandlerArgs & {
+    viewItem: IWorktreeLess;
+}) {
+    const item = quickPick.selectedItems[0];
+    if (!item) {
+        resolve();
+        quickPick.hide();
+        return;
+    }
+    switch (item.action) {
+        case 'copy':
+            const detail = item.description || '';
+            await vscode.env.clipboard.writeText(detail).then(() => {
+                Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', detail));
+            });
+            break;
+        case Commands.openExternalTerminalContext:
+        case Commands.openTerminal:
+        case Commands.revealInSystemExplorerContext:
+        case Commands.viewHistory:
+        case Commands.openRepository:
+            await vscode.commands.executeCommand(item.action, viewItem);
+            break;
+        case Commands.removeFromWorkspace:
+        case Commands.addToWorkspace:
+            reject();
+            quickPick.hide();
+            process.nextTick(() => {
+                vscode.commands.executeCommand(item.action, viewItem);
+            });
+            return;
+        default:
+            const value: never = item.action;
+            void value;
+            break;
+    }
+    resolve(item);
+    quickPick.hide();
+}
+
+function handleTriggerButton({
+    event,
+    resolve,
+    reject,
+    quickPick,
+}: HandlerArgs & {
+    event: vscode.QuickInputButton;
+}) {
+    if (event === backButton) {
+        resolve();
+        quickPick.hide();
+        return;
+    }
+}
+
+function handleHide({
+    disposables,
+    resolve,
+    reject,
+    quickPick,
+}: HandlerArgs & {
+    disposables: vscode.Disposable[];
+}) {
+    reject();
+    disposables.forEach((i) => i.dispose());
+    disposables.length = 0;
+    quickPick.dispose();
+}
+
+function buildTitle(viewItem: IWorktreeLess) {
+    return `${viewItem.name} ⇄ ${viewItem.path.length > 35 ? `...${viewItem.path.slice(-34)}` : viewItem.path}`;
+}
+
 export const pickAction = async (viewItem: IWorktreeLess) => {
     const disposables: vscode.Disposable[] = [];
     let resolve: (value: QuickPickAction | void | false) => void = () => {};
@@ -99,63 +183,14 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
     });
     try {
         const quickPick = vscode.window.createQuickPick<QuickPickAction>();
-        quickPick.title = `${viewItem.name} ⇄ ${
-            viewItem.path.length > 35 ? `...${viewItem.path.slice(-34)}` : viewItem.path
-        }`;
+        quickPick.title = buildTitle(viewItem);
         quickPick.placeholder = vscode.l10n.t('Please select an action');
         quickPick.buttons = [backButton];
         quickPick.busy = true;
         disposables.push(
-            quickPick.onDidHide(() => {
-                reject();
-                disposables.forEach((i) => i.dispose());
-                disposables.length = 0;
-                quickPick.dispose();
-            }),
-            quickPick.onDidAccept(async () => {
-                const item = quickPick.selectedItems[0];
-                if (!item) {
-                    resolve();
-                    quickPick.hide();
-                    return;
-                }
-                switch (item.action) {
-                    case 'copy':
-                        const detail = item.description || '';
-                        await vscode.env.clipboard.writeText(detail).then(() => {
-                            Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', detail));
-                        });
-                        break;
-                    case Commands.openExternalTerminalContext:
-                    case Commands.openTerminal:
-                    case Commands.revealInSystemExplorerContext:
-                    case Commands.viewHistory:
-                    case Commands.openRepository:
-                        await vscode.commands.executeCommand(item.action, viewItem);
-                        break;
-                    case Commands.removeFromWorkspace:
-                    case Commands.addToWorkspace:
-                        reject();
-                        quickPick.hide();
-                        process.nextTick(() => {
-                            vscode.commands.executeCommand(item.action, viewItem);
-                        });
-                        return;
-                    default:
-                        const value: never = item.action;
-                        void value;
-                        break;
-                }
-                resolve(item);
-                quickPick.hide();
-            }),
-            quickPick.onDidTriggerButton((event) => {
-                if (event === backButton) {
-                    resolve();
-                    quickPick.hide();
-                    return;
-                }
-            }),
+            quickPick.onDidHide(() => handleHide({ disposables, resolve, reject, quickPick })),
+            quickPick.onDidAccept(() => handleAccept({ quickPick, resolve, reject, viewItem })),
+            quickPick.onDidTriggerButton((event) => handleTriggerButton({ event, resolve, reject, quickPick })),
         );
         quickPick.show();
         await new Promise((r) => process.nextTick(r));

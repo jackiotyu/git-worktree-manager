@@ -3,6 +3,7 @@ import { Alert } from '@/core/ui/message';
 import { IWorktreeLess } from '@/types';
 import folderRoot from "@/core/folderRoot";
 import { checkGitValid } from '@/core/git/checkGitValid';
+import { getMainFolder } from '@/core/git/getMainFolder';
 import { getNameRev } from '@/core/git/getNameRev';
 import { checkoutBranch } from '@/core/git/checkoutBranch';
 import { pickBranch } from '@/core/quickPick/pickBranch';
@@ -25,9 +26,12 @@ export const checkoutBranchCmd = async (item?: IWorktreeLess) => {
         };
     }
     if (!selectedItem) return false;
+    const mainFolder = await getMainFolder(selectedItem.path);
+    if(!mainFolder) return false;
     let branchItem = await pickBranch(
         vscode.l10n.t('Checkout branch ( {0} )', `${selectedItem.name} ⇄ ${selectedItem.path.length > 35 ? `...${selectedItem.path.slice(-34)}` : selectedItem.path}`),
         vscode.l10n.t('Select branch for checkout'),
+        mainFolder,
         selectedItem.path,
     );
     // FIXME 改造quickPick

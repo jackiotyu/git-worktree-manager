@@ -1,6 +1,6 @@
 import { Uri as URI, TreeItem } from 'vscode';
-import { Commands, ViewId } from '@/constants';
-import * as vscode from "vscode";
+import { Commands, ViewId, refArgList } from '@/constants';
+import * as vscode from 'vscode';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IWorktreeDetail {
@@ -33,13 +33,13 @@ export interface IWorktreeCacheItem extends IWorktreeDetail {
 }
 
 export interface IRecentFolder {
-	readonly folderUri: URI;
-	label?: string;
-	readonly remoteAuthority?: string;
+    readonly folderUri: URI;
+    label?: string;
+    readonly remoteAuthority?: string;
 }
 
 export interface IRecentlyOpened {
-	workspaces: Array<IRecentFolder>;
+    workspaces: Array<IRecentFolder>;
 }
 
 export interface ILoadMoreItem extends TreeItem {
@@ -59,6 +59,16 @@ export interface IRecentFolderConfig extends Pick<IFolderItemConfig, 'name' | 'p
     uri: URI;
 }
 
+type RepoPath = string;
+export type RefItem = Record<(typeof refArgList)[number], string>;
+export type RefList = RefItem[];
+export type RepoRefList = {
+    branchList: RefList;
+    remoteBranchList: RefList;
+    tagList: RefList;
+};
+export type IRepoRefMap = Record<RepoPath, RepoRefList>;
+
 export interface IWorktreeLess {
     name: string;
     path: string;
@@ -75,14 +85,15 @@ export enum GitHistoryExtension {
 }
 
 export interface QuickPickAction extends vscode.QuickPickItem {
-    action: 'copy' |
-    Commands.openTerminal |
-    Commands.openExternalTerminalContext |
-    Commands.revealInSystemExplorerContext |
-    Commands.addToWorkspace |
-    Commands.removeFromWorkspace |
-    Commands.viewHistory |
-    Commands.openRepository;
+    action:
+        | 'copy'
+        | Commands.openTerminal
+        | Commands.openExternalTerminalContext
+        | Commands.revealInSystemExplorerContext
+        | Commands.addToWorkspace
+        | Commands.removeFromWorkspace
+        | Commands.viewHistory
+        | Commands.openRepository;
     hide?: boolean;
 }
 
@@ -98,3 +109,15 @@ export type FetchArgs = {
     remoteRef: string;
     cwd: string;
 };
+
+export interface BranchForWorktree extends vscode.QuickPickItem {
+    branch?: string;
+    hash?: string;
+}
+export type IPickBranchResolveValue = BranchForWorktree | void | false;
+export type IPickBranch = (
+    title: string,
+    placeholder: string,
+    mainFolder: string,
+    cwd: string,
+) => Promise<IPickBranchResolveValue>;
