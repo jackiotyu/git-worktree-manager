@@ -80,10 +80,8 @@ const buildRemoteBranchDesc = (item: RefItem) =>
     `${vscode.l10n.t('remote branch')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
         item.authordate,
     )}`;
-const buildTagDesc = (item: RefItem) =>
-    `${vscode.l10n.t('tag')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
-        item.authordate,
-    )}`;
+const buildTagDesc = (hash: string, authordate: string) =>
+    `${vscode.l10n.t('tag')} $(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
 
 const mapBranchItems = (branchList: RefList) => {
     const branchItems: BranchForWorktree[] = [
@@ -148,11 +146,12 @@ const mapTagItems = (tagList: RefList) => {
     const tagItems: BranchForWorktree[] = [
         { label: vscode.l10n.t('tag'), kind: vscode.QuickPickItemKind.Separator },
         ...tagList.map((item) => {
+            const hash = (item['*objectname'] || item['objectname:short']).slice(0, 8);
             return {
                 label: item['refname'].replace('refs/tags/', ''),
                 iconPath: new vscode.ThemeIcon('tag'),
-                description: buildTagDesc(item),
-                hash: item['objectname:short'],
+                description: buildTagDesc(hash, item['*authordate']),
+                hash,
             };
         }),
     ];

@@ -75,7 +75,7 @@ export enum ViewId {
     settingList = 'git-worktree-manager-setting',
 }
 
-export const refArgList = ['refname', 'objectname:short', 'worktreepath', 'authordate', 'HEAD', 'refname:short'] as const;
+export const refArgList = ['refname', 'objectname:short', '*objectname', 'worktreepath', 'authordate', '*authordate', 'HEAD', 'refname:short'] as const;
 
 export enum HEAD {
     current = '*'

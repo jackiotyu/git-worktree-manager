@@ -15,9 +15,11 @@ export function formatSimpleQuery<T extends string>(keyList: T[]) {
     return [...new Set(keyList)].map((key) => `${key}="%${key}"`).join(' ');
 }
 
+// 转义正则表达式特殊字符
+const escapedReg = /[.*+?^${}()|[\]\\]/g;
 export function parseOutput<T extends string>(output: string, keyList: T[]): Record<T, string>[] {
     let tokenList = [...new Set(keyList)];
-    let regex = tokenList.map((key) => `${key}="(.*)"`).join(' ');
+    let regex = tokenList.map((key) => `${key.replace(escapedReg, '\\$&')}="(.*)"`).join(' ');
     let workTrees = [];
     let matches = output.matchAll(new RegExp(regex, 'g'));
     for (const match of matches) {
