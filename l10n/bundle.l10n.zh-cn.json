@@ -100,5 +100,9 @@
     "Select folder(s)": "选择目录",
     "Fetch all remote commit on {1}": "抓取全部远程提交于 {0}",
     "Fetch remote ( {0} ) on {1}": "抓取 ( {0} ) 的远程提交于 {1}",
-    "Open the repository in Source Control view": "在源代码管理中打开该仓库"
+    "Open the repository in Source Control view": "在源代码管理中打开该仓库",
+    "Use base name": "使用文件夹名称",
+    "Use full path": "使用完整路径",
+    "There are no folders to add": "没有文件夹可以添加",
+    "All folders have been added, there are no more folders to add": "已添加全部文件夹，没有文件夹可以额外添加"
 }
