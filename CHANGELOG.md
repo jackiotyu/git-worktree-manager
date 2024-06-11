@@ -1,3 +1,9 @@
+## [0.4.3] 2024-06-11
+
+### Change
+
+- Improve performance and replace some icons.
+
 ## [0.4.2] 2024-05-30
 
 ### Change
