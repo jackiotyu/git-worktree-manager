@@ -55,7 +55,7 @@ export const useWorkspaceWorktreeQuickInputButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Click to display worktree list in workspace'),
 };
 export const checkoutBranchQuickInputButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('target'),
+    iconPath: new vscode.ThemeIcon('source-control'),
     tooltip: vscode.l10n.t('Checkout'),
 };
 export const addWorktreeQuickInputButton: vscode.QuickInputButton = {
