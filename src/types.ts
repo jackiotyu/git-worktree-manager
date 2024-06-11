@@ -59,7 +59,6 @@ export interface IRecentFolderConfig extends Pick<IFolderItemConfig, 'name' | 'p
     uri: URI;
 }
 
-type RepoPath = string;
 export type RefItem = Record<(typeof refArgList)[number], string>;
 export type RefList = RefItem[];
 export type RepoRefList = {
@@ -67,7 +66,6 @@ export type RepoRefList = {
     remoteBranchList: RefList;
     tagList: RefList;
 };
-export type IRepoRefMap = Record<RepoPath, RepoRefList>;
 
 export interface IWorktreeLess {
     name: string;

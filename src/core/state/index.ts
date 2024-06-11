@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { IFolderItemConfig, IWorktreeCacheItem, IRepoRefMap } from '@/types';
+import { IFolderItemConfig, IWorktreeCacheItem, RepoRefList } from '@/types';
 import { globalStateEvent } from '@/core/event/events';
 
 export class GlobalState {
@@ -15,7 +15,7 @@ export class GlobalState {
             },
         });
     }
-    static get(key: 'gitRepoRefMap', defaultValue: IRepoRefMap): IRepoRefMap;
+    static get(key: `global.gitRepo.refList.${string}`, defaultValue: RepoRefList): RepoRefList;
     static get(key: 'gitFolderViewAsTree', defaultValue: boolean): boolean;
     static get(key: 'gitFolders', defaultValue: IFolderItemConfig[]): IFolderItemConfig[];
     static get(key: 'workTreeCache', defaultValue: IWorktreeCacheItem[]): IWorktreeCacheItem[];
@@ -23,7 +23,7 @@ export class GlobalState {
         return this.state.get<T>(key, defaultValue);
     }
 
-    static update(key: 'gitRepoRefMap', value: IRepoRefMap): Thenable<void>;
+    static update(key: `global.gitRepo.refList.${string}`, value: RepoRefList): Thenable<void>;
     static update(key: 'gitFolderViewAsTree', value: boolean): Thenable<void>;
     static update(key: 'gitFolders', value: IFolderItemConfig[]): Thenable<void>;
     static update(key: 'workTreeCache', value: IWorktreeCacheItem[]): Thenable<void>;

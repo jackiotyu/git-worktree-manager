@@ -6,7 +6,7 @@ import { Alert } from '@/core/ui/message';
 import { backButton } from './quickPick.button';
 import { GlobalState } from '@/core/state';
 import { refArgList, HEAD } from '@/constants';
-import type { RefItem, RefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
+import type { RefItem, RefList, RepoRefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
 import { getLastCommitHash } from '@/core/git/getLastCommitHash';
 
 type ResolveValue = IPickBranchResolveValue;
@@ -46,9 +46,7 @@ function handleTriggerButton({ resolve, reject, quickPick, event }: TriggerButto
     }
 }
 
-const getRefList = async (cwd?: string) => {
-    // 使用 git for-each-ref 获取所有分支和tag
-    const allRefList = await getAllRefList([...refArgList], cwd);
+const mapRefList = (allRefList: RefList) => {
     let branchList: RefList = [];
     let remoteBranchList: RefList = [];
     let tagList: RefList = [];
@@ -66,6 +64,12 @@ const getRefList = async (cwd?: string) => {
         remoteBranchList,
         tagList,
     };
+};
+
+const getRefList = async (cwd?: string) => {
+    // 使用 git for-each-ref 获取所有分支和tag
+    const allRefList = await getAllRefList([...refArgList], cwd);
+    return mapRefList(allRefList);
 };
 
 const buildBranchDesc = (item: RefItem) =>
@@ -180,6 +184,37 @@ const mapRefItems = ({
     ];
 };
 
+const getRefListCache = async (mainFolder: string, cwd: string) => {
+    const refList = GlobalState.get(`global.gitRepo.refList.${mainFolder}`, {
+        branchList: [],
+        remoteBranchList: [],
+        tagList: [],
+    });
+    if (!refList.branchList.length && !refList.remoteBranchList.length && !refList.tagList.length) return false;
+    const hash = await getLastCommitHash(cwd, true);
+    refList.branchList.some((item) => {
+        if (item['objectname:short'] !== hash) return false;
+        item.HEAD = HEAD.current;
+        return true;
+    });
+    return refList;
+};
+
+const updateRefListCache = (mainFolder: string, refList: RepoRefList) => {
+    const { branchList, remoteBranchList, tagList } = refList;
+    const branchItems = branchList.map((item) => {
+        if (item.HEAD !== HEAD.current) return item;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        return { ...item, HEAD: ' ' };
+    });
+    // 添加缓存
+    GlobalState.update(`global.gitRepo.refList.${mainFolder}`, {
+        branchList: branchItems,
+        remoteBranchList,
+        tagList,
+    });
+};
+
 export const pickBranch: IPickBranch = async (title, placeholder, mainFolder, cwd) => {
     let resolve: ResolveType = () => {};
     let reject: RejectType = () => {};
@@ -207,34 +242,15 @@ export const pickBranch: IPickBranch = async (title, placeholder, mainFolder, cw
         // TODO 按名称排序
         quickPick.show();
         quickPick.busy = true;
-        const repoRefMap = GlobalState.get('gitRepoRefMap', {});
         // 读取缓存
-        if (repoRefMap[mainFolder]) {
-            const hash = await getLastCommitHash(cwd, true);
-            const branchItems = repoRefMap[mainFolder];
-            branchItems.branchList.some((item) => {
-                console.log(item['objectname:short'], hash, '....');
-                if (item['objectname:short'] === hash) {
-                    item.HEAD = HEAD.current;
-                }
-            });
-            quickPick.items = mapRefItems(repoRefMap[mainFolder]);
-        }
+        const refList = await getRefListCache(mainFolder, cwd);
+        if (refList) quickPick.items = mapRefItems(refList);
         const { branchList, remoteBranchList, tagList } = await getRefList(cwd);
         if (!branchList) {
             quickPick.hide();
             return;
         }
-        const branchItems = branchList.map((item) => {
-            if (item.HEAD !== HEAD.current) return item;
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            return { ...item, HEAD: ' ' };
-        });
-        // 添加缓存
-        GlobalState.update('gitRepoRefMap', {
-            ...repoRefMap,
-            [mainFolder]: { branchList: branchItems, remoteBranchList, tagList },
-        });
+        updateRefListCache(mainFolder, { branchList, remoteBranchList, tagList });
         quickPick.items = mapRefItems({ branchList, remoteBranchList, tagList });
         quickPick.busy = false;
         return await waiting;
