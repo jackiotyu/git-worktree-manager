@@ -8,39 +8,21 @@ export class SettingDataProvider implements vscode.TreeDataProvider<vscode.TreeI
     }
     getChildren(): vscode.ProviderResult<vscode.TreeItem[]> {
         return [
-            {
-                label: vscode.l10n.t('Add Worktree'),
-                iconPath: new vscode.ThemeIcon('new-folder'),
-                command: {
-                    command: Commands.addWorktree,
-                    title: vscode.l10n.t('Add Worktree'),
-                },
-            },
-            {
-                label: vscode.l10n.t('Find Worktree'),
-                iconPath: new vscode.ThemeIcon('search'),
-                command: {
-                    command: Commands.searchAllWorktree,
-                    title: vscode.l10n.t('Find Worktree'),
-                },
-            },
-            {
-                label: vscode.l10n.t('Open Settings'),
-                iconPath: new vscode.ThemeIcon('gear'),
-                command: {
-                    command: Commands.openSetting,
-                    title: vscode.l10n.t('Open Settings'),
-                },
-            },
-            {
-                label: vscode.l10n.t('Report Issue'),
-                iconPath: new vscode.ThemeIcon('issues'),
-                command: {
-                    command: 'vscode.open',
-                    arguments: ['https://github.com/jackiotyu/git-worktree-manager/issues'],
-                    title: vscode.l10n.t('Report Issue'),
-                },
-            },
+            this.createTreeItem(vscode.l10n.t('Add Worktree'), 'new-folder', Commands.addWorktree),
+            this.createTreeItem(vscode.l10n.t('Find Worktree'), 'search', Commands.searchAllWorktree),
+            this.createTreeItem(vscode.l10n.t('Open Settings'), 'gear', Commands.openSetting),
+            this.createTreeItem(vscode.l10n.t('Report Issue'), 'issues', {
+                command: 'vscode.open',
+                title: '',
+                arguments: [vscode.Uri.parse('https://github.com/jackiotyu/git-worktree-manager/issues')],
+            }),
         ];
+    }
+    private createTreeItem(label: string, icon: string, command: string | vscode.Command): vscode.TreeItem {
+        return {
+            label: label,
+            iconPath: new vscode.ThemeIcon(icon),
+            command: typeof command === 'string' ? { command: command, title: label } : command,
+        };
     }
 }

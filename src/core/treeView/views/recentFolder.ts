@@ -13,34 +13,46 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     static readonly id = ViewId.folderList;
     private pageNo = 1;
     private pageSize = 20;
-    _onDidChangeTreeData = new vscode.EventEmitter<void>();
-    onDidChangeTreeData = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData = new vscode.EventEmitter<void>();
+    public readonly onDidChangeTreeData: vscode.Event<void> = this._onDidChangeTreeData.event;
+
     constructor(context: vscode.ExtensionContext) {
         this.refresh = throttle(this.refresh, 1000, { leading: true, trailing: true });
+        this.initializeEventListeners(context);
+        this.initializeRecentFolders();
+    }
+
+    private initializeEventListeners(context: vscode.ExtensionContext) {
         context.subscriptions.push(
             updateRecentEvent.event(this.refresh),
             vscode.commands.registerCommand(Commands.loadMoreRecentFolder, this.loadMoreFolder),
             loadAllTreeDataEvent.event(this.loadAllCheck),
         );
-        // HACK 强制获取一次最近的文件夹，加快访问速度
+    }
+
+    private initializeRecentFolders() {
         queueMicrotask(() => {
             vscode.commands.executeCommand('_workbench.getRecentlyOpened');
         });
     }
-    refresh = () => {
+
+    private refresh = () => {
         this._onDidChangeTreeData.fire();
     };
-    loadAllCheck = (viewId: ViewId) => {
+
+    private loadAllCheck = (viewId: ViewId) => {
         if (viewId === RecentFoldersDataProvider.id) {
             this.pageSize = Infinity;
             this.refresh();
         }
     };
-    loadMoreFolder = () => {
+
+    private loadMoreFolder = () => {
         this.pageNo += 1;
         this.refresh();
     };
-    async getChildren(element?: RecentFolderItem | undefined): Promise<RecentFolderItem[]> {
+
+    async getChildren(element?: RecentFolderItem): Promise<RecentFolderItem[]> {
         let folders = await getRecentFolders();
         let itemList = folders
             .slice(0, this.pageNo * this.pageSize)
@@ -59,9 +71,11 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
         }
         return itemList;
     }
-    getTreeItem(element: FolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+
+    getTreeItem(element: RecentFolderItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
+
     getParent(element: RecentFolderItem): vscode.ProviderResult<RecentFolderItem> {
         return void 0;
     }
