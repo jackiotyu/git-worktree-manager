@@ -72,14 +72,12 @@ const getRefList = async (cwd?: string) => {
     return mapRefList(allRefList);
 };
 
-const buildBranchDesc = (item: RefItem) =>
-    `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`;
-const buildWorktreeBranchDesc = (item: RefItem) =>
-    `$(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(item.authordate)}`;
-const buildRemoteBranchDesc = (item: RefItem) =>
-    `${vscode.l10n.t('remote branch')} $(git-commit) ${item['objectname:short']} $(circle-small-filled) ${formatTime(
-        item.authordate,
-    )}`;
+const buildBranchDesc = (hash: string, authordate: string) =>
+    `$(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
+const buildWorktreeBranchDesc = (hash: string, authordate: string) =>
+    `$(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
+const buildRemoteBranchDesc = (hash: string, authordate: string) =>
+    `${vscode.l10n.t('remote branch')} $(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
 const buildTagDesc = (hash: string, authordate: string) =>
     `${vscode.l10n.t('tag')} $(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
 
@@ -90,7 +88,7 @@ const mapBranchItems = (branchList: RefList) => {
             const shortRefName = item['refname'].replace('refs/heads/', '');
             return {
                 label: shortRefName,
-                description: buildBranchDesc(item),
+                description: buildBranchDesc(item['objectname:short'], item['authordate']),
                 iconPath: new vscode.ThemeIcon('source-control'),
                 hash: item['objectname:short'],
                 branch: shortRefName,
@@ -116,7 +114,7 @@ const mapWorktreeBranchItems = (branchList: RefList, defaultBranch?: RefItem) =>
             const shortName = item['refname'].replace('refs/heads/', '');
             return {
                 label: shortName,
-                description: buildWorktreeBranchDesc(item),
+                description: buildWorktreeBranchDesc(item['objectname:short'], item['authordate']),
                 iconPath:
                     item.HEAD === HEAD.current ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('source-control'),
                 hash: item['objectname:short'],
@@ -134,7 +132,7 @@ const mapRemoteBranchItems = (remoteBranchList: RefList) => {
             return {
                 label: item['refname:short'],
                 iconPath: new vscode.ThemeIcon('cloud'),
-                description: buildRemoteBranchDesc(item),
+                description: buildRemoteBranchDesc(item['objectname:short'], item['authordate']),
                 branch: item['refname:short'],
             };
         }),
@@ -147,10 +145,11 @@ const mapTagItems = (tagList: RefList) => {
         { label: vscode.l10n.t('tag'), kind: vscode.QuickPickItemKind.Separator },
         ...tagList.map((item) => {
             const hash = (item['*objectname'] || item['objectname:short']).slice(0, 8);
+            const authordate = item['*authordate'] || item['authordate'];
             return {
                 label: item['refname'].replace('refs/tags/', ''),
                 iconPath: new vscode.ThemeIcon('tag'),
-                description: buildTagDesc(hash, item['*authordate']),
+                description: buildTagDesc(hash, authordate),
                 hash,
             };
         }),
