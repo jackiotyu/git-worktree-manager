@@ -16,7 +16,6 @@ export function activate(context: vscode.ExtensionContext) {
     GlobalState.init(context);
     WorkspaceState.init(context);
     Alert.init(context);
-    vscode.commands.executeCommand('setContext', 'git-worktree-manager.locale', vscode.env.language.toLowerCase());
     vscode.window.registerFileDecorationProvider(new WorktreeDecorator());
     const updateHandler = updateTreeDataEvent.event(
         throttle(async () => {

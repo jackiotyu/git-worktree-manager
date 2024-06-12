@@ -23,7 +23,9 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
             loadAllTreeDataEvent.event(this.loadAllCheck),
         );
         // HACK 强制获取一次最近的文件夹，加快访问速度
-        vscode.commands.executeCommand('_workbench.getRecentlyOpened');
+        queueMicrotask(() => {
+            vscode.commands.executeCommand('_workbench.getRecentlyOpened');
+        });
     }
     refresh = () => {
         this._onDidChangeTreeData.fire();

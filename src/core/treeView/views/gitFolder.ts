@@ -37,8 +37,10 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             this,
         );
         let viewAsTree = GlobalState.get('gitFolderViewAsTree', true);
-        vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
         this.viewAsTree = viewAsTree;
+        queueMicrotask(() => {
+            vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', viewAsTree);
+        });
     }
 
     dispose() {
