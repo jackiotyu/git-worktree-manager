@@ -7,7 +7,7 @@ export const pushBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         vscode.l10n.t('Push commit ( {0} → {1} ) on {2}', branch, `${remote}/${remoteRef}`, cwd),
-        () => execAuto(cwd, ['push', remote, `${remoteRef}:${branch}`], token.token),
+        () => execAuto(cwd, ['push'], token.token),
         () => {},
         token,
     );

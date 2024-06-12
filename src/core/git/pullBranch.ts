@@ -7,7 +7,7 @@ export const pullBranch = ({ remote, branch, remoteRef, cwd }: PullPushArgs) => 
     const token = new vscode.CancellationTokenSource();
     actionProgressWrapper(
         vscode.l10n.t('Pull commit ( {0} → {1} ) on {2}', `${remote}/${remoteRef}`, branch, cwd),
-        () => execAuto(cwd, ['pull', remote, `${remoteRef}:${branch}`], token.token),
+        () => execAuto(cwd, ['pull'], token.token),
         () => {},
         token,
     );
