@@ -802,10 +802,12 @@
           "git-worktree-manager.worktreePick.defaultDisplayList": {
             "scope": "application",
             "enum": [
+              "recentlyOpened",
               "workspace",
               "all"
             ],
             "enumDescriptions": [
+              "%config.defaultDisplayList.enum.recentlyOpened%",
               "%config.defaultDisplayList.enum.workspace%",
               "%config.defaultDisplayList.enum.all%"
             ],

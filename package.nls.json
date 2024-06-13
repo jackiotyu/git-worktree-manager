@@ -72,6 +72,7 @@
     "config.worktreePick.showViewHistory.description": "Show the \"View git history\" button on the results of \"Find Worktree\"",
     "config.worktreePick.showOpenRepository.description": "Show the \"Open the repository in Source Control view\" button on the results of \"Find Worktree\"",
     "config.defaultDisplayList.description": "Default Display List",
+    "config.defaultDisplayList.enum.recentlyOpened": "Display recently opened folder list",
     "config.defaultDisplayList.enum.workspace": "Display worktree list in workspace",
     "config.defaultDisplayList.enum.all": "Display all worktree list",
     "submenus.worktree-action": "Worktree Action"

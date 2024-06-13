@@ -74,3 +74,11 @@ export const openRepositoryQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('repo'),
     tooltip: vscode.l10n.t('Open the repository in Source Control view'),
 };
+export const openRecentlyQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('clock'),
+    tooltip: vscode.l10n.t('Open recently used folders'),
+};
+export const backWorkspaceQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('arrow-left'),
+    tooltip: vscode.l10n.t('Back to workspace'),
+};

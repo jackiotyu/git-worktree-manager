@@ -83,6 +83,7 @@ export interface IWorktreeLess {
 }
 
 export enum DefaultDisplayList {
+    recentlyOpened = 'recentlyOpened',
     workspace = 'workspace',
     all = 'all',
 }
