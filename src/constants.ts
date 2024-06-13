@@ -5,6 +5,7 @@ export enum Commands {
     switchWorktree = 'git-worktree-manager.switchWorktree',
     addWorktree = 'git-worktree-manager.addWorktree',
     addGitFolder = 'git-worktree-manager.addGitFolder',
+    addRootsToRepo = 'git-worktree-manager.addRootsToRepo',
     removeGitFolder = 'git-worktree-manager.removeGitFolder',
     renameGitFolder = 'git-worktree-manager.renameGitFolder',
     repairWorktree = 'git-worktree-manager.repairWorktree',
@@ -50,6 +51,11 @@ export enum Commands {
     unwatchWorktreeEvent = 'git-worktree-manager.internal.unwatchWorktreeEvent',
 }
 
+export enum ContextKey {
+    gitFolderViewAsTree = 'git-worktree-manager.gitFolderViewAsTree',
+    addRootsToRepo = 'git-worktree-manager.addRootsToRepo'
+}
+
 export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';
 
 export const WORK_TREE = 'worktree';
@@ -79,4 +85,11 @@ export const refArgList = ['refname', 'objectname:short', '*objectname', 'worktr
 
 export enum HEAD {
     current = '*'
+}
+
+export enum StateKey {
+    gitFolderViewAsTree = 'gitFolderViewAsTree',
+    gitFolders = 'gitFolders',
+    workTreeCache = 'workTreeCache',
+    mainFolders = 'mainFolders',
 }

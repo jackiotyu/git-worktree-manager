@@ -175,6 +175,11 @@
         "title": "%cmd.addToGitFolder%"
       },
       {
+        "command": "git-worktree-manager.addRootsToRepo",
+        "title": "%cmd.addToGitFolder%",
+        "icon": "$(star-empty)"
+      },
+      {
         "command": "git-worktree-manager.checkoutBranch",
         "title": "%cmd.checkoutBranch%",
         "icon": "$(source-control)",
@@ -291,19 +296,24 @@
           "group": "navigation@20"
         },
         {
-          "command": "git-worktree-manager.addWorktree",
-          "when": "view === git-worktree-manager-list",
+          "command": "git-worktree-manager.addRootsToRepo",
+          "when": "view === git-worktree-manager-list && git-worktree-manager.addRootsToRepo",
           "group": "navigation@1"
         },
         {
-          "command": "git-worktree-manager.pruneWorktree",
+          "command": "git-worktree-manager.addWorktree",
           "when": "view === git-worktree-manager-list",
           "group": "navigation@2"
         },
         {
+          "command": "git-worktree-manager.pruneWorktree",
+          "when": "view === git-worktree-manager-list",
+          "group": "navigation@5"
+        },
+        {
           "command": "git-worktree-manager.toggleLog",
           "when": "view === git-worktree-manager-list",
-          "group": "navigation@3"
+          "group": "navigation@10"
         },
         {
           "command": "git-worktree-manager.addGitFolder",

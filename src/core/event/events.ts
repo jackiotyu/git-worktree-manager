@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { ViewId, TreeItemKind, QuickPickKind } from '@/constants';
+import { ViewId, TreeItemKind, QuickPickKind, Commands } from '@/constants';
 import type { AllViewItem } from '@/core/treeView/items';
-import { Commands } from '@/constants';
+import type { StateKey } from '@/core/state';
 
 export const treeDataEvent = new vscode.EventEmitter<void>();
 export const updateTreeDataEvent = new vscode.EventEmitter<void>();
 export const updateFolderEvent = new vscode.EventEmitter<void>();
-export const globalStateEvent = new vscode.EventEmitter<void>();
+export const globalStateEvent = new vscode.EventEmitter<StateKey>();
 export const updateRecentEvent = new vscode.EventEmitter<void>();
 export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
 export const loadAllTreeDataEvent = new vscode.EventEmitter<ViewId>();

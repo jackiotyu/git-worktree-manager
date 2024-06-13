@@ -1,14 +1,9 @@
 import * as vscode from 'vscode';
-import { Alert } from '@/core/ui/message';
 import folderRoot from '@/core/folderRoot';
 import path from 'path';
 import fs from 'fs/promises';
-import { toSimplePath } from '@/core/util/folder';
-import { getMainFolder } from '@/core/git/getMainFolder';
-import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
-import { worktreeEventRegister } from '@/core/event/git';
 import { addToGitFolder } from '@/core/command/addToGitFolder';
-import { pickMultiFolder } from '@/core/ui/pickGitFolder';
+import { addDirsToRepo } from '@/core/command/addDirsToRepo';
 
 const addMultiGitFolder = async () => {
     let uriList = await vscode.window.showOpenDialog({
@@ -21,39 +16,13 @@ const addMultiGitFolder = async () => {
     if (!uriList?.length) return;
     let folderUri = uriList[0];
     let folderPath = folderUri.fsPath;
-    const files = await fs
+    const dirs = await fs
         .readdir(folderPath, { encoding: 'utf-8' })
         .then((files) => files.map((fileName) => path.join(folderPath, fileName)))
         .catch(() => []);
-    if (!files.length) return;
-    const folders = await Promise.all(
-        files.map(async (filePath) => {
-            try {
-                return toSimplePath(await getMainFolder(filePath));
-            } catch {
-                return null;
-            }
-        }),
-    );
-    const existFolders = getFolderConfig();
-    const distinctFolders = [...new Set(folders.filter(i => i))];
-    if (!distinctFolders.length) {
-        Alert.showErrorMessage(vscode.l10n.t('There are no folders to add'));
-        return;
-    }
-    const existFoldersMap = new Map(existFolders.map((i) => [toSimplePath(i.path), true]));
-    const gitFolders = distinctFolders.filter((i) => i && !existFoldersMap.has(i)) as string[];
-    if (!gitFolders.length) {
-        Alert.showErrorMessage(vscode.l10n.t('All folders have been added, there are no more folders to add'));
-        return;
-    }
-    const selectGitFolders = await pickMultiFolder(gitFolders);
-    if (!selectGitFolders || !selectGitFolders.length) return;
-    const newFolders = getFolderConfig();
-    newFolders.push(...selectGitFolders);
-    await updateFolderConfig(newFolders);
-    selectGitFolders.forEach((item) => worktreeEventRegister.add(vscode.Uri.file(item.path)));
-    Alert.showInformationMessage(vscode.l10n.t('Saved successfully'));
+    if (!dirs.length) return;
+    return await addDirsToRepo(dirs);
+
 };
 
 const addSingleGitFolder = async () => {

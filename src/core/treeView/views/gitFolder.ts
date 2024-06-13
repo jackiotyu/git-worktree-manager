@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { IFolderItemConfig } from '@/types';
 import { GlobalState } from '@/core/state';
-import { TreeItemKind, ViewId } from '@/constants';
+import { TreeItemKind, ViewId, ContextKey } from '@/constants';
 import { GitFolderItem, WorktreeItem } from '@/core/treeView/items';
 import throttle from 'lodash/throttle';
 import debounce from 'lodash/debounce';
@@ -30,17 +30,15 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     private initializeEventListeners(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            globalStateEvent.event(this.refresh),
+            globalStateEvent.event((key) => {
+                if (key === 'gitFolders') this.refresh();
+            }),
             treeDataEvent.event(() => process.nextTick(this.refresh)),
             updateFolderEvent.event(this.refresh),
             toggleGitFolderViewAsEvent.event(
                 debounce((viewAsTree: boolean) => {
                     this.viewAsTree = viewAsTree;
-                    vscode.commands.executeCommand(
-                        'setContext',
-                        'git-worktree-manager.gitFolderViewAsTree',
-                        viewAsTree,
-                    );
+                    vscode.commands.executeCommand('setContext', ContextKey.gitFolderViewAsTree, viewAsTree);
                     GlobalState.update('gitFolderViewAsTree', viewAsTree);
                 }, 300),
             ),
@@ -51,7 +49,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     private initializeViewState() {
         this.viewAsTree = GlobalState.get('gitFolderViewAsTree', true);
         queueMicrotask(() => {
-            vscode.commands.executeCommand('setContext', 'git-worktree-manager.gitFolderViewAsTree', this.viewAsTree);
+            vscode.commands.executeCommand('setContext', ContextKey.gitFolderViewAsTree, this.viewAsTree);
         });
     }
 

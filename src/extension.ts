@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent, collectEvent } from '@/core/event/events';
+import { treeDataEvent, updateTreeDataEvent, collectEvent, globalStateEvent } from '@/core/event/events';
 import folderRoot from '@/core/folderRoot';
-import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/core/util/cache';
+import { updateWorkspaceMainFolders } from '@/core/util/cache';
+import { checkRoots, updateAddDirsContext } from '@/core/util/workspace';
 import { registerCommands } from '@/core/command';
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { Alert } from '@/core/ui/message';
@@ -18,21 +19,31 @@ export function activate(context: vscode.ExtensionContext) {
     Alert.init(context);
     vscode.window.registerFileDecorationProvider(new WorktreeDecorator());
     const updateHandler = updateTreeDataEvent.event(
-        throttle(async () => {
-            await updateWorkspaceMainFolders();
-            treeDataEvent.fire();
-        }, 1000, { trailing: true, leading: true }),
+        throttle(
+            async () => {
+                await updateWorkspaceMainFolders();
+                treeDataEvent.fire();
+            },
+            1000,
+            { trailing: true, leading: true },
+        ),
     );
-    const workspaceFoldersChangeEvent = vscode.workspace.onDidChangeWorkspaceFolders(async () => {
-        await new Promise(resolve => process.nextTick(resolve));
-        await updateWorkspaceMainFolders();
-        await updateWorkspaceListCache();
-        treeDataEvent.fire();
-    });
+    const workspaceFoldersChangeEvent = vscode.workspace.onDidChangeWorkspaceFolders(checkRoots);
+    queueMicrotask(checkRoots);
     registerCommands(context);
     TreeViewManager.register(context);
     collectEvent(context);
-    context.subscriptions.push(folderRoot, updateHandler, logger, worktreeEventRegister, workspaceFoldersChangeEvent);
+    const stateChangeEvent = globalStateEvent.event((key) => {
+        if (key === 'gitFolders') updateAddDirsContext();
+    });
+    context.subscriptions.push(
+        folderRoot,
+        updateHandler,
+        logger,
+        worktreeEventRegister,
+        workspaceFoldersChangeEvent,
+        stateChangeEvent,
+    );
 }
 
 export function deactivate() {}

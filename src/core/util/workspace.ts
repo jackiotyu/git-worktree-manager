@@ -4,6 +4,11 @@ import { treeDataEvent } from '@/core/event/events';
 import { comparePath } from '@/core/util/folder';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import type { IRecentlyOpened, IFolderItemConfig } from '@/types';
+import { ContextKey } from '@/constants';
+import { WorkspaceState } from '@/core/state';
+import { getFolderConfig } from '@/core/util/state';
+import { toSimplePath } from '@/core/util/folder';
+import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/core/util/cache';
 import path from 'path';
 
 export const addToWorkspace = (path: string) => {
@@ -34,4 +39,29 @@ export const getWorkspaceMainFolders = async (): Promise<IFolderItemConfig[]> =>
         path: folder,
     }));
     return folders;
+};
+
+export const updateAddDirsContext = () => {
+    let canAdd = false;
+    try {
+        const dirs = WorkspaceState.get('mainFolders', []).map((i) => i.path);
+        const distinctFolders = [...new Set(dirs.filter((i) => i))];
+        if (!dirs.length) return;
+        const existFolders = getFolderConfig();
+        const existFoldersMap = new Map(existFolders.map((i) => [toSimplePath(i.path), true]));
+        const gitFolders = distinctFolders.filter((i) => i && !existFoldersMap.has(toSimplePath(i))) as string[];
+        if (gitFolders.length) canAdd = true;
+    } finally {
+        vscode.commands.executeCommand('setContext', ContextKey.addRootsToRepo, canAdd);
+    }
+};
+
+export const checkRoots = async () => {
+    await new Promise(resolve => process.nextTick(resolve));
+    await updateWorkspaceMainFolders();
+    await Promise.all([
+        updateAddDirsContext(),
+        updateWorkspaceListCache(),
+    ]);
+    treeDataEvent.fire();
 };
