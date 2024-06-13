@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { treeDataEvent, updateTreeDataEvent, collectEvent, globalStateEvent } from '@/core/event/events';
 import folderRoot from '@/core/folderRoot';
-import { updateWorkspaceMainFolders } from '@/core/util/cache';
+import { updateWorkspaceMainFolders, checkRecentFolderCache } from '@/core/util/cache';
 import { checkRoots, updateAddDirsContext } from '@/core/util/workspace';
 import { registerCommands } from '@/core/command';
 import { GlobalState, WorkspaceState } from '@/core/state';
@@ -36,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
     const stateChangeEvent = globalStateEvent.event((key) => {
         if (key === 'gitFolders') updateAddDirsContext();
     });
+    checkRecentFolderCache();
     context.subscriptions.push(
         folderRoot,
         updateHandler,

@@ -38,6 +38,16 @@ export interface IRecentFolder {
     readonly remoteAuthority?: string;
 }
 
+export interface IRecentCache {
+    time: number;
+    list: string[];
+}
+
+export interface IRecentUriCache {
+    time: number;
+    list: vscode.Uri[];
+}
+
 export interface IRecentlyOpened {
     workspaces: Array<IRecentFolder>;
 }

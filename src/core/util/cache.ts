@@ -1,7 +1,8 @@
+import * as vscode from 'vscode';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
-import { getWorkspaceMainFolders } from '@/core/util/workspace';
+import { getRecentFolders, getWorkspaceMainFolders } from '@/core/util/workspace';
 import { WorkspaceState, GlobalState } from '@/core/state';
-import type { IFolderItemConfig, IWorktreeCacheItem } from '@/types';
+import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache } from '@/types';
 
 export const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorktreeCacheItem[]> => {
     const worktreeList = await Promise.all(
@@ -37,4 +38,27 @@ export const updateWorkspaceListCache = async () => {
     const mainFolders = WorkspaceState.get('mainFolders', []);
     const cache = await gitFolderToCaches(mainFolders);
     WorkspaceState.update('workTreeCache', cache);
+};
+
+export const updateRecentFolders = async () => {
+    const list = await getRecentFolders();
+    GlobalState.update('global.recentFolderCache', {
+        time: +new Date(),
+        list: list.map((item) => item.folderUri.toString()),
+    });
+};
+
+export const getRecentFolderCache = (): IRecentUriCache => {
+    const res = GlobalState.get('global.recentFolderCache', { time: -1, list: [] });
+    return {
+        time: res.time,
+        list: res.list.map((str) => vscode.Uri.parse(str)),
+    };
+};
+
+export const checkRecentFolderCache = () => {
+    queueMicrotask(() => {
+        const res = GlobalState.get('global.recentFolderCache', { time: -1, list: [] });
+        if (+new Date() - res.time > 5000) updateRecentFolders();
+    });
 };
