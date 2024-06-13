@@ -189,13 +189,13 @@
         "command": "git-worktree-manager.gitFolderViewAsTree",
         "title": "%cmd.viewAsList%",
         "icon": "$(list-tree)",
-        "enablement": "git-worktree-manager.gitFolderViewAsTree"
+        "enablement": "gwm.context.gitFolderViewAsTree"
       },
       {
         "command": "git-worktree-manager.gitFolderViewAsList",
         "title": "%cmd.viewAsTree%",
         "icon": "$(list-flat)",
-        "enablement": "!git-worktree-manager.gitFolderViewAsTree"
+        "enablement": "!gwm.context.gitFolderViewAsTree"
       },
       {
         "command": "git-worktree-manager.gitFolderSetOpen",
@@ -297,7 +297,7 @@
         },
         {
           "command": "git-worktree-manager.addRootsToRepo",
-          "when": "view === git-worktree-manager-list && git-worktree-manager.addRootsToRepo",
+          "when": "view === git-worktree-manager-list && gwm.context.addRootsToRepo",
           "group": "navigation@1"
         },
         {
@@ -322,12 +322,12 @@
         },
         {
           "command": "git-worktree-manager.gitFolderViewAsTree",
-          "when": "view === git-worktree-manager-folders && git-worktree-manager.gitFolderViewAsTree",
+          "when": "view === git-worktree-manager-folders && gwm.context.gitFolderViewAsTree",
           "group": "navigation@2"
         },
         {
           "command": "git-worktree-manager.gitFolderViewAsList",
-          "when": "view === git-worktree-manager-folders && !git-worktree-manager.gitFolderViewAsTree",
+          "when": "view === git-worktree-manager-folders && !gwm.context.gitFolderViewAsTree",
           "group": "navigation@2"
         },
         {

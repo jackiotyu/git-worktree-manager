@@ -52,8 +52,8 @@ export enum Commands {
 }
 
 export enum ContextKey {
-    gitFolderViewAsTree = 'git-worktree-manager.gitFolderViewAsTree',
-    addRootsToRepo = 'git-worktree-manager.addRootsToRepo'
+    gitFolderViewAsTree = 'gwm.context.gitFolderViewAsTree',
+    addRootsToRepo = 'gwm.context.addRootsToRepo'
 }
 
 export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';

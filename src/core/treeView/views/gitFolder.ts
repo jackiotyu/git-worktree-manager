@@ -37,9 +37,11 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             updateFolderEvent.event(this.refresh),
             toggleGitFolderViewAsEvent.event(
                 debounce((viewAsTree: boolean) => {
+                    const changed = this.viewAsTree !== viewAsTree;
                     this.viewAsTree = viewAsTree;
                     vscode.commands.executeCommand('setContext', ContextKey.gitFolderViewAsTree, viewAsTree);
                     GlobalState.update('gitFolderViewAsTree', viewAsTree);
+                    changed && this.refresh();
                 }, 300),
             ),
             this,
