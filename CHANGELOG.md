@@ -1,3 +1,10 @@
+## [0.4.4] 2024-06-14
+
+### Change
+
+- Add an icon for saving the workspace Git repository and optimize the save logic.
+- Fix the annotation tag hash value.
+
 ## [0.4.3] 2024-06-11
 
 ### Change
