@@ -106,5 +106,7 @@
     "There are no folders to add": "没有文件夹可以添加",
     "All folders have been added, there are no more folders to add": "已添加全部文件夹，没有文件夹可以额外添加",
     "Refresh": "刷新",
-    "Save git repository": "添加到 git 仓库管理"
+    "Save git repository": "添加到 git 仓库管理",
+    "Open recently used folders": "打开最近使用的文件夹",
+    "Back to workspace list": "返回工作区列表"
 }

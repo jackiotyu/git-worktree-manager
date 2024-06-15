@@ -80,7 +80,7 @@ export const openRecentlyQuickInputButton: vscode.QuickInputButton = {
 };
 export const backWorkspaceQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('arrow-left'),
-    tooltip: vscode.l10n.t('Back to workspace'),
+    tooltip: vscode.l10n.t('Back to workspace list'),
 };
 export const refreshRecentlyQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('refresh'),
