@@ -180,7 +180,7 @@ const mapRecentWorktreePickItems = async (list: vscode.Uri[]): Promise<WorktreeP
             return {
                 label: name ? path.basename(name).trim() : path.basename(uri.path),
                 detail: uri.path,
-                iconPath: name ? new vscode.ThemeIcon('source-control') : undefined,
+                iconPath: name ? new vscode.ThemeIcon('source-control') : new vscode.ThemeIcon('folder'),
                 description: name ? `⇄ ${path.basename(uri.path)}` : '',
                 path: uri.fsPath,
                 uri: uri,
@@ -194,7 +194,13 @@ const mapRecentWorktreePickItems = async (list: vscode.Uri[]): Promise<WorktreeP
                     openRepositoryQuickInputButton,
                     moreQuickInputButton,
                     openInNewWindowQuickInputButton,
-                ] : [],
+                ] : [
+                    openExternalTerminalQuickInputButton,
+                    openTerminalQuickInputButton,
+                    revealInSystemExplorerQuickInputButton,
+                    addToWorkspaceQuickInputButton,
+                    openInNewWindowQuickInputButton,
+                ],
             };
         }),
     );
