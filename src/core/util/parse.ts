@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 // 加载dayjs中文语言包
 import 'dayjs/locale/zh-cn';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -34,4 +34,12 @@ export function parseOutput<T extends string>(output: string, keyList: T[]): Rec
 
 export function formatTime(time: string) {
     return dayjs(time).fromNow();
+}
+
+export function parseObjStr(str: string) {
+    try {
+        return JSON.parse(str);
+    } catch {
+        return {};
+    }
 }

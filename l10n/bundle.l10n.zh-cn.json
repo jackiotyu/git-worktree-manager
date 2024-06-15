@@ -104,5 +104,6 @@
     "Use base name": "使用文件夹名称",
     "Use full path": "使用完整路径",
     "There are no folders to add": "没有文件夹可以添加",
-    "All folders have been added, there are no more folders to add": "已添加全部文件夹，没有文件夹可以额外添加"
+    "All folders have been added, there are no more folders to add": "已添加全部文件夹，没有文件夹可以额外添加",
+    "Refresh": "刷新"
 }
