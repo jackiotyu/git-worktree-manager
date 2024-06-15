@@ -206,8 +206,8 @@ const handleHide = ({ resolve, reject, quickPick, actionService, disposables }: 
 const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService }: TriggerButtonHandlerArgs) => {
     if (event === sortByBranchQuickInputButton) {
         actionService.sortByBranch = true;
-        actionService.updateList();
         quickPick.buttons = actionService.updateButtons();
+        actionService.updateList();
         return;
     }
     if (event === sortByRepoQuickInputButton) {
@@ -396,7 +396,7 @@ class ActionService implements IActionService {
     updateButtons = (displayType: DefaultDisplayList = this.displayType) => {
         this.displayType = displayType;
         const displayList = this.displayType;
-        const sortButton = this.sortByBranch ? sortByBranchQuickInputButton : sortByRepoQuickInputButton;
+        const sortButton = this.sortByBranch ? sortByRepoQuickInputButton : sortByBranchQuickInputButton;
         const showWorktreeButton = this.displayAll
             ? useWorkspaceWorktreeQuickInputButton
             : useAllWorktreeQuickInputButton;
