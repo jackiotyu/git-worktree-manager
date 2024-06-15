@@ -43,16 +43,9 @@ export const updateWorkspaceListCache = async () => {
 
 export const updateRecentFolders = async () => {
     const list = await getRecentFolders();
-    const withQueryList = await Promise.all(
-        list.map(async (item) => {
-            const uri = item.folderUri;
-            let name = await getNameRevSafe(uri.fsPath);
-            return uri.with({ query: JSON.stringify({ name }) }).toString();
-        }),
-    );
     GlobalState.update('global.recentFolderCache', {
         time: +new Date(),
-        list: withQueryList,
+        list: list.map(i => i.folderUri.toString()),
     });
 };
 

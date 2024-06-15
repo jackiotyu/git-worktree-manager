@@ -174,35 +174,22 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
 
 const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
     return list.map((uri) => {
-        const name = parseObjStr(uri.query).name;
+        const baseName = path.basename(uri.fsPath);
         return {
-            label: name ? path.basename(name).trim() : path.basename(uri.path),
-            detail: uri.path,
-            iconPath: name ? new vscode.ThemeIcon('source-control') : new vscode.ThemeIcon('folder'),
-            description: name ? `⇄ ${path.basename(uri.path)}` : '',
+            label: baseName || uri.fsPath,
+            description: baseName ? uri.fsPath : '',
+            iconPath: vscode.ThemeIcon.Folder,
             path: uri.fsPath,
-            uri: uri,
             // TODO 按钮展示状态
-            buttons: name
-                ? [
-                      saveRepoQuickInputButton,
-                      openExternalTerminalQuickInputButton,
-                      openTerminalQuickInputButton,
-                      revealInSystemExplorerQuickInputButton,
-                      checkoutBranchQuickInputButton,
-                      addToWorkspaceQuickInputButton,
-                      viewHistoryQuickInputButton,
-                      openRepositoryQuickInputButton,
-                      moreQuickInputButton,
-                      openInNewWindowQuickInputButton,
-                  ]
-                : [
-                      openExternalTerminalQuickInputButton,
-                      openTerminalQuickInputButton,
-                      revealInSystemExplorerQuickInputButton,
-                      addToWorkspaceQuickInputButton,
-                      openInNewWindowQuickInputButton,
-                  ],
+            buttons: [
+                saveRepoQuickInputButton,
+                openExternalTerminalQuickInputButton,
+                openTerminalQuickInputButton,
+                revealInSystemExplorerQuickInputButton,
+                openRepositoryQuickInputButton,
+                addToWorkspaceQuickInputButton,
+                openInNewWindowQuickInputButton,
+            ],
         };
     });
 };
