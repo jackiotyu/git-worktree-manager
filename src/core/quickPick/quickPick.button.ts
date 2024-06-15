@@ -86,3 +86,7 @@ export const refreshRecentlyQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('refresh'),
     tooltip: vscode.l10n.t('Refresh'),
 };
+export const saveRepoQuickInputButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('star-empty'),
+    tooltip: vscode.l10n.t('Save git repository'),
+};

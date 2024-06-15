@@ -34,6 +34,7 @@ import {
     openRecentlyQuickInputButton,
     backWorkspaceQuickInputButton,
     refreshRecentlyQuickInputButton,
+    saveRepoQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
 
@@ -181,8 +182,10 @@ const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
             description: name ? `⇄ ${path.basename(uri.path)}` : '',
             path: uri.fsPath,
             uri: uri,
+            // TODO 按钮展示状态
             buttons: name
                 ? [
+                      saveRepoQuickInputButton,
                       openExternalTerminalQuickInputButton,
                       openTerminalQuickInputButton,
                       revealInSystemExplorerQuickInputButton,
@@ -341,6 +344,9 @@ const handleTriggerItemButton = ({
             break;
         case openRepositoryQuickInputButton:
             vscode.commands.executeCommand(Commands.openRepository, viewItem);
+            break;
+        case saveRepoQuickInputButton:
+            vscode.commands.executeCommand(Commands.addToGitFolder, viewItem);
             break;
         case copyItemQuickInputButton:
             const template = Config.get('worktreePick.copyTemplate', '$LABEL');
