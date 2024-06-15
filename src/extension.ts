@@ -11,6 +11,7 @@ import throttle from 'lodash/throttle';
 import logger from '@/core/log/logger';
 import { WorktreeDecorator } from '@/core/util/worktree';
 import { worktreeEventRegister } from '@/core/event/git';
+import { Config } from '@/core/config/setting';
 
 export function activate(context: vscode.ExtensionContext) {
     logger.log('git-worktree-manager is now active!');
@@ -44,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
         worktreeEventRegister,
         workspaceFoldersChangeEvent,
         stateChangeEvent,
+        Config,
     );
 }
 

@@ -4,6 +4,9 @@ import { DefaultDisplayList, GitHistoryExtension } from '@/types';
 
 export class Config {
     private constructor() {}
+
+    static disposables: vscode.Disposable[] = [];
+
     static get(key: 'alertLevel', defaultValue: 'error'): AlertLevel;
     static get(key: 'gitHistoryExtension', defaultValue: GitHistoryExtension.gitGraph): GitHistoryExtension;
     static get(key: 'worktreePick.defaultDisplayList', defaultValue: DefaultDisplayList.all): DefaultDisplayList;
@@ -27,5 +30,18 @@ export class Config {
 
     static update<T>(key: string, defaultValue: T): Thenable<void> {
         return vscode.workspace.getConfiguration(APP_NAME).update(key, defaultValue);
+    }
+
+    static onChange(key: string, func: () => any) {
+        const event = vscode.workspace.onDidChangeConfiguration((e) => {
+            if (e.affectsConfiguration(`${APP_NAME}.${key}`)) func();
+        });
+        this.disposables.push(event);
+        return event;
+    }
+
+    static dispose() {
+        this.disposables.forEach((d) => d.dispose());
+        this.disposables.length = 0;
     }
 }

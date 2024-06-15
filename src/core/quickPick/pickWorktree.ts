@@ -10,7 +10,6 @@ import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
 import folderRoot from '@/core/folderRoot';
 import { updateTreeDataEvent, changeUIVisibleEvent, globalStateEvent } from '@/core/event/events';
-import { parseObjStr } from '@/core/util/parse';
 import path from 'path';
 import {
     openExternalTerminalQuickInputButton,
@@ -88,61 +87,52 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
     const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
-    const showExternalTerminal = Config.get('worktreePick.showExternalTerminal', false);
-    const showTerminal = Config.get('worktreePick.showTerminal', false);
-    const showRevealInSystemExplorer = Config.get('worktreePick.showRevealInSystemExplorer', false);
-    const showCopy = Config.get('worktreePick.showCopy', false);
-    const showAddToWorkspace = Config.get('worktreePick.showAddToWorkspace', false);
-    const showCheckout = Config.get('worktreePick.showCheckout', true);
-    const showViewHistory = Config.get('worktreePick.showViewHistory', true);
-    const showOpenRepository = Config.get('worktreePick.showOpenRepository', true);
-
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
         const list: { button: vscode.QuickInputButton; show: boolean }[] = [
             {
                 button: openExternalTerminalQuickInputButton,
-                show: showExternalTerminal,
+                show: openExternalTerminalQuickInputButton.enabled,
             },
             {
                 button: openTerminalQuickInputButton,
-                show: showTerminal,
+                show: openTerminalQuickInputButton.enabled,
             },
             {
                 button: revealInSystemExplorerQuickInputButton,
-                show: showRevealInSystemExplorer,
+                show: revealInSystemExplorerQuickInputButton.enabled,
             },
             {
                 button: Object.assign(copyItemQuickInputButton, { tooltip: copyTooltip }),
-                show: showCopy,
+                show: copyItemQuickInputButton.enabled,
             },
             {
                 button: checkoutBranchQuickInputButton,
-                show: showCheckout,
+                show: checkoutBranchQuickInputButton.enabled,
             },
             {
                 button: addToWorkspaceQuickInputButton,
-                show: !isCurrent && showAddToWorkspace,
+                show: !isCurrent && addToWorkspaceQuickInputButton.enabled,
             },
             {
                 button: removeFromWorkspaceQuickInputButton,
-                show: isCurrent && showAddToWorkspace,
+                show: isCurrent && removeFromWorkspaceQuickInputButton.enabled,
             },
             {
                 button: viewHistoryQuickInputButton,
-                show: showViewHistory,
+                show: viewHistoryQuickInputButton.enabled,
             },
             {
                 button: openRepositoryQuickInputButton,
-                show: showOpenRepository,
+                show: openRepositoryQuickInputButton.enabled,
             },
             {
                 button: moreQuickInputButton,
-                show: true,
+                show: moreQuickInputButton.enabled,
             },
             {
                 button: openInNewWindowQuickInputButton,
-                show: true,
+                show: openInNewWindowQuickInputButton.enabled,
             },
         ];
 
@@ -180,7 +170,6 @@ const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
             description: baseName ? uri.fsPath : '',
             iconPath: vscode.ThemeIcon.Folder,
             path: uri.fsPath,
-            // TODO 按钮展示状态
             buttons: [
                 saveRepoQuickInputButton,
                 openExternalTerminalQuickInputButton,
@@ -189,7 +178,7 @@ const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
                 openRepositoryQuickInputButton,
                 addToWorkspaceQuickInputButton,
                 openInNewWindowQuickInputButton,
-            ],
+            ].filter((i) => i.enabled),
         };
     });
 };
