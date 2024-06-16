@@ -27,7 +27,7 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     if (!mainFolder) return false;
 
     // 选择文件夹
-    let folderPath = await inputWorktreeDir({ baseDir: gitFolder, step: 1, totalSteps: 2 });
+    let folderPath = await inputWorktreeDir({ baseDir: mainFolder, step: 1, totalSteps: 2 });
     if (!folderPath) return;
 
     // 选择ref
@@ -36,7 +36,7 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     // 没有选择ref时，返回选择文件夹
     while (branchItem === void 0) {
         folderPath = await inputWorktreeDir({
-            baseDir: gitFolder,
+            baseDir: mainFolder,
             baseWorktreeDir: folderPath,
             step: 1,
             totalSteps: 2,
