@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import path from 'path';
 import { checkExist } from '@/core/util/file';
+import { comparePath } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
 
 export const pickWorktreeDir = async (dir: string) => {
@@ -15,6 +16,17 @@ export const pickWorktreeDir = async (dir: string) => {
     return uriList?.[0]?.fsPath;
 };
 
+const verifySameDir = (dir: string, baseDir: string) => {
+    if(comparePath(path.resolve(dir), path.resolve(baseDir))) {
+        Alert.showErrorMessage(vscode.l10n.t('Please select a different directory'));
+        return true;
+    }
+    return false;
+};
+
+// 暂时写死主文件夹加.worktree后缀
+const getBaseWorktreeDir = (baseDir: string) => `${baseDir}.worktree`;
+
 export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string) => {
     let canClose = true;
     // 最终路径
@@ -24,11 +36,12 @@ export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string
         resolve = _resolve;
         reject = _reject;
     });
-    let workTreeDir = `${baseDir}.worktree`;
+    const workTreeDir = getBaseWorktreeDir(baseDir);
     let finalWorktreeDir = path.join(workTreeDir, 'worktree1');
     const dirReg = /worktree(\d+)/;
     const inputBox = vscode.window.createInputBox();
-    if(baseWorktreeDir && workTreeDir !== baseWorktreeDir) {
+    // 传入的 baseWorktreeDir 有值，且和 workTreeDir 不同，说明是从已选择的 worktree 切换过来
+    if(baseWorktreeDir && !comparePath(workTreeDir, baseWorktreeDir)) {
         finalWorktreeDir = baseWorktreeDir;
     } else if (await checkExist(workTreeDir)) {
         let worktreeDirList = (await vscode.workspace.fs.readDirectory(vscode.Uri.file(workTreeDir)))
@@ -56,6 +69,11 @@ export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string
         try {
             const dir = await pickWorktreeDir(path.dirname(baseDir));
             if (!dir) return;
+            if(verifySameDir(dir, workTreeDir)) {
+                inputBox.value = finalWorktreeDir;
+                inputBox.show();
+                return;
+            }
             resolve(dir);
             inputBox.dispose();
         } catch (err) {
@@ -69,9 +87,7 @@ export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string
         try {
             const input = inputBox.value;
             if (!input) return;
-            if (input === workTreeDir) {
-                return Alert.showErrorMessage(vscode.l10n.t('Please select a different directory'));
-            }
+            if(verifySameDir(input, workTreeDir)) return;
             if (await checkExist(input)) {
                 return Alert.showErrorMessage(vscode.l10n.t('The folder already exists'));
             }
