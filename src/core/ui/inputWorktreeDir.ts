@@ -28,7 +28,7 @@ export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string
     let finalWorktreeDir = path.join(workTreeDir, 'worktree1');
     const dirReg = /worktree(\d+)/;
     const inputBox = vscode.window.createInputBox();
-    if(baseWorktreeDir) {
+    if(baseWorktreeDir && workTreeDir !== baseWorktreeDir) {
         finalWorktreeDir = baseWorktreeDir;
     } else if (await checkExist(workTreeDir)) {
         let worktreeDirList = (await vscode.workspace.fs.readDirectory(vscode.Uri.file(workTreeDir)))
