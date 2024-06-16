@@ -1,3 +1,11 @@
+
+## [0.4.5] 2024-06-16
+
+### Change
+
+- Improve performance.
+- Optimize the worktree creation process and display recently opened folders.
+
 ## [0.4.4] 2024-06-14
 
 ### Change
