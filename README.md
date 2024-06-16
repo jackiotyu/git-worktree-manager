@@ -72,19 +72,19 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. Create Worktree. 创建 worktree
+1. [Create Worktree. 创建 worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/create-worktree.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/create-worktree.mp4" controls="controls" width="800" height="450"></video>
 
-2. Checkout Branch/tag. 切换分支/标记
+2. [Checkout Branch/tag. 切换分支/标记](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/switch-branch.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/switch-branch.mp4" controls="controls" width="800" height="450"></video>
 
-3. Manage multiple repositories. 管理多个仓库
+3. [Manage multiple repositories. 管理多个仓库](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/manage-multiple-repositories.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
 
-4. Add worktrees to workspace. 向工作区添加 worktree 目录
+4. [Add worktrees to workspace. 向工作区添加 worktree 目录](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/add-worktrees-to-workspace.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
