@@ -7,7 +7,7 @@
 This extension aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
 该扩展旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
 
-<img src="images/overview.png" width="800" />
+<img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/overview.png" width="800" />
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -74,19 +74,19 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 
 1. Create Worktree. 创建 worktree
 
-<video src="images/create-worktree.mp4" controls="controls" width="800" height="450"></video>
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/create-worktree.mp4" controls="controls" width="800" height="450"></video>
 
 2. Checkout Branch/tag. 切换分支/标记
 
-<video src="images/switch-branch.mp4" controls="controls" width="800" height="450"></video>
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/switch-branch.mp4" controls="controls" width="800" height="450"></video>
 
 3. Manage multiple repositories. 管理多个仓库
 
-<video src="images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
 
 4. Add worktrees to workspace. 向工作区添加 worktree 目录
 
-<video src="images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
