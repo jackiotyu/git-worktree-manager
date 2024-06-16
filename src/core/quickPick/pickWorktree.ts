@@ -417,8 +417,6 @@ class ActionService implements IActionService {
             case DefaultDisplayList.recentlyOpened:
                 this.worktreeButtons = [
                     refreshRecentlyQuickInputButton,
-                    addGitRepoQuickInputButton,
-                    addWorktreeQuickInputButton,
                     settingQuickInputButton,
                     backWorkspaceQuickInputButton,
                 ];
