@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { pickGitFolder } from '@/core/ui/pickGitFolder';
 import type { IWorktreeLess } from '@/types';
 import { Alert } from '@/core/ui/message';
@@ -8,17 +8,15 @@ import { getMainFolder } from '@/core/git/getMainFolder';
 import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
 
 const pickBranchItem = async (dir: string, mainFolder: string) => {
-    let branchItem = await pickBranch(
-        vscode.l10n.t('Create Worktree ({0})', dir.length > 35 ? `...${dir.slice(-34)}` : dir),
-        vscode.l10n.t('Choose a branch to create new worktree for'),
+    let branchItem = await pickBranch({
+        title: vscode.l10n.t('Create Worktree ({0})', dir.length > 35 ? `...${dir.slice(-34)}` : dir),
+        placeholder: vscode.l10n.t('Choose a branch to create new worktree for'),
         mainFolder,
-        dir,
-    );
+        cwd: dir,
+        step: 2,
+        totalSteps: 2,
+    });
     return branchItem;
-};
-
-const pickDirAndBranchItem = async (dir: string, mainFolder: string) => {
-
 };
 
 export const addWorktreeCmd = async (item?: IWorktreeLess) => {
@@ -26,18 +24,23 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     if (gitFolder === null) Alert.showErrorMessage(vscode.l10n.t('Please open a git repository in workspace'));
     if (!gitFolder) return false;
     const mainFolder = await getMainFolder(gitFolder);
-    if(!mainFolder) return false;
+    if (!mainFolder) return false;
 
     // 选择文件夹
-    let folderPath = await inputWorktreeDir(gitFolder);
+    let folderPath = await inputWorktreeDir({ baseDir: gitFolder, step: 1, totalSteps: 2 });
     if (!folderPath) return;
 
     // 选择ref
     let branchItem = await pickBranchItem(gitFolder, mainFolder);
     // FIXME 改造quickPick
     // 没有选择ref时，返回选择文件夹
-    while(branchItem === void 0) {
-        folderPath = await inputWorktreeDir(gitFolder, folderPath);
+    while (branchItem === void 0) {
+        folderPath = await inputWorktreeDir({
+            baseDir: gitFolder,
+            baseWorktreeDir: folderPath,
+            step: 1,
+            totalSteps: 2,
+        });
         if (!folderPath) return;
         branchItem = await pickBranchItem(gitFolder, mainFolder);
     }

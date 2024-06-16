@@ -124,9 +124,12 @@ export interface BranchForWorktree extends vscode.QuickPickItem {
     hash?: string;
 }
 export type IPickBranchResolveValue = BranchForWorktree | void | false;
-export type IPickBranch = (
-    title: string,
-    placeholder: string,
-    mainFolder: string,
-    cwd: string,
-) => Promise<IPickBranchResolveValue>;
+export type IPickBranchParams = {
+    title: string;
+    placeholder: string;
+    mainFolder: string;
+    cwd: string;
+    step?: number;
+    totalSteps?: number;
+};
+export type IPickBranch = (params: IPickBranchParams) => Promise<IPickBranchResolveValue>;
