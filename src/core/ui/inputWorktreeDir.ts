@@ -15,7 +15,7 @@ export const pickWorktreeDir = async (dir: string) => {
     return uriList?.[0]?.fsPath;
 };
 
-export const inputWorktreeDir = async (baseDir: string) => {
+export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string) => {
     let canClose = true;
     // 最终路径
     let resolve: (str?: string) => void;
@@ -28,7 +28,9 @@ export const inputWorktreeDir = async (baseDir: string) => {
     let finalWorktreeDir = path.join(workTreeDir, 'worktree1');
     const dirReg = /worktree(\d+)/;
     const inputBox = vscode.window.createInputBox();
-    if (await checkExist(workTreeDir)) {
+    if(baseWorktreeDir) {
+        finalWorktreeDir = baseWorktreeDir;
+    } else if (await checkExist(workTreeDir)) {
         let worktreeDirList = (await vscode.workspace.fs.readDirectory(vscode.Uri.file(workTreeDir)))
             .filter((item) => item[1] === vscode.FileType.Directory)
             .filter((item) => dirReg.test(item[0]))
