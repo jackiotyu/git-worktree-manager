@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { checkFolderExist } from '@/core/util/file';
+import { verifyDirExistence } from '@/core/util/file';
 import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
 import { comparePath } from '@/core/util/folder';
 import { checkGitValid } from '@/core/git/checkGitValid';
@@ -9,9 +9,7 @@ import { worktreeEventRegister } from '@/core/event/git';
 import path from 'path';
 
 export const addToGitFolder = async (folderPath: string) => {
-    if (!(await checkFolderExist(folderPath))) {
-        return;
-    }
+    if (!(await verifyDirExistence(folderPath))) return;
     let existFolders = getFolderConfig();
     if (!(await checkGitValid(folderPath))) {
         return Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
@@ -31,9 +29,7 @@ export const addToGitFolder = async (folderPath: string) => {
             }
         },
     });
-    if (!folderName) {
-        return;
-    }
+    if (!folderName) return;
     existFolders.push({ name: folderName, path: folderPath });
     await updateFolderConfig(existFolders);
     worktreeEventRegister.add(vscode.Uri.file(folderPath));

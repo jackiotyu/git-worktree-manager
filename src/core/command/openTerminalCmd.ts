@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { checkFolderExist } from '@/core/util/file';
+import { verifyDirExistence } from '@/core/util/file';
 import { judgeIncludeFolder } from '@/core/util/folder';
 import { getTerminalLocationConfig, getTerminalCmdListConfig } from '@/core/util/state';
 import { AllViewItem } from '@/core/treeView/items';
@@ -10,7 +10,7 @@ interface CmdItem extends vscode.QuickPickItem {
 
 export const openTerminalCmd = async (item?: AllViewItem) => {
     if (!item) return;
-    if (!(await checkFolderExist(item.path))) return;
+    if (!(await verifyDirExistence(item.path))) return;
     const terminal = vscode.window.createTerminal({
         cwd: item.path,
         name: `${item.name} ⇄ ${item.path}`,

@@ -9,7 +9,7 @@ export const checkExist = (path: string) => {
         .catch(() => false);
 };
 
-export const checkFolderExist = async (path: string) => {
+export const verifyDirExistence = async (path: string) => {
     let exist = await checkExist(path);
     if (!exist) {
         Alert.showErrorMessage(vscode.l10n.t('The folder does not exist'), { modal: true });

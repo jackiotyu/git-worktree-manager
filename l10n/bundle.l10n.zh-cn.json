@@ -28,7 +28,7 @@
     "Open folder": "打开文件夹",
     "Whether to open the new worktree in a new window?": "是否在新窗口打开新建的worktree?",
     "Select the folder": "选择文件夹",
-    "Select the folder where you want to create the worktree?": "请选择需要创建worktree的文件夹?",
+    "Select the folder where you want to create the worktree": "选择需要创建worktree的文件夹",
     "Select the new location to move the Worktree's folder from {0}": "请选择将 worktree 的文件夹从 {0} 移动到的新位置",
     "The worktree for the {0} folder will be deleted": "将删除 {0} 文件夹的worktree",
     "The following Worktree folder will be deleted": "将删除以下 worktree 文件夹",
@@ -108,5 +108,8 @@
     "Refresh": "刷新",
     "Save git repository": "添加到 git 仓库管理",
     "Open recently used folders": "打开最近使用的文件夹",
-    "Back to workspace list": "返回工作区列表"
+    "Back to workspace list": "返回工作区列表",
+    "Input worktree directory": "输入 worktree 文件夹",
+    "Please select a different directory": "请选择其他文件夹",
+    "The folder already exists": "文件夹已存在"
 }
