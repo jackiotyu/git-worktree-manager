@@ -9,7 +9,7 @@ type KeyWorkTreeCache = 'workTreeCache';
 type KeyMainFolders = 'mainFolders';
 type KeyGlobalRecentFolderCache = 'global.recentFolderCache';
 
-export type StateKey = KeyGitRepoRefList | KeyGitFolderViewAsTree | KeyGitFolders | KeyWorkTreeCache | KeyMainFolders;
+export type StateKey = KeyGitRepoRefList | KeyGitFolderViewAsTree | KeyGitFolders | KeyWorkTreeCache | KeyMainFolders | KeyGlobalRecentFolderCache;
 
 export class GlobalState {
     static context: vscode.ExtensionContext;

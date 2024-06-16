@@ -3,6 +3,7 @@ import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { getRecentFolders, getWorkspaceMainFolders } from '@/core/util/workspace';
 import { WorkspaceState, GlobalState } from '@/core/state';
 import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache } from '@/types';
+import { getNameRevSafe } from '@/core/git/getNameRev';
 
 export const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorktreeCacheItem[]> => {
     const worktreeList = await Promise.all(
@@ -44,7 +45,7 @@ export const updateRecentFolders = async () => {
     const list = await getRecentFolders();
     GlobalState.update('global.recentFolderCache', {
         time: +new Date(),
-        list: list.map((item) => item.folderUri.toString()),
+        list: list.map(i => i.folderUri.toString()),
     });
 };
 

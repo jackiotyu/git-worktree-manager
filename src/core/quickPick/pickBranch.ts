@@ -213,7 +213,7 @@ const updateRefListCache = (mainFolder: string, refList: RepoRefList) => {
     });
 };
 
-export const pickBranch: IPickBranch = async (title, placeholder, mainFolder, cwd) => {
+export const pickBranch: IPickBranch = async ({ title, placeholder, mainFolder, cwd, step, totalSteps }) => {
     let resolve: ResolveType = () => {};
     let reject: RejectType = () => {};
     let waiting = new Promise<ResolveValue>((_resolve, _reject) => {
@@ -232,6 +232,8 @@ export const pickBranch: IPickBranch = async (title, placeholder, mainFolder, cw
         quickPick.placeholder = placeholder;
         quickPick.canSelectMany = false;
         quickPick.buttons = [backButton];
+        quickPick.step = step;
+        quickPick.totalSteps = totalSteps;
         disposables.push(
             quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick })),
             quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick, disposables })),

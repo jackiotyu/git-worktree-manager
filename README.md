@@ -7,14 +7,9 @@
 This extension aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
 该扩展旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
 
-![ git worktree manager preview](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/preview.gif)
+<img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/overview.png" width="800" />
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<details>
-  <summary>Overview 概览</summary>
-  <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/overview.png" width="800" />
-</details>
 
 <details>
   <summary>How Git Worktree Works. git worktree 工作原理</summary>
@@ -48,6 +43,7 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#note">Note</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -58,14 +54,14 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 
 
 <!-- GETTING STARTED -->
-## Getting Started 快速开始
+## Getting Started
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
 在 VSCode [扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
 1. Press `Ctrl + Shift + R` to start.
 按下 `Ctrl + Shift + R` 开始操作
 
-### Requirements 要求
+## Requirements
 
 * git version >= 2.30 for best performance.
 * 建议安装版本号不低于2.30的git
@@ -74,51 +70,76 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 
 
 <!-- USAGE EXAMPLES -->
-## Usage 使用
+## Usage
 
-1. Worktree manager. 管理 worktree
+1. [Create Worktree. 创建 worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/create-worktree.mp4)
 
-![create-worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/create-worktree.png)
-- Click on the "Add worktree" icon and follow the prompts to add a new worktree.
-点击 `添加 worktree` 图标，跟随提示进行操作，添加新的 worktree。
-- The right-click context menu provides the following convenient commands. You can click on the worktree item to directly open the worktree in a new window.
-- 右键上下文菜单中提供了一下方便的命令。可以点击 worktree 项直接在新窗口打开 worktree。
-![open-terminal](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/open-terminal.png)
-- Using VSCode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
-- 使用 VSCode 自带的外部终端设置。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
-```json
-{
-  "terminal.external.osxExec": "iTerm.app",
-  "terminal.external.windowsExec": "C:\\Program Files\\Git\\bin\\bash.exe",
-}
-```
-![pull-commit](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/pull-commit.png)
-- Quick pull/push commits in remote branch.
-- 快速在远程分支上pull/push提交。
-- Quick view git history. (current use extension [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
-- 快速查看git提交历史. (当前使用扩展 [mhutchie.git-graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph))
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/create-worktree.mp4" controls="controls" width="800" height="450"></video>
 
+2. [Checkout Branch/tag. 切换分支/标记](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/switch-branch.mp4)
 
-2. Git repository manger.  git 仓库管理
-![save-repository](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/save-repository.png)
-- Click the `Add git repository` icon, then following the tips to save a git repository.
-- 点击 `添加 git 仓库` 图标，跟随提示进行操作，添加一个 git 仓库。
-- Also provider some quick operation in context menu and inline icon.
-- 右键上下文菜单和行内图标也可以执行一下快速操作。
-- List all worktree in every repository.
-- 每个仓库都会列出所有 worktree。
-- Press `Ctrl + Shift + R` to open the worktree list.
-- 按下 `Ctrl + Shift + R` 打开 worktree 列表。
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/switch-branch.mp4" controls="controls" width="800" height="450"></video>
 
-3. Setting. 设置
-![open-setting](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/open-setting.png)
-- Open setting quickly by click this button.
-- 点击这个按钮快速打开设置
-![setting-detail](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.1.9/images/setting-detail.png)
-- Managing settings, for example, providing a terminal command that can be quickly executed in the right-click context menu of the worktree item, called "Open VSCode Integrated Terminal" command.
-- 管理设置，例如提供终端命令，可以在点击 worktree 项的右键上下文菜单`打开VSCode内置终端`命令中快速运行该命令。
+3. [Manage multiple repositories. 管理多个仓库](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/manage-multiple-repositories.mp4)
+
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
+
+4. [Add worktrees to workspace. 向工作区添加 worktree 目录](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/add-worktrees-to-workspace.mp4)
+
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.5/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Note
+
+1. External Terminal settings. 外部终端设置
+    - When opening an external terminal, you can customize the terminal application to be launched. On Windows, you can configure the enabled terminal using `terminal.external.windowsExec`, with similar settings available on other platforms.
+    - 打开外部终端时，可以自定义打开的终端应用。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
+    ```json
+    {
+      "terminal.external.osxExec": "iTerm.app",
+      "terminal.external.windowsExec": "C:\\Program Files\\Git\\bin\\bash.exe",
+    }
+    ```
+2. Prevent unstaged code from the worktree of the same branch from automatically entering the staging area after git pull is executed. 防止在执行 git pull 后，相同分支的worktree未暂存的代码自动进入暂存区
+    - Add git post-merge script in `your-repo/.git/hook/post-merge`.
+    - 在 `仓库目录/.git/hooks/post-merge` 脚本文件中添加脚本
+    ```sh
+    #!/bin/bash
+
+    # Get the current directory path (Unix system)
+    CURRENT_FOLDER=$(pwd)
+    # Uncomment the following line to enable cygpath on Windows (Cygwin). windows需要去掉下面的注释，启用 crypath 转换路径
+    # CURRENT_FOLDER=$(cygpath -w "$(pwd)")
+
+    # Get the current Git branch name
+    CURRENT_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+
+    # Get the list of all worktrees and process each line. 获取所有 worktree 的列表并逐行处理
+    git worktree list --porcelain | grep "worktree" | while read -r LINE; do
+        # Extract the worktree path. 提取 worktree 路径
+        WORKTREE=$(echo "$LINE" | awk '{print $2}')
+
+        # Uncomment the following line to enable cygpath on Windows (Cygwin). windows需要去掉下面的注释，启用 crypath 转换路径
+        # WORKTREE=$(cygpath -w "$WORKTREE")
+
+        # If the current directory path matches the worktree path, skip it. 如果当前目录路径与 worktree 路径相同，则跳过
+        if [ "$CURRENT_FOLDER" = "$WORKTREE" ]; then
+            continue
+        fi
+
+        # Get the branch name of the target worktree. 获取目标 worktree 的分支名称
+        TARGET_BRANCH=$(git --work-tree="$WORKTREE" --git-dir="$WORKTREE/.git" rev-parse --abbrev-ref HEAD)
+
+        # If the target worktree's branch matches the current branch, process it. 如果目标 worktree 的分支与当前分支相同，则进行处理
+        if [ "$TARGET_BRANCH" = "$CURRENT_BRANCH_NAME" ]; then
+            echo "Processing worktree: $WORKTREE on branch: $TARGET_BRANCH"
+            git --work-tree="$WORKTREE" --git-dir="$WORKTREE/.git" reset --merge HEAD
+        fi
+    done
+    ```
+    - This post-merge script ensures consistency across multiple Git worktrees by resetting any matching branch to its merged state after a merge operation.
+    - 这段 post-merge 脚本在 Git 合并操作后，通过将匹配的分支重置为合并后的状态，确保多个 Git worktree 的一致性。
 
 
 

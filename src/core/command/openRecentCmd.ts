@@ -1,5 +1,6 @@
-import * as vscode from "vscode";
+import { pickWorktree } from "@/core/quickPick/pickWorktree";
+import { DefaultDisplayList } from '@/types';
 
 export const openRecentCmd = () => {
-    vscode.commands.executeCommand('workbench.action.openRecent');
+    pickWorktree(DefaultDisplayList.recentlyOpened);
 };

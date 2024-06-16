@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { updateWorktreeCache, updateWorkspaceListCache } from '@/core/util/cache';
+import { updateWorktreeCache, updateWorkspaceListCache, getRecentFolderCache } from '@/core/util/cache';
 import { GlobalState, WorkspaceState } from '@/core/state';
-import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess } from '@/types';
+import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentUriCache } from '@/types';
 import { Commands, QuickPickKind } from '@/constants';
 import groupBy from 'lodash/groupBy';
 import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
 import folderRoot from '@/core/folderRoot';
-import { updateTreeDataEvent, changeUIVisibleEvent } from '@/core/event/events';
+import { updateTreeDataEvent, changeUIVisibleEvent, globalStateEvent } from '@/core/event/events';
 import path from 'path';
 import {
     openExternalTerminalQuickInputButton,
@@ -30,6 +30,10 @@ import {
     moreQuickInputButton,
     viewHistoryQuickInputButton,
     openRepositoryQuickInputButton,
+    openRecentlyQuickInputButton,
+    backWorkspaceQuickInputButton,
+    refreshRecentlyQuickInputButton,
+    saveRepoQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
 
@@ -39,14 +43,17 @@ interface WorktreePick extends vscode.QuickPickItem {
 
 interface IActionService {
     canClose: boolean;
-    checkSortByBranch: boolean;
+    sortByBranch: boolean;
     listLoading: boolean;
     workspaceListLoading: boolean;
     workspaceList: IWorktreeCacheItem[];
     list: IWorktreeCacheItem[];
-    displayAll: boolean;
-    updateList: () => void;
+    recentUriCache: IRecentUriCache;
+    recentPickCache: WorktreePick[];
+    displayType: DefaultDisplayList;
+    updateList: (forceUpdate?: boolean) => void;
     initList: () => void;
+    updateButtons: (displayType?: DefaultDisplayList) => vscode.QuickInputButton[];
     worktreeButtons: vscode.QuickInputButton[];
 }
 
@@ -74,77 +81,58 @@ interface TriggerItemButtonHandlerArgs extends HandlerArgs {
     actionService: IActionService;
 }
 
-const exchangeButton = (
-    worktreeButtons: vscode.QuickInputButton[],
-    btn1: vscode.QuickInputButton,
-    btn2: vscode.QuickInputButton,
-): vscode.QuickInputButton[] => {
-    const index = worktreeButtons.findIndex((btn) => btn === btn1);
-    if (~~index) worktreeButtons[index] = btn2;
-    return worktreeButtons;
-};
-
 const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     // 是否置顶当前仓库的分支
     const pinCurRepo = Config.get('worktreePick.pinCurrentRepo', false);
     const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
     const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
-    const showExternalTerminal = Config.get('worktreePick.showExternalTerminal', false);
-    const showTerminal = Config.get('worktreePick.showTerminal', false);
-    const showRevealInSystemExplorer = Config.get('worktreePick.showRevealInSystemExplorer', false);
-    const showCopy = Config.get('worktreePick.showCopy', false);
-    const showAddToWorkspace = Config.get('worktreePick.showAddToWorkspace', false);
-    const showCheckout = Config.get('worktreePick.showCheckout', true);
-    const showViewHistory = Config.get('worktreePick.showViewHistory', true);
-    const showOpenRepository = Config.get('worktreePick.showOpenRepository', true);
-
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
         const list: { button: vscode.QuickInputButton; show: boolean }[] = [
             {
                 button: openExternalTerminalQuickInputButton,
-                show: showExternalTerminal,
+                show: openExternalTerminalQuickInputButton.enabled,
             },
             {
                 button: openTerminalQuickInputButton,
-                show: showTerminal,
+                show: openTerminalQuickInputButton.enabled,
             },
             {
                 button: revealInSystemExplorerQuickInputButton,
-                show: showRevealInSystemExplorer,
+                show: revealInSystemExplorerQuickInputButton.enabled,
             },
             {
                 button: Object.assign(copyItemQuickInputButton, { tooltip: copyTooltip }),
-                show: showCopy,
+                show: copyItemQuickInputButton.enabled,
             },
             {
                 button: checkoutBranchQuickInputButton,
-                show: showCheckout,
+                show: checkoutBranchQuickInputButton.enabled,
             },
             {
                 button: addToWorkspaceQuickInputButton,
-                show: !isCurrent && showAddToWorkspace,
+                show: !isCurrent && addToWorkspaceQuickInputButton.enabled,
             },
             {
                 button: removeFromWorkspaceQuickInputButton,
-                show: isCurrent && showAddToWorkspace,
+                show: isCurrent && removeFromWorkspaceQuickInputButton.enabled,
             },
             {
                 button: viewHistoryQuickInputButton,
-                show: showViewHistory,
+                show: viewHistoryQuickInputButton.enabled,
             },
             {
                 button: openRepositoryQuickInputButton,
-                show: showOpenRepository,
+                show: openRepositoryQuickInputButton.enabled,
             },
             {
                 button: moreQuickInputButton,
-                show: true,
+                show: moreQuickInputButton.enabled,
             },
             {
                 button: openInNewWindowQuickInputButton,
-                show: true,
+                show: openInNewWindowQuickInputButton.enabled,
             },
         ];
 
@@ -174,11 +162,34 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     }, []);
 };
 
+const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
+    return list.map((uri) => {
+        const baseName = path.basename(uri.fsPath);
+        return {
+            label: baseName || uri.fsPath,
+            description: baseName ? uri.fsPath : '',
+            iconPath: vscode.ThemeIcon.Folder,
+            path: uri.fsPath,
+            buttons: [
+                saveRepoQuickInputButton,
+                openExternalTerminalQuickInputButton,
+                openTerminalQuickInputButton,
+                revealInSystemExplorerQuickInputButton,
+                openRepositoryQuickInputButton,
+                addToWorkspaceQuickInputButton,
+                openInNewWindowQuickInputButton,
+            ].filter((i) => i.enabled),
+        };
+    });
+};
+
 const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     let selectedItem = quickPick.selectedItems[0];
     if (selectedItem?.path) {
         vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
             forceNewWindow: true,
+        }).then(() => {
+            vscode.commands.executeCommand(Commands.refreshRecentFolder);
         });
     }
     resolve(selectedItem);
@@ -196,23 +207,15 @@ const handleHide = ({ resolve, reject, quickPick, actionService, disposables }: 
 
 const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService }: TriggerButtonHandlerArgs) => {
     if (event === sortByBranchQuickInputButton) {
-        actionService.checkSortByBranch = true;
+        actionService.sortByBranch = true;
+        quickPick.buttons = actionService.updateButtons();
         actionService.updateList();
-        quickPick.buttons = exchangeButton(
-            actionService.worktreeButtons,
-            sortByBranchQuickInputButton,
-            sortByRepoQuickInputButton,
-        );
         return;
     }
     if (event === sortByRepoQuickInputButton) {
-        actionService.checkSortByBranch = false;
+        actionService.sortByBranch = false;
+        quickPick.buttons = actionService.updateButtons();
         actionService.updateList();
-        quickPick.buttons = exchangeButton(
-            actionService.worktreeButtons,
-            sortByRepoQuickInputButton,
-            sortByBranchQuickInputButton,
-        );
         return;
     }
     if (event === settingQuickInputButton) {
@@ -225,23 +228,13 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         return;
     }
     if (event === useAllWorktreeQuickInputButton) {
-        actionService.displayAll = true;
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.all);
         actionService.updateList();
-        quickPick.buttons = exchangeButton(
-            actionService.worktreeButtons,
-            useAllWorktreeQuickInputButton,
-            useWorkspaceWorktreeQuickInputButton,
-        );
         return;
     }
     if (event === useWorkspaceWorktreeQuickInputButton) {
-        actionService.displayAll = false;
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.workspace);
         actionService.updateList();
-        quickPick.buttons = exchangeButton(
-            actionService.worktreeButtons,
-            useWorkspaceWorktreeQuickInputButton,
-            useAllWorktreeQuickInputButton,
-        );
         return;
     }
     if (event === addWorktreeQuickInputButton) {
@@ -258,6 +251,27 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
             }
         });
         quickPick.hide();
+        return;
+    }
+    if (event === openRecentlyQuickInputButton) {
+        actionService.displayType = DefaultDisplayList.recentlyOpened;
+        actionService.updateList();
+        quickPick.buttons = actionService.updateButtons();
+        return;
+    }
+    if (event === backWorkspaceQuickInputButton) {
+        actionService.displayType = DefaultDisplayList.all;
+        actionService.updateList();
+        quickPick.buttons = actionService.updateButtons();
+        return;
+    }
+    if (event === refreshRecentlyQuickInputButton) {
+        const listener = globalStateEvent.event((e) => {
+            if (e !== 'global.recentFolderCache') return;
+            actionService.updateList(true);
+            listener.dispose();
+        });
+        vscode.commands.executeCommand(Commands.refreshRecentFolder);
         return;
     }
 };
@@ -308,6 +322,9 @@ const handleTriggerItemButton = ({
             break;
         case openRepositoryQuickInputButton:
             vscode.commands.executeCommand(Commands.openRepository, viewItem);
+            break;
+        case saveRepoQuickInputButton:
+            vscode.commands.executeCommand(Commands.addToGitFolder, viewItem);
             break;
         case copyItemQuickInputButton:
             const template = Config.get('worktreePick.copyTemplate', '$LABEL');
@@ -363,36 +380,84 @@ const handleTriggerItemButton = ({
 
 class ActionService implements IActionService {
     canClose: boolean = true;
-    checkSortByBranch: boolean = false;
-    displayAll: boolean;
+    sortByBranch: boolean = false;
     listLoading: boolean = true;
+    displayType: DefaultDisplayList = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all);
     workspaceListLoading: boolean = true;
-    worktreeButtons: vscode.QuickInputButton[];
+    worktreeButtons: vscode.QuickInputButton[] = [];
     workspaceList: IWorktreeCacheItem[] = WorkspaceState.get('workTreeCache', []);
     list: IWorktreeCacheItem[] = GlobalState.get('workTreeCache', []);
-    constructor(private quickPick: vscode.QuickPick<WorktreePick>) {
-        const displayAll = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all) === DefaultDisplayList.all;
-        this.displayAll = displayAll;
-        this.worktreeButtons = [
-            addGitRepoQuickInputButton,
-            addWorktreeQuickInputButton,
-            displayAll ? useWorkspaceWorktreeQuickInputButton : useAllWorktreeQuickInputButton,
-            settingQuickInputButton,
-            sortByBranchQuickInputButton,
-        ];
+    recentUriCache: IRecentUriCache = getRecentFolderCache();
+    recentPickCache: WorktreePick[] = [];
+    constructor(private quickPick: vscode.QuickPick<WorktreePick>, displayType?: DefaultDisplayList) {
+        this.updateButtons(displayType);
     }
-    updateList = () => {
-        let items = this.displayAll
-            ? mapWorktreePickItems(this.list)
-            : mapWorktreePickItems(this.workspaceList);
-        const busy = this.displayAll ? this.listLoading : this.workspaceListLoading;
-        if (this.checkSortByBranch) {
-            items = items
-                .sort((a, b) => a.label.localeCompare(b.label))
-                .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
+    get displayAll() {
+        return this.displayType === DefaultDisplayList.all;
+    }
+    updateButtons = (displayType: DefaultDisplayList = this.displayType) => {
+        this.displayType = displayType;
+        const displayList = this.displayType;
+        const sortButton = this.sortByBranch ? sortByRepoQuickInputButton : sortByBranchQuickInputButton;
+        const showWorktreeButton = this.displayAll
+            ? useWorkspaceWorktreeQuickInputButton
+            : useAllWorktreeQuickInputButton;
+        switch (displayList) {
+            case DefaultDisplayList.all:
+            case DefaultDisplayList.workspace:
+                this.worktreeButtons = [
+                    sortButton,
+                    addGitRepoQuickInputButton,
+                    addWorktreeQuickInputButton,
+                    showWorktreeButton,
+                    settingQuickInputButton,
+                    openRecentlyQuickInputButton,
+                ];
+                break;
+            case DefaultDisplayList.recentlyOpened:
+                this.worktreeButtons = [
+                    refreshRecentlyQuickInputButton,
+                    settingQuickInputButton,
+                    backWorkspaceQuickInputButton,
+                ];
+                break;
+            default:
+                let e: never = displayList;
+                void e;
+                break;
         }
-        this.quickPick.busy = busy;
-        this.quickPick.items = items;
+        return this.worktreeButtons;
+    };
+    updateList = (forceUpdate?: boolean) => {
+        let items: WorktreePick[] = [];
+        let busy: boolean = false;
+        if (this.displayType === DefaultDisplayList.recentlyOpened) {
+            if (forceUpdate) {
+                this.recentUriCache = getRecentFolderCache();
+                this.recentPickCache.length = 0;
+            }
+            if (this.recentPickCache.length) {
+                this.quickPick.items = this.recentPickCache;
+                this.quickPick.busy = false;
+            } else {
+                this.quickPick.busy = true;
+                this.quickPick.items = [];
+                const list = mapRecentWorktreePickItems(this.recentUriCache.list);
+                this.recentPickCache = list;
+                this.quickPick.items = list;
+                this.quickPick.busy = false;
+            }
+        } else {
+            items = this.displayAll ? mapWorktreePickItems(this.list) : mapWorktreePickItems(this.workspaceList);
+            busy = this.displayAll ? this.listLoading : this.workspaceListLoading;
+            if (this.sortByBranch) {
+                items = items
+                    .sort((a, b) => a.label.localeCompare(b.label))
+                    .filter((i) => i.kind !== vscode.QuickPickItemKind.Separator);
+            }
+            this.quickPick.busy = busy;
+            this.quickPick.items = items;
+        }
     };
     initList = () => {
         updateWorkspaceListCache().then(() => {
@@ -408,10 +473,10 @@ class ActionService implements IActionService {
     };
 }
 
-export const pickWorktree = async () => {
+export const pickWorktree = async (type?: DefaultDisplayList) => {
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();
-    const actionService: IActionService = new ActionService(quickPick);
+    const actionService: IActionService = new ActionService(quickPick, type);
     let resolve: ResolveType = () => {};
     let reject: RejectType = () => {};
     let waiting = new Promise<ResolveValue>((_resolve, _reject) => {

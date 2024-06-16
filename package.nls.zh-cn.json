@@ -21,7 +21,7 @@
     "cmd.addToWorkspace": "添加到工作区",
     "cmd.removeFromWorkspace": "从工作区中移除",
     "cmd.copyFolderPath": "复制文件夹路径",
-    "cmd.openRecent": "打开最近使用的文件夹和文件",
+    "cmd.openRecent": "打开最近使用的文件夹",
     "cmd.addToGitFolder": "保存到 git 仓库管理",
     "cmd.checkoutBranch": "签出分支",
     "cmd.viewAsTree": "以树的形式查看",
@@ -72,6 +72,7 @@
     "config.worktreePick.showViewHistory.description": "在 \"查找 Worktree\" 列表中展示 \"查看 git 历史\" 按钮",
     "config.worktreePick.showOpenRepository.description": "在 \"查找 Worktree\" 列表中展示 \"在源代码管理中打开该仓库\" 按钮",
     "config.defaultDisplayList.description": "默认展示列表",
+    "config.defaultDisplayList.enum.recentlyOpened": "最近使用的文件夹列表",
     "config.defaultDisplayList.enum.workspace": "展示工作区内的 worktree 列表",
     "config.defaultDisplayList.enum.all": "展示所有的 worktree 列表",
     "submenus.worktree-action": "worktree 操作"
