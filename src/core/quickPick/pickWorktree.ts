@@ -188,6 +188,8 @@ const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     if (selectedItem?.path) {
         vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
             forceNewWindow: true,
+        }).then(() => {
+            vscode.commands.executeCommand(Commands.refreshRecentFolder);
         });
     }
     resolve(selectedItem);
@@ -404,21 +406,21 @@ class ActionService implements IActionService {
             case DefaultDisplayList.all:
             case DefaultDisplayList.workspace:
                 this.worktreeButtons = [
-                    openRecentlyQuickInputButton,
+                    sortButton,
                     addGitRepoQuickInputButton,
                     addWorktreeQuickInputButton,
                     showWorktreeButton,
                     settingQuickInputButton,
-                    sortButton,
+                    openRecentlyQuickInputButton,
                 ];
                 break;
             case DefaultDisplayList.recentlyOpened:
                 this.worktreeButtons = [
-                    backWorkspaceQuickInputButton,
                     refreshRecentlyQuickInputButton,
                     addGitRepoQuickInputButton,
                     addWorktreeQuickInputButton,
                     settingQuickInputButton,
+                    backWorkspaceQuickInputButton,
                 ];
                 break;
             default:

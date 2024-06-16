@@ -108,7 +108,7 @@
     "Refresh": "刷新",
     "Save git repository": "添加到 git 仓库管理",
     "Open recently used folders": "打开最近使用的文件夹",
-    "Back to workspace list": "返回工作区列表",
+    "Open worktree list": "打开 worktree 列表",
     "Input worktree directory": "输入 worktree 文件夹",
     "Please select a different directory": "请选择其他文件夹",
     "The folder already exists": "文件夹已存在"

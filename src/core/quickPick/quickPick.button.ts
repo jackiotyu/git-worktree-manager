@@ -131,13 +131,13 @@ export const openRepositoryQuickInputButton: IQuickInputButton = new (class exte
     enabled = Config.get(this.configKey, this.defaultValue);
 })();
 export const openRecentlyQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('graph-left');
+    iconPath = new vscode.ThemeIcon('arrow-swap');
     tooltip = vscode.l10n.t('Open recently used folders');
     enabled = true;
 })();
 export const backWorkspaceQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('arrow-left');
-    tooltip = vscode.l10n.t('Back to workspace list');
+    iconPath = new vscode.ThemeIcon('arrow-swap');
+    tooltip = vscode.l10n.t('Open worktree list');
     enabled = true;
 })();
 export const refreshRecentlyQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
