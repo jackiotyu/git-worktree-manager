@@ -68,15 +68,11 @@ export const inputWorktreeDir = async (baseDir: string, baseWorktreeDir?: string
         inputBox.hide();
         try {
             const dir = await pickWorktreeDir(path.dirname(baseDir));
-            if (!dir) return;
-            if(verifySameDir(dir, workTreeDir)) {
-                inputBox.value = finalWorktreeDir;
-                inputBox.show();
-                return;
-            }
-            resolve(dir);
-            inputBox.dispose();
+            if (!dir) return inputBox.show();
+            inputBox.value = verifySameDir(dir, workTreeDir) ? finalWorktreeDir : dir;
+            inputBox.show();
         } catch (err) {
+            if(err instanceof Error) Alert.showErrorMessage(err.message);
             inputBox.dispose();
             reject(err);
         } finally {
