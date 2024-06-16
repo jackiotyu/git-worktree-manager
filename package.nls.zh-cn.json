@@ -21,7 +21,7 @@
     "cmd.addToWorkspace": "添加到工作区",
     "cmd.removeFromWorkspace": "从工作区中移除",
     "cmd.copyFolderPath": "复制文件夹路径",
-    "cmd.openRecent": "打开最近使用的文件夹和文件",
+    "cmd.openRecent": "打开最近使用的文件夹",
     "cmd.addToGitFolder": "保存到 git 仓库管理",
     "cmd.checkoutBranch": "签出分支",
     "cmd.viewAsTree": "以树的形式查看",

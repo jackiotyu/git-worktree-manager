@@ -387,8 +387,8 @@ class ActionService implements IActionService {
     list: IWorktreeCacheItem[] = GlobalState.get('workTreeCache', []);
     recentUriCache: IRecentUriCache = getRecentFolderCache();
     recentPickCache: WorktreePick[] = [];
-    constructor(private quickPick: vscode.QuickPick<WorktreePick>) {
-        this.updateButtons();
+    constructor(private quickPick: vscode.QuickPick<WorktreePick>, displayType?: DefaultDisplayList) {
+        this.updateButtons(displayType);
     }
     get displayAll() {
         return this.displayType === DefaultDisplayList.all;
@@ -473,10 +473,10 @@ class ActionService implements IActionService {
     };
 }
 
-export const pickWorktree = async () => {
+export const pickWorktree = async (type?: DefaultDisplayList) => {
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();
-    const actionService: IActionService = new ActionService(quickPick);
+    const actionService: IActionService = new ActionService(quickPick, type);
     let resolve: ResolveType = () => {};
     let reject: RejectType = () => {};
     let waiting = new Promise<ResolveValue>((_resolve, _reject) => {

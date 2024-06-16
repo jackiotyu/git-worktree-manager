@@ -21,7 +21,7 @@
     "cmd.addToWorkspace": "Add folder to workspace",
     "cmd.removeFromWorkspace": "Remove folder from workspace",
     "cmd.copyFolderPath": "Copy folder path",
-    "cmd.openRecent": "Open recently used folders and files",
+    "cmd.openRecent": "Open recently used folders",
     "cmd.addToGitFolder": "Save git repository",
     "cmd.checkoutBranch": "Checkout branch",
     "cmd.viewAsTree": "View as Tree",
