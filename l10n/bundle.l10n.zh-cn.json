@@ -111,5 +111,5 @@
     "Open worktree list": "打开 worktree 列表",
     "Input worktree directory": "输入 worktree 文件夹",
     "Please select a different directory": "请选择其他文件夹",
-    "The folder already exists": "文件夹已存在"
+    "The folder is not empty": "所选文件夹中有文件"
 }

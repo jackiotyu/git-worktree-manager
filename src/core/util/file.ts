@@ -17,3 +17,10 @@ export const verifyDirExistence = async (path: string) => {
     }
     return true;
 };
+
+export function isDirEmpty(path: string) {
+    return fs
+        .readdir(path)
+        .then((res) => res.length === 0)
+        .catch(() => true);
+}

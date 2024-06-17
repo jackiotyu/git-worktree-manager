@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import path from 'path';
-import { checkExist } from '@/core/util/file';
+import { checkExist, isDirEmpty } from '@/core/util/file';
 import { comparePath } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
 
@@ -92,8 +92,8 @@ export const inputWorktreeDir = async ({ baseDir, baseWorktreeDir, step, totalSt
             const input = inputBox.value;
             if (!input) return;
             if (verifySameDir(input, workTreeDir)) return;
-            if (await checkExist(input)) {
-                return Alert.showErrorMessage(vscode.l10n.t('The folder already exists'));
+            if (!(await isDirEmpty(input))) {
+                return Alert.showErrorMessage(vscode.l10n.t('The folder is not empty'));
             }
             resolve(input);
             inputBox.hide();
