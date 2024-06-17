@@ -3,7 +3,7 @@
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
   "description": "Convenient multi-workspace, fast git project copying, running projects in multiple directories. 便捷多工作区操作，快速复制git项目，多目录同时运行项目",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "engines": {
     "vscode": "^1.60.0"
   },
