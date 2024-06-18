@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { WorktreeItem } from '@/core/treeView/items';
 import { moveWorktree } from '@/core/git/moveWorktree';
+import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
 import logger from '@/core/log/logger';
 import path from 'path';
@@ -20,7 +21,7 @@ export const moveWorktreeCmd = async (item?: WorktreeItem) => {
             return;
         }
         let folderUri = uriList[0];
-        await moveWorktree(item.path, folderUri.fsPath, item.parent?.path);
+        await moveWorktree(item.path, folderUri.fsPath, item.path);
         Alert.showInformationMessage(vscode.l10n.t('Worktree moved successfully'));
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Worktree move failed \n\n {0}', String(error)));

@@ -16,7 +16,7 @@ export const removeWorktreeCmd = async (item?: WorktreeItem) => {
         if (!confirm) {
             return;
         }
-        await removeWorktree(item.path, item.parent?.path);
+        await removeWorktree(item.path, item.path);
         Alert.showInformationMessage(vscode.l10n.t('Successfully deleted the worktree for the {0} folder', item.path));
         vscode.commands.executeCommand(Commands.refreshWorktree);
     } catch (error) {

@@ -12,11 +12,9 @@ class WorkspaceFolderRoot implements vscode.Disposable {
     }
     private checkUri() {
         const folders = vscode.workspace.workspaceFolders || [];
-        const workspaceFile = vscode.workspace.workspaceFile;
         this._folderSet = new Set(folders.map(i => i.uri.fsPath.toLocaleLowerCase().replace(/\\/g, '/')).filter(i => i));
-        if(workspaceFile) {
-            this._uri = workspaceFile;
-        } else if(folders.length === 1) {
+        // TODO 多个工作区时特殊处理
+        if(folders.length) {
             this._uri = folders[0].uri;
         } else {
             this._uri = void 0;
