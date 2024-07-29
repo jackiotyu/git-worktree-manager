@@ -7,146 +7,143 @@ interface IQuickInputButton extends vscode.QuickInputButton {
     enabled: boolean;
 }
 
-abstract class QuickInputButton implements IQuickInputButton {
-    abstract enabled: boolean;
-    readonly defaultValue?: boolean;
-    abstract iconPath: vscode.ThemeIcon | vscode.Uri | { light: vscode.Uri; dark: vscode.Uri };
-    readonly configKey?: string;
-    constructor() {
-        queueMicrotask(() => {
-            this.configKey &&
-                Config.onChange(this.configKey, () => {
-                    this.enabled = Config.get(this.configKey as any, this.defaultValue as any) as unknown as boolean;
-                });
-        });
-    }
+interface IOptions {
+    iconPath: vscode.ThemeIcon | vscode.Uri | { light: vscode.Uri; dark: vscode.Uri };
+    tooltip: string;
+    enabled?: boolean;
+    configKey?: string;
+    defaultValue?: boolean;
 }
 
-export const openInNewWindowQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('arrow-right');
-    tooltip = vscode.l10n.t('Switch the current window to this folder.');
-    enabled = true;
-})();
-export const revealInSystemExplorerQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('folder-opened');
-    tooltip = vscode.l10n.t('Reveal in the system explorer');
-    readonly configKey = 'worktreePick.showRevealInSystemExplorer';
-    readonly defaultValue = false;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const openExternalTerminalQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('terminal-bash');
-    tooltip = vscode.l10n.t('Open in External Terminal');
-    readonly configKey = 'worktreePick.showExternalTerminal';
-    readonly defaultValue = false;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const openTerminalQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('terminal');
-    tooltip = vscode.l10n.t('Open in VSCode built-in Terminal');
-    readonly configKey = 'worktreePick.showTerminal';
-    readonly defaultValue = false;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const addToWorkspaceQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('multiple-windows');
-    tooltip = vscode.l10n.t('Add folder to workspace');
-    readonly configKey = 'worktreePick.showAddToWorkspace';
-    readonly defaultValue = false;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const removeFromWorkspaceQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('close');
-    tooltip = vscode.l10n.t('Remove folder from workspace');
-    readonly configKey = 'worktreePick.showAddToWorkspace';
-    readonly defaultValue = false;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const sortByBranchQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('case-sensitive');
-    tooltip = vscode.l10n.t('Sort by branch name');
-    enabled = true;
-})();
-export const sortByRepoQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('list-flat');
-    tooltip = vscode.l10n.t('Sort by repository');
-    enabled = true;
-})();
-export const settingQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('gear');
-    tooltip = vscode.l10n.t('Settings');
-    enabled = true;
-})();
-export const addGitRepoQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('add');
-    tooltip = vscode.l10n.t('Add a git repository folder path');
-    enabled = true;
-})();
-export const copyItemQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('copy');
-    tooltip = vscode.l10n.t('Copy');
-    readonly configKey = 'worktreePick.showCopy';
-    readonly defaultValue = false;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const useAllWorktreeQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('list-tree');
-    tooltip = vscode.l10n.t('Click to display worktree list in all workspaces');
-    enabled = true;
-})();
-export const useWorkspaceWorktreeQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('folder-library');
-    tooltip = vscode.l10n.t('Click to display worktree list in workspace');
-    enabled = true;
-})();
-export const checkoutBranchQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('source-control');
-    tooltip = vscode.l10n.t('Checkout');
-    readonly configKey = 'worktreePick.showCheckout';
-    readonly defaultValue = true;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const addWorktreeQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('new-folder');
-    tooltip = vscode.l10n.t('Create Worktree');
-    enabled = true;
-})();
-export const moreQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('three-bars');
-    tooltip = vscode.l10n.t('More actions...');
-    enabled = true;
-})();
-export const viewHistoryQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('history');
-    tooltip = vscode.l10n.t('View git history');
-    readonly configKey = 'worktreePick.showViewHistory';
-    readonly defaultValue = true;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const openRepositoryQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('repo');
-    tooltip = vscode.l10n.t('Open the repository in Source Control view');
-    readonly configKey = 'worktreePick.showOpenRepository';
-    readonly defaultValue = true;
-    enabled = Config.get(this.configKey, this.defaultValue);
-})();
-export const openRecentlyQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('arrow-swap');
-    tooltip = vscode.l10n.t('Open recently used folders');
-    enabled = true;
-})();
-export const backWorkspaceQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('arrow-swap');
-    tooltip = vscode.l10n.t('Open worktree list');
-    enabled = true;
-})();
-export const refreshRecentlyQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('refresh');
-    tooltip = vscode.l10n.t('Refresh');
-    enabled = true;
-})();
-export const saveRepoQuickInputButton: IQuickInputButton = new (class extends QuickInputButton {
-    iconPath = new vscode.ThemeIcon('star-empty');
-    tooltip = vscode.l10n.t('Save git repository');
-    enabled = true;
-})();
+class QuickInputButton implements IQuickInputButton {
+    public enabled: boolean = true;
+    public iconPath: vscode.ThemeIcon | vscode.Uri | { light: vscode.Uri; dark: vscode.Uri };
+    public tooltip: string;
+    private readonly configKey?: string;
+    private defaultValue?: boolean;
+    constructor(options: IOptions) {
+        this.iconPath = options.iconPath;
+        this.tooltip = options.tooltip;
+        this.configKey = options.configKey;
+        this.defaultValue = options.defaultValue;
+        if (typeof options.enabled === 'boolean') {
+            this.enabled = options.enabled;
+        }
+        if (typeof this.configKey === 'string') {
+            this.initEnabled();
+            queueMicrotask(() => {
+                this.configKey && Config.onChange(this.configKey, this.initEnabled);
+            });
+        }
+    }
+    private initEnabled = () => {
+        this.enabled = Config.get(this.configKey as any, this.defaultValue as any) as unknown as boolean;
+    };
+}
+
+export const openInNewWindowQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('arrow-right'),
+    tooltip: vscode.l10n.t('Switch the current window to this folder.'),
+});
+export const revealInSystemExplorerQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('folder-opened'),
+    tooltip: vscode.l10n.t('Reveal in the system explorer'),
+    configKey: 'worktreePick.showRevealInSystemExplorer',
+    defaultValue: false,
+});
+export const openExternalTerminalQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('terminal-bash'),
+    tooltip: vscode.l10n.t('Open in External Terminal'),
+    configKey: 'worktreePick.showExternalTerminal',
+    defaultValue: false,
+});
+export const openTerminalQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('terminal'),
+    tooltip: vscode.l10n.t('Open in VSCode built-in Terminal'),
+    configKey: 'worktreePick.showTerminal',
+    defaultValue: false,
+});
+export const addToWorkspaceQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('multiple-windows'),
+    tooltip: vscode.l10n.t('Add folder to workspace'),
+    configKey: 'worktreePick.showAddToWorkspace',
+    defaultValue: false,
+});
+export const removeFromWorkspaceQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: vscode.l10n.t('Remove folder from workspace'),
+    configKey: 'worktreePick.showAddToWorkspace',
+    defaultValue: false,
+});
+export const sortByBranchQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('case-sensitive'),
+    tooltip: vscode.l10n.t('Sort by branch name'),
+});
+export const sortByRepoQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('list-flat'),
+    tooltip: vscode.l10n.t('Sort by repository'),
+});
+export const settingQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('gear'),
+    tooltip: vscode.l10n.t('Settings'),
+});
+export const addGitRepoQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('add'),
+    tooltip: vscode.l10n.t('Add a git repository folder path'),
+});
+export const copyItemQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('copy'),
+    tooltip: vscode.l10n.t('Copy'),
+    configKey: 'worktreePick.showCopy',
+    defaultValue: false,
+});
+export const useAllWorktreeQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('list-tree'),
+    tooltip: vscode.l10n.t('Click to display worktree list in all workspaces'),
+});
+export const useWorkspaceWorktreeQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('folder-library'),
+    tooltip: vscode.l10n.t('Click to display worktree list in workspace'),
+});
+export const checkoutBranchQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('source-control'),
+    tooltip: vscode.l10n.t('Checkout'),
+    configKey: 'worktreePick.showCheckout',
+    defaultValue: true,
+});
+export const addWorktreeQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('new-folder'),
+    tooltip: vscode.l10n.t('Create Worktree'),
+});
+export const moreQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('three-bars'),
+    tooltip: vscode.l10n.t('More actions...'),
+});
+export const viewHistoryQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('history'),
+    tooltip: vscode.l10n.t('View git history'),
+    configKey: 'worktreePick.showViewHistory',
+    defaultValue: true,
+});
+export const openRepositoryQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('repo'),
+    tooltip: vscode.l10n.t('Open the repository in Source Control view'),
+    configKey: 'worktreePick.showOpenRepository',
+    defaultValue: true,
+});
+export const openRecentlyQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('arrow-swap'),
+    tooltip: vscode.l10n.t('Open recently used folders'),
+});
+export const backWorkspaceQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('arrow-swap'),
+    tooltip: vscode.l10n.t('Open worktree list'),
+});
+export const refreshRecentlyQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('refresh'),
+    tooltip: vscode.l10n.t('Refresh'),
+});
+export const saveRepoQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('star-empty'),
+    tooltip: vscode.l10n.t('Save git repository'),
+});
