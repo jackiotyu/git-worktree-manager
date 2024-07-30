@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import { Config } from '@/core/config/setting';
@@ -14,7 +15,12 @@ export const execBase = (cwd: string, args?: string[], token?: vscode.Cancellati
         if (httpProxy) Object.assign(env, { http_proxy: httpProxy, https_proxy: httpProxy });
         const proc = cp.spawn('git', args, {
             cwd,
-            env,
+            env: {
+                ...env,
+                GCM_INTERACTIVE: 'NEVER',
+				GCM_PRESERVE_CREDS: 'TRUE',
+				LC_ALL: 'C',
+            },
         });
         let out: Buffer = Buffer.from('', 'utf-8');
         let err: Buffer = Buffer.from('', 'utf-8');
