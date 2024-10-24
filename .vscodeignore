@@ -6,9 +6,14 @@ src/**
 .gitignore
 .yarnrc
 webpack.config.js
+rspack.config.js
+tag-release.sh
 vsc-extension-quickstart.md
+pnpm-lock.yaml
+.pnpm*
 **/tsconfig.json
 **/.eslintrc.json
+**/.eslintignore
 **/*.map
 **/*.ts
 images/**
