@@ -7,7 +7,7 @@ import { registerCommands } from '@/core/command';
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { Alert } from '@/core/ui/message';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
-import throttle from 'lodash/throttle';
+import throttle from 'lodash-es/throttle';
 import logger from '@/core/log/logger';
 import { WorktreeDecorator } from '@/core/util/worktree';
 import { worktreeEventRegister } from '@/core/event/git';

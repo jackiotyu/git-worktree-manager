@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Commands, ViewId } from '@/constants';
 import { updateRecentEvent, loadAllTreeDataEvent } from '@/core/event/events';
-import throttle from 'lodash/throttle';
+import throttle from 'lodash-es/throttle';
 import { IRecentFolderConfig, IRecentUriCache } from '@/types';
 import { FolderLoadMore, FolderItem } from '@/core/treeView/items';
 import path from 'path';

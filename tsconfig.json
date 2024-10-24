@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"importHelpers": true,
+		"isolatedModules": true,
 		"module": "commonjs",
 		"target": "ES2020",
 		"lib": [

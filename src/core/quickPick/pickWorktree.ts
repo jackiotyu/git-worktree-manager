@@ -5,7 +5,7 @@ import { updateWorktreeCache, updateWorkspaceListCache, getRecentFolderCache } f
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentUriCache } from '@/types';
 import { Commands, QuickPickKind } from '@/constants';
-import groupBy from 'lodash/groupBy';
+import groupBy from 'lodash-es/groupBy';
 import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
 import folderRoot from '@/core/folderRoot';

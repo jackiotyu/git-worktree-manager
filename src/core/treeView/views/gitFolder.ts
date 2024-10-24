@@ -3,8 +3,8 @@ import { IFolderItemConfig } from '@/types';
 import { GlobalState } from '@/core/state';
 import { TreeItemKind, ViewId, ContextKey } from '@/constants';
 import { GitFolderItem, WorktreeItem } from '@/core/treeView/items';
-import throttle from 'lodash/throttle';
-import debounce from 'lodash/debounce';
+import throttle from 'lodash-es/throttle';
+import debounce from 'lodash-es/debounce';
 import { treeDataEvent, updateFolderEvent, globalStateEvent, toggleGitFolderViewAsEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 
