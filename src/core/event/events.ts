@@ -20,6 +20,13 @@ worktreeChangeEvent.event((uri) => {
 });
 
 const visibleSet = new Set();
+const executeWatchWorktree = () => {
+    if (visibleSet.size === 0) {
+        vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
+    } else {
+        vscode.commands.executeCommand(Commands.watchWorktreeEvent);
+    }
+};
 changeUIVisibleEvent.event((event) => {
     if (event.visible) visibleSet.add(event.type);
     else visibleSet.delete(event.type);
@@ -31,12 +38,11 @@ changeUIVisibleEvent.event((event) => {
     ) {
         updateTreeDataEvent.fire();
     }
-
-    if (visibleSet.size === 0) {
-        vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
-    } else {
-        vscode.commands.executeCommand(Commands.watchWorktreeEvent);
-    }
+    executeWatchWorktree();
+});
+const watchWindowState = vscode.window.onDidChangeWindowState((event) => {
+    if (!event.active || !event.focused) vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
+    else executeWatchWorktree();
 });
 
 export const collectEvent = (context: vscode.ExtensionContext) => {
@@ -51,5 +57,6 @@ export const collectEvent = (context: vscode.ExtensionContext) => {
         revealTreeItemEvent,
         worktreeChangeEvent,
         changeUIVisibleEvent,
+        watchWindowState
     );
 };
