@@ -4,7 +4,7 @@ import type { AllViewItem } from '@/core/treeView/items';
 import type { StateKey } from '@/core/state';
 
 export const treeDataEvent = new vscode.EventEmitter<void>();
-export const updateTreeDataEvent = new vscode.EventEmitter<void>();
+export const updateTreeDataEvent = new vscode.EventEmitter<void | vscode.Uri>();
 export const updateFolderEvent = new vscode.EventEmitter<void>();
 export const globalStateEvent = new vscode.EventEmitter<StateKey>();
 export const updateRecentEvent = new vscode.EventEmitter<void>();
@@ -16,7 +16,7 @@ export const changeUIVisibleEvent = new vscode.EventEmitter<{ type: TreeItemKind
 
 // TODO 需要精确到指定仓库
 worktreeChangeEvent.event((uri) => {
-    updateTreeDataEvent.fire();
+    updateTreeDataEvent.fire(uri);
 });
 
 const visibleSet = new Set();

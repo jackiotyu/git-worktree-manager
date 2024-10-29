@@ -52,7 +52,7 @@ interface IActionService {
     recentPickCache: WorktreePick[];
     displayType: DefaultDisplayList;
     updateList: (forceUpdate?: boolean) => void;
-    initList: () => void;
+    initList: (repoUri: vscode.Uri | void) => void;
     updateButtons: (displayType?: DefaultDisplayList) => vscode.QuickInputButton[];
     worktreeButtons: vscode.QuickInputButton[];
 }
@@ -459,13 +459,14 @@ class ActionService implements IActionService {
             this.quickPick.items = items;
         }
     };
-    initList = () => {
-        updateWorkspaceListCache().then(() => {
+    initList = (repoUri: vscode.Uri | void) => {
+        const repoPath = repoUri ? path.dirname(`${repoUri.fsPath.split('.git')[0]}.git`) : void 0;
+        updateWorkspaceListCache(repoPath).then(() => {
             this.workspaceList = WorkspaceState.get('workTreeCache', []);
             this.workspaceListLoading = false;
             this.updateList();
         });
-        updateWorktreeCache().then(() => {
+        updateWorktreeCache(repoPath).then(() => {
             this.list = GlobalState.get('workTreeCache', []);
             this.listLoading = false;
             this.updateList();

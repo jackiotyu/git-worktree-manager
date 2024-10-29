@@ -18,7 +18,7 @@ export async function getWorktreeList(root?: string, skipRemote?: boolean): Prom
                 : getAllRefList(['refname', 'upstream:remoteref', 'refname:short', 'upstream:remotename'], cwd),
         ]);
 
-        const mainFolder = mainFolderFull.replace('/.git', '');
+        const mainFolder = mainFolderFull.replace('/.git', '').trim();
         const [remoteName] = remoteBranchOutput.split('\n');
         const remoteBranchMap = new Map(
             branchList.filter((item) => item['upstream:remoteref']).map((item) => [item.refname, item]),
@@ -80,12 +80,13 @@ export async function getWorktreeList(root?: string, skipRemote?: boolean): Prom
                     detached: Reflect.has(item, 'detached'),
                     prunable: !!item.prunable,
                     locked: Reflect.has(item, 'locked'),
-                    isMain: item.worktree.trim() === mainFolder.trim(),
+                    isMain: item.worktree.trim() === mainFolder,
                     ahead: aheadBehind?.ahead,
                     behind: aheadBehind?.behind,
                     hash: item.HEAD,
                     remoteRef,
                     remote,
+                    mainFolder,
                 };
             }),
         );
