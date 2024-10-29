@@ -85,7 +85,7 @@ export const sortByRepoQuickInputButton = new QuickInputButton({
 });
 export const settingQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('gear'),
-    tooltip: vscode.l10n.t('Settings'),
+    tooltip: vscode.l10n.t('Open Settings'),
 });
 export const addGitRepoQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('add'),
@@ -99,7 +99,7 @@ export const copyItemQuickInputButton = new QuickInputButton({
 });
 export const useAllWorktreeQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('list-tree'),
-    tooltip: vscode.l10n.t('Click to display worktree list in all workspaces'),
+    tooltip: vscode.l10n.t('Click to display all worktree list'),
 });
 export const useWorkspaceWorktreeQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('folder-library'),
