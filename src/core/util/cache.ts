@@ -2,16 +2,14 @@ import * as vscode from 'vscode';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { getRecentFolders, getWorkspaceMainFolders } from '@/core/util/workspace';
 import { WorkspaceState, GlobalState } from '@/core/state';
-import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache } from '@/types';
-import { getNameRevSafe } from '@/core/git/getNameRev';
+import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache, IWorktreeDetail } from '@/types';
 
 export const gitFolderToCaches = async (gitFolders: IFolderItemConfig[]): Promise<IWorktreeCacheItem[]> => {
-    const worktreeList = await Promise.all(
-        gitFolders.map(async (item) => {
-            const list = await getWorktreeList(item.path, true);
-            return [list, item] as const;
-        }),
-    );
+    const worktreeList: [IWorktreeDetail[], IFolderItemConfig][] = [];
+    for (const item of gitFolders) {
+        const list = await getWorktreeList(item.path, true);
+        worktreeList.push([list, item] as const);
+    }
     return worktreeList
         .map(([list, config]) => {
             return list.map<IWorktreeCacheItem>((row) => {

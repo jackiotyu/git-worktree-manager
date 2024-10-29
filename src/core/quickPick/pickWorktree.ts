@@ -476,7 +476,7 @@ class ActionService implements IActionService {
 export const pickWorktree = async (type?: DefaultDisplayList) => {
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();
-    const actionService: IActionService = new ActionService(quickPick, type);
+    const actionService = new ActionService(quickPick, type);
     let resolve: ResolveType = () => {};
     let reject: RejectType = () => {};
     let waiting = new Promise<ResolveValue>((_resolve, _reject) => {
@@ -507,7 +507,7 @@ export const pickWorktree = async (type?: DefaultDisplayList) => {
         changeUIVisibleEvent.fire({ type: QuickPickKind.pickWorktree, visible: true });
         actionService.updateList();
         // 先展示出缓存的数据
-        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        await new Promise<void>((resolve) => setTimeout(resolve, 3000));
         actionService.initList();
         return waiting;
     } catch {

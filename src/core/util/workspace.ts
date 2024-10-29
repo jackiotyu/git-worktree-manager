@@ -33,7 +33,11 @@ export const getRecentFolders = async () => {
 };
 
 export const getWorkspaceMainFolders = async (): Promise<IFolderItemConfig[]> => {
-    const list = await Promise.all([...folderRoot.folderPathSet].map(async (folder) => await getMainFolder(folder)));
+    let list: string[] = [];
+    for (const folder of folderRoot.folderPathSet) {
+        const mainFolder = await getMainFolder(folder);
+        list.push(mainFolder);
+    }
     const folders = [...new Set(list.filter((i) => i))].map((folder) => ({
         name: path.basename(folder),
         path: folder,
