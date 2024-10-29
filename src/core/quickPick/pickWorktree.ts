@@ -508,7 +508,7 @@ export const pickWorktree = async (type?: DefaultDisplayList) => {
         changeUIVisibleEvent.fire({ type: QuickPickKind.pickWorktree, visible: true });
         actionService.updateList();
         // 先展示出缓存的数据
-        await new Promise<void>((resolve) => setTimeout(resolve, 3000));
+        await new Promise<void>((resolve) => setTimeout(resolve, 30));
         actionService.initList();
         return waiting;
     } catch {
