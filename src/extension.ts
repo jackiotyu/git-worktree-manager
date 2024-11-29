@@ -12,6 +12,9 @@ import logger from '@/core/log/logger';
 import { WorktreeDecorator } from '@/core/util/worktree';
 import { worktreeEventRegister } from '@/core/event/git';
 import { Config } from '@/core/config/setting';
+import { Commands } from '@/constants';
+import { updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
+import path from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
     logger.log('git-worktree-manager is now active!');
@@ -19,6 +22,12 @@ export function activate(context: vscode.ExtensionContext) {
     WorkspaceState.init(context);
     Alert.init(context);
     vscode.window.registerFileDecorationProvider(new WorktreeDecorator());
+    const updateCacheEvent = updateTreeDataEvent.event((e) => {
+        const repoPath = e ? path.dirname(`${e.fsPath.split('.git')[0]}.git`) : void 0;
+        if(!repoPath) return;
+        updateWorktreeCache(repoPath);
+        updateWorkspaceListCache(repoPath);
+    });
     const updateHandler = updateTreeDataEvent.event(
         throttle(
             async () => {
@@ -38,9 +47,11 @@ export function activate(context: vscode.ExtensionContext) {
         if (key === 'gitFolders') updateAddDirsContext();
     });
     checkRecentFolderCache();
+    vscode.commands.executeCommand(Commands.watchWorktreeEvent);
     context.subscriptions.push(
         folderRoot,
         updateHandler,
+        updateCacheEvent,
         logger,
         worktreeEventRegister,
         workspaceFoldersChangeEvent,
@@ -49,4 +60,6 @@ export function activate(context: vscode.ExtensionContext) {
     );
 }
 
-export function deactivate() {}
+export function deactivate() {
+    vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
+}

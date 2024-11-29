@@ -7,6 +7,7 @@ export const treeDataEvent = new vscode.EventEmitter<void>();
 export const updateTreeDataEvent = new vscode.EventEmitter<void | vscode.Uri>();
 export const updateFolderEvent = new vscode.EventEmitter<void>();
 export const globalStateEvent = new vscode.EventEmitter<StateKey>();
+export const workspaceStateEvent = new vscode.EventEmitter<StateKey>();
 export const updateRecentEvent = new vscode.EventEmitter<void>();
 export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
 export const loadAllTreeDataEvent = new vscode.EventEmitter<ViewId>();
@@ -19,31 +20,31 @@ worktreeChangeEvent.event((uri) => {
     updateTreeDataEvent.fire(uri);
 });
 
-const visibleSet = new Set();
-const executeWatchWorktree = () => {
-    if (visibleSet.size === 0) {
-        vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
-    } else {
-        vscode.commands.executeCommand(Commands.watchWorktreeEvent);
-    }
-};
-changeUIVisibleEvent.event((event) => {
-    if (event.visible) visibleSet.add(event.type);
-    else visibleSet.delete(event.type);
+// const visibleSet = new Set();
+// const executeWatchWorktree = () => {
+//     if (visibleSet.size === 0) {
+//         vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
+//     } else {
+//         vscode.commands.executeCommand(Commands.watchWorktreeEvent);
+//     }
+// };
+// changeUIVisibleEvent.event((event) => {
+//     if (event.visible) visibleSet.add(event.type);
+//     else visibleSet.delete(event.type);
 
-    if (
-        event.visible &&
-        visibleSet.size === 1 &&
-        (event.type === TreeItemKind.worktree || event.type === TreeItemKind.gitFolder)
-    ) {
-        updateTreeDataEvent.fire();
-    }
-    executeWatchWorktree();
-});
-const watchWindowState = vscode.window.onDidChangeWindowState((event) => {
-    if (!event.active || !event.focused) vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
-    else executeWatchWorktree();
-});
+//     if (
+//         event.visible &&
+//         visibleSet.size === 1 &&
+//         (event.type === TreeItemKind.worktree || event.type === TreeItemKind.gitFolder)
+//     ) {
+//         updateTreeDataEvent.fire();
+//     }
+//     executeWatchWorktree();
+// });
+// const watchWindowState = vscode.window.onDidChangeWindowState((event) => {
+//     if (!event.active || !event.focused) vscode.commands.executeCommand(Commands.unwatchWorktreeEvent);
+//     else executeWatchWorktree();
+// });
 
 export const collectEvent = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(
@@ -51,12 +52,13 @@ export const collectEvent = (context: vscode.ExtensionContext) => {
         updateTreeDataEvent,
         updateFolderEvent,
         globalStateEvent,
+        workspaceStateEvent,
         updateRecentEvent,
         toggleGitFolderViewAsEvent,
         loadAllTreeDataEvent,
         revealTreeItemEvent,
         worktreeChangeEvent,
         changeUIVisibleEvent,
-        watchWindowState
+        // watchWindowState
     );
 };

@@ -36,12 +36,12 @@ export class TreeViewManager {
             worktreeView,
             gitFolderView,
             recentFolderView,
-            worktreeView.onDidChangeVisibility((event) => {
-                changeUIVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
-            }),
-            gitFolderView.onDidChangeVisibility((event) => {
-                changeUIVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
-            }),
+            // worktreeView.onDidChangeVisibility((event) => {
+            //     changeUIVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
+            // }),
+            // gitFolderView.onDidChangeVisibility((event) => {
+            //     changeUIVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
+            // }),
         );
     }
 }
