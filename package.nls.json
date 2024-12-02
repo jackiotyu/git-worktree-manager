@@ -75,5 +75,6 @@
     "config.defaultDisplayList.enum.recentlyOpened": "Display recently opened folder list",
     "config.defaultDisplayList.enum.workspace": "Display worktree list in workspace",
     "config.defaultDisplayList.enum.all": "Display all worktree list",
+    "config.gitHistoryExtension.enum.vscode.git": "vscode git ⇄ Built-in Git graph",
     "submenus.worktree-action": "Worktree Action"
 }

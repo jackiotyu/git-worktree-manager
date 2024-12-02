@@ -75,5 +75,6 @@
     "config.defaultDisplayList.enum.recentlyOpened": "最近使用的文件夹列表",
     "config.defaultDisplayList.enum.workspace": "展示工作区内的 worktree 列表",
     "config.defaultDisplayList.enum.all": "展示所有的 worktree 列表",
+    "config.gitHistoryExtension.enum.vscode.git": "vscode git ⇄ 内置的 git 历史视图",
     "submenus.worktree-action": "worktree 操作"
 }
