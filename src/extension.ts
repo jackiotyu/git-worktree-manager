@@ -63,9 +63,15 @@ export function activate(context: vscode.ExtensionContext) {
     TreeViewManager.register(context);
     collectEvent(context);
     const stateChangeEvent = globalStateEvent.event((key) => {
-        if (key === 'gitFolders') updateAddDirsContext();
+        if (key === 'gitFolders') {
+            updateAddDirsContext();
+            checkRoots();
+        }
     });
     checkRecentFolderCache();
+    const windowEvent = vscode.window.onDidChangeWindowState((e) => {
+        vscode.commands.executeCommand(e.focused ? Commands.watchWorktreeEvent : Commands.unwatchWorktreeEvent);
+    });
     vscode.commands.executeCommand(Commands.watchWorktreeEvent);
     context.subscriptions.push(
         folderRoot,
@@ -76,6 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
         workspaceFoldersChangeEvent,
         stateChangeEvent,
         Config,
+        windowEvent,
     );
 }
 

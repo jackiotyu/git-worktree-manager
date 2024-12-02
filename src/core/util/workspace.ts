@@ -8,8 +8,9 @@ import { ContextKey } from '@/constants';
 import { WorkspaceState } from '@/core/state';
 import { getFolderConfig } from '@/core/util/state';
 import { toSimplePath } from '@/core/util/folder';
-import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/core/util/cache';
+import { updateWorkspaceMainFolders, updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
 import path from 'path';
+import { debounce } from 'lodash-es';
 
 export const addToWorkspace = (path: string) => {
     let success = vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
@@ -60,12 +61,13 @@ export const updateAddDirsContext = () => {
     }
 };
 
-export const checkRoots = async () => {
+export const checkRoots = debounce(async () => {
     await new Promise(resolve => process.nextTick(resolve));
     await updateWorkspaceMainFolders();
     await Promise.all([
         updateAddDirsContext(),
         updateWorkspaceListCache(),
+        updateWorktreeCache(),
     ]);
     treeDataEvent.fire();
-};
+}, 300, { leading: true });
