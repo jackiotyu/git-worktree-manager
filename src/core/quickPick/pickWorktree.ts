@@ -472,7 +472,10 @@ class ActionService implements IActionService {
     };
 }
 
+let firstOpen = true;
 export const pickWorktree = async (type?: DefaultDisplayList) => {
+    if(firstOpen) vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
+    firstOpen = false;
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();
     const actionService = new ActionService(quickPick, type);

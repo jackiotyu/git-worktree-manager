@@ -5,9 +5,11 @@ import {
     collectEvent,
     globalStateEvent,
     refreshWorktreeCacheEvent,
+    updateWorktreeCacheEvent,
 } from '@/core/event/events';
 import folderRoot from '@/core/folderRoot';
 import { updateWorkspaceMainFolders, checkRecentFolderCache } from '@/core/util/cache';
+import { getGitFolderByUri } from '@/core/util/folder';
 import { checkRoots, updateAddDirsContext } from '@/core/util/workspace';
 import { registerCommands } from '@/core/command';
 import { GlobalState, WorkspaceState } from '@/core/state';
@@ -27,6 +29,11 @@ export function activate(context: vscode.ExtensionContext) {
     WorkspaceState.init(context);
     Alert.init(context);
     vscode.window.registerFileDecorationProvider(new WorktreeDecorator());
+    updateWorktreeCacheEvent.event(e => {
+        const repoPath = getGitFolderByUri(e);
+        updateWorktreeCache(repoPath);
+        updateWorkspaceListCache(repoPath);
+    });
     const updateCacheEvent = refreshWorktreeCacheEvent.event(
         debounce(
             (e) => {
