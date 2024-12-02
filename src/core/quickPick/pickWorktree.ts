@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { updateWorktreeCache, updateWorkspaceListCache, getRecentFolderCache } from '@/core/util/cache';
+import { getRecentFolderCache } from '@/core/util/cache';
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentUriCache } from '@/types';
-import { Commands, QuickPickKind } from '@/constants';
+import { Commands, RefreshCacheType } from '@/constants';
 import groupBy from 'lodash-es/groupBy';
 import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
@@ -33,6 +33,8 @@ import {
     openRecentlyQuickInputButton,
     backWorkspaceQuickInputButton,
     refreshRecentlyQuickInputButton,
+    refreshAllWorktreeQuickInputButton,
+    refreshWorkspaceWorktreeQuickInputButton,
     saveRepoQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
@@ -259,6 +261,14 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         quickPick.buttons = actionService.updateButtons();
         return;
     }
+    if (event === refreshAllWorktreeQuickInputButton) {
+        vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.all);
+        return;
+    }
+    if(event === refreshWorkspaceWorktreeQuickInputButton) {
+        vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
+        return;
+    }
     if (event === refreshRecentlyQuickInputButton) {
         vscode.commands.executeCommand(Commands.refreshRecentFolder);
         return;
@@ -399,10 +409,14 @@ class ActionService implements IActionService {
         const showWorktreeButton = this.displayAll
             ? useWorkspaceWorktreeQuickInputButton
             : useAllWorktreeQuickInputButton;
+        const refreshWorktreeButton = this.displayAll
+            ? refreshAllWorktreeQuickInputButton
+            : refreshWorkspaceWorktreeQuickInputButton;
         switch (displayList) {
             case DefaultDisplayList.all:
             case DefaultDisplayList.workspace:
                 this.worktreeButtons = [
+                    refreshWorktreeButton,
                     sortButton,
                     addGitRepoQuickInputButton,
                     addWorktreeQuickInputButton,

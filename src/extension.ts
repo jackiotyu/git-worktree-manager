@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
-import { treeDataEvent, updateTreeDataEvent, collectEvent, globalStateEvent } from '@/core/event/events';
+import {
+    treeDataEvent,
+    updateTreeDataEvent,
+    collectEvent,
+    globalStateEvent,
+    refreshWorktreeCacheEvent,
+} from '@/core/event/events';
 import folderRoot from '@/core/folderRoot';
 import { updateWorkspaceMainFolders, checkRecentFolderCache } from '@/core/util/cache';
 import { checkRoots, updateAddDirsContext } from '@/core/util/workspace';
@@ -7,14 +13,13 @@ import { registerCommands } from '@/core/command';
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { Alert } from '@/core/ui/message';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
-import throttle from 'lodash-es/throttle';
+import { throttle, debounce } from 'lodash-es';
 import logger from '@/core/log/logger';
 import { WorktreeDecorator } from '@/core/util/worktree';
 import { worktreeEventRegister } from '@/core/event/git';
 import { Config } from '@/core/config/setting';
-import { Commands } from '@/constants';
+import { Commands, RefreshCacheType } from '@/constants';
 import { updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
-import path from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
     logger.log('git-worktree-manager is now active!');
@@ -22,12 +27,19 @@ export function activate(context: vscode.ExtensionContext) {
     WorkspaceState.init(context);
     Alert.init(context);
     vscode.window.registerFileDecorationProvider(new WorktreeDecorator());
-    const updateCacheEvent = updateTreeDataEvent.event((e) => {
-        const repoPath = e ? path.dirname(`${e.fsPath.split('.git')[0]}.git`) : void 0;
-        if(!repoPath) return;
-        updateWorktreeCache(repoPath);
-        updateWorkspaceListCache(repoPath);
-    });
+    const updateCacheEvent = refreshWorktreeCacheEvent.event(
+        debounce(
+            (e) => {
+                if (e === RefreshCacheType.all) {
+                    updateWorktreeCache();
+                } else if (e === RefreshCacheType.workspace) {
+                    updateWorkspaceListCache();
+                }
+            },
+            1000,
+            { leading: true },
+        ),
+    );
     const updateHandler = updateTreeDataEvent.event(
         throttle(
             async () => {

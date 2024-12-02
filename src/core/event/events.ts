@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
-import { ViewId, TreeItemKind, QuickPickKind, Commands } from '@/constants';
+import { ViewId, TreeItemKind, QuickPickKind, Commands, RefreshCacheType } from '@/constants';
 import type { AllViewItem } from '@/core/treeView/items';
 import type { StateKey } from '@/core/state';
 
+export const refreshWorktreeCacheEvent = new vscode.EventEmitter<RefreshCacheType>();
 export const treeDataEvent = new vscode.EventEmitter<void>();
 export const updateTreeDataEvent = new vscode.EventEmitter<void | vscode.Uri>();
 export const updateFolderEvent = new vscode.EventEmitter<void>();
@@ -48,6 +49,7 @@ worktreeChangeEvent.event((uri) => {
 
 export const collectEvent = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(
+        refreshWorktreeCacheEvent,
         treeDataEvent,
         updateTreeDataEvent,
         updateFolderEvent,
