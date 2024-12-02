@@ -5,7 +5,7 @@ import { TreeItemKind, ViewId, ContextKey } from '@/constants';
 import { GitFolderItem, WorktreeItem } from '@/core/treeView/items';
 import throttle from 'lodash-es/throttle';
 import debounce from 'lodash-es/debounce';
-import { treeDataEvent, updateFolderEvent, globalStateEvent, toggleGitFolderViewAsEvent } from '@/core/event/events';
+import { treeDataEvent, updateFolderEvent, globalStateEvent, toggleGitFolderViewAsEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 
 type CommonWorktreeItem = GitFolderItem | WorktreeItem;
@@ -35,6 +35,8 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             }),
             treeDataEvent.event(() => process.nextTick(this.refresh)),
             updateFolderEvent.event(this.refresh),
+            // TODO 更新当前对应git仓库
+            worktreeChangeEvent.event(this.refresh),
             toggleGitFolderViewAsEvent.event(
                 debounce((viewAsTree: boolean) => {
                     const changed = this.viewAsTree !== viewAsTree;
