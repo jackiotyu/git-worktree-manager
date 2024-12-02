@@ -6,6 +6,7 @@ import {
     globalStateEvent,
     refreshWorktreeCacheEvent,
     updateWorktreeCacheEvent,
+    worktreeChangeEvent,
 } from '@/core/event/events';
 import folderRoot from '@/core/folderRoot';
 import { updateWorkspaceMainFolders, checkRecentFolderCache } from '@/core/util/cache';
@@ -24,8 +25,7 @@ import { Commands, RefreshCacheType } from '@/constants';
 import { updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
 
 const setupCacheEvents = (context: vscode.ExtensionContext) => {
-    const updateWorktreeCacheHandler = updateWorktreeCacheEvent.event((e) => {
-        const repoPath = getGitFolderByUri(e);
+    const updateWorktreeCacheHandler = updateWorktreeCacheEvent.event((repoPath) => {
         updateWorktreeCache(repoPath);
         updateWorkspaceListCache(repoPath);
     });
@@ -46,6 +46,11 @@ const setupCacheEvents = (context: vscode.ExtensionContext) => {
 };
 
 const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
+    const worktreeChangeHanlder = worktreeChangeEvent.event((uri) => {
+        // 精确到指定仓库
+        const repoPath = getGitFolderByUri(uri);
+        updateWorktreeCacheEvent.fire(repoPath);
+    });
     const updateHandler = updateTreeDataEvent.event(
         throttle(
             async () => {
@@ -67,6 +72,7 @@ const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
         vscode.commands.executeCommand(e.focused ? Commands.watchWorktreeEvent : Commands.unwatchWorktreeEvent);
     });
     context.subscriptions.push(
+        worktreeChangeHanlder,
         updateHandler,
         workspaceFoldersHanlder,
         stateChangeHanlder,
@@ -92,7 +98,7 @@ const registerAllSubscriptions = (context: vscode.ExtensionContext) => {
         folderRoot,
         logger,
         worktreeEventRegister,
-        Config
+        Config,
     );
 };
 

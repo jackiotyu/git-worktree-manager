@@ -4,7 +4,7 @@ import type { AllViewItem } from '@/core/treeView/items';
 import type { StateKey } from '@/core/state';
 
 export const refreshWorktreeCacheEvent = new vscode.EventEmitter<RefreshCacheType>();
-export const updateWorktreeCacheEvent = new vscode.EventEmitter<vscode.Uri>();
+export const updateWorktreeCacheEvent = new vscode.EventEmitter<string>();
 export const treeDataEvent = new vscode.EventEmitter<void>();
 export const updateTreeDataEvent = new vscode.EventEmitter<void | vscode.Uri>();
 export const updateFolderEvent = new vscode.EventEmitter<void>();
@@ -15,12 +15,6 @@ export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
 export const loadAllTreeDataEvent = new vscode.EventEmitter<ViewId>();
 export const revealTreeItemEvent = new vscode.EventEmitter<AllViewItem>();
 export const worktreeChangeEvent = new vscode.EventEmitter<vscode.Uri>();
-
-// TODO 需要精确到指定仓库
-worktreeChangeEvent.event((uri) => {
-    updateWorktreeCacheEvent.fire(uri);
-    updateTreeDataEvent.fire(uri);
-});
 
 export const collectEvent = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(
