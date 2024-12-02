@@ -104,8 +104,6 @@ export const getRecentFolderCache = (): IRecentUriCache => {
 };
 
 export const checkRecentFolderCache = () => {
-    queueMicrotask(() => {
-        const res = GlobalState.get('global.recentFolderCache', { time: -1, list: [] });
-        if (+new Date() - res.time > 5000) updateRecentFolders();
-    });
+    const res = GlobalState.get('global.recentFolderCache', { time: -1, list: [] });
+    if (+new Date() - res.time > 5000) updateRecentFolders();
 };
