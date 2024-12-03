@@ -13,13 +13,10 @@ import path from 'path';
 import { debounce } from 'lodash-es';
 
 export const addToWorkspace = (path: string) => {
-    let success = vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
+    return vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
         uri: vscode.Uri.file(path),
         name: path,
     });
-    if (success) {
-        treeDataEvent.fire();
-    }
 };
 
 export const removeFromWorkspace = (path: string) => {
