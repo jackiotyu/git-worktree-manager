@@ -1,3 +1,10 @@
+## [0.4.9] 2024-12-03
+
+### Change
+
+- Improve performance by keep git repo watchers.
+- Add Built-in Git graph for viewing git history.
+
 ## [0.4.7] 2024-10-29
 
 ### Change
