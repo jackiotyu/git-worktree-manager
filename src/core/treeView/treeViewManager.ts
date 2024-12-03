@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { GitFoldersDataProvider, RecentFoldersDataProvider, WorktreeDataProvider, SettingDataProvider } from '@/core/treeView/views';
 import { TreeItemKind } from '@/constants';
-import { revealTreeItemEvent, changeUIVisibleEvent } from '@/core/event/events';
+import { revealTreeItemEvent } from '@/core/event/events';
 
 export class TreeViewManager {
     static register (context: vscode.ExtensionContext) {
@@ -36,12 +36,6 @@ export class TreeViewManager {
             worktreeView,
             gitFolderView,
             recentFolderView,
-            worktreeView.onDidChangeVisibility((event) => {
-                changeUIVisibleEvent.fire({ type: TreeItemKind.worktree, visible: event.visible });
-            }),
-            gitFolderView.onDidChangeVisibility((event) => {
-                changeUIVisibleEvent.fire({ type: TreeItemKind.gitFolder, visible: event.visible });
-            }),
         );
     }
 }

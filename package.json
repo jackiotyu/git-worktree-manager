@@ -721,12 +721,14 @@
           "git-worktree-manager.gitHistoryExtension": {
             "scope": "application",
             "enum": [
-              "mhutchie.git-graph"
+              "mhutchie.git-graph",
+              "vscode.git"
             ],
             "enumDescriptions": [
-              "git graph ⇄ https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph"
+              "git graph ⇄ https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph",
+              "%config.gitHistoryExtension.enum.vscode.git%"
             ],
-            "default": "mhutchie.git-graph",
+            "default": "vscode.git",
             "description": "%config.gitHistoryExtension.description%"
           },
           "git-worktree-manager.openInsideFolder": {

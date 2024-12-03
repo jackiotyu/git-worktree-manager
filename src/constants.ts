@@ -47,6 +47,7 @@ export enum Commands {
     openRepository = 'git-worktree-manager.openRepository',
     openChanges = 'git-worktree-manager.openChanges',
 
+    refreshWorktreeCache = 'git-worktree-manager.internal.refreshWorktreeCache',
     watchWorktreeEvent = 'git-worktree-manager.internal.watchWorktreeEvent',
     unwatchWorktreeEvent = 'git-worktree-manager.internal.unwatchWorktreeEvent',
 }
@@ -92,4 +93,9 @@ export enum StateKey {
     gitFolders = 'gitFolders',
     workTreeCache = 'workTreeCache',
     mainFolders = 'mainFolders',
+}
+
+export enum RefreshCacheType {
+    all = 'all',
+    workspace = 'workspace',
 }

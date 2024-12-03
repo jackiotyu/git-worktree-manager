@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { WorktreeItem, WorkspaceMainGitFolderItem } from '@/core/treeView/items';
 import { TreeItemKind, ViewId } from '@/constants';
-import { treeDataEvent, updateTreeDataEvent } from '@/core/event/events';
+import { treeDataEvent, updateTreeDataEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { WorkspaceState } from '@/core/state';
 import folderRoot from '@/core/folderRoot';
@@ -15,6 +15,10 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
             treeDataEvent.event(() => {
                 this._onDidChangeTreeData.fire();
             }),
+            worktreeChangeEvent.event(() => {
+                // TODO 更新当前对应git仓库
+                this._onDidChangeTreeData.fire();
+            })
         );
     }
     refresh() {

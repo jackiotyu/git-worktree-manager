@@ -1,5 +1,4 @@
-import { workspace, extensions, commands, Uri, MarkdownString, l10n } from 'vscode';
-import { APP_NAME } from '@/constants';
+import { extensions, commands, Uri, MarkdownString, l10n } from 'vscode';
 import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
 import { GitHistoryExtension } from '@/types';
@@ -29,13 +28,14 @@ export class GitHistory {
             extension.activate();
         }
     }
-    private static openHistoryStrategy(uri: Uri) {
+    private static async openHistoryStrategy(uri: Uri) {
         switch (this.extensionName) {
             case GitHistoryExtension.gitGraph:
                 return commands.executeCommand('git-graph.view', { rootUri: uri });
-            // FIXME git history 无法实现浏览其他仓库的历史
-            // case GitHistoryExtension.gitHistory:
-            //     return commands.executeCommand('git.viewHistory', uri);
+            case GitHistoryExtension.builtinGit:
+                await commands.executeCommand('git.openRepository', uri.fsPath);
+                await commands.executeCommand('workbench.scm.history.focus');
+                return commands.executeCommand('workbench.scm.action.graph.pickRepository');
         }
     }
 }

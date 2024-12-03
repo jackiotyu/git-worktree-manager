@@ -8,17 +8,15 @@ import { ContextKey } from '@/constants';
 import { WorkspaceState } from '@/core/state';
 import { getFolderConfig } from '@/core/util/state';
 import { toSimplePath } from '@/core/util/folder';
-import { updateWorkspaceMainFolders, updateWorkspaceListCache } from '@/core/util/cache';
+import { updateWorkspaceMainFolders, updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
 import path from 'path';
+import { debounce } from 'lodash-es';
 
 export const addToWorkspace = (path: string) => {
-    let success = vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
+    return vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
         uri: vscode.Uri.file(path),
         name: path,
     });
-    if (success) {
-        treeDataEvent.fire();
-    }
 };
 
 export const removeFromWorkspace = (path: string) => {
@@ -60,12 +58,18 @@ export const updateAddDirsContext = () => {
     }
 };
 
-export const checkRoots = async () => {
-    await new Promise(resolve => process.nextTick(resolve));
-    await updateWorkspaceMainFolders();
-    await Promise.all([
-        updateAddDirsContext(),
-        updateWorkspaceListCache(),
-    ]);
-    treeDataEvent.fire();
-};
+export const checkRoots = debounce(
+    async () => {
+        await new Promise((resolve) => process.nextTick(resolve));
+        await updateWorkspaceMainFolders();
+        await Promise.all([
+            Promise.resolve(updateAddDirsContext()).finally(() => {
+                treeDataEvent.fire();
+            }),
+            updateWorkspaceListCache(),
+            updateWorktreeCache(),
+        ]);
+    },
+    300,
+    { leading: true },
+);

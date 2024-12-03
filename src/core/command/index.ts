@@ -40,6 +40,7 @@ import { fetchRepoCmd } from '@/core/command/fetchRepoCmd';
 import { toggleLogCmd } from '@/core/command/toggleLogCmd';
 import { openRepositoryCmd } from '@/core/command/openRepositoryCmd';
 import { addRootsToRepoCmd } from '@/core/command/addRootsToRepoCmd';
+import { refreshWorktreeCacheCmd } from '@/core/command/refreshWorktreeCacheCmd';
 import { Commands } from '@/constants';
 import { AllViewItem } from '@/core/treeView/items';
 
@@ -103,5 +104,6 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.toggleLog, toggleLogCmd),
         registerCommand(Commands.openRepository, openRepositoryCmd),
         registerCommand(Commands.addRootsToRepo, addRootsToRepoCmd),
+        registerCommand(Commands.refreshWorktreeCache, refreshWorktreeCacheCmd),
     );
 }

@@ -92,6 +92,7 @@ export enum DefaultDisplayList {
 export enum GitHistoryExtension {
     gitHistory = 'donjayamanne.githistory',
     gitGraph = 'mhutchie.git-graph',
+    builtinGit = 'vscode.git',
 }
 
 export interface QuickPickAction extends vscode.QuickPickItem {
