@@ -61,13 +61,18 @@ export const updateAddDirsContext = () => {
     }
 };
 
-export const checkRoots = debounce(async () => {
-    await new Promise(resolve => process.nextTick(resolve));
-    await updateWorkspaceMainFolders();
-    await Promise.all([
-        updateAddDirsContext(),
-        updateWorkspaceListCache(),
-        updateWorktreeCache(),
-    ]);
-    treeDataEvent.fire();
-}, 300, { leading: true });
+export const checkRoots = debounce(
+    async () => {
+        await new Promise((resolve) => process.nextTick(resolve));
+        await updateWorkspaceMainFolders();
+        await Promise.all([
+            Promise.resolve(updateAddDirsContext()).finally(() => {
+                treeDataEvent.fire();
+            }),
+            updateWorkspaceListCache(),
+            updateWorktreeCache(),
+        ]);
+    },
+    300,
+    { leading: true },
+);
