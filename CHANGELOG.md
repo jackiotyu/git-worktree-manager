@@ -1,3 +1,9 @@
+## [1.0.0] 2024-12-11
+
+### Change
+
+- Release stable version.
+
 ## [0.4.9] 2024-12-03
 
 ### Change
