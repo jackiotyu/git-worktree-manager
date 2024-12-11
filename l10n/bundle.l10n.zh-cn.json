@@ -2,7 +2,7 @@
     "Switch the current window to this folder.": "当前窗口切换到这个文件夹",
     "Reveal in the system explorer": "在系统文件管理器中展示",
     "Open in External Terminal": "在外部终端中打开",
-    "Open in VSCode built-in Terminal": "在vscode内置终端中打开",
+    "Open in Built-in Terminal": "在内置终端中打开",
     "Add folder to workspace": "添加到工作区",
     "Remove folder from workspace": "从工作区中移除",
     "Open Settings": "打开设置",

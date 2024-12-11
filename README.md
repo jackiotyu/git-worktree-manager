@@ -1,34 +1,41 @@
 <a name="readme-top"></a>
-
 <!-- PROJECT LOGO -->
 # Git Worktree Manager
 
 <!-- ABOUT THE PROJECT -->
-This extension aims to provide convenient switching between multiple workspaces, facilitate shared Git commit information, and support running code simultaneously in different directories.
-该扩展旨在提供便捷的多工作区切换功能，并实现共享 Git 提交信息，同时支持在不同目录上同时运行代码。
+Seamlessly switch between branches, keep your code organized, and run code across multiple directories—simplifying your workflow.  
+无缝切换分支，保持代码井然有序，轻松跨多个目录运行——简化你的开发流程。
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Why Git Worktree Manager?
+1. **Managing multiple branches becomes tedious**  
+  在多个分支间切换可能非常繁琐，容易导致冲突或遗忘提交。Git Worktree Manager 帮助开发者在不同工作目录间快速切换，简化分支管理。
+
+2. **Need to work on different versions simultaneously**  
+  有时需要同时处理不同版本的代码，但切换分支或提交非常耗时。通过使用工作区，你可以在独立目录中并行开发，不会相互干扰。
+
+
 <details>
-  <summary>How Git Worktree Works. git worktree 工作原理</summary>
+  <summary>How Git Worktree Works.</summary>
   <section>
     <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/how-worktree-works.png" width="800" />
-    <p>Git worktree is a feature of the Git version control system that allows you to work on multiple branches or commits within the same repository.
+    <p>Git worktree lets you effortlessly juggle multiple tasks across branches and commits without ever needing to leave your current workspace—ideal for managing complex projects.
 
-With git worktree, you can create an additional working directory that can be linked to different branches or commits of the original repository. The benefit of this is that you can work on multiple tasks without switching branches, making it convenient for developers to handle different versions of the code.
+With git worktree, you can create extra working directories linked to different branches or commits. The benefit of this is that you can work on multiple tasks without switching branches, making it convenient for developers to handle different versions of the code.
 
-By creating a new working directory, we can switch between the current directory and the new one, each associated with different branches or commits. This means that we can perform git operations such as committing code, pulling updates, etc., on each directory without affecting each other.
+By creating a new working directory, we can switch between the current directory and the new one, each associated with different branches or commits. This allows you to perform Git operations such as committing, pulling updates, and more in each directory, independently of the others.
 
-In summary, git worktree provides a flexible way to manage multiple tasks or versions, making development work more efficient and convenient.</p>
-    <p>Git worktree 是 Git 版本控制系统的一个功能，它用于在同一个仓库中同时工作于多个分支或提交。
+In summary, git worktree offers a flexible way to manage multiple tasks or versions, boosting development efficiency.</p>
+    <p>Git worktree 让你无需离开当前工作区，轻松处理跨分支和提交的多个任务——完美适用于管理复杂项目。
 
-使用 git worktree 可以创建一个额外的工作目录，这个目录可以连接到原始仓库的不同分支或提交。这样做的好处是可以在不切换分支的情况下同时进行多个任务，方便开发人员处理不同的代码版本。
+使用 git worktree，你可以创建额外的工作目录，并将它们与不同的分支或提交关联。这样做的好处是可以在不切换分支的情况下同时进行多个任务，方便开发人员处理不同的代码版本。
 
-通过创建一个新的工作目录，我们可以在当前目录和新的工作目录之间切换，而每个目录都可以与不同的分支或提交关联。这意味着我们可以在每个目录上执行 git 操作，例如提交代码、拉取更新等，而不会相互影响。
+通过创建一个新的工作目录，我们可以在当前目录和新的工作目录之间切换，而每个目录都可以与不同的分支或提交关联。这使得你可以在每个目录中独立执行 Git 操作，如提交代码、拉取更新等，互不影响。
 
-总结来说，git worktree 提供了一种灵活的方式来管理多个任务或版本，使得开发工作更加高效和便捷。</p>
+总结来说，git worktree 提供了一种灵活的方式来管理多个任务或版本，提升开发效率。</p>
   </section>
 </details>
 
@@ -56,15 +63,14 @@ In summary, git worktree provides a flexible way to manage multiple tasks or ver
 <!-- GETTING STARTED -->
 ## Getting Started
 
-1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
+1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).  
 在 VSCode [扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
-1. Press `Ctrl + Shift + R` to start.
+1. Press `Ctrl + Shift + R` to start.  
 按下 `Ctrl + Shift + R` 开始操作
 
 ## Requirements
 
-* git version >= 2.30 for best performance.
-* 建议安装版本号不低于2.30的git
+* git version >= 2.30
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

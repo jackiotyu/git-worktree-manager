@@ -59,7 +59,7 @@ export const openExternalTerminalQuickInputButton = new QuickInputButton({
 });
 export const openTerminalQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('terminal'),
-    tooltip: vscode.l10n.t('Open in VSCode built-in Terminal'),
+    tooltip: vscode.l10n.t('Open in Built-in Terminal'),
     configKey: 'worktreePick.showTerminal',
     defaultValue: false,
 });

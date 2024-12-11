@@ -60,7 +60,7 @@ const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
         },
         {
             iconPath: new vscode.ThemeIcon('terminal'),
-            label: vscode.l10n.t('Open in VSCode built-in Terminal'),
+            label: vscode.l10n.t('Open in Built-in Terminal'),
             action: Commands.openTerminal,
         },
         {

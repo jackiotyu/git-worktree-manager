@@ -206,7 +206,7 @@
 ### Change
 
 - Change message prompts level.
-- Using vscode built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
+- Using vscode Built-in external terminal. It can configure by setting `terminal.external.windowsExec` in windows, other platforms is similar.
 
 ## [0.1.1] 2023-09-13
 

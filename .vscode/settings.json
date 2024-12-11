@@ -13,5 +13,6 @@
     "cSpell.words": [
         "worktree"
     ],
-    "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?."
+    "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?.",
+    "files.trimTrailingWhitespace": false,
 }
