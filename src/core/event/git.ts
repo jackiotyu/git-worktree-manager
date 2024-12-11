@@ -4,7 +4,7 @@ import logger from '@/core/log/logger';
 import fs from 'fs';
 
 const worktreeGlob = 'worktrees/*/HEAD,worktrees/*/index,worktrees/*/locked,worktrees/*/gitdir';
-const watcherGlob = `{config,index,refs/remotes/**,${worktreeGlob}}`;
+const watcherGlob = `{config,index,refs/remotes/**,worktrees,${worktreeGlob}}`;
 
 class WorktreeEvent implements vscode.Disposable {
     private disposables: vscode.Disposable[] = [];
