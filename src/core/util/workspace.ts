@@ -7,15 +7,23 @@ import type { IRecentlyOpened, IFolderItemConfig } from '@/types';
 import { ContextKey } from '@/constants';
 import { WorkspaceState } from '@/core/state';
 import { getFolderConfig } from '@/core/util/state';
+import { Config } from '@/core/config/setting';
 import { toSimplePath } from '@/core/util/folder';
 import { updateWorkspaceMainFolders, updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
 import path from 'path';
 import { debounce } from 'lodash-es';
 
-export const addToWorkspace = (path: string) => {
+export const formatWorkspacePath = (folder: string): string => {
+    const baseName = path.basename(folder);
+    const fullPath = folder;
+    const templateStr = Config.get('workspacePathFormat', '$FULL_PATH');
+    return templateStr.replace('$FULL_PATH', fullPath).replace('$BASE_NAME', baseName);
+};
+
+export const addToWorkspace = (folder: string) => {
     return vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders?.length || 0, 0, {
-        uri: vscode.Uri.file(path),
-        name: path,
+        uri: vscode.Uri.file(folder),
+        name: formatWorkspacePath(folder),
     });
 };
 

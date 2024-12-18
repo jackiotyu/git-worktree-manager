@@ -76,5 +76,6 @@
     "config.defaultDisplayList.enum.workspace": "展示工作区内的 worktree 列表",
     "config.defaultDisplayList.enum.all": "展示所有的 worktree 列表",
     "config.gitHistoryExtension.enum.vscode.git": "vscode git ⇄ 内置的 git 历史视图",
+    "config.workspacePathFormat.description": "自定义工作区路径的显示模板。你可以在模板中使用以下变量：\n\n- `$FULL_PATH`：仓库的完整路径。\n- `$BASE_NAME`：仓库的文件夹名称。\n\n示例：\n`$BASE_NAME - $FULL_PATH` 将会显示为 `my-project - /Users/username/projects/my-project。`",
     "submenus.worktree-action": "worktree 操作"
 }

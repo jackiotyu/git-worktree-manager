@@ -742,6 +742,12 @@
             "type": "string",
             "default": "",
             "markdownDescription": "%config.httpProxy.description%"
+          },
+          "git-worktree-manager.workspacePathFormat": {
+            "scope": "application",
+            "type": "string",
+            "default": "$FULL_PATH",
+            "markdownDescription": "%config.workspacePathFormat.description%"
           }
         }
       },

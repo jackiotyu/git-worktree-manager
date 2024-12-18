@@ -76,5 +76,6 @@
     "config.defaultDisplayList.enum.workspace": "Display worktree list in workspace",
     "config.defaultDisplayList.enum.all": "Display all worktree list",
     "config.gitHistoryExtension.enum.vscode.git": "vscode git ⇄ Built-in Git graph",
+    "config.workspacePathFormat.description": "Custom template for displaying the workspace path. You can use the following variables in the template:\n\n- `$FULL_PATH`: The full path of the repository.\n- `$BASE_NAME`: The folder name of the repository.\n\nExample:\n`$BASE_NAME - $FULL_PATH` will be displayed as `my-project - /Users/username/projects/my-project`.",
     "submenus.worktree-action": "Worktree Action"
 }
