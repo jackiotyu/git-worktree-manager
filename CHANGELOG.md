@@ -1,3 +1,10 @@
+## [1.0.1] 2024-12-18
+
+### Change
+
+- Add custom template for displaying the workspace path (#7)
+
+
 ## [1.0.0] 2024-12-11
 
 ### Change
