@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Install vsce
+        run: pnpm add -g vsce
+
+      - name: Package VSIX
+        run: vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
+
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.TOKEN }}
+          release-type: node
+
+      - name: Upload Release Artifact
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: gh release upload ${{ steps.release.outputs.tag_name }} ./git-worktree-manager-${{ github.ref_name }}.vsix
