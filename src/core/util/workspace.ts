@@ -16,8 +16,8 @@ import { debounce } from 'lodash-es';
 export const formatWorkspacePath = (folder: string): string => {
     const baseName = path.basename(folder);
     const fullPath = folder;
-    const templateStr = Config.get('workspacePathFormat', '$FULL_PATH');
-    return templateStr.replace('$FULL_PATH', fullPath).replace('$BASE_NAME', baseName);
+    const templateStr = Config.get('workspacePathFormat', '$BASE_NAME - $FULL_PATH');
+    return templateStr.replace(/\$FULL_PATH/g, fullPath).replace(/\$BASE_NAME/g, baseName);
 };
 
 export const addToWorkspace = (folder: string) => {

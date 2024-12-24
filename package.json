@@ -746,7 +746,7 @@
           "git-worktree-manager.workspacePathFormat": {
             "scope": "application",
             "type": "string",
-            "default": "$FULL_PATH",
+            "default": "$BASE_NAME - $FULL_PATH",
             "markdownDescription": "%config.workspacePathFormat.description%"
           }
         }
