@@ -8,20 +8,17 @@
 [![License](https://img.shields.io/github/license/jackiotyu/git-worktree-manager)](https://github.com/jackiotyu/git-worktree-manager/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/jackiotyu/git-worktree-manager)](https://github.com/jackiotyu/git-worktree-manager)
 
+English | [简体中文](./README.zh-CN.md)
+
 <!-- ABOUT THE PROJECT -->
 Seamlessly switch between branches, keep your code organized, and run code across multiple directories—simplifying your workflow.  
-无缝切换分支，保持代码井然有序，轻松跨多个目录运行——简化你的开发流程。
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Why Git Worktree Manager?
 1. **Managing multiple branches becomes tedious**  
-  在多个分支间切换可能非常繁琐，容易导致冲突或遗忘提交。Git Worktree Manager 帮助开发者在不同工作目录间快速切换，简化分支管理。
 
 2. **Need to work on different versions simultaneously**  
-  有时需要同时处理不同版本的代码，但切换分支或提交非常耗时。通过使用工作区，你可以在独立目录中并行开发，不会相互干扰。
 
 
 <details>
@@ -35,13 +32,6 @@ With git worktree, you can create extra working directories linked to different 
 By creating a new working directory, we can switch between the current directory and the new one, each associated with different branches or commits. This allows you to perform Git operations such as committing, pulling updates, and more in each directory, independently of the others.
 
 In summary, git worktree offers a flexible way to manage multiple tasks or versions, boosting development efficiency.</p>
-    <p>Git worktree 让你无需离开当前工作区，轻松处理跨分支和提交的多个任务——完美适用于管理复杂项目。
-
-使用 git worktree，你可以创建额外的工作目录，并将它们与不同的分支或提交关联。这样做的好处是可以在不切换分支的情况下同时进行多个任务，方便开发人员处理不同的代码版本。
-
-通过创建一个新的工作目录，我们可以在当前目录和新的工作目录之间切换，而每个目录都可以与不同的分支或提交关联。这使得你可以在每个目录中独立执行 Git 操作，如提交代码、拉取更新等，互不影响。
-
-总结来说，git worktree 提供了一种灵活的方式来管理多个任务或版本，提升开发效率。</p>
   </section>
 </details>
 
@@ -70,9 +60,7 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 ## Getting Started
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).  
-在 VSCode [扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
 1. Press `Ctrl + Shift + R` to start.  
-按下 `Ctrl + Shift + R` 开始操作
 
 ## Requirements
 
@@ -84,19 +72,19 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. [Create Worktree. 创建 worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4)
+1. [Create Worktree](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4" controls="controls" width="800" height="450"></video>
 
-2. [Checkout Branch/tag. 切换分支/标记](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4)
+2. [Checkout Branch](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4" controls="controls" width="800" height="450"></video>
 
-3. [Manage multiple repositories. 管理多个仓库](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4)
+3. [Manage multiple repositories](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
 
-4. [Add worktrees to workspace. 向工作区添加 worktree 目录](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4)
+4. [Add worktrees to workspace](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4)
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
@@ -104,46 +92,44 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 
 ## Note
 
-1. External Terminal settings. 外部终端设置
+1. External Terminal settings.
     - When opening an external terminal, you can customize the terminal application to be launched. On Windows, you can configure the enabled terminal using `terminal.external.windowsExec`, with similar settings available on other platforms.
-    - 打开外部终端时，可以自定义打开的终端应用。在 windows 上可以通过 `terminal.external.windowsExec` 配置启用的终端，其他平台类似。
     ```json
     {
       "terminal.external.osxExec": "iTerm.app",
       "terminal.external.windowsExec": "C:\\Program Files\\Git\\bin\\bash.exe",
     }
     ```
-2. Prevent unstaged code from the worktree of the same branch from automatically entering the staging area after git pull is executed. 防止在执行 git pull 后，相同分支的worktree未暂存的代码自动进入暂存区
+2. Prevent unstaged code from the worktree of the same branch from automatically entering the staging area after git pull is executed.
     - Add git post-merge script in `your-repo/.git/hook/post-merge`.
-    - 在 `仓库目录/.git/hooks/post-merge` 脚本文件中添加脚本
     ```sh
     #!/bin/bash
 
     # Get the current directory path (Unix system)
     CURRENT_FOLDER=$(pwd)
-    # Uncomment the following line to enable cygpath on Windows (Cygwin). windows需要去掉下面的注释，启用 crypath 转换路径
+    # Uncomment the following line to enable cygpath on Windows (Cygwin).
     # CURRENT_FOLDER=$(cygpath -w "$(pwd)")
 
     # Get the current Git branch name
     CURRENT_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 
-    # Get the list of all worktrees and process each line. 获取所有 worktree 的列表并逐行处理
+    # Get the list of all worktrees and process each line.
     git worktree list --porcelain | grep "worktree" | while read -r LINE; do
-        # Extract the worktree path. 提取 worktree 路径
+        # Extract the worktree path.
         WORKTREE=$(echo "$LINE" | awk '{print $2}')
 
-        # Uncomment the following line to enable cygpath on Windows (Cygwin). windows需要去掉下面的注释，启用 crypath 转换路径
+        # Uncomment the following line to enable cygpath on Windows (Cygwin).
         # WORKTREE=$(cygpath -w "$WORKTREE")
 
-        # If the current directory path matches the worktree path, skip it. 如果当前目录路径与 worktree 路径相同，则跳过
+        # If the current directory path matches the worktree path, skip it.
         if [ "$CURRENT_FOLDER" = "$WORKTREE" ]; then
             continue
         fi
 
-        # Get the branch name of the target worktree. 获取目标 worktree 的分支名称
+        # Get the branch name of the target worktree.
         TARGET_BRANCH=$(git --work-tree="$WORKTREE" --git-dir="$WORKTREE/.git" rev-parse --abbrev-ref HEAD)
 
-        # If the target worktree's branch matches the current branch, process it. 如果目标 worktree 的分支与当前分支相同，则进行处理
+        # If the target worktree's branch matches the current branch, process it.
         if [ "$TARGET_BRANCH" = "$CURRENT_BRANCH_NAME" ]; then
             echo "Processing worktree: $WORKTREE on branch: $TARGET_BRANCH"
             git --work-tree="$WORKTREE" --git-dir="$WORKTREE/.git" reset --merge HEAD
@@ -151,7 +137,6 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
     done
     ```
     - This post-merge script ensures consistency across multiple Git worktrees by resetting any matching branch to its merged state after a merge operation.
-    - 这段 post-merge 脚本在 Git 合并操作后，通过将匹配的分支重置为合并后的状态，确保多个 Git worktree 的一致性。
 
 
 
@@ -192,18 +177,10 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See [LICENSE](https://github.com/jackiotyu/git-worktree-manager/blob/main/LICENSE) for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTACT -->
 ## Contact
@@ -211,8 +188,6 @@ Distributed under the MIT License. See [LICENSE](https://github.com/jackiotyu/gi
 Jackiotyu - 2504448153@qq.com
 
 Project Link: [https://github.com/jackiotyu/git-worktree-manager](https://github.com/jackiotyu/git-worktree-manager)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
