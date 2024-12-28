@@ -883,7 +883,6 @@
   "scripts": {
     "vsce:pack": "vsce package --no-dependencies",
     "vscode:prepublish": "pnpm run package",
-    "vscode:postpublish": "./tag-release.sh",
     "compile": "rspack",
     "watch": "rspack --watch",
     "package": "rspack --mode production --devtool true",
