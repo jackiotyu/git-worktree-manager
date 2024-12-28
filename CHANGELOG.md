@@ -5,6 +5,13 @@
 - Add custom template for displaying the workspace path (#7)
 
 
+## [1.0.2](https://github.com/jackiotyu/git-worktree-manager/compare/v1.0.1...v1.0.2) (2024-12-28)
+
+
+### Performance Improvements
+
+* Update workspacePathFormat and change release action ([b0655aa](https://github.com/jackiotyu/git-worktree-manager/commit/b0655aa04fdeea4558ed81a4d925ea32c5337b6a))
+
 ## [1.0.0] 2024-12-11
 
 ### Change
