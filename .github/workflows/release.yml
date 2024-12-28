@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+    workflow_dispatch:  # 允许手动触发
 
 jobs:
   release:
@@ -12,6 +10,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.TOKEN }}
+          release-type: node
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -31,16 +35,10 @@ jobs:
         run: pnpm add -g vsce
 
       - name: Package VSIX
-        run: vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
-
-      - uses: googleapis/release-please-action@v4
-        id: release
-        with:
-          token: ${{ secrets.TOKEN }}
-          release-type: node
+        run: vsce package --no-dependencies --out ./git-worktree-manager-${{ steps.release.outputs.tag_name }}.vsix
 
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: gh release upload ${{ steps.release.outputs.tag_name }} ./git-worktree-manager-${{ github.ref_name }}.vsix
+        run: gh release upload ${{ steps.release.outputs.tag_name }} ./git-worktree-manager-${{ steps.release.outputs.tag_name }}.vsix
