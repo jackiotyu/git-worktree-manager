@@ -21,3 +21,5 @@ images/**
 !images/icon.png
 demo/**
 TODO.md
+README.zh-CN.md
+.github/**
