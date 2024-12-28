@@ -2,8 +2,13 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -13,34 +18,39 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Install vsce
-        run: pnpm add -g vsce
-
-      - name: Package VSIX
-        run: vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
-
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           token: ${{ secrets.TOKEN }}
           release-type: node
 
+      - name: Setup Node.js
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        if: ${{ steps.release.outputs.release_created }}
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Install vsce
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm add -g vsce
+
+      - name: Package VSIX
+        if: ${{ steps.release.outputs.release_created }}
+        run: vsce package --no-dependencies --out ./git-worktree-manager-${{ steps.release.outputs.tag_name }}.vsix
+
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: gh release upload ${{ steps.release.outputs.tag_name }} ./git-worktree-manager-${{ github.ref_name }}.vsix
+        run: gh release upload ${{ steps.release.outputs.tag_name }} ./git-worktree-manager-${{ steps.release.outputs.tag_name }}.vsix
