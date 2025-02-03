@@ -1,3 +1,9 @@
+## [1.0.3] 2025-02-03
+
+### Change
+
+- Change worktree icon color to `terminal.ansiBlue`
+
 ## [1.0.2] 2024-12-28
 
 ### Change
