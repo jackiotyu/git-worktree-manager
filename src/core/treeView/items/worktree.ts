@@ -57,7 +57,7 @@ export class WorktreeItem extends vscode.TreeItem {
     }
 
     private setIcon(item: IWorktreeDetail, isCurrent: boolean) {
-        const themeColor = isCurrent ? new vscode.ThemeColor('statusBarItem.remoteBackground') : void 0;
+        const themeColor = isCurrent ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
         switch (true) {
             case item.prunable:
                 this.iconPath = new vscode.ThemeIcon('error', themeColor);
