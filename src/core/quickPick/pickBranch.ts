@@ -52,8 +52,6 @@ async function createBranchStrategy({
             placeholder: vscode.l10n.t('Choose a reference to create new branch from'),
             mainFolder: mainFolder,
             cwd: cwd,
-            step: 2,
-            totalSteps: 2,
             showCreate: false,
         });
     }
