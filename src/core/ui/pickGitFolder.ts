@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { WorkspaceState } from '@/core/state';
 import path from 'path';
+import { withResolvers } from '@/core/util/promise';
 
 export const pickGitFolder = async (): Promise<string | undefined | null> => {
     const mainFolders = WorkspaceState.get('mainFolders', []).map((i) => i.path);
@@ -25,9 +26,7 @@ export const pickGitFolder = async (): Promise<string | undefined | null> => {
     }
 };
 
-type ResolveValue = readonly { name: string; path: string }[] | undefined | null;
-type ResolveType = (value?: ResolveValue) => void;
-type RejectType = (reason?: any) => void;
+type ResolveValue = readonly { name: string; path: string }[] | void | null;
 const showBaseNameQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('pass'),
     tooltip: vscode.l10n.t('Use base name'),
@@ -43,12 +42,7 @@ export const pickMultiFolder = async (gitFolders: string[]): Promise<ResolveValu
         label: path.basename(folderPath),
         description: folderPath,
     }));
-    let resolve: ResolveType = () => {};
-    let reject: RejectType = () => {};
-    let waiting = new Promise<ResolveValue>((_resolve, _reject) => {
-        resolve = _resolve;
-        reject = _reject;
-    });
+    const { resolve, reject, promise } = withResolvers<ResolveValue>();
     try {
         const picker = vscode.window.createQuickPick();
         picker.title = vscode.l10n.t('Select folder(s)');
@@ -73,7 +67,7 @@ export const pickMultiFolder = async (gitFolders: string[]): Promise<ResolveValu
             picker.dispose();
         });
         picker.show();
-        return waiting;
+        return promise;
     } catch (error) {
         return void 0;
     }

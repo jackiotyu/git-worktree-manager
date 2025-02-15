@@ -38,6 +38,7 @@ import {
     saveRepoQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
+import { withResolvers } from '@/core/util/promise';
 
 interface WorktreePick extends vscode.QuickPickItem {
     path?: string;
@@ -479,12 +480,7 @@ export const pickWorktree = async (type?: DefaultDisplayList) => {
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();
     const actionService = new ActionService(quickPick, type);
-    let resolve: ResolveType = () => {};
-    let reject: RejectType = () => {};
-    let waiting = new Promise<ResolveValue>((_resolve, _reject) => {
-        resolve = _resolve;
-        reject = _reject;
-    });
+    const { resolve, reject, promise } = withResolvers<ResolveValue>();
     try {
         quickPick.placeholder = vscode.l10n.t('Select to open in new window');
         quickPick.canSelectMany = false;
@@ -507,7 +503,7 @@ export const pickWorktree = async (type?: DefaultDisplayList) => {
         actionService.updateList();
         // 先展示出缓存的数据
         await new Promise<void>((resolve) => setTimeout(resolve, 30));
-        return waiting;
+        return promise;
     } catch {
         reject();
     }

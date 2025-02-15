@@ -7,6 +7,7 @@ import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
 import path from 'path';
 import { backButton } from './quickPick.button';
+import { withResolvers } from '@/core/util/promise';
 
 const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
     const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.path, ['s', 'H'])]);
@@ -175,12 +176,7 @@ function buildTitle(viewItem: IWorktreeLess) {
 
 export const pickAction = async (viewItem: IWorktreeLess) => {
     const disposables: vscode.Disposable[] = [];
-    let resolve: (value: QuickPickAction | void | false) => void = () => {};
-    let reject: (value?: any) => void = () => {};
-    let waiting = new Promise<QuickPickAction | void | false>((_resolve, _reject) => {
-        resolve = _resolve;
-        reject = _reject;
-    });
+    const { resolve, reject, promise } = withResolvers<QuickPickAction | void | false>();
     try {
         const quickPick = vscode.window.createQuickPick<QuickPickAction>();
         quickPick.title = buildTitle(viewItem);
@@ -196,7 +192,7 @@ export const pickAction = async (viewItem: IWorktreeLess) => {
         await new Promise((r) => process.nextTick(r));
         quickPick.items = await getPickActionsByWorktree(viewItem);
         quickPick.busy = false;
-        return waiting;
+        return promise;
     } catch {
         reject();
     }

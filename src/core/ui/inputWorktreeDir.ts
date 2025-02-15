@@ -3,6 +3,7 @@ import path from 'path';
 import { checkExist, isDirEmpty } from '@/core/util/file';
 import { comparePath } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
+import { withResolvers } from '@/core/util/promise';
 
 export const pickWorktreeDir = async (dir: string) => {
     let uriList = await vscode.window.showOpenDialog({
@@ -35,13 +36,8 @@ interface InputWorktreeDirOptions {
 }
 export const inputWorktreeDir = async ({ baseDir, baseWorktreeDir, step, totalSteps }: InputWorktreeDirOptions) => {
     let canClose = true;
+    const { promise, resolve, reject } = withResolvers<string | undefined>();
     // 最终路径
-    let resolve: (str?: string) => void;
-    let reject: (reason?: any) => void;
-    const waiting = new Promise<string | undefined>((_resolve, _reject) => {
-        resolve = _resolve;
-        reject = _reject;
-    });
     const workTreeDir = getBaseWorktreeDir(baseDir);
     let finalWorktreeDir = path.join(workTreeDir, 'worktree1');
     const dirReg = /worktree(\d+)/;
@@ -107,5 +103,5 @@ export const inputWorktreeDir = async ({ baseDir, baseWorktreeDir, step, totalSt
     inputBox.onDidHide(handleHide);
     inputBox.onDidAccept(handleAccept);
     inputBox.show();
-    return waiting;
+    return promise;
 };

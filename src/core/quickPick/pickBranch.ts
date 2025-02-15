@@ -8,6 +8,7 @@ import { GlobalState } from '@/core/state';
 import { refArgList, HEAD } from '@/constants';
 import type { RefItem, RefList, RepoRefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
 import { getLastCommitHash } from '@/core/git/getLastCommitHash';
+import { withResolvers } from '@/core/util/promise';
 
 type ResolveValue = IPickBranchResolveValue;
 type ResolveType = (value: ResolveValue) => void;
@@ -214,12 +215,7 @@ const updateRefListCache = (mainFolder: string, refList: RepoRefList) => {
 };
 
 export const pickBranch: IPickBranch = async ({ title, placeholder, mainFolder, cwd, step, totalSteps }) => {
-    let resolve: ResolveType = () => {};
-    let reject: RejectType = () => {};
-    let waiting = new Promise<ResolveValue>((_resolve, _reject) => {
-        resolve = _resolve;
-        reject = _reject;
-    });
+    const { resolve, reject, promise } = withResolvers<ResolveValue>();
     const disposables: vscode.Disposable[] = [];
     try {
         let isValidGit = await checkGitValid(cwd);
@@ -253,7 +249,7 @@ export const pickBranch: IPickBranch = async ({ title, placeholder, mainFolder, 
         updateRefListCache(mainFolder, { branchList, remoteBranchList, tagList });
         quickPick.items = mapRefItems({ branchList, remoteBranchList, tagList });
         quickPick.busy = false;
-        return await waiting;
+        return await promise;
     } catch (error) {
         console.log('pickBranch error ', error);
         reject(error);
