@@ -9,6 +9,8 @@ import { refArgList, HEAD } from '@/constants';
 import type { RefItem, RefList, RepoRefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
 import { getLastCommitHash } from '@/core/git/getLastCommitHash';
 import { withResolvers } from '@/core/util/promise';
+import { createBranchFrom } from '@/core/git/createBranch';
+import { inputNewBranch } from '@/core/ui/inputNewBranch';
 
 type ResolveValue = IPickBranchResolveValue;
 type ResolveType = (value: ResolveValue) => void;
@@ -17,26 +19,112 @@ type RejectType = (value?: any) => void;
 interface HandlerArgs {
     resolve: ResolveType;
     reject: RejectType;
-    quickPick: vscode.QuickPick<vscode.QuickPickItem>;
+    quickPick: vscode.QuickPick<BranchForWorktree>;
 }
 
-interface HideHanderArgs extends HandlerArgs {
-    disposables: vscode.Disposable[];
-}
+interface HideHanderArgs extends HandlerArgs {}
 
 interface TriggerButtonHandlerArgs extends HandlerArgs {
     event: vscode.QuickInputButton;
 }
 
-function handleAccept({ resolve, reject, quickPick }: HandlerArgs) {
-    resolve(quickPick.selectedItems[0]);
+// Create a new branch
+async function createBranchStrategy({
+    cwd,
+    mainFolder,
+    showSelectRef,
+    quickPick,
+    resolve,
+    showCreate,
+}: {
+    cwd: string;
+    mainFolder: string;
+    showSelectRef: boolean;
+    quickPick: vscode.QuickPick<BranchForWorktree>;
+    resolve: (value: ResolveValue) => void;
+    showCreate: boolean;
+}) {
+    let branchItem: IPickBranchResolveValue = {};
+    if (showSelectRef) {
+        // selected ref
+        branchItem = await pickBranch({
+            title: vscode.l10n.t('Create new branch from...'),
+            placeholder: vscode.l10n.t('Choose a reference to create new branch from'),
+            mainFolder: mainFolder,
+            cwd: cwd,
+            step: 2,
+            totalSteps: 2,
+            showCreate: false,
+        });
+    }
+    if (branchItem === false) {
+        quickPick.dispose();
+        resolve(false);
+        return;
+    }
+    if (!branchItem) {
+        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
+        quickPick.show();
+        return;
+    }
+    let branchName = await inputNewBranch(cwd);
+    if (branchName === false) {
+        quickPick.dispose();
+        resolve(false);
+        return;
+    }
+    if (!branchName) {
+        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
+        quickPick.show();
+        return;
+    }
+    await createBranchFrom(cwd, branchName, branchItem.hash);
+    const hash = await getLastCommitHash(cwd, true);
+    resolve({ branch: branchName, hash });
     quickPick.hide();
+    quickPick.dispose();
 }
 
-function handleHide({ resolve, reject, quickPick, disposables }: HideHanderArgs) {
+function isSelectCreateBranch(item: vscode.QuickPickItem) {
+    return [createNewBranchItem, createNewBranchFromItem].includes(item);
+}
+
+async function handleAccept({
+    resolve,
+    reject,
+    quickPick,
+    cwd,
+    mainFolder,
+    showCreate,
+}: HandlerArgs & { cwd: string; mainFolder: string; showCreate: boolean }) {
+    try {
+        const selected = quickPick.selectedItems[0];
+        if (isSelectCreateBranch(selected)) {
+            await createBranchStrategy({
+                cwd,
+                mainFolder,
+                showSelectRef: selected === createNewBranchFromItem,
+                quickPick,
+                resolve,
+                showCreate,
+            });
+            return;
+        }
+        resolve(selected);
+        quickPick.hide();
+        quickPick.dispose();
+    } catch (error) {
+        vscode.window.showErrorMessage(`${error}`);
+        reject(error);
+    }
+}
+
+function handleHide({ resolve, reject, quickPick }: HideHanderArgs) {
+    const selected = quickPick.selectedItems[0];
+    if (isSelectCreateBranch(selected)) {
+        return;
+    }
     resolve(false);
-    disposables.forEach((i) => i.dispose());
-    disposables.length = 0;
     quickPick.dispose();
 }
 
@@ -84,7 +172,10 @@ const buildTagDesc = (hash: string, authordate: string) =>
 
 const mapBranchItems = (branchList: RefList) => {
     const branchItems: BranchForWorktree[] = [
-        { label: vscode.l10n.t('branch'), kind: vscode.QuickPickItemKind.Separator },
+        {
+            label: vscode.l10n.t('branch'),
+            kind: vscode.QuickPickItemKind.Separator,
+        },
         ...branchList.map((item) => {
             const shortRefName = item['refname'].replace('refs/heads/', '');
             return {
@@ -101,7 +192,10 @@ const mapBranchItems = (branchList: RefList) => {
 
 const mapWorktreeBranchItems = (branchList: RefList, defaultBranch?: RefItem) => {
     const worktreeBranchItems: BranchForWorktree[] = [];
-    worktreeBranchItems.push({ label: 'worktree', kind: vscode.QuickPickItemKind.Separator });
+    worktreeBranchItems.push({
+        label: 'worktree',
+        kind: vscode.QuickPickItemKind.Separator,
+    });
     defaultBranch &&
         worktreeBranchItems.push({
             label: `HEAD ${defaultBranch['objectname:short'] || ''}`,
@@ -121,14 +215,17 @@ const mapWorktreeBranchItems = (branchList: RefList, defaultBranch?: RefItem) =>
                 hash: item['objectname:short'],
                 branch: shortName,
             };
-        }),
+        })
     );
     return worktreeBranchItems;
 };
 
 const mapRemoteBranchItems = (remoteBranchList: RefList) => {
     const remoteBranchItems: BranchForWorktree[] = [
-        { label: vscode.l10n.t('remote branch'), kind: vscode.QuickPickItemKind.Separator },
+        {
+            label: vscode.l10n.t('remote branch'),
+            kind: vscode.QuickPickItemKind.Separator,
+        },
         ...remoteBranchList.map((item) => {
             return {
                 label: item['refname:short'],
@@ -143,7 +240,10 @@ const mapRemoteBranchItems = (remoteBranchList: RefList) => {
 
 const mapTagItems = (tagList: RefList) => {
     const tagItems: BranchForWorktree[] = [
-        { label: vscode.l10n.t('tag'), kind: vscode.QuickPickItemKind.Separator },
+        {
+            label: vscode.l10n.t('tag'),
+            kind: vscode.QuickPickItemKind.Separator,
+        },
         ...tagList.map((item) => {
             const hash = (item['*objectname'] || item['objectname:short']).slice(0, 8);
             const authordate = item['*authordate'] || item['authordate'];
@@ -158,14 +258,28 @@ const mapTagItems = (tagList: RefList) => {
     return tagItems;
 };
 
+const createNewBranchItem: vscode.QuickPickItem = {
+    label: `$(plus) ${vscode.l10n.t('Create new branch...')}`,
+};
+const createNewBranchFromItem: vscode.QuickPickItem = {
+    label: `$(plus) ${vscode.l10n.t('Create new branch from...')}`,
+};
+
+const getPreItems = (showCreate: boolean): vscode.QuickPickItem[] => {
+    if (!showCreate) return [];
+    return [createNewBranchItem, createNewBranchFromItem, { label: '', kind: vscode.QuickPickItemKind.Separator }];
+};
+
 const mapRefItems = ({
     branchList,
     remoteBranchList,
     tagList,
+    showCreate,
 }: {
     branchList: RefList;
     remoteBranchList: RefList;
     tagList: RefList;
+    showCreate: boolean;
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
     let branchItems: RefList = [];
@@ -176,6 +290,7 @@ const mapRefItems = ({
         else branchItems.push(item);
     });
     return [
+        ...getPreItems(showCreate),
         ...mapWorktreeBranchItems(worktreeItems, defaultBranch),
         ...mapBranchItems(branchItems),
         ...mapRemoteBranchItems(remoteBranchList),
@@ -189,7 +304,9 @@ const getRefListCache = async (mainFolder: string, cwd: string) => {
         remoteBranchList: [],
         tagList: [],
     });
-    if (!refList.branchList.length && !refList.remoteBranchList.length && !refList.tagList.length) return false;
+    if (!refList.branchList.length && !refList.remoteBranchList.length && !refList.tagList.length) {
+        return false;
+    }
     const hash = await getLastCommitHash(cwd, true);
     refList.branchList.some((item) => {
         if (item['objectname:short'] !== hash) return false;
@@ -214,9 +331,32 @@ const updateRefListCache = (mainFolder: string, refList: RepoRefList) => {
     });
 };
 
-export const pickBranch: IPickBranch = async ({ title, placeholder, mainFolder, cwd, step, totalSteps }) => {
+const updateQuickItems = async ({
+    mainFolder,
+    cwd,
+    showCreate,
+    quickPick,
+}: {
+    mainFolder: string;
+    cwd: string;
+    showCreate: boolean;
+    quickPick: vscode.QuickPick<BranchForWorktree>;
+}) => {
+    // Read cache
+    const refList = await getRefListCache(mainFolder, cwd);
+    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate });
+};
+
+export const pickBranch: IPickBranch = async ({
+    title,
+    placeholder,
+    mainFolder,
+    cwd,
+    step,
+    totalSteps,
+    showCreate,
+}) => {
     const { resolve, reject, promise } = withResolvers<ResolveValue>();
-    const disposables: vscode.Disposable[] = [];
     try {
         let isValidGit = await checkGitValid(cwd);
         if (!isValidGit) {
@@ -230,24 +370,24 @@ export const pickBranch: IPickBranch = async ({ title, placeholder, mainFolder, 
         quickPick.buttons = [backButton];
         quickPick.step = step;
         quickPick.totalSteps = totalSteps;
-        disposables.push(
-            quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick })),
-            quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick, disposables })),
-            quickPick.onDidTriggerButton((event) => handleTriggerButton({ resolve, reject, event, quickPick })),
-        );
+        quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, showCreate }));
+        quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
+        quickPick.onDidTriggerButton((event) => handleTriggerButton({ resolve, reject, event, quickPick }));
         // TODO 按名称排序
         quickPick.show();
         quickPick.busy = true;
-        // 读取缓存
-        const refList = await getRefListCache(mainFolder, cwd);
-        if (refList) quickPick.items = mapRefItems(refList);
+        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
         const { branchList, remoteBranchList, tagList } = await getRefList(cwd);
         if (!branchList) {
             quickPick.hide();
             return;
         }
-        updateRefListCache(mainFolder, { branchList, remoteBranchList, tagList });
-        quickPick.items = mapRefItems({ branchList, remoteBranchList, tagList });
+        updateRefListCache(mainFolder, {
+            branchList,
+            remoteBranchList,
+            tagList,
+        });
+        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
         quickPick.busy = false;
         return await promise;
     } catch (error) {

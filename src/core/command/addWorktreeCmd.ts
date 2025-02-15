@@ -15,6 +15,7 @@ const pickBranchItem = async (dir: string, mainFolder: string) => {
         cwd: dir,
         step: 2,
         totalSteps: 2,
+        showCreate: true,
     });
     return branchItem;
 };

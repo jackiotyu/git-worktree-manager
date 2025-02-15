@@ -34,6 +34,7 @@ export const checkoutBranchCmd = async (item?: IWorktreeLess) => {
         placeholder: vscode.l10n.t('Select branch for checkout'),
         mainFolder,
         cwd: selected.path,
+        showCreate: true,
     });
     // FIXME 改造quickPick
     if (branchItem === void 0) return;

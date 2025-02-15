@@ -120,12 +120,9 @@ export type FetchArgs = {
     remoteRef: string;
     cwd: string;
 };
-
-export interface BranchForWorktree extends vscode.QuickPickItem {
-    branch?: string;
-    hash?: string;
-}
-export type IPickBranchResolveValue = BranchForWorktree | void | false;
+export type IBranchForWorktree = { branch?: string; hash?: string };
+export type BranchForWorktree = vscode.QuickPickItem & IBranchForWorktree;
+export type IPickBranchResolveValue = IBranchForWorktree | void | false;
 export type IPickBranchParams = {
     title: string;
     placeholder: string;
@@ -133,5 +130,6 @@ export type IPickBranchParams = {
     cwd: string;
     step?: number;
     totalSteps?: number;
+    showCreate: boolean;
 };
 export type IPickBranch = (params: IPickBranchParams) => Promise<IPickBranchResolveValue>;
