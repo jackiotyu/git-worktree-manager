@@ -1,3 +1,9 @@
+## [1.0.4] 2025-02-15
+
+### Change
+
+- Add functionality to create new branches
+
 ## [1.0.3] 2025-02-03
 
 ### Change
