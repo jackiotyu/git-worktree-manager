@@ -1,3 +1,9 @@
+## [1.0.6] 2025-02-16
+
+### Fix
+
+- Update branch creation logic to prefer branch name over hash
+
 ## [1.0.5] 2025-02-16
 
 ### Change
