@@ -34,7 +34,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Install vsce
-        run: pnpm add -g vsce
+        run: pnpm add -g @vscode/vsce
 
       - name: Package VSIX
         run: vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
