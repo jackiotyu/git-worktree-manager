@@ -8,6 +8,8 @@ const backButton = vscode.QuickInputButtons.Back;
 export const inputNewBranch = async (cwd: string) => {
     const { promise, resolve, reject } = withResolvers<string | undefined | false>();
     const inputBox = vscode.window.createInputBox();
+    inputBox.value = vscode.workspace.getConfiguration('git').get('branchPrefix', '');
+    inputBox.valueSelection = [-1, -1];
     inputBox.placeholder = vscode.l10n.t('Please input branch name');
     inputBox.prompt = vscode.l10n.t('Please input branch name');
     inputBox.buttons = [backButton];
