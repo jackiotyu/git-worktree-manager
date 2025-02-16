@@ -76,7 +76,7 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    await createBranchFrom(cwd, branchName, branchItem.hash);
+    await createBranchFrom(cwd, branchName, branchItem.branch || branchItem.hash);
     const hash = await getLastCommitHash(cwd, true);
     resolve({ branch: branchName, hash });
     quickPick.hide();
