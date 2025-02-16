@@ -1,8 +1,15 @@
+## [1.0.5] 2025-02-16
+
+### Change
+
+- Add branch prefix support for new branches
+- Prevent focus loss when creating a new branch
+
 ## [1.0.4] 2025-02-15
 
 ### Change
 
-- Add functionality to create new branches
+- Add functionality to create new branches (#14)
 
 ## [1.0.3] 2025-02-03
 
