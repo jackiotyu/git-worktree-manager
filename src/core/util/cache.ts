@@ -27,7 +27,7 @@ const getUpdatedWorktreeCache = async (
 ) => {
     const nextWorkTreeCache: IWorktreeCacheItem[] = [];
     const preCacheGroup = groupBy(
-        preWorkTreeCache.map((item) => ({ ...item, mainFolder: toSimplePath(item.mainFolder) })),
+        preWorkTreeCache.filter(i => i.mainFolder).map((item) => ({ ...item, mainFolder: toSimplePath(item.mainFolder) })),
         'mainFolder',
     );
     for (const item of configList) {

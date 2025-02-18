@@ -3,9 +3,9 @@ import { formatTime } from '@/core/util/parse';
 import { checkGitValid } from '@/core/git/checkGitValid';
 import { getAllRefList } from '@/core/git/getAllRefList';
 import { Alert } from '@/core/ui/message';
-import { backButton } from './quickPick.button';
+import { backButton, deleteBranchQuickInputButton } from './quickPick.button';
 import { GlobalState } from '@/core/state';
-import { refArgList, HEAD } from '@/constants';
+import { refArgList, HEAD, Commands } from '@/constants';
 import type { RefItem, RefList, RepoRefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
 import { getLastCommitHash } from '@/core/git/getLastCommitHash';
 import { withResolvers } from '@/core/util/promise';
@@ -26,6 +26,10 @@ interface HideHanderArgs extends HandlerArgs {}
 
 interface TriggerButtonHandlerArgs extends HandlerArgs {
     event: vscode.QuickInputButton;
+}
+
+interface HandleTriggerItemButtonArgs {
+    event: vscode.QuickPickItemButtonEvent<BranchForWorktree>;
 }
 
 // Create a new branch
@@ -133,6 +137,12 @@ function handleTriggerButton({ resolve, reject, quickPick, event }: TriggerButto
     }
 }
 
+function handleTriggerItemButton({ event }: HandleTriggerItemButtonArgs) {
+    if(event.button === deleteBranchQuickInputButton) {
+        vscode.commands.executeCommand(Commands.deleteBranch, event.item);
+    }
+}
+
 const mapRefList = (allRefList: RefList) => {
     let branchList: RefList = [];
     let remoteBranchList: RefList = [];
@@ -168,13 +178,21 @@ const buildRemoteBranchDesc = (hash: string, authordate: string) =>
 const buildTagDesc = (hash: string, authordate: string) =>
     `${vscode.l10n.t('tag')} $(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
 
-const mapBranchItems = (branchList: RefList) => {
+const mapBranchItemButtons = (): vscode.QuickInputButton[] => {
+    const buttons: vscode.QuickInputButton[] = [
+        { button: deleteBranchQuickInputButton, show: deleteBranchQuickInputButton.enabled },
+    ].filter(i => i.show).map(i => i.button);
+    return buttons;
+};
+
+const mapBranchItems = (branchList: RefList, mainFolder: string): vscode.QuickPickItem[] => {
+    const buttons: vscode.QuickInputButton[] = mapBranchItemButtons();
     const branchItems: BranchForWorktree[] = [
         {
             label: vscode.l10n.t('branch'),
             kind: vscode.QuickPickItemKind.Separator,
         },
-        ...branchList.map((item) => {
+        ...branchList.map<BranchForWorktree>((item) => {
             const shortRefName = item['refname'].replace('refs/heads/', '');
             return {
                 label: shortRefName,
@@ -182,6 +200,8 @@ const mapBranchItems = (branchList: RefList) => {
                 iconPath: new vscode.ThemeIcon('source-control'),
                 hash: item['objectname:short'],
                 branch: shortRefName,
+                buttons,
+                mainFolder,
             };
         }),
     ];
@@ -273,11 +293,13 @@ const mapRefItems = ({
     remoteBranchList,
     tagList,
     showCreate,
+    mainFolder,
 }: {
     branchList: RefList;
     remoteBranchList: RefList;
     tagList: RefList;
     showCreate: boolean;
+    mainFolder: string;
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
     let branchItems: RefList = [];
@@ -290,7 +312,7 @@ const mapRefItems = ({
     return [
         ...getPreItems(showCreate),
         ...mapWorktreeBranchItems(worktreeItems, defaultBranch),
-        ...mapBranchItems(branchItems),
+        ...mapBranchItems(branchItems, mainFolder),
         ...mapRemoteBranchItems(remoteBranchList),
         ...mapTagItems(tagList),
     ];
@@ -342,7 +364,7 @@ const updateQuickItems = async ({
 }) => {
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate });
+    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder });
 };
 
 export const pickBranch: IPickBranch = async ({
@@ -371,6 +393,7 @@ export const pickBranch: IPickBranch = async ({
         quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, showCreate }));
         quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
         quickPick.onDidTriggerButton((event) => handleTriggerButton({ resolve, reject, event, quickPick }));
+        quickPick.onDidTriggerItemButton(event => handleTriggerItemButton({ event }));
         // TODO 按名称排序
         quickPick.show();
         quickPick.busy = true;

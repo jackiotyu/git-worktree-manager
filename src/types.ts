@@ -104,7 +104,8 @@ export interface QuickPickAction extends vscode.QuickPickItem {
         | Commands.addToWorkspace
         | Commands.removeFromWorkspace
         | Commands.viewHistory
-        | Commands.openRepository;
+        | Commands.openRepository
+        | Commands.removeWorktree;
     hide?: boolean;
 }
 
@@ -120,7 +121,7 @@ export type FetchArgs = {
     remoteRef: string;
     cwd: string;
 };
-export type IBranchForWorktree = { branch?: string; hash?: string };
+export type IBranchForWorktree = { branch?: string; hash?: string; mainFolder?: string };
 export type BranchForWorktree = vscode.QuickPickItem & IBranchForWorktree;
 export type IPickBranchResolveValue = IBranchForWorktree | void | false;
 export type IPickBranchParams = {

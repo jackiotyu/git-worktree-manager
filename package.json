@@ -242,6 +242,10 @@
         "command": "git-worktree-manager.openRepository",
         "title": "%cmd.openRepository%",
         "icon": "$(repo)"
+      },
+      {
+        "command": "git-worktree-manager.deleteBranch",
+        "title": "%cmd.deleteBranch%"
       }
     ],
     "keybindings": [
@@ -674,6 +678,10 @@
         {
           "command": "git-worktree-manager.openRepository",
           "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.deleteBranch",
+          "when": "false"
         }
       ]
     },
@@ -875,6 +883,23 @@
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.worktreePick.showOpenRepository.description%"
+          },
+          "git-worktree-manager.worktreePick.showDeleteWorktree": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "%config.worktreePick.showDeleteWorktree.description%"
+          }
+        }
+      },
+      {
+        "title": "Pick Branch",
+        "properties": {
+          "git-worktree-manager.branchPick.showDeleteBranch": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "%config.branchPick.showDeleteBranch.description%"
           }
         }
       }

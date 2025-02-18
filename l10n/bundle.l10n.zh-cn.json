@@ -117,5 +117,8 @@
     "Branch name cannot be empty": "分支名称不能为空",
     "Branch name is invalid": "分支名称无效",
     "Choose a reference to create new branch from": "选择用于创建新分支的引用",
-    "Please input branch name": "请输入分支名称"
+    "Please input branch name": "请输入分支名称",
+    "Delete branch": "删除分支",
+    "The branch {0} based on {1} will be deleted": "将删除基于 {1} 的分支 {0}",
+    "Failed to delete branch ( {0} ), {1}": "删除分支 ( {0} ) 失败, {1}"
 }

@@ -32,6 +32,7 @@ export enum Commands {
     refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',
     addToGitFolder = 'git-worktree-manager.addToGitFolder',
     checkoutBranch = 'git-worktree-manager.checkoutBranch',
+    deleteBranch = 'git-worktree-manager.deleteBranch',
     gitFolderViewAsTree = 'git-worktree-manager.gitFolderViewAsTree',
     gitFolderViewAsList = 'git-worktree-manager.gitFolderViewAsList',
     gitFolderSetOpen = 'git-worktree-manager.gitFolderSetOpen',

@@ -86,6 +86,11 @@ const getPickActionsByWorktree = async (viewItem: IWorktreeLess) => {
             label: vscode.l10n.t('Open the repository in Source Control view'),
             action: Commands.openRepository,
         },
+        {
+            iconPath: new vscode.ThemeIcon('trash'),
+            label: vscode.l10n.t('Delete worktree'),
+            action: Commands.removeWorktree,
+        }
     ];
     return items.filter((i) => !i.hide);
 };
@@ -122,6 +127,7 @@ async function handleAccept({
         case Commands.revealInSystemExplorerContext:
         case Commands.viewHistory:
         case Commands.openRepository:
+        case Commands.removeWorktree:
             await vscode.commands.executeCommand(item.action, viewItem);
             break;
         case Commands.removeFromWorkspace:
