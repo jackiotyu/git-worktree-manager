@@ -1,3 +1,9 @@
+## [1.0.7] 2025-02-18
+
+### Fix
+
+- Update remove worktree logic to delete associated branch and add delete branch functionality (#14) 
+
 ## [1.0.6] 2025-02-16
 
 ### Fix
