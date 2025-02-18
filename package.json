@@ -756,6 +756,12 @@
             "type": "string",
             "default": "$BASE_NAME - $FULL_PATH",
             "markdownDescription": "%config.workspacePathFormat.description%"
+          },
+          "git-worktree-manager.promptDeleteBranchAfterWorktreeDeletion": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.promptDeleteBranchAfterWorktreeDeletion.description%"
           }
         }
       },

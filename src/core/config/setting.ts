@@ -27,6 +27,7 @@ export class Config {
     static get(key: 'openInsideFolder', defaultValue: false): boolean;
     static get(key: 'httpProxy', defaultValue: ''): string;
     static get(key: 'workspacePathFormat', defaultValue: '$BASE_NAME - $FULL_PATH'): string;
+    static get(key: 'promptDeleteBranchAfterWorktreeDeletion', defaultValue: false): boolean;
     static get<T>(key: string, defaultValue: T): T {
         return vscode.workspace.getConfiguration(APP_NAME).get(key, defaultValue);
     }

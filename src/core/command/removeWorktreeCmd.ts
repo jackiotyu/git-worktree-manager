@@ -7,6 +7,7 @@ import { getMainFolder } from '@/core/git/getMainFolder';
 import { confirmModal } from '@/core/ui/modal';
 import { Alert } from '@/core/ui/message';
 import logger from '@/core/log/logger';
+import { Config } from '@/core/config/setting';
 import { IBranchForWorktree } from '@/types';
 
 export const removeWorktreeCmd = async (item?: { path: string }) => {
@@ -21,14 +22,19 @@ export const removeWorktreeCmd = async (item?: { path: string }) => {
             return;
         }
 
-        const [branchName, mainFolder] = await Promise.all([getCurrentBranch(worktreePath), getMainFolder(worktreePath)]).catch(() => ['', '']);
+        const needDeleteBranch = Config.get('promptDeleteBranchAfterWorktreeDeletion', false);
+        let branchName = '';
+        let mainFolder = '';
+        if(needDeleteBranch) {
+            [branchName, mainFolder] = await Promise.all([getCurrentBranch(worktreePath), getMainFolder(worktreePath)]).catch(() => ['', '']);
+        }
 
         await removeWorktree(worktreePath, worktreePath);
         Alert.showInformationMessage(vscode.l10n.t('Successfully deleted the worktree for the {0} folder', worktreePath));
         vscode.commands.executeCommand(Commands.refreshWorktree);
 
         // Delete the related branch
-        if(!branchName) return;
+        if(!needDeleteBranch || !branchName) return;
         const branchInfo: IBranchForWorktree = { branch: branchName, mainFolder };
         await vscode.commands.executeCommand(Commands.deleteBranch, branchInfo);
     } catch (error) {
