@@ -11,6 +11,7 @@ import { getLastCommitHash } from '@/core/git/getLastCommitHash';
 import { withResolvers } from '@/core/util/promise';
 import { createBranchFrom } from '@/core/git/createBranch';
 import { inputNewBranch } from '@/core/ui/inputNewBranch';
+import logger from '@/core/log/logger';
 
 type ResolveValue = IPickBranchResolveValue;
 type ResolveType = (value: ResolveValue) => void;
@@ -412,7 +413,7 @@ export const pickBranch: IPickBranch = async ({
         quickPick.busy = false;
         return await promise;
     } catch (error) {
-        console.log('pickBranch error ', error);
+        logger.error(error);
         reject(error);
     }
 };

@@ -6,7 +6,6 @@ import logger from '@/core/log/logger';
 import { BranchForWorktree } from '@/types';
 
 export const deleteBranchCmd = async (item: BranchForWorktree) => {
-    console.log('deleteBranchCmd', item);
     if(!item.mainFolder || !item.branch) return;
     try {
         const confirm = await confirmModal(
