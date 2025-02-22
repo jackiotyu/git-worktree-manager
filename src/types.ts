@@ -134,3 +134,11 @@ export type IPickBranchParams = {
     showCreate: boolean;
 };
 export type IPickBranch = (params: IPickBranchParams) => Promise<IPickBranchResolveValue>;
+
+export interface ICreateWorktreeInfo {
+    folderPath: string;
+    name: string;
+    label: string;
+    isBranch: boolean;
+    cwd?: string;
+}

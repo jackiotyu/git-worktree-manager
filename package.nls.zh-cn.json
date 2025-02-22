@@ -81,5 +81,7 @@
     "config.worktreePick.showDeleteWorktree.description": "在 \"查找 Worktree\" 列表中展示 \"删除 worktree\" 按钮",
     "config.branchPick.showDeleteBranch.description": "在 \"挑选分支\" 列表中展示 \"删除分支\" 按钮",
     "config.promptDeleteBranchAfterWorktreeDeletion.description": "在删除 worktree 之后，是否提示删除之前关联的分支",
+    "config.copyFiles.description": "需要复制到新 worktree 的文件 glob 匹配模式",
+    "config.ignoreFiles.description": "复制文件时需要忽略的 glob 匹配模式",
     "submenus.worktree-action": "worktree 操作"
 }
