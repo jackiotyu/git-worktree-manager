@@ -762,6 +762,29 @@
             "type": "boolean",
             "default": false,
             "description": "%config.promptDeleteBranchAfterWorktreeDeletion.description%"
+          },
+          "git-worktree-manager.worktreeCopyPatterns": {
+            "type": "array",
+            "default": [
+              ".env",
+              ".vscode/**",
+              "*.local"
+            ],
+            "markdownDescription": "%config.worktreeCopyPatterns.description%"
+          },
+          "git-worktree-manager.worktreeCopyIgnores": {
+            "type": "array",
+            "default": [
+              "**/node_modules/**",
+              "**/dist/**",
+              "**/.git/**",
+              "**/.svn/**",
+              "**/.hg/**",
+              "**/CVS/**",
+              "**/Thumbs.db/**",
+              "**/.DS_Store"
+            ],
+            "markdownDescription": "%config.worktreeCopyIgnores.description%"
           }
         }
       },

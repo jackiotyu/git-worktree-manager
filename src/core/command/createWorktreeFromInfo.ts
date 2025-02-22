@@ -1,14 +1,11 @@
 import * as vscode from 'vscode';
 import { addWorktree } from '@/core/git/addWorktree';
+import { getMainFolder } from '@/core/git/getMainFolder';
 import { confirmModal } from '@/core/ui/modal';
+import { copyWorktreeFiles } from '@/core/util/copyWorktreeFiles';
+import type { ICreateWorktreeInfo } from '@/types';
 
-export const createWorktreeFromInfo = async (info: {
-    folderPath: string;
-    name: string;
-    label: string;
-    isBranch: boolean;
-    cwd?: string;
-}) => {
+export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     const { folderPath, name, label, isBranch, cwd } = info;
     let confirmCreate = await confirmModal(
         vscode.l10n.t('Create worktree'),
@@ -21,6 +18,13 @@ export const createWorktreeFromInfo = async (info: {
     if (!created) {
         return;
     }
+
+    const mainFolder = await getMainFolder(folderPath);
+    // Copy files after worktree creation is successful
+    if (mainFolder) {
+        await copyWorktreeFiles(mainFolder, folderPath);
+    }
+
     let confirmOpen = await confirmModal(
         vscode.l10n.t('Open folder'),
         vscode.l10n.t('Whether to open the new worktree in a new window?'),
@@ -32,4 +36,4 @@ export const createWorktreeFromInfo = async (info: {
     vscode.commands.executeCommand('vscode.openFolder', folderUri, {
         forceNewWindow: true,
     });
-};
+}
