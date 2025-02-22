@@ -7,8 +7,8 @@ import { Config } from '@/core/config/setting';
 
 export async function copyIgnoredFiles(sourceRepo: string, targetWorktree: string) {
     try {
-        const patterns = Config.get('copyFiles', []);
-        const ignorePatterns = Config.get('ignoreFiles', []);
+        const patterns = Config.get('worktreeCopyPatterns', []);
+        const ignorePatterns = Config.get('worktreeCopyIgnores', []);
 
         if (patterns.length === 0) return;
 

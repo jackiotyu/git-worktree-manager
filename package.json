@@ -763,16 +763,16 @@
             "default": false,
             "description": "%config.promptDeleteBranchAfterWorktreeDeletion.description%"
           },
-          "git-worktree-manager.copyFiles": {
+          "git-worktree-manager.worktreeCopyPatterns": {
             "type": "array",
             "default": [
               ".env",
               ".vscode/**",
               "*.local"
             ],
-            "markdownDescription": "%config.copyFiles.description%"
+            "markdownDescription": "%config.worktreeCopyPatterns.description%"
           },
-          "git-worktree-manager.ignoreFiles": {
+          "git-worktree-manager.worktreeCopyIgnores": {
             "type": "array",
             "default": [
               "**/node_modules/**",
@@ -784,7 +784,7 @@
               "**/Thumbs.db/**",
               "**/.DS_Store"
             ],
-            "markdownDescription": "%config.ignoreFiles.description%"
+            "markdownDescription": "%config.worktreeCopyIgnores.description%"
           }
         }
       },
