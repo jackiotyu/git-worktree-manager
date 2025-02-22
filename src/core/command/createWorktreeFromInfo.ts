@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { addWorktree } from '@/core/git/addWorktree';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { confirmModal } from '@/core/ui/modal';
-import { copyIgnoredFiles } from '@/core/util/copyIgnoredFiles';
+import { copyWorktreeFiles } from '@/core/util/copyWorktreeFiles';
 import type { ICreateWorktreeInfo } from '@/types';
 
 export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
@@ -22,7 +22,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     const mainFolder = await getMainFolder(folderPath);
     // Copy files after worktree creation is successful
     if (mainFolder) {
-        await copyIgnoredFiles(mainFolder, folderPath);
+        await copyWorktreeFiles(mainFolder, folderPath);
     }
 
     let confirmOpen = await confirmModal(

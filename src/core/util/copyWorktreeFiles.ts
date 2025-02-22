@@ -5,7 +5,7 @@ import { pipeline } from 'stream/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { Config } from '@/core/config/setting';
 
-export async function copyIgnoredFiles(sourceRepo: string, targetWorktree: string) {
+export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: string) {
     try {
         const patterns = Config.get('worktreeCopyPatterns', []);
         const ignorePatterns = Config.get('worktreeCopyIgnores', []);
