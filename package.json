@@ -770,7 +770,7 @@
               ".vscode/**",
               "*.local"
             ],
-            "description": "%config.copyFiles.description%"
+            "markdownDescription": "%config.copyFiles.description%"
           },
           "git-worktree-manager.ignoreFiles": {
             "type": "array",
@@ -784,7 +784,7 @@
               "**/Thumbs.db/**",
               "**/.DS_Store"
             ],
-            "description": "%config.ignoreFiles.description%"
+            "markdownDescription": "%config.ignoreFiles.description%"
           }
         }
       },
