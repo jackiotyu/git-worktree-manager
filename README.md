@@ -16,9 +16,9 @@ Seamlessly switch between branches, keep your code organized, and run code acros
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
 ### Why Git Worktree Manager?
-1. **Managing multiple branches becomes tedious**  
+1. **Switching between multiple branches can be cumbersome and may lead to conflicts or forgotten commits. Git Worktree Manager helps developers quickly switch between different working directories, simplifying branch management**
 
-2. **Need to work on different versions simultaneously**  
+2. **Sometimes you need to work with different versions of code simultaneously, but switching branches or commits can be time-consuming. With worktrees, you can develop in parallel across separate directories without interference**
 
 
 <details>
@@ -153,6 +153,8 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 - [x] Display git branch status.
 - [x] Quick pull/push branch.
 - [x] Quick add/remove worktree in workspace.
+- [x] Create new branches while creating worktree or switching branch. (#14)
+- [x] Copy untracked files from the main repository when creating a worktree. (#16)
 - [ ] Git repository snapshot.
 - [ ] Multi-language Support.
     - [x] Chinese.

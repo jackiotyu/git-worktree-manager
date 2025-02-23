@@ -15,10 +15,10 @@
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
-### Why Git Worktree Manager?
-1. 在多个分支间切换可能非常繁琐，容易导致冲突或遗忘提交。Git Worktree Manager 帮助开发者在不同工作目录间快速切换，简化分支管理。
+### 为何需要 Git Worktree Manager?
+1. **在多个分支间切换可能非常繁琐，容易导致冲突或遗忘提交。Git Worktree Manager 帮助开发者在不同工作目录间快速切换，简化分支管理。**
 
-2. 有时需要同时处理不同版本的代码，但切换分支或提交非常耗时。通过使用工作区，你可以在独立目录中并行开发，不会相互干扰。
+2. **有时需要同时处理不同版本的代码，但切换分支或提交非常耗时。通过使用 worktree，你可以在独立目录中并行开发，不会相互干扰。**
 
 
 <details>
@@ -133,6 +133,8 @@
 - [x] 展示 git 分支状态
 - [x] 拉取/推送分支
 - [x] 在工作区内添加/删除指定 worktree 目录
+- [x] 切换分支或者创建 worktree 时支持新建分支 (#14)
+- [x] 创建 worktree 时支持复制主仓库中 git 未跟踪的文件 (#16)
 - [ ] git 仓库快照
 - [ ] 多语言支持
     - [x] 中文
