@@ -24,6 +24,17 @@ export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: stri
             const targetPath = path.join(targetWorktree, relativePath);
             const targetDir = path.dirname(targetPath);
 
+            try {
+                // Check if target file exists
+                const stat = await fs.stat(targetPath);
+                if (stat.isFile()) {
+                    // Skip if file already exists
+                    continue;
+                }
+            } catch (err) {
+                // File does not exist, continue with copy process
+            }
+
             // Ensure target directory exists
             await fs.mkdir(targetDir, { recursive: true });
 
