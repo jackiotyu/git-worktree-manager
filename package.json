@@ -765,6 +765,9 @@
           },
           "git-worktree-manager.worktreeCopyPatterns": {
             "type": "array",
+            "items": {
+              "type": "string"
+            },
             "default": [
               ".env",
               ".vscode/**",
@@ -774,6 +777,9 @@
           },
           "git-worktree-manager.worktreeCopyIgnores": {
             "type": "array",
+            "items": {
+              "type": "string"
+            },
             "default": [
               "**/node_modules/**",
               "**/dist/**",
