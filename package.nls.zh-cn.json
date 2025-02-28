@@ -84,5 +84,6 @@
     "config.promptDeleteBranchAfterWorktreeDeletion.description": "在删除 worktree 之后，是否提示删除之前关联的分支",
     "config.worktreeCopyPatterns.description": "创建新 worktree 时需要复制的文件匹配模式，参考[glob patterns介绍](https://juejin.cn/post/7474119575574855717)",
     "config.worktreeCopyIgnores.description": "创建新 worktree 时需要排除的文件匹配模式，参考[glob patterns介绍](https://juejin.cn/post/7474119575574855717)",
-    "submenus.worktree-action": "worktree 操作"
+    "submenus.worktree-action": "worktree 操作",
+    "config.checkoutIgnoreOtherWorktree.description": "启用后，Git 在切换分支时会忽略其他工作树的状态，允许多个工作树使用相同分支"
 }

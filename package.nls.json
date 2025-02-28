@@ -84,5 +84,6 @@
     "config.promptDeleteBranchAfterWorktreeDeletion.description": "Prompt to delete the branch previously associated with the worktree after its deletion",
     "config.worktreeCopyPatterns.description": "Glob patterns for files to be copied when creating a new worktree, referring to [glob patterns](https://code.visualstudio.com/docs/editor/glob-patterns).",
     "config.worktreeCopyIgnores.description": "Glob patterns for files to be excluded when copying files to a new worktree, referring to [glob patterns](https://code.visualstudio.com/docs/editor/glob-patterns).",
-    "submenus.worktree-action": "Worktree Action"
+    "submenus.worktree-action": "Worktree Action",
+    "config.checkoutIgnoreOtherWorktree.description": "When enabled, Git ignores the state of other worktrees when switching branches, allowing multiple worktrees to use the same branch."
 }

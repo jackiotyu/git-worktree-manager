@@ -811,6 +811,12 @@
               "**/.DS_Store"
             ],
             "markdownDescription": "%config.worktreeCopyIgnores.description%"
+          },
+          "git-worktree-manager.checkoutIgnoreOtherWorktree": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.checkoutIgnoreOtherWorktree.description%"
           }
         }
       },

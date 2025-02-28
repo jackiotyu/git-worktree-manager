@@ -30,6 +30,7 @@ export class Config {
     static get(key: 'promptDeleteBranchAfterWorktreeDeletion', defaultValue: false): boolean;
     static get(key: 'worktreeCopyPatterns', defaultValue: []): string[];
     static get(key: 'worktreeCopyIgnores', defaultValue: []): string[];
+    static get(key: 'checkoutIgnoreOtherWorktree', defaultValue: false): boolean;
     static get<T>(key: string, defaultValue: T): T {
         return vscode.workspace.getConfiguration(APP_NAME).get(key, defaultValue);
     }
