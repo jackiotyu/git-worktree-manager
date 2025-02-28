@@ -8,18 +8,11 @@ import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
 import { IWorktreeDetail } from '@/types';
 
-interface WorktreeCache {
-    timestamp: number;
-    data: IWorktreeDetail[];
-}
-
 export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMainGitFolderItem | WorktreeItem>, vscode.Disposable {
     static readonly id = ViewId.worktreeList;
-    private static readonly cacheTimeout = 30000; // 30s
     private static readonly refreshThrottle = 800; // 800ms
 
     private _onDidChangeTreeData = new vscode.EventEmitter<WorkspaceMainGitFolderItem | WorktreeItem | void>();
-    private worktreeCache: Map<string, WorktreeCache> = new Map();
     public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     constructor(context: vscode.ExtensionContext) {
@@ -32,7 +25,6 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
 
     dispose() {
         this._onDidChangeTreeData.dispose();
-        this.worktreeCache.clear();
     }
 
     private initializeEventListeners(context: vscode.ExtensionContext) {
@@ -41,9 +33,7 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
                 this._onDidChangeTreeData.fire();
             }),
             worktreeChangeEvent.event((uri) => {
-                if (uri) {
-                    this.worktreeCache.delete(uri.fsPath);
-                }
+                // TODO 缓存
                 this._onDidChangeTreeData.fire();
             }),
             this
@@ -54,16 +44,9 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
         updateTreeDataEvent.fire();
     }
 
-    private async getWorktreeListWithCache(path: string, forceUpdate = false): Promise<IWorktreeDetail[]> {
-        const now = Date.now();
-        const cached = this.worktreeCache.get(path);
-
-        if (!forceUpdate && cached && (now - cached.timestamp < WorktreeDataProvider.cacheTimeout)) {
-            return cached.data;
-        }
-
-        const data = await getWorktreeList(path, forceUpdate);
-        this.worktreeCache.set(path, { timestamp: now, data });
+    private async getWorktreeListWithCache(path: string): Promise<IWorktreeDetail[]> {
+        const skipRemote = false;
+        const data = await getWorktreeList(path, skipRemote);
         return data;
     }
 
