@@ -1,3 +1,11 @@
+## [1.1.2] 2025-02-28
+
+### Change
+
+- add search worktree icon and open setting icon to worktree list.
+- add option to ignore other worktrees when checking out.
+- adjust worktree buttons and update icon.
+
 ## [1.0.8] 2025-02-22
 
 ### Change
