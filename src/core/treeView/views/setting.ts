@@ -1,28 +1,58 @@
 import * as vscode from 'vscode';
 import { ViewId, Commands } from '@/constants';
 
+interface MenuItemConfig {
+    label: string;
+    icon: string;
+    command: string | vscode.Command;
+}
+
+const menuItems: MenuItemConfig[] = [
+    {
+        label: vscode.l10n.t('Add Worktree'),
+        icon: 'new-folder',
+        command: Commands.addWorktree,
+    },
+    {
+        label: vscode.l10n.t('Find Worktree'),
+        icon: 'search',
+        command: Commands.searchAllWorktree,
+    },
+    {
+        label: vscode.l10n.t('Open Settings'),
+        icon: 'gear',
+        command: Commands.openSetting,
+    },
+    {
+        label: vscode.l10n.t('Report Issue'),
+        icon: 'issues',
+        command: {
+            command: 'vscode.open',
+            title: '',
+            arguments: [vscode.Uri.parse('https://github.com/jackiotyu/git-worktree-manager/issues')]
+        },
+    }
+];
+
+function createTreeItem(config: MenuItemConfig): vscode.TreeItem {
+    const item = new vscode.TreeItem(config.label);
+    item.iconPath = new vscode.ThemeIcon(config.icon);
+    item.command = typeof config.command === 'string'
+        ? { command: config.command, title: config.label }
+        : config.command;
+
+    return item;
+}
+
 export class SettingDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     static readonly id = ViewId.settingList;
-    getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    private readonly items: vscode.TreeItem[] = menuItems.map(config => createTreeItem(config));
+
+    getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
         return element;
     }
-    getChildren(): vscode.ProviderResult<vscode.TreeItem[]> {
-        return [
-            this.createTreeItem(vscode.l10n.t('Add Worktree'), 'new-folder', Commands.addWorktree),
-            this.createTreeItem(vscode.l10n.t('Find Worktree'), 'search', Commands.searchAllWorktree),
-            this.createTreeItem(vscode.l10n.t('Open Settings'), 'gear', Commands.openSetting),
-            this.createTreeItem(vscode.l10n.t('Report Issue'), 'issues', {
-                command: 'vscode.open',
-                title: '',
-                arguments: [vscode.Uri.parse('https://github.com/jackiotyu/git-worktree-manager/issues')],
-            }),
-        ];
-    }
-    private createTreeItem(label: string, icon: string, command: string | vscode.Command): vscode.TreeItem {
-        return {
-            label: label,
-            iconPath: new vscode.ThemeIcon(icon),
-            command: typeof command === 'string' ? { command: command, title: label } : command,
-        };
+
+    getChildren(): vscode.TreeItem[] {
+        return this.items;
     }
 }

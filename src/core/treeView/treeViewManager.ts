@@ -5,7 +5,9 @@ import { revealTreeItemEvent } from '@/core/event/events';
 
 export class TreeViewManager {
     static register (context: vscode.ExtensionContext) {
-        vscode.window.registerTreeDataProvider(SettingDataProvider.id, new SettingDataProvider());
+        const settingView = vscode.window.createTreeView(SettingDataProvider.id, {
+            treeDataProvider: new SettingDataProvider(),
+        });
         const worktreeView = vscode.window.createTreeView(WorktreeDataProvider.id, {
             treeDataProvider: new WorktreeDataProvider(context),
             showCollapseAll: false,
@@ -33,6 +35,7 @@ export class TreeViewManager {
             }
         });
         context.subscriptions.push(
+            settingView,
             worktreeView,
             gitFolderView,
             recentFolderView,
