@@ -171,6 +171,11 @@
         "icon": "$(search)"
       },
       {
+        "command": "git-worktree-manager.openWorkspaceWorktree",
+        "title": "%cmd.searchAllWorktree%",
+        "icon": "$(search)"
+      },
+      {
         "command": "git-worktree-manager.addToGitFolder",
         "title": "%cmd.addToGitFolder%"
       },
@@ -246,6 +251,11 @@
       {
         "command": "git-worktree-manager.deleteBranch",
         "title": "%cmd.deleteBranch%"
+      },
+      {
+        "command": "git-worktree-manager.openSetting",
+        "title": "%cmd.openSetting%",
+        "icon": "$(gear)"
       }
     ],
     "keybindings": [
@@ -295,6 +305,11 @@
           "group": "navigation@100"
         },
         {
+          "command": "git-worktree-manager.openSetting",
+          "when": "view == git-worktree-manager-list",
+          "group": "navigation@90"
+        },
+        {
           "command": "git-worktree-manager.viewHistory",
           "when": "view == git-worktree-manager-list",
           "group": "navigation@20"
@@ -308,6 +323,11 @@
           "command": "git-worktree-manager.addWorktree",
           "when": "view === git-worktree-manager-list",
           "group": "navigation@2"
+        },
+        {
+          "command": "git-worktree-manager.openWorkspaceWorktree",
+          "when": "view === git-worktree-manager-list",
+          "group": "navigation@3"
         },
         {
           "command": "git-worktree-manager.pruneWorktree",

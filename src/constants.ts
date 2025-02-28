@@ -42,6 +42,7 @@ export enum Commands {
     loadAllTreeData = 'git-worktree-manager.loadAllTreeData',
     viewHistory = 'git-worktree-manager.viewHistory',
     openRecent = 'git-worktree-manager.openRecent',
+    openWorkspaceWorktree = 'git-worktree-manager.openWorkspaceWorktree',
     fetchWorktree = 'git-worktree-manager.fetchWorktree',
     fetchRepo = 'git-worktree-manager.fetchRepo',
     toggleLog = 'git-worktree-manager.toggleLog',

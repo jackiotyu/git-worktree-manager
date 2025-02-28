@@ -33,6 +33,7 @@ import { pullWorktreeCmd } from '@/core/command/pullWorktreeCmd';
 import { loadAllTreeDataCmd } from '@/core/command/loadAllTreeDataCmd';
 import { viewHistoryCmd } from '@/core/command/viewHistoryCmd';
 import { openRecentCmd } from '@/core/command/openRecentCmd';
+import { openWorkspaceWorktreeCmd } from '@/core/command/openWorkspaceWorktreeCmd';
 import { watchWorktreeEventCmd } from '@/core/command/watchWorktreeEventCmd';
 import { unwatchWorktreeEventCmd } from '@/core/command/unwatchWorktreeEventCmd';
 import { fetchWorktreeCmd } from '@/core/command/fetchWorktreeCmd';
@@ -98,6 +99,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.loadAllTreeData, loadAllTreeDataCmd),
         registerCommand(Commands.viewHistory, viewHistoryCmd),
         registerCommand(Commands.openRecent, openRecentCmd),
+        registerCommand(Commands.openWorkspaceWorktree, openWorkspaceWorktreeCmd),
         registerCommand(Commands.watchWorktreeEvent, watchWorktreeEventCmd),
         registerCommand(Commands.unwatchWorktreeEvent, unwatchWorktreeEventCmd),
         registerCommand(Commands.fetchWorktree, fetchWorktreeCmd),

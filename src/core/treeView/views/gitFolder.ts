@@ -56,11 +56,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         );
     }
 
-    private handleWorktreeChange = (uri?: vscode.Uri) => {
-        if (uri) {
-            this.worktreeCache.delete(uri.fsPath);
-            this.refresh();
-        }
+    private handleWorktreeChange = (uri: vscode.Uri) => {
+        this.worktreeCache.delete(uri.fsPath);
+        this.refresh();
     };
 
     private handleViewAsTreeChange = (viewAsTree: boolean) => {
