@@ -82,6 +82,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         try {
             this.data = GlobalState.get('gitFolders', []);
             this.data.sort((a, b) => a.name.localeCompare(b.name));
+            this.worktreeCache.clear();
             this._onDidChangeTreeData.fire();
         } catch (error) {
             logger.error(`Failed to refresh git folders: ${error}`);
