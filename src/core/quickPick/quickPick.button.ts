@@ -98,11 +98,11 @@ export const copyItemQuickInputButton = new QuickInputButton({
     defaultValue: false,
 });
 export const useAllWorktreeQuickInputButton = new QuickInputButton({
-    iconPath: new vscode.ThemeIcon('list-tree'),
+    iconPath: new vscode.ThemeIcon('pass'),
     tooltip: vscode.l10n.t('Click to display all worktree list'),
 });
 export const useWorkspaceWorktreeQuickInputButton = new QuickInputButton({
-    iconPath: new vscode.ThemeIcon('folder-library'),
+    iconPath: new vscode.ThemeIcon('pass-filled'),
     tooltip: vscode.l10n.t('Click to display worktree list in workspace'),
 });
 export const checkoutBranchQuickInputButton = new QuickInputButton({

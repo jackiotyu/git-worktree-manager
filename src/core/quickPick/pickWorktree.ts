@@ -426,10 +426,10 @@ class ActionService implements IActionService {
             case DefaultDisplayList.workspace:
                 this.worktreeButtons = [
                     refreshWorktreeButton,
+                    showWorktreeButton,
                     sortButton,
                     addGitRepoQuickInputButton,
                     addWorktreeQuickInputButton,
-                    showWorktreeButton,
                     settingQuickInputButton,
                     openRecentlyQuickInputButton,
                 ];
