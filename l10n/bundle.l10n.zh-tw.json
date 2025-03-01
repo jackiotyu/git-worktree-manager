@@ -100,7 +100,7 @@
     "Please select a different directory": "請選擇其他目錄",
     "The folder is not empty": "資料夾不是空的",
     "Create new branch...": "建立新分支...",
-    "Create new branch from...": "從...建立新分支",
+    "Create new branch from...": "從以下位置建立新分支...",
     "Branch name cannot be empty": "分支名稱不能為空",
     "Branch name is invalid": "分支名稱無效",
     "Choose a reference to create new branch from": "選擇要用來建立新分支的參考",
