@@ -1,3 +1,11 @@
+## [1.1.3] 2025-03-01
+
+### Change
+
+- Improve Traditional Chinese and Japanese localization translations
+- Standardize technical terms in Japanese translations
+- Optimize Traditional Chinese translation expressions
+
 ## [1.1.2] 2025-02-28
 
 ### Change
