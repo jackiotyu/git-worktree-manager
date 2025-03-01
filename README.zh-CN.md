@@ -138,6 +138,8 @@
 - [ ] git 仓库快照
 - [ ] 多语言支持
     - [x] 中文
+    - [x] 繁体中文
+    - [x] 日语
 
 点击 [打开议题](https://github.com/jackiotyu/git-worktree-manager/issues) 查看所有功能建议（和已知问题）
 

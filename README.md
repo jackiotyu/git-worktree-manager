@@ -158,6 +158,8 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 - [ ] Git repository snapshot.
 - [ ] Multi-language Support.
     - [x] Chinese.
+    - [x] Traditional Chinese
+    - [x] Japanese
 
 See the [open issues](https://github.com/jackiotyu/git-worktree-manager/issues) for a full list of proposed features (and known issues).
 
