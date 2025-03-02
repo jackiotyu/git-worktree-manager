@@ -5,11 +5,11 @@ import { debounce } from 'lodash-es';
 
 const backButton = vscode.QuickInputButtons.Back;
 
-export const inputNewBranch = async (cwd: string) => {
+export const inputNewBranch = async (cwd: string, defaultValue?: string) => {
     const { promise, resolve, reject } = withResolvers<string | undefined | false>();
     const inputBox = vscode.window.createInputBox();
     inputBox.ignoreFocusOut = true;
-    inputBox.value = vscode.workspace.getConfiguration('git').get('branchPrefix', '');
+    inputBox.value = defaultValue || vscode.workspace.getConfiguration('git').get('branchPrefix', '');
     inputBox.valueSelection = [-1, -1];
     inputBox.placeholder = vscode.l10n.t('Please input branch name');
     inputBox.prompt = vscode.l10n.t('Please input branch name');

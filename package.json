@@ -821,7 +821,7 @@
         }
       },
       {
-        "title": "Tree View",
+        "title": "%config.treeView.title%",
         "properties": {
           "git-worktree-manager.treeView.showLockInWorktreeItem": {
             "scope": "application",
@@ -868,7 +868,7 @@
         }
       },
       {
-        "title": "Find Worktree",
+        "title": "%config.findWorktree.title%",
         "properties": {
           "git-worktree-manager.worktreePick.pinCurrentRepo": {
             "scope": "application",
@@ -954,13 +954,19 @@
         }
       },
       {
-        "title": "Pick Branch",
+        "title": "%config.pickBranch.title%",
         "properties": {
           "git-worktree-manager.branchPick.showDeleteBranch": {
             "scope": "application",
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.branchPick.showDeleteBranch.description%"
+          },
+          "git-worktree-manager.branchPick.showRenameBranch": {
+            "scope": "application",
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "%config.branchPick.showRenameBranch.description%"
           }
         }
       }

@@ -121,5 +121,6 @@
     "Delete branch": "删除分支",
     "The branch {0} based on {1} will be deleted": "将删除基于 {1} 的分支 {0}",
     "Failed to delete branch ( {0} ), {1}": "删除分支 ( {0} ) 失败, {1}",
-    "Failed to copy files: {error}": "复制文件失败: {error}"
+    "Failed to copy files: {error}": "复制文件失败: {error}",
+    "Rename branch": "重命名分支"
 }

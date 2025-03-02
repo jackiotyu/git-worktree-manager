@@ -3,7 +3,7 @@ import { formatTime } from '@/core/util/parse';
 import { checkGitValid } from '@/core/git/checkGitValid';
 import { getAllRefList } from '@/core/git/getAllRefList';
 import { Alert } from '@/core/ui/message';
-import { backButton, deleteBranchQuickInputButton } from './quickPick.button';
+import { backButton, deleteBranchQuickInputButton, renameBranchQuickInputButton } from './quickPick.button';
 import { GlobalState } from '@/core/state';
 import { refArgList, HEAD, Commands } from '@/constants';
 import type { RefItem, RefList, RepoRefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
@@ -141,6 +141,8 @@ function handleTriggerButton({ resolve, reject, quickPick, event }: TriggerButto
 function handleTriggerItemButton({ event }: HandleTriggerItemButtonArgs) {
     if(event.button === deleteBranchQuickInputButton) {
         vscode.commands.executeCommand(Commands.deleteBranch, event.item);
+    } else if(event.button === renameBranchQuickInputButton) {
+        vscode.commands.executeCommand(Commands.renameBranch, event.item);
     }
 }
 
@@ -182,6 +184,7 @@ const buildTagDesc = (hash: string, authordate: string) =>
 const mapBranchItemButtons = (): vscode.QuickInputButton[] => {
     const buttons: vscode.QuickInputButton[] = [
         { button: deleteBranchQuickInputButton, show: deleteBranchQuickInputButton.enabled },
+        { button: renameBranchQuickInputButton, show: renameBranchQuickInputButton.enabled },
     ].filter(i => i.show).map(i => i.button);
     return buttons;
 };
@@ -209,7 +212,13 @@ const mapBranchItems = (branchList: RefList, mainFolder: string): vscode.QuickPi
     return branchItems;
 };
 
-const mapWorktreeBranchItems = (branchList: RefList, defaultBranch?: RefItem) => {
+const mapWorktreeItemButtons = (): vscode.QuickInputButton[] => {
+    const buttons: vscode.QuickInputButton[] = [
+        { button: renameBranchQuickInputButton, show: renameBranchQuickInputButton.enabled },
+    ].filter(i => i.show).map(i => i.button);
+    return buttons;
+};
+const mapWorktreeBranchItems = (branchList: RefList, mainFolder: string, defaultBranch?: RefItem) => {
     const worktreeBranchItems: BranchForWorktree[] = [];
     worktreeBranchItems.push({
         label: 'worktree',
@@ -222,6 +231,7 @@ const mapWorktreeBranchItems = (branchList: RefList, defaultBranch?: RefItem) =>
             iconPath: new vscode.ThemeIcon('git-commit'),
             hash: defaultBranch['objectname:short'],
         });
+    const buttons: vscode.QuickInputButton[] = mapWorktreeItemButtons();
     worktreeBranchItems.push(
         // worktree branch list
         ...branchList.map((item) => {
@@ -233,6 +243,8 @@ const mapWorktreeBranchItems = (branchList: RefList, defaultBranch?: RefItem) =>
                     item.HEAD === HEAD.current ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('source-control'),
                 hash: item['objectname:short'],
                 branch: shortName,
+                buttons,
+                mainFolder,
             };
         })
     );
@@ -312,7 +324,7 @@ const mapRefItems = ({
     });
     return [
         ...getPreItems(showCreate),
-        ...mapWorktreeBranchItems(worktreeItems, defaultBranch),
+        ...mapWorktreeBranchItems(worktreeItems, mainFolder, defaultBranch),
         ...mapBranchItems(branchItems, mainFolder),
         ...mapRemoteBranchItems(remoteBranchList),
         ...mapTagItems(tagList),

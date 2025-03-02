@@ -49,6 +49,7 @@ export enum Commands {
     openRepository = 'git-worktree-manager.openRepository',
     openChanges = 'git-worktree-manager.openChanges',
 
+    renameBranch = 'git-worktree-manager.internal.renameBranch',
     refreshWorktreeCache = 'git-worktree-manager.internal.refreshWorktreeCache',
     watchWorktreeEvent = 'git-worktree-manager.internal.watchWorktreeEvent',
     unwatchWorktreeEvent = 'git-worktree-manager.internal.unwatchWorktreeEvent',

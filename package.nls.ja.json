@@ -46,6 +46,9 @@
     "view.git-worktree-manager-setting": "Git Worktree設定",
     "viewsWelcome.addWorktree": "ワークツリーを追加",
     "config.general.title": "一般設定",
+    "config.treeView.title": "ツリービュー",
+    "config.findWorktree.title": "ワークツリーを検索",
+    "config.pickBranch.title": "ブランチを選択",
     "config.terminalLocationInEditor.description": "内蔵ターミナルをエディタで開くかどうか（デフォルトではパネルで開きます）",
     "config.terminalCmdList.description": "ターミナルを開くときに送信するコマンドテキスト（例：node -v）",
     "config.externalTerminalInvoke.description": "外部ターミナルを起動",
@@ -85,5 +88,6 @@
     "config.worktreeCopyPatterns.description": "新しいワークツリーを作成する際にコピーするファイルのGlobパターン。[globパターンの説明](https://code.visualstudio.com/docs/editor/glob-patterns)を参照",
     "config.worktreeCopyIgnores.description": "新しいワークツリーを作成する際に除外するファイルのGlobパターン。[globパターンの説明](https://code.visualstudio.com/docs/editor/glob-patterns)を参照",
     "submenus.worktree-action": "ワークツリー操作",
-    "config.checkoutIgnoreOtherWorktree.description": "有効にすると、ブランチの切り替え時に他のワークツリーの状態を無視し、複数のワークツリーで同じブランチを使用できるようになります"
+    "config.checkoutIgnoreOtherWorktree.description": "有効にすると、ブランチの切り替え時に他のワークツリーの状態を無視し、複数のワークツリーで同じブランチを使用できるようになります",
+    "config.branchPick.showRenameBranch.description": "「ブランチを選択」の結果に「ブランチのリネーム」ボタンを表示"
 }

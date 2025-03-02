@@ -43,6 +43,7 @@ import { openRepositoryCmd } from '@/core/command/openRepositoryCmd';
 import { addRootsToRepoCmd } from '@/core/command/addRootsToRepoCmd';
 import { refreshWorktreeCacheCmd } from '@/core/command/refreshWorktreeCacheCmd';
 import { deleteBranchCmd } from '@/core/command/deleteBranchCmd';
+import { renameBranchCmd } from '@/core/command/renameBranchCmd';
 import { Commands } from '@/constants';
 import { AllViewItem } from '@/core/treeView/items';
 
@@ -109,5 +110,6 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.addRootsToRepo, addRootsToRepoCmd),
         registerCommand(Commands.refreshWorktreeCache, refreshWorktreeCacheCmd),
         registerCommand(Commands.deleteBranch, deleteBranchCmd),
+        registerCommand(Commands.renameBranch, renameBranchCmd),
     );
 }

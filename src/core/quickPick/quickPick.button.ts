@@ -167,3 +167,9 @@ export const deleteBranchQuickInputButton = new QuickInputButton({
     configKey: 'branchPick.showDeleteBranch',
     defaultValue: true,
 });
+export const renameBranchQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('edit'),
+    tooltip: vscode.l10n.t('Rename branch'),
+    configKey: 'branchPick.showRenameBranch',
+    defaultValue: true,
+});

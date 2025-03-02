@@ -108,5 +108,6 @@
     "Delete branch": "刪除分支",
     "The branch {0} based on {1} will be deleted": "將刪除基於 {1} 的分支 {0}",
     "Failed to delete branch ( {0} ), {1}": "刪除分支 ( {0} ) 失敗，{1}",
-    "Failed to copy files: {error}": "複製檔案失敗: {error}"
+    "Failed to copy files: {error}": "複製檔案失敗: {error}",
+    "Rename branch": "重命名分支"
 }

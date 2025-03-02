@@ -108,5 +108,6 @@
     "Delete branch": "ブランチを削除",
     "The branch {0} based on {1} will be deleted": "{1} に基づくブランチ {0} が削除されます",
     "Failed to delete branch ( {0} ), {1}": "ブランチ ( {0} ) の削除に失敗しました、{1}",
-    "Failed to copy files: {error}": "ファイルのコピーに失敗しました: {error}"
+    "Failed to copy files: {error}": "ファイルのコピーに失敗しました: {error}",
+    "Rename branch": "ブランチの名前を変更"
 }

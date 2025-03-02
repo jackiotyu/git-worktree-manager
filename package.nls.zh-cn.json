@@ -46,6 +46,9 @@
     "view.git-worktree-manager-setting": "git worktree 设置",
     "viewsWelcome.addWorktree": "新建 worktree",
     "config.general.title": "通用设置",
+    "config.treeView.title": "树视图设置",
+    "config.findWorktree.title": "查找 Worktree",
+    "config.pickBranch.title": "挑选分支",
     "config.terminalLocationInEditor.description": "是否在编辑器中打开内置终端, 默认在面板中打开",
     "config.terminalCmdList.description": "打开终端时传入指令, 例如 node -v",
     "config.externalTerminalInvoke.description": "唤起外部终端",
@@ -85,5 +88,6 @@
     "config.worktreeCopyPatterns.description": "创建新 worktree 时需要复制的文件匹配模式，参考[glob patterns介绍](https://juejin.cn/post/7474119575574855717)",
     "config.worktreeCopyIgnores.description": "创建新 worktree 时需要排除的文件匹配模式，参考[glob patterns介绍](https://juejin.cn/post/7474119575574855717)",
     "submenus.worktree-action": "worktree 操作",
-    "config.checkoutIgnoreOtherWorktree.description": "启用后，在切换分支时会忽略其他工作树的状态，允许多个工作树使用相同分支"
+    "config.checkoutIgnoreOtherWorktree.description": "启用后，在切换分支时会忽略其他工作树的状态，允许多个工作树使用相同分支",
+    "config.branchPick.showRenameBranch.description": "在 \"挑选分支\" 列表中展示 \"重命名分支\" 按钮"
 }
