@@ -1,3 +1,10 @@
+## [1.1.4] 2025-03-02
+
+### Change
+
+- add branch rename feature
+- update README
+
 ## [1.1.3] 2025-03-01
 
 ### Change
