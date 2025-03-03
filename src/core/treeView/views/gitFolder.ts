@@ -7,6 +7,7 @@ import throttle from 'lodash-es/throttle';
 import debounce from 'lodash-es/debounce';
 import { treeDataEvent, updateFolderEvent, globalStateEvent, toggleGitFolderViewAsEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
+import { Config } from '@/core/config/setting';
 import logger from '@/core/log/logger';
 
 type CommonWorktreeItem = GitFolderItem | WorktreeItem;
@@ -96,7 +97,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         }
 
         try {
-            const skipRemote = false;
+            const skipRemote = !Config.get('treeView.showFetchInTreeItem', true);
             const data = await getWorktreeList(path, skipRemote);
             this.worktreeCache.set(path, { timestamp: now, data });
             return data;

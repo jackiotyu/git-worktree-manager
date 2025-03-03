@@ -4,6 +4,7 @@ import { TreeItemKind, ViewId } from '@/constants';
 import { treeDataEvent, updateTreeDataEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { WorkspaceState } from '@/core/state';
+import { Config } from '@/core/config/setting';
 import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
 import { IWorktreeDetail } from '@/types';
@@ -45,7 +46,7 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
     }
 
     private async getWorktreeListWithCache(path: string): Promise<IWorktreeDetail[]> {
-        const skipRemote = false;
+        const skipRemote = !Config.get('treeView.showFetchInTreeItem', true);
         const data = await getWorktreeList(path, skipRemote);
         return data;
     }

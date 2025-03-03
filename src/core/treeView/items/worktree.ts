@@ -36,9 +36,7 @@ export class WorktreeItem extends vscode.TreeItem {
     }
 
     private setProperties(item: IWorktreeDetail, parent?: GitFolderItem | WorkspaceMainGitFolderItem) {
-        this.description = `${item.isMain ? '✨ ' : ''}${item.ahead ? `${item.ahead}↑ ` : ''}${
-            item.behind ? `${item.behind}↓ ` : ''
-        }${item.path}`;
+        this.setDescription(item);
         this.parent = parent;
         this.id = item.path;
         this.path = item.path;
@@ -46,6 +44,13 @@ export class WorktreeItem extends vscode.TreeItem {
         this.remoteRef = item.remoteRef;
         this.remote = item.remote;
         this.isBranch = item.isBranch;
+    }
+
+    private setDescription(item: IWorktreeDetail) {
+        const aheadText = item.ahead ? `${item.ahead}↑ ` : '';
+        const behindText = item.behind ? `${item.behind}↓` : '';
+        const mainTag = item.isMain ? '✨ ' : '';
+        this.description = `${mainTag}${aheadText}${behindText}${item.path}`;
     }
 
     private setCommand(item: IWorktreeDetail) {

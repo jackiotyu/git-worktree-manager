@@ -3,7 +3,7 @@ import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { getFolderIcon } from '@/core/util/folder';
 
 export const switchWorktreeCmd = async () => {
-    let workTrees = await getWorktreeList();
+    let workTrees = await getWorktreeList('', true);
     const items: vscode.QuickPickItem[] = workTrees.map((item) => {
         return {
             label: item.name,
