@@ -110,5 +110,7 @@
     "Failed to delete branch ( {0} ), {1}": "ブランチ ( {0} ) の削除に失敗しました、{1}",
     "Failed to copy files: {error}": "ファイルのコピーに失敗しました: {error}",
     "Rename branch": "ブランチの名前を変更",
-    "Deleting branch {branch}": "ブランチ {branch} を削除中"
+    "Deleting branch {branch}": "ブランチ {branch} を削除中",
+    "Creating worktree {path}": "ワークツリー {path} を作成中",
+    "Deleting worktree {path}": "ワークツリー {path} を削除中"
 }

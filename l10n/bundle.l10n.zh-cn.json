@@ -123,5 +123,7 @@
     "Failed to delete branch ( {0} ), {1}": "删除分支 ( {0} ) 失败, {1}",
     "Failed to copy files: {error}": "复制文件失败: {error}",
     "Rename branch": "重命名分支",
-    "Deleting branch {branch}": "删除分支 {branch}"
+    "Deleting branch {branch}": "正在删除分支 {branch}",
+    "Creating worktree {path}": "正在创建 worktree {path}",
+    "Deleting worktree {path}": "正在删除 worktree {path}"
 }

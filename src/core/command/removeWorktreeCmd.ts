@@ -8,11 +8,14 @@ import { confirmModal } from '@/core/ui/modal';
 import { Alert } from '@/core/ui/message';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
+import { actionProgressWrapper } from '@/core/ui/progress';
+import { withResolvers } from '@/core/util/promise';
 import { IBranchForWorktree } from '@/types';
 
 export const removeWorktreeCmd = async (item?: { path: string }) => {
     if (!item || !item.path) return;
     const worktreePath = item.path;
+    const { promise, resolve } = withResolvers<void>();
     try {
         const confirm = await confirmModal(
             vscode.l10n.t('Delete worktree'),
@@ -28,8 +31,9 @@ export const removeWorktreeCmd = async (item?: { path: string }) => {
         if(needDeleteBranch) {
             [branchName, mainFolder] = await Promise.all([getCurrentBranch(worktreePath), getMainFolder(worktreePath)]).catch(() => ['', '']);
         }
-
+        actionProgressWrapper(vscode.l10n.t('Deleting worktree {path}', { path: worktreePath }), () => promise, () => {});
         await removeWorktree(worktreePath, worktreePath);
+        resolve();
         Alert.showInformationMessage(vscode.l10n.t('Successfully deleted the worktree for the {0} folder', worktreePath));
         vscode.commands.executeCommand(Commands.refreshWorktree);
 
@@ -38,6 +42,7 @@ export const removeWorktreeCmd = async (item?: { path: string }) => {
         const branchInfo: IBranchForWorktree = { branch: branchName, mainFolder };
         await vscode.commands.executeCommand(Commands.deleteBranch, branchInfo);
     } catch (error) {
+        resolve();
         Alert.showErrorMessage(vscode.l10n.t('Worktree removal failed\n\n {0}', String(error)));
         logger.error(error);
     }

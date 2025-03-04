@@ -3,6 +3,8 @@ import { addWorktree } from '@/core/git/addWorktree';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { confirmModal } from '@/core/ui/modal';
 import { copyWorktreeFiles } from '@/core/util/copyWorktreeFiles';
+import { actionProgressWrapper } from '@/core/ui/progress';
+import { withResolvers } from '@/core/util/promise';
 import type { ICreateWorktreeInfo } from '@/types';
 
 export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
@@ -14,8 +16,13 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     if (!confirmCreate) {
         return;
     }
+
+    const { promise, resolve } = withResolvers<void>();
+    actionProgressWrapper(vscode.l10n.t('Creating worktree {path}', { path: folderPath }), () => promise, () => {});
+
     let created = await addWorktree(folderPath, name, isBranch, cwd);
     if (!created) {
+        resolve();
         return;
     }
 
@@ -24,6 +31,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     if (mainFolder) {
         await copyWorktreeFiles(mainFolder, folderPath);
     }
+    resolve();
 
     let confirmOpen = await confirmModal(
         vscode.l10n.t('Open folder'),
