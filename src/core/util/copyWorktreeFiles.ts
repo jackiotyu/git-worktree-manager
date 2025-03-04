@@ -7,15 +7,15 @@ import { Config } from '@/core/config/setting';
 
 export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: string) {
     try {
-        const patterns = Config.get('worktreeCopyPatterns', []);
-        const ignorePatterns = Config.get('worktreeCopyIgnores', []);
+        const patterns = Config.get('worktreeCopyPatterns', []).filter(i => i);
+        const ignorePatterns = Config.get('worktreeCopyIgnores', []).filter(i => i);
 
         if (patterns.length === 0) return;
 
         // Find matching files
         const files = await vscode.workspace.findFiles(
             new vscode.RelativePattern(sourceRepo, `{${patterns.join(',')}}`),
-            `{${ignorePatterns.join(',')}}`,
+            ignorePatterns.length > 0 ? `{${ignorePatterns.join(',')}}` : null,
         );
 
         // Copy the found files
