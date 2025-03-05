@@ -11,31 +11,42 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     const { folderPath, name, label, isBranch, cwd } = info;
     let confirmCreate = await confirmModal(
         vscode.l10n.t('Create worktree'),
-        vscode.l10n.t('A worktree with {1} {2} is created under {0}', folderPath, label, name),
+        vscode.l10n.t('A worktree with {1} {2} is created under {0}', folderPath, label, name)
     );
     if (!confirmCreate) {
         return;
     }
 
-    const { promise, resolve } = withResolvers<void>();
-    actionProgressWrapper(vscode.l10n.t('Creating worktree {path}', { path: folderPath }), () => promise, () => {});
-
+    const waitingCreate = withResolvers<void>();
+    actionProgressWrapper(
+        vscode.l10n.t('Creating worktree {path}', { path: folderPath }),
+        () => waitingCreate.promise,
+        () => {}
+    );
     let created = await addWorktree(folderPath, name, isBranch, cwd);
+    waitingCreate.resolve();
     if (!created) {
-        resolve();
         return;
     }
 
     const mainFolder = await getMainFolder(folderPath);
     // Copy files after worktree creation is successful
     if (mainFolder) {
-        await copyWorktreeFiles(mainFolder, folderPath);
+        const waitingCopy = withResolvers<void>();
+        const token = new vscode.CancellationTokenSource();
+        actionProgressWrapper(
+            vscode.l10n.t('Copying files to worktree {path}', { path: folderPath }),
+            () => waitingCopy.promise,
+            () => {},
+            token
+        );
+        await copyWorktreeFiles(mainFolder, folderPath, token.token);
+        waitingCopy.resolve();
     }
-    resolve();
 
     let confirmOpen = await confirmModal(
         vscode.l10n.t('Open folder'),
-        vscode.l10n.t('Whether to open the new worktree in a new window?'),
+        vscode.l10n.t('Whether to open the new worktree in a new window?')
     );
     if (!confirmOpen) {
         return;

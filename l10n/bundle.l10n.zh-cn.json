@@ -125,5 +125,6 @@
     "Rename branch": "重命名分支",
     "Deleting branch {branch}": "正在删除分支 {branch}",
     "Creating worktree {path}": "正在创建 worktree {path}",
+    "Copying files to worktree {path}": "正在复制文件到 worktree {path}",
     "Deleting worktree {path}": "正在删除 worktree {path}"
 }
