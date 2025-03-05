@@ -1,3 +1,10 @@
+## [1.1.5] 2025-03-05
+
+### Change
+
+- support cancellation of worktree file copying
+- add worktree creation and deletion progress
+
 ## [1.1.4] 2025-03-02
 
 ### Change
