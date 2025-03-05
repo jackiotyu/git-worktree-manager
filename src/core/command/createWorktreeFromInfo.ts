@@ -32,16 +32,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     const mainFolder = await getMainFolder(folderPath);
     // Copy files after worktree creation is successful
     if (mainFolder) {
-        const waitingCopy = withResolvers<void>();
-        const token = new vscode.CancellationTokenSource();
-        actionProgressWrapper(
-            vscode.l10n.t('Copying files to worktree {path}', { path: folderPath }),
-            () => waitingCopy.promise,
-            () => {},
-            token
-        );
-        await copyWorktreeFiles(mainFolder, folderPath, token.token);
-        waitingCopy.resolve();
+        await copyWorktreeFiles(mainFolder, folderPath);
     }
 
     let confirmOpen = await confirmModal(
