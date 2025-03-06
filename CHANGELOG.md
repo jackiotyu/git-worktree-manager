@@ -1,3 +1,9 @@
+## [1.1.6] 2025-03-06
+
+### Change
+
+- add force delete option for worktree removal
+
 ## [1.1.5] 2025-03-05
 
 ### Change
