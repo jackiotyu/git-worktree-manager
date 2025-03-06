@@ -113,5 +113,6 @@
     "Deleting branch {branch}": "正在刪除分支 {branch}",
     "Creating worktree {path}": "正在建立 worktree {path}",
     "Copying files to worktree {path}": "正在複製檔案到 worktree {path}",
-    "Deleting worktree {path}": "正在刪除 worktree {path}"
+    "Deleting worktree {path}": "正在刪除 worktree {path}",
+    "Force delete": "強制刪除"
 }
