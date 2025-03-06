@@ -15,6 +15,8 @@
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
+如果这个插件帮到了你，请点个 [star ⭐](https://github.com/jackiotyu/git-worktree-manager) 吧
+
 ### 为何需要 Git Worktree Manager?
 1. **在多个分支间切换可能非常繁琐，容易导致冲突或遗忘提交。Git Worktree Manager 帮助开发者在不同工作目录间快速切换，简化分支管理。**
 

@@ -15,6 +15,8 @@ Seamlessly switch between branches, keep your code organized, and run code acros
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
+If you enjoy this extension, consider giving it a [star ⭐](https://github.com/jackiotyu/git-worktree-manager) and sharing it on social platforms like [X.com](https://x.com/intent/post?text=Check%20out%20this%20awesome%20VSCode%20extension%20for%20managing%20Git%20worktrees!!%20https%3A%2F%2Fgithub.com%2Fjackiotyu%2Fgit-worktree-manager)—it really helps!
+
 ### Why Git Worktree Manager?
 1. **Switching between multiple branches can be cumbersome and may lead to conflicts or forgotten commits. Git Worktree Manager helps developers quickly switch between different working directories, simplifying branch management**
 
