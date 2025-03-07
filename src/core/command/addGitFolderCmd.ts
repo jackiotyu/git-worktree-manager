@@ -41,10 +41,12 @@ const addSingleGitFolder = async () => {
 
 export const addGitFolderCmd = async () => {
     const multiLabel = vscode.l10n.t('Multiple repositories');
+    const multiTips = vscode.l10n.t('Please select the root directory of multiple git repositories');
     const singleLabel = vscode.l10n.t('Single repository');
+    const singleTips = vscode.l10n.t('Select git repository for create worktree');
     let options: vscode.QuickPickItem[] = [
-        { label: multiLabel, iconPath: new vscode.ThemeIcon('checklist') },
-        { label: singleLabel, iconPath: new vscode.ThemeIcon('repo') },
+        { label: multiLabel, iconPath: new vscode.ThemeIcon('checklist'), description: multiTips },
+        { label: singleLabel, iconPath: new vscode.ThemeIcon('repo'), description: singleTips },
     ];
     let selected = await vscode.window.showQuickPick(options, {
         canPickMany: false,
