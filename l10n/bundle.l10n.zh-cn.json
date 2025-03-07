@@ -127,5 +127,7 @@
     "Creating worktree {path}": "正在创建 worktree {path}",
     "Copying files to worktree {path}": "正在复制文件到 worktree {path}",
     "Deleting worktree {path}": "正在删除 worktree {path}",
-    "Force delete": "强制删除"
+    "Force delete": "强制删除",
+    "Searching folders": "正在搜索文件夹",
+    "Loading...": "正在加载..."
 }

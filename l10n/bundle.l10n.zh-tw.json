@@ -114,5 +114,7 @@
     "Creating worktree {path}": "正在建立 worktree {path}",
     "Copying files to worktree {path}": "正在複製檔案到 worktree {path}",
     "Deleting worktree {path}": "正在刪除 worktree {path}",
-    "Force delete": "強制刪除"
+    "Force delete": "強制刪除",
+    "Searching folders": "正在搜尋資料夾",
+    "Loading...": "載入中..."
 }

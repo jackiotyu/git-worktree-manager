@@ -114,5 +114,7 @@
     "Creating worktree {path}": "ワークツリー {path} を作成中",
     "Copying files to worktree {path}": "ファイルをワークツリー {path} にコピー中",
     "Deleting worktree {path}": "ワークツリー {path} を削除中",
-    "Force delete": "強制削除"
+    "Force delete": "強制削除",
+    "Searching folders": "フォルダを検索中",
+    "Loading...": "ロード中..."
 }
