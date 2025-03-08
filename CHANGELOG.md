@@ -1,3 +1,10 @@
+## [1.1.7] 2025-03-08
+
+### Change
+
+- implement git repository backup functionality
+- add progress indicator for folder search
+
 ## [1.1.6] 2025-03-06
 
 ### Change
