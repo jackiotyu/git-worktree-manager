@@ -11,7 +11,7 @@
 English | [简体中文](./README.zh-CN.md)
 
 <!-- ABOUT THE PROJECT -->
-Seamlessly switch between branches, keep your code organized, and run code across multiple directories—simplifying your workflow.  
+Seamlessly switch between branches, keep your code organized, and run code across multiple directories—simplifying your workflow.
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
@@ -61,8 +61,8 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 <!-- GETTING STARTED -->
 ## Getting Started
 
-1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).  
-1. Press `Ctrl + Shift + R` to start.  
+1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
+1. Press `Ctrl + Shift + R` to start.
 
 ## Requirements
 
@@ -159,7 +159,7 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 - [x] Copy untracked files from the main repository when creating a worktree. (#16)
 - [ ] Git repository snapshot.
 - [ ] Multi-language Support.
-    - [x] Chinese.
+    - [x] Simplified Chinese
     - [x] Traditional Chinese
     - [x] Japanese
 
