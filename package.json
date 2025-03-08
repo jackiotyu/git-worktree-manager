@@ -263,6 +263,11 @@
         "command": "git-worktree-manager.openSetting",
         "title": "%cmd.openSetting%",
         "icon": "$(gear)"
+      },
+      {
+        "command": "git-worktree-manager.bundleRepo",
+        "title": "%cmd.backupRepo%",
+        "icon": "$(archive)"
       }
     ],
     "keybindings": [
@@ -504,6 +509,11 @@
           "group": "inline@2"
         },
         {
+          "command": "git-worktree-manager.bundleRepo",
+          "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
+          "group": "inline@4"
+        },
+        {
           "command": "git-worktree-manager.removeGitFolder",
           "when": "viewItem =~ /git-worktree-manager.gitFolderItem/",
           "group": "inline@100"
@@ -709,6 +719,10 @@
         {
           "command": "git-worktree-manager.deleteBranch",
           "when": "false"
+        },
+        {
+            "command": "git-worktree-manager.bundleRepo",
+            "when": "false"
         }
       ]
     },

@@ -39,6 +39,7 @@
     "cmd.openRepository": "在源代码管理中打开该仓库",
     "cmd.deleteBranch": "删除分支",
     "cmd.openSetting": "打开设置",
+    "cmd.backupRepo": "备份仓库",
     "activitybar.git-worktree-manager": "Git Worktree Manager",
     "view.git-worktree-manager-list": "worktree 列表",
     "view.git-worktree-manager-folders": "git 仓库管理",

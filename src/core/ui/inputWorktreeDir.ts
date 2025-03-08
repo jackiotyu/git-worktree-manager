@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import path from 'path';
 import { checkExist, isDirEmpty } from '@/core/util/file';
-import { comparePath } from '@/core/util/folder';
+import { comparePath, getBaseWorktreeDir } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
 import { withResolvers } from '@/core/util/promise';
 
@@ -24,9 +24,6 @@ const verifySameDir = (dir: string, baseDir: string) => {
     }
     return false;
 };
-
-// 暂时写死主文件夹加.worktree后缀
-const getBaseWorktreeDir = (baseDir: string) => `${baseDir}.worktree`;
 
 interface InputWorktreeDirOptions {
     baseDir: string;

@@ -116,5 +116,7 @@
     "Deleting worktree {path}": "ワークツリー {path} を削除中",
     "Force delete": "強制削除",
     "Searching folders": "フォルダを検索中",
-    "Loading...": "ロード中..."
+    "Loading...": "ロード中...",
+    "Bundling repo..., {path}": "リポジトリをバンドル中..., {path}",
+    "Repository backup successful: {path}": "リポジトリのバックアップに成功しました: {path}"
 }

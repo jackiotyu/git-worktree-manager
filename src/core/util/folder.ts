@@ -29,3 +29,8 @@ export function getGitFolderByUri(uri: vscode.Uri) {
     const repoPath = path.dirname(`${uri.fsPath.split('.git')[0]}.git`);
     return repoPath;
 }
+
+// 暂时写死主文件夹加.worktree后缀
+export const getBaseWorktreeDir = (baseDir: string) => `${baseDir}.worktree`;
+
+export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;

@@ -39,6 +39,7 @@
     "cmd.openRepository": "ソース管理ビューでリポジトリを開く",
     "cmd.deleteBranch": "ブランチを削除",
     "cmd.openSetting": "設定を開く",
+    "cmd.backupRepo": "リポジトリをバックアップ",
     "activitybar.git-worktree-manager": "Git Worktree Manager",
     "view.git-worktree-manager-list": "ワークツリー一覧",
     "view.git-worktree-manager-folders": "Gitリポジトリ管理",

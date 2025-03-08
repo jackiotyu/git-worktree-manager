@@ -48,6 +48,7 @@ export enum Commands {
     toggleLog = 'git-worktree-manager.toggleLog',
     openRepository = 'git-worktree-manager.openRepository',
     openChanges = 'git-worktree-manager.openChanges',
+    bundleRepo = 'git-worktree-manager.bundleRepo',
 
     renameBranch = 'git-worktree-manager.internal.renameBranch',
     refreshWorktreeCache = 'git-worktree-manager.internal.refreshWorktreeCache',

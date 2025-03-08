@@ -39,6 +39,7 @@
     "cmd.openRepository": "Open the repository in Source Control view",
     "cmd.deleteBranch": "Delete branch",
     "cmd.openSetting": "Open Settings",
+    "cmd.backupRepo": "Backup repository",
     "activitybar.git-worktree-manager": "Git Worktree Manager",
     "view.git-worktree-manager-list": "worktree list",
     "view.git-worktree-manager-folders": "git repository manage",

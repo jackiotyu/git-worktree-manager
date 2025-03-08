@@ -116,5 +116,7 @@
     "Deleting worktree {path}": "正在刪除 worktree {path}",
     "Force delete": "強制刪除",
     "Searching folders": "正在搜尋資料夾",
-    "Loading...": "載入中..."
+    "Loading...": "載入中...",
+    "Bundling repo..., {path}": "組合儲存庫..., {path}",
+    "Repository backup successful: {path}": "儲存庫備份成功: {path}"
 }

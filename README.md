@@ -157,7 +157,7 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 - [x] Quick add/remove worktree in workspace.
 - [x] Create new branches while creating worktree or switching branch. (#14)
 - [x] Copy untracked files from the main repository when creating a worktree. (#16)
-- [ ] Git repository snapshot.
+- [x] Git repository snapshot (backup).
 - [ ] Multi-language Support.
     - [x] Simplified Chinese
     - [x] Traditional Chinese

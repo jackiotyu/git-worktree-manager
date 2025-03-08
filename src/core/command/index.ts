@@ -44,6 +44,7 @@ import { addRootsToRepoCmd } from '@/core/command/addRootsToRepoCmd';
 import { refreshWorktreeCacheCmd } from '@/core/command/refreshWorktreeCacheCmd';
 import { deleteBranchCmd } from '@/core/command/deleteBranchCmd';
 import { renameBranchCmd } from '@/core/command/renameBranchCmd';
+import { bundleRepoCmd } from '@/core/command/bundleRepoCmd';
 import { Commands } from '@/constants';
 import { AllViewItem } from '@/core/treeView/items';
 
@@ -111,5 +112,6 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.refreshWorktreeCache, refreshWorktreeCacheCmd),
         registerCommand(Commands.deleteBranch, deleteBranchCmd),
         registerCommand(Commands.renameBranch, renameBranchCmd),
+        registerCommand(Commands.bundleRepo, bundleRepoCmd),
     );
 }
