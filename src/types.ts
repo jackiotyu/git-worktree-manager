@@ -29,8 +29,12 @@ export interface IWorktreeOutputItem {
     branch?: string;
 }
 
-export interface IWorktreeCacheItem extends IWorktreeDetail {
+export interface IWorktreeCacheItem {
     label: string;
+    path: string;
+    name: string;
+    isMain: boolean;
+    mainFolder: string;
 }
 
 export interface IRecentFolder {
