@@ -1,3 +1,10 @@
+## [1.1.8] 2025-03-12
+
+### Change
+
+- Improve worktree view performance.
+- Support bare repository.
+
 ## [1.1.7] 2025-03-08
 
 ### Change
