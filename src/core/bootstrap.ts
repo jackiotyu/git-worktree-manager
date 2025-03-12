@@ -46,7 +46,7 @@ const setupCacheEvents = (context: vscode.ExtensionContext) => {
 };
 
 const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
-    const worktreeChangeHanlder = worktreeChangeEvent.event((uri) => {
+    const worktreeChangeHandler = worktreeChangeEvent.event((uri) => {
         // 精确到指定仓库
         const repoPath = getGitFolderByUri(uri);
         updateWorktreeCacheEvent.fire(repoPath);
@@ -61,8 +61,8 @@ const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
             { trailing: true, leading: true },
         ),
     );
-    const workspaceFoldersHanlder = vscode.workspace.onDidChangeWorkspaceFolders(checkRoots);
-    const stateChangeHanlder = globalStateEvent.event((key) => {
+    const workspaceFoldersHandler = vscode.workspace.onDidChangeWorkspaceFolders(checkRoots);
+    const stateChangeHandler = globalStateEvent.event((key) => {
         if (key === 'gitFolders') {
             updateAddDirsContext();
             checkRoots();
@@ -72,10 +72,10 @@ const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
         vscode.commands.executeCommand(e.focused ? Commands.watchWorktreeEvent : Commands.unwatchWorktreeEvent);
     });
     context.subscriptions.push(
-        worktreeChangeHanlder,
+        worktreeChangeHandler,
         updateHandler,
-        workspaceFoldersHanlder,
-        stateChangeHanlder,
+        workspaceFoldersHandler,
+        stateChangeHandler,
         windowStateHandler,
     );
 };
