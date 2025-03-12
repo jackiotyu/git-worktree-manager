@@ -24,8 +24,8 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     private data: IFolderItemConfig[] = [];
     private viewAsTree: boolean = true;
     private worktreeCache: Map<string, WorktreeCache> = new Map();
-    private _onDidChangeTreeData = new vscode.EventEmitter<GitFolderItem | void>();
-    public readonly onDidChangeTreeData: vscode.Event<GitFolderItem | void> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData = new vscode.EventEmitter<GitFolderItem | WorktreeItem | void>();
+    public readonly onDidChangeTreeData: vscode.Event<GitFolderItem | WorktreeItem | void> = this._onDidChangeTreeData.event;
 
     constructor(context: vscode.ExtensionContext) {
         this.refresh = throttle(this.refresh, GitFoldersDataProvider.refreshThrottle, { 
@@ -76,6 +76,10 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         });
     }
 
+    update(item: GitFolderItem | WorktreeItem | void) {
+        this._onDidChangeTreeData.fire(item);
+    }
+
     private refresh = () => {
         try {
             this.data = GlobalState.get('gitFolders', []);
@@ -96,8 +100,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         }
 
         try {
-            const skipRemote = false;
-            const data = await getWorktreeList(path, skipRemote);
+            const data = await getWorktreeList(path);
             this.worktreeCache.set(path, { timestamp: now, data });
             return data;
         } catch (error) {

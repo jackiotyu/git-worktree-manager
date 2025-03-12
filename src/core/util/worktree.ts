@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { IWorktreeDetail } from '@/types';
+import { AheadBehindInfo } from '@/types';
 import { WORK_TREE_SCHEME } from '@/constants';
 
-export const getWorktreeStatus = (item: IWorktreeDetail) => {
+export const getWorktreeStatus = (item: AheadBehindInfo) => {
     if (item.ahead && item.behind) return 'diverged';
     if (item.ahead) return 'ahead';
     if (item.behind) return 'behind';

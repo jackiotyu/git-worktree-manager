@@ -2,61 +2,82 @@ import * as vscode from 'vscode';
 import { TreeItemKind, WORK_TREE_SCHEME } from '@/constants';
 import { judgeIncludeFolder, getFolderIcon } from '@/core/util/folder';
 import { getWorktreeStatus } from '@/core/util/worktree';
+import { getAheadBehindCommitCount } from '@/core/git/getAheadBehindCommitCount';
+import { getUpstream } from '@/core/git/getUpstream';
 import { IWorktreeDetail } from '@/types';
 import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
+import { TreeViewManager } from '@/core/treeView/treeViewManager';
+import { parseUpstream } from '@/core/util/ref';
 
 export class WorktreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon = new vscode.ThemeIcon('folder');
     path: string = '';
     name: string = '';
     readonly type = TreeItemKind.worktree;
-    parent?: GitFolderItem | WorkspaceMainGitFolderItem;
-    remoteRef?: string;
+    upstream: string = '';
     remote?: string;
+    remoteRef?: string;
     isBranch?: boolean;
+    private ahead?: number;
+    private behind?: number;
+    private isCurrent: boolean = false;
+    private updatedAheadBehind: boolean = false;
 
     constructor(
-        item: IWorktreeDetail,
+        private item: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
-        parent?: GitFolderItem | WorkspaceMainGitFolderItem
+        public parent?: GitFolderItem | WorkspaceMainGitFolderItem
     ) {
         super(WorktreeItem.generateLabel(item), collapsible);
-        const isCurrent = judgeIncludeFolder(item.path);
-        this.setProperties(item, parent);
-        this.setTooltip(item, isCurrent);
-        this.setCommand(item);
-        this.setIcon(item, isCurrent);
-        this.setContextValue(item);
-        this.setResourceUri(item);
+        this.isCurrent = judgeIncludeFolder(item.path);
+
+        this.setProperties();
+        this.initUpstreamInfo();
+        this.init();
+    }
+
+    init() {
+        this.setDescription();
+        this.setTooltip();
+        this.setCommand();
+        this.setIcon();
+        this.setContextValue();
+        this.setResourceUri();
     }
 
     private static generateLabel(item: IWorktreeDetail): string {
         return item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
     }
 
-    private setProperties(item: IWorktreeDetail, parent?: GitFolderItem | WorkspaceMainGitFolderItem) {
-        this.description = `${item.isMain ? '✨ ' : ''}${item.ahead ? `${item.ahead}↑ ` : ''}${
-            item.behind ? `${item.behind}↓ ` : ''
-        }${item.path}`;
-        this.parent = parent;
+    private setProperties() {
+        const item = this.item;
         this.id = item.path;
         this.path = item.path;
         this.name = item.name;
-        this.remoteRef = item.remoteRef;
-        this.remote = item.remote;
         this.isBranch = item.isBranch;
     }
 
-    private setCommand(item: IWorktreeDetail) {
+    private setDescription() {
+        let descriptionList = [];
+        if (this.item.isMain) descriptionList.push('✨ ');
+        if (this.ahead) descriptionList.push(`${this.ahead}↑ `);
+        if (this.behind) descriptionList.push(`${this.behind}↓ `);
+        descriptionList.push(this.item.path);
+        this.description = descriptionList.join('');
+    }
+
+    private setCommand() {
         this.command = {
             title: 'open worktree',
             command: 'vscode.openFolder',
-            arguments: [vscode.Uri.file(item.path), { forceNewWindow: true }],
+            arguments: [vscode.Uri.file(this.item.path), { forceNewWindow: true }],
         };
     }
 
-    private setIcon(item: IWorktreeDetail, isCurrent: boolean) {
+    private setIcon() {
+        const item = this.item;
+        const isCurrent = this.isCurrent;
         const themeColor = isCurrent ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
         switch (true) {
             case item.prunable:
@@ -71,19 +92,22 @@ export class WorktreeItem extends vscode.TreeItem {
         }
     }
 
-    private setContextValue(item: IWorktreeDetail) {
+    private setContextValue() {
+        const item = this.item;
         const lockPost = (!item.isMain && (item.locked ? '.lock' : '.unlock')) || '';
         const mainPost = item.isMain ? '.main' : '';
         const currentPost = judgeIncludeFolder(item.path) ? '.current' : '';
-        const aheadPost = item.ahead ? '.ahead' : '';
-        const behindPost = item.behind ? '.behind' : '';
-        const fetchPost = item.remote && item.remoteRef ? '.fetch' : '';
+        const aheadPost = this.ahead ? '.ahead' : '';
+        const behindPost = this.behind ? '.behind' : '';
+        const fetchPost = this.upstream ? '.fetch' : '';
         const notBare = item.isBare ? '' : '.notBare';
         // TODO 手动获取ahead/behind
         this.contextValue = `git-worktree-manager.worktreeItem${notBare}${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}${fetchPost}`;
     }
 
-    private setTooltip(item: IWorktreeDetail, isCurrent: boolean) {
+    private setTooltip() {
+        const item = this.item;
+        const isCurrent = this.isCurrent;
         const tooltip = new vscode.MarkdownString('', true);
         tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
 
@@ -108,16 +132,49 @@ export class WorktreeItem extends vscode.TreeItem {
             tooltip.appendMarkdown(vscode.l10n.t('$(lock) The worktree is locked to prevent accidental purging\n\n'));
         item.isMain &&
             tooltip.appendMarkdown(vscode.l10n.t('✨ Worktree main folder, cannot be cleared and locked\n\n'));
-        item.ahead && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${item.ahead}`));
-        item.behind && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${item.behind}`));
+        this.ahead && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${this.ahead}`));
+        this.behind && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${this.behind}`));
         !isCurrent && tooltip.appendMarkdown(vscode.l10n.t('*Click to open new window for this worktree*\n\n'));
 
         this.tooltip = tooltip;
     }
 
-    private setResourceUri(item: IWorktreeDetail) {
-        if (item.isBranch) {
-            this.resourceUri = vscode.Uri.parse(`${WORK_TREE_SCHEME}://status/worktree/${getWorktreeStatus(item)}`);
+    private async initUpstreamInfo() {
+        try {
+            if (this.updatedAheadBehind) return;
+            this.updatedAheadBehind = true;
+
+            const item = this.item;
+    
+            if (item.isBare) return;
+            if (!item.isBranch) return;
+    
+            await new Promise((r) => setTimeout(r, 200));
+            this.upstream = await getUpstream(item.path);
+
+            const { branch, remote } = parseUpstream(this.upstream);
+            this.remote = remote;
+            this.remoteRef = branch;
+            
+            const aheadBehind = await getAheadBehindCommitCount(item.name, `refs/remotes/${this.upstream}`, item.path);
+    
+            this.ahead = aheadBehind?.ahead;
+            this.behind = aheadBehind?.behind;
+    
+            this.init();
+    
+            TreeViewManager.refreshWorktreeView(this);
+            TreeViewManager.refreshGitFolderView(this);
+        } finally {
+            this.updatedAheadBehind = false;
+        }
+    }
+
+    private setResourceUri() {
+        if (this.item.isBranch) {
+            this.resourceUri = vscode.Uri.parse(
+                `${WORK_TREE_SCHEME}://status/worktree/${getWorktreeStatus({ ahead: this.ahead, behind: this.behind })}`
+            );
         }
     }
 }

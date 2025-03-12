@@ -2,18 +2,24 @@ import * as vscode from 'vscode';
 import { GitFoldersDataProvider, RecentFoldersDataProvider, WorktreeDataProvider, SettingDataProvider } from '@/core/treeView/views';
 import { TreeItemKind } from '@/constants';
 import { revealTreeItemEvent } from '@/core/event/events';
+import { GitFolderItem, WorktreeItem, WorkspaceMainGitFolderItem } from '@/core/treeView/items';
 
 export class TreeViewManager {
+    private static worktreeData?: WorktreeDataProvider;
+    private static gitFolderData?: GitFoldersDataProvider;
+
     static register (context: vscode.ExtensionContext) {
         const settingView = vscode.window.createTreeView(SettingDataProvider.id, {
             treeDataProvider: new SettingDataProvider(),
         });
+        this.worktreeData = new WorktreeDataProvider(context);
         const worktreeView = vscode.window.createTreeView(WorktreeDataProvider.id, {
-            treeDataProvider: new WorktreeDataProvider(context),
+            treeDataProvider: this.worktreeData,
             showCollapseAll: false,
         });
+        this.gitFolderData = new GitFoldersDataProvider(context);
         const gitFolderView = vscode.window.createTreeView(GitFoldersDataProvider.id, {
-            treeDataProvider: new GitFoldersDataProvider(context),
+            treeDataProvider: this.gitFolderData,
             showCollapseAll: true,
         });
         const recentFolderView = vscode.window.createTreeView(RecentFoldersDataProvider.id, {
@@ -40,5 +46,13 @@ export class TreeViewManager {
             gitFolderView,
             recentFolderView,
         );
+    }
+
+    static refreshWorktreeView(item: WorktreeItem) {
+        return this.worktreeData?.update(item);
+    }
+
+    static refreshGitFolderView(item: GitFolderItem | WorktreeItem) {
+        return this.gitFolderData?.update(item);
     }
 }

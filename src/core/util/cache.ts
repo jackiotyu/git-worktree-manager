@@ -8,7 +8,7 @@ import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache, IWorktreeD
 
 export const gitFolderToCache = async (item: IFolderItemConfig): Promise<IWorktreeCacheItem[]> => {
     const worktreeList: [IWorktreeDetail[], IFolderItemConfig][] = [];
-    const list = await getWorktreeList(item.path, true);
+    const list = await getWorktreeList(item.path);
     worktreeList.push([list, item] as const);
     return list.map<IWorktreeCacheItem>((row) => {
         return { ...row, label: item.name };

@@ -15,11 +15,12 @@ export interface IWorktreeDetail {
     locked: boolean;
     isMain: boolean;
     folderName?: string;
+    mainFolder: string;
+}
+
+export interface AheadBehindInfo {
     ahead?: number;
     behind?: number;
-    remoteRef?: string;
-    remote?: string;
-    mainFolder: string;
 }
 
 export interface IWorktreeOutputItem {

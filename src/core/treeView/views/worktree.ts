@@ -40,13 +40,16 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
         );
     }
 
+    update(item: WorkspaceMainGitFolderItem | WorktreeItem | void) {
+        this._onDidChangeTreeData.fire(item);
+    }
+
     refresh() {
         updateTreeDataEvent.fire();
     }
 
     private async getWorktreeListWithCache(path: string): Promise<IWorktreeDetail[]> {
-        const skipRemote = false;
-        const data = await getWorktreeList(path, skipRemote);
+        const data = await getWorktreeList(path);
         return data;
     }
 
