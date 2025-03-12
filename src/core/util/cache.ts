@@ -7,9 +7,7 @@ import { groupBy } from 'lodash-es';
 import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache, IWorktreeDetail } from '@/types';
 
 export const gitFolderToCache = async (item: IFolderItemConfig): Promise<IWorktreeCacheItem[]> => {
-    const worktreeList: [IWorktreeDetail[], IFolderItemConfig][] = [];
     const list = await getWorktreeList(item.path);
-    worktreeList.push([list, item] as const);
     return list.map<IWorktreeCacheItem>((row) => {
         return { ...row, label: item.name };
     });
