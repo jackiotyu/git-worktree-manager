@@ -146,26 +146,26 @@ export class WorktreeItem extends vscode.TreeItem {
             this.updatedAheadBehind = true;
 
             const item = this.item;
-    
+
             if (item.isBare) return;
             if (!item.isBranch) return;
-    
+
             await new Promise((r) => setTimeout(r, 200));
             this.upstream = await getUpstream(item.path);
 
             const { branch, remote } = parseUpstream(this.upstream);
             this.remote = remote;
             this.remoteRef = branch;
-            
+
             const aheadBehind = await getAheadBehindCommitCount(item.name, `refs/remotes/${this.upstream}`, item.path);
-    
+
             this.ahead = aheadBehind?.ahead;
             this.behind = aheadBehind?.behind;
-    
+
             this.init();
-    
-            TreeViewManager.refreshWorktreeView(this);
-            TreeViewManager.refreshGitFolderView(this);
+
+            TreeViewManager.updateWorktreeView(this);
+            TreeViewManager.updateGitFolderView(this);
         } catch (error) {
             logger.error(String(error));
         } finally {

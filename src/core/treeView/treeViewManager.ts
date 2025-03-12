@@ -48,11 +48,11 @@ export class TreeViewManager {
         );
     }
 
-    static refreshWorktreeView(item: WorktreeItem) {
+    static updateWorktreeView(item: WorktreeItem) {
         return this.worktreeData?.update(item);
     }
 
-    static refreshGitFolderView(item: GitFolderItem | WorktreeItem) {
+    static updateGitFolderView(item: GitFolderItem | WorktreeItem) {
         return this.gitFolderData?.update(item);
     }
 }
