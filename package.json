@@ -455,32 +455,32 @@
         },
         {
           "command": "git-worktree-manager.checkoutBranch",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.treeView.showCheckoutInWorktreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.notBare/ && config.git-worktree-manager.treeView.showCheckoutInWorktreeItem",
           "group": "inline@15"
         },
         {
           "command": "git-worktree-manager.openRepository",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && config.git-worktree-manager.treeView.showOpenRepositoryInTreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.notBare/ && config.git-worktree-manager.treeView.showOpenRepositoryInTreeItem",
           "group": "inline@16"
         },
         {
           "command": "git-worktree-manager.lockWorktree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem.unlock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.notBare.unlock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
           "command": "git-worktree-manager.unlockWorktree",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem.lock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.notBare.lock/ && config.git-worktree-manager.treeView.showLockInWorktreeItem",
           "group": "inline@20"
         },
         {
           "command": "git-worktree-manager.checkoutBranch",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.notBare/",
           "group": "git-action"
         },
         {
           "command": "git-worktree-manager.openRepository",
-          "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
+          "when": "viewItem =~ /git-worktree-manager.worktreeItem.notBare/",
           "group": "git-action"
         },
         {

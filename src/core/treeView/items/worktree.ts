@@ -19,7 +19,7 @@ export class WorktreeItem extends vscode.TreeItem {
     constructor(
         item: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
-        parent?: GitFolderItem | WorkspaceMainGitFolderItem,
+        parent?: GitFolderItem | WorkspaceMainGitFolderItem
     ) {
         super(WorktreeItem.generateLabel(item), collapsible);
         const isCurrent = judgeIncludeFolder(item.path);
@@ -72,14 +72,15 @@ export class WorktreeItem extends vscode.TreeItem {
     }
 
     private setContextValue(item: IWorktreeDetail) {
-        let lockPost = (!item.isMain && (item.locked ? '.lock' : '.unlock')) || '';
-        let mainPost = item.isMain ? '.main' : '';
-        let currentPost = judgeIncludeFolder(item.path) ? '.current' : '';
-        let aheadPost = item.ahead ? '.ahead' : '';
-        let behindPost = item.behind ? '.behind' : '';
-        let fetchPost = item.remote && item.remoteRef ? '.fetch' : '';
+        const lockPost = (!item.isMain && (item.locked ? '.lock' : '.unlock')) || '';
+        const mainPost = item.isMain ? '.main' : '';
+        const currentPost = judgeIncludeFolder(item.path) ? '.current' : '';
+        const aheadPost = item.ahead ? '.ahead' : '';
+        const behindPost = item.behind ? '.behind' : '';
+        const fetchPost = item.remote && item.remoteRef ? '.fetch' : '';
+        const notBare = item.isBare ? '' : '.notBare';
         // TODO 手动获取ahead/behind
-        this.contextValue = `git-worktree-manager.worktreeItem${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}${fetchPost}`;
+        this.contextValue = `git-worktree-manager.worktreeItem${notBare}${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}${fetchPost}`;
     }
 
     private setTooltip(item: IWorktreeDetail, isCurrent: boolean) {
@@ -88,7 +89,10 @@ export class WorktreeItem extends vscode.TreeItem {
 
         let sourceIcon = 'git-commit';
         let sourceName = vscode.l10n.t('commit');
-        if (item.isBranch) {
+        if (item.isBare) {
+            sourceIcon = 'repo';
+            sourceName = 'BARE';
+        } else if (item.isBranch) {
             sourceIcon = 'source-control';
             sourceName = vscode.l10n.t('branch');
         } else if (item.isTag) {
@@ -96,8 +100,9 @@ export class WorktreeItem extends vscode.TreeItem {
             sourceName = vscode.l10n.t('tag');
         }
         tooltip.appendMarkdown(`$(${sourceIcon}) ${sourceName}  ${item.name}\n\n`);
-        sourceIcon !== 'git-commit' &&
+        if (sourceIcon !== 'git-commit' && !item.isBare) {
             tooltip.appendMarkdown(`$(git-commit) ${vscode.l10n.t('commit')}  ${item.hash.slice(0, 8)}\n\n`);
+        }
         item.prunable && tooltip.appendMarkdown(vscode.l10n.t('$(error) Detached from the git version\n\n'));
         item.locked &&
             tooltip.appendMarkdown(vscode.l10n.t('$(lock) The worktree is locked to prevent accidental purging\n\n'));

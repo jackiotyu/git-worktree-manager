@@ -88,6 +88,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
 
     let items = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
+        const notBare = !row.isBare;
         const list: { button: vscode.QuickInputButton; show: boolean }[] = [
             {
                 button: openExternalTerminalQuickInputButton,
@@ -103,11 +104,11 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
             },
             {
                 button: Object.assign(copyItemQuickInputButton, { tooltip: copyTooltip }),
-                show: copyItemQuickInputButton.enabled,
+                show: notBare && copyItemQuickInputButton.enabled,
             },
             {
                 button: checkoutBranchQuickInputButton,
-                show: checkoutBranchQuickInputButton.enabled,
+                show: notBare && checkoutBranchQuickInputButton.enabled,
             },
             {
                 button: addToWorkspaceQuickInputButton,
@@ -123,11 +124,11 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
             },
             {
                 button: openRepositoryQuickInputButton,
-                show: openRepositoryQuickInputButton.enabled,
+                show: notBare && openRepositoryQuickInputButton.enabled,
             },
             {
                 button: deleteWorktreeQuickInputButton,
-                show: deleteWorktreeQuickInputButton.enabled,
+                show: notBare && deleteWorktreeQuickInputButton.enabled,
             },
             {
                 button: moreQuickInputButton,
@@ -271,7 +272,7 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.all);
         return;
     }
-    if(event === refreshWorkspaceWorktreeQuickInputButton) {
+    if (event === refreshWorkspaceWorktreeQuickInputButton) {
         vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
         return;
     }
@@ -483,7 +484,7 @@ class ActionService implements IActionService {
 
 let firstOpen = true;
 export const pickWorktree = async (type?: DefaultDisplayList) => {
-    if(firstOpen) vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
+    if (firstOpen) vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
     firstOpen = false;
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();

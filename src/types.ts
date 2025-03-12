@@ -9,6 +9,7 @@ export interface IWorktreeDetail {
     hash: string;
     detached: boolean;
     prunable: boolean;
+    isBare: boolean;
     isBranch: boolean;
     isTag: boolean;
     locked: boolean;
@@ -34,6 +35,7 @@ export interface IWorktreeCacheItem {
     path: string;
     name: string;
     isMain: boolean;
+    isBare: boolean;
     mainFolder: string;
 }
 
