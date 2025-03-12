@@ -12,6 +12,7 @@ import { toSimplePath } from '@/core/util/folder';
 import { updateWorkspaceMainFolders, updateWorkspaceListCache, updateWorktreeCache } from '@/core/util/cache';
 import path from 'path';
 import { debounce } from 'lodash-es';
+import logger from '@/core/log/logger';
 
 export const formatWorkspacePath = (folder: string): string => {
     const baseName = path.basename(folder);
@@ -61,6 +62,8 @@ export const updateAddDirsContext = () => {
         const existFoldersMap = new Map(existFolders.map((i) => [toSimplePath(i.path), true]));
         const gitFolders = distinctFolders.filter((i) => i && !existFoldersMap.has(toSimplePath(i))) as string[];
         if (gitFolders.length) canAdd = true;
+    } catch (error) {
+        logger.error(String(error));
     } finally {
         vscode.commands.executeCommand('setContext', ContextKey.addRootsToRepo, canAdd);
     }

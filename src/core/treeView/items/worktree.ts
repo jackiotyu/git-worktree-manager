@@ -9,6 +9,7 @@ import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { parseUpstream } from '@/core/util/ref';
+import logger from '@/core/log/logger';
 
 export class WorktreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon = new vscode.ThemeIcon('folder');
@@ -165,6 +166,8 @@ export class WorktreeItem extends vscode.TreeItem {
     
             TreeViewManager.refreshWorktreeView(this);
             TreeViewManager.refreshGitFolderView(this);
+        } catch (error) {
+            logger.error(String(error));
         } finally {
             this.updatedAheadBehind = false;
         }
