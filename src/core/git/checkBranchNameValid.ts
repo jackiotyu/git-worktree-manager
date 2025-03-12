@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import { execAuto } from '@/core/git/exec';
 
 export async function checkBranchNameValid(cwd: string, branchName: string) {
