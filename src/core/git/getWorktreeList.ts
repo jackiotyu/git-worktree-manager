@@ -29,13 +29,22 @@ function parseWorktreeOutput(output: string): IWorktreeOutputItem[] {
         });
 }
 
+function checkIsTag(nameRev: string) {
+    return Boolean(
+        nameRev &&
+            /^tags\/[^~]+/.test(nameRev) &&
+            // 排除 tags/xxx-<数字>-g<哈希>
+            !/^tags\/.+-\d+-g[0-9a-f]{7}$/.test(nameRev)
+    );
+}
+
 async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string): Promise<IWorktreeDetail> {
     const branchName = item.branch?.replace('refs/heads/', '') || '';
 
     let nameRev = '';
-    if (!branchName) nameRev = await getNameRev(item.worktree);
+    if (!branchName) nameRev = (await getNameRev(item.worktree)).trim();
 
-    const isTag = Boolean(nameRev && /^tags\/[^~]+/.test(nameRev));
+    const isTag = checkIsTag(nameRev);
     const isBare = Reflect.has(item, 'bare');
     const locked = Reflect.has(item, 'locked');
     const isMain = item.worktree.trim() === mainFolder;
