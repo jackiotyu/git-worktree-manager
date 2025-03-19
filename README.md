@@ -62,7 +62,7 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 ## Getting Started
 
 1. Install the extension from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
-1. Press `Ctrl + Shift + R` to start.
+1. Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> to start.
 
 ## Requirements
 

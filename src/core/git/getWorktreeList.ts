@@ -1,6 +1,7 @@
 import folderRoot from '@/core/folderRoot';
 import { execBase } from '@/core/git/exec-base';
 import { getNameRev } from '@/core/git/getNameRev';
+import { getMainFolder } from '@/core/git/getMainFolder';
 import type { IWorktreeDetail, IWorktreeOutputItem } from '@/types';
 import logger from '@/core/log/logger';
 
@@ -34,7 +35,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
     let nameRev = '';
     if (!branchName) nameRev = await getNameRev(item.worktree);
 
-    const isTag = /^tags\/[^~]+/.test(nameRev);
+    const isTag = Boolean(nameRev && /^tags\/[^~]+/.test(nameRev));
     const isBare = Reflect.has(item, 'bare');
     const locked = Reflect.has(item, 'locked');
     const isMain = item.worktree.trim() === mainFolder;
@@ -48,12 +49,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
     } else if (branchName) {
         name = branchName;
     } else if (nameRev) {
-        name = /^heads\//.test(nameRev)
-            ? item.HEAD?.slice(0, 8)
-            : nameRev
-                  .replace(/^tags\//, '')
-                  .replace(/^heads\//, '')
-                  .trim();
+        name = isTag ? nameRev.replace(/^tags\//, '').trim() : item.HEAD?.slice(0, 8);
     }
 
     const hash = item.HEAD || '';
@@ -77,12 +73,11 @@ export async function getWorktreeList(root?: string): Promise<IWorktreeDetail[]>
     const cwd = root || folderRoot.uri?.fsPath || '';
 
     try {
-        const [output, mainFolderFull] = await Promise.all([
+        const [output, mainFolder] = await Promise.all([
             execBase(cwd, ['worktree', 'list', '--porcelain']),
-            execBase(cwd, ['rev-parse', '--path-format=absolute', '--git-common-dir']),
+            getMainFolder(cwd),
         ]);
 
-        const mainFolder = mainFolderFull.replace('/.git', '').trim();
         const worktreeList = parseWorktreeOutput(output);
 
         return await Promise.all(worktreeList.map((item) => buildWorktreeDetail(item, mainFolder)));

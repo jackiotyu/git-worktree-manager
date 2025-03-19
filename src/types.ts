@@ -29,6 +29,8 @@ export interface IWorktreeOutputItem {
     detached: void;
     prunable: string;
     branch?: string;
+    bare?: string;
+    locked?: string;
 }
 
 export interface IWorktreeCacheItem {

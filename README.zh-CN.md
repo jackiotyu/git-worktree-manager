@@ -42,7 +42,7 @@
 ## 快速上手
 
 1. 在 VSCode [扩展市场](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)中安装
-1. 按下 `Ctrl + Shift + R` 开始操作
+1. 按下 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> 开始操作
 
 ## 使用要求
 
