@@ -83,7 +83,7 @@ export class WorktreeItem extends vscode.TreeItem {
         const themeColor = isCurrent ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
         switch (true) {
             case this.updatingAheadBehind:
-                this.iconPath = new vscode.ThemeIcon('loading~spin');
+                this.iconPath = new vscode.ThemeIcon('loading~spin', themeColor);
                 break;
             case item.prunable:
                 this.iconPath = new vscode.ThemeIcon('error', themeColor);
