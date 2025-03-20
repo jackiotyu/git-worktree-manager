@@ -65,7 +65,7 @@
     "config.showCheckoutInWorktreeItem.description": "ワークツリーのツリービューに「ブランチをチェックアウト」アイコンを表示",
     "config.showExternalTerminalInTreeItem.description": "ツリービューに「外部ターミナル」アイコンを表示",
     "config.showTerminalInTreeItem.description": "ツリービューに「内蔵ターミナル」アイコンを表示",
-    "config.showFetchInTreeItem.description": "ツリービューに「コミットをフェッチ」アイコンを表示",
+    "config.showFetchInTreeItem.description": "ツリービューに「コミットをフェッチ」アイコンを表示。無効にすると、「コミットをプッシュ」と「コミットをプル」ボタンは表示されません",
     "config.pinCurrentRepo.description": "「ワークツリーを検索」の結果で現在のGitリポジトリのワークツリーをピン留め",
     "config.showOpenRepositoryInTreeItem.description": "ツリービューに「ソース管理ビューでリポジトリを開く」アイコンを表示",
     "config.worktreePick.showTerminal.description": "「ワークツリーを検索」の結果に「内蔵ターミナル」ボタンを表示",

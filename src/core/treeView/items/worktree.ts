@@ -10,6 +10,7 @@ import type { GitFolderItem } from './gitFolder';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { parseUpstream } from '@/core/util/ref';
 import logger from '@/core/log/logger';
+import { Config } from '@/core/config/setting';
 
 export class WorktreeItem extends vscode.TreeItem {
     iconPath: vscode.ThemeIcon = new vscode.ThemeIcon('folder');
@@ -144,7 +145,11 @@ export class WorktreeItem extends vscode.TreeItem {
 
     // 手动获取ahead/behind
     private async initUpstreamInfo() {
+        const needFetch = Config.get('treeView.showFetchInTreeItem', true);
+        if (!needFetch) return;
+
         try {
+
             const item = this.item;
 
             if (item.isBare) return;
@@ -166,7 +171,6 @@ export class WorktreeItem extends vscode.TreeItem {
 
             this.ahead = aheadBehind?.ahead;
             this.behind = aheadBehind?.behind;
-
         } catch (error) {
             logger.error(String(error));
         } finally {

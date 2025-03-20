@@ -65,7 +65,7 @@
     "config.showCheckoutInWorktreeItem.description": "在worktree树视图上展示“切换分支”按钮",
     "config.showExternalTerminalInTreeItem.description": "在树视图上展示“外部终端”按钮",
     "config.showTerminalInTreeItem.description": "在树视图上展示内置终端按钮",
-    "config.showFetchInTreeItem.description": "在树视图上展示“抓取远程提交”按钮",
+    "config.showFetchInTreeItem.description": "在树视图上展示“抓取远程提交”按钮，关闭后不会出现\"推送提交\"和\"拉取提交\"按钮",
     "config.pinCurrentRepo.description": "在 \"查找 Worktree\" 的结果中置顶当前 git 仓库的 worktree",
     "config.showOpenRepositoryInTreeItem.description": "在树视图上展示 \"在源代码管理中打开该仓库\" 按钮",
     "config.worktreePick.showTerminal.description": "在 \"查找 Worktree\" 列表中展示 \"内置终端\" 按钮",

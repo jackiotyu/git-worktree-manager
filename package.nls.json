@@ -65,7 +65,7 @@
     "config.showCheckoutInWorktreeItem.description": "Show the \"Checkout Branch\" icon on the Worktree treeView",
     "config.showExternalTerminalInTreeItem.description": "Show the \"External Terminal\" icon on the treeView",
     "config.showTerminalInTreeItem.description": "Show the \"Built-in Terminal\" icon on the treeView",
-    "config.showFetchInTreeItem.description": "Show the \"Fetch Commit\" icon on the treeView",
+    "config.showFetchInTreeItem.description": "Show the \"Fetch Commit\" icon on the treeView. When disabled, the \"Push Commit\" and \"Pull Commit\" buttons will not appear",
     "config.pinCurrentRepo.description": "Pin the current git repository's worktree in the results of \"Find Worktree\" ",
     "config.showOpenRepositoryInTreeItem.description": "Show the \"Open the repository in Source Control view\" icon on the treeView",
     "config.worktreePick.showTerminal.description": "Show the \"Built-in Terminal\" button on the results of \"Find Worktree\"",

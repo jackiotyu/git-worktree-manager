@@ -65,7 +65,7 @@
     "config.showCheckoutInWorktreeItem.description": "在 worktree 樹狀檢視上顯示「切換分支」按鈕",
     "config.showExternalTerminalInTreeItem.description": "在樹狀檢視上顯示「外部終端機」按鈕",
     "config.showTerminalInTreeItem.description": "在樹狀檢視上顯示內建終端機按鈕",
-    "config.showFetchInTreeItem.description": "在樹狀檢視上顯示「擷取遠端提交」按鈕",
+    "config.showFetchInTreeItem.description": "在樹狀檢視上顯示「擷取遠端提交」按鈕，關閉後不會出現「推送提交」和「拉取提交」按鈕",
     "config.pinCurrentRepo.description": "在「尋找 Worktree」的結果中置頂當前 git 儲存庫的 worktree",
     "config.showOpenRepositoryInTreeItem.description": "在樹狀檢視上顯示「在原始碼控制中開啟該儲存庫」按鈕",
     "config.worktreePick.showTerminal.description": "在「尋找 Worktree」清單中顯示「內建終端機」按鈕",
