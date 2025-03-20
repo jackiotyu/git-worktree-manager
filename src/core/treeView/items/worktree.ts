@@ -23,7 +23,7 @@ export class WorktreeItem extends vscode.TreeItem {
     private ahead?: number;
     private behind?: number;
     private isCurrent: boolean = false;
-    private updatedAheadBehind: boolean = false;
+    private updatingAheadBehind: boolean = false;
 
     constructor(
         private item: IWorktreeDetail,
@@ -81,6 +81,9 @@ export class WorktreeItem extends vscode.TreeItem {
         const isCurrent = this.isCurrent;
         const themeColor = isCurrent ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
         switch (true) {
+            case this.updatingAheadBehind:
+                this.iconPath = new vscode.ThemeIcon('loading~spin');
+                break;
             case item.prunable:
                 this.iconPath = new vscode.ThemeIcon('error', themeColor);
                 break;
@@ -102,7 +105,6 @@ export class WorktreeItem extends vscode.TreeItem {
         const behindPost = this.behind ? '.behind' : '';
         const fetchPost = this.upstream ? '.fetch' : '';
         const notBare = item.isBare ? '' : '.notBare';
-        // TODO 手动获取ahead/behind
         this.contextValue = `git-worktree-manager.worktreeItem${notBare}${mainPost}${lockPost}${currentPost}${aheadPost}${behindPost}${fetchPost}`;
     }
 
@@ -140,15 +142,18 @@ export class WorktreeItem extends vscode.TreeItem {
         this.tooltip = tooltip;
     }
 
+    // 手动获取ahead/behind
     private async initUpstreamInfo() {
         try {
-            if (this.updatedAheadBehind) return;
-            this.updatedAheadBehind = true;
-
             const item = this.item;
 
             if (item.isBare) return;
             if (!item.isBranch) return;
+
+            if (this.updatingAheadBehind) return;
+            this.updatingAheadBehind = true;
+
+            this.updateView();
 
             await new Promise((r) => setTimeout(r, 200));
             this.upstream = await getUpstream(item.path);
@@ -162,15 +167,18 @@ export class WorktreeItem extends vscode.TreeItem {
             this.ahead = aheadBehind?.ahead;
             this.behind = aheadBehind?.behind;
 
-            this.init();
-
-            TreeViewManager.updateWorktreeView(this);
-            TreeViewManager.updateGitFolderView(this);
         } catch (error) {
             logger.error(String(error));
         } finally {
-            this.updatedAheadBehind = false;
+            this.updatingAheadBehind = false;
+            this.updateView();
         }
+    }
+
+    private updateView() {
+        this.init();
+        TreeViewManager.updateWorktreeView(this);
+        TreeViewManager.updateGitFolderView(this);
     }
 
     private setResourceUri() {

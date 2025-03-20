@@ -167,6 +167,15 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
 };
 
 const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
+    const buttons: vscode.QuickInputButton[] = [
+        saveRepoQuickInputButton,
+        openExternalTerminalQuickInputButton,
+        openTerminalQuickInputButton,
+        revealInSystemExplorerQuickInputButton,
+        openRepositoryQuickInputButton,
+        addToWorkspaceQuickInputButton,
+        openInNewWindowQuickInputButton,
+    ].filter((i) => i.enabled);
     return list.map((uri) => {
         const baseName = path.basename(uri.fsPath);
         return {
@@ -174,15 +183,7 @@ const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
             description: baseName ? uri.fsPath : '',
             iconPath: vscode.ThemeIcon.Folder,
             path: uri.fsPath,
-            buttons: [
-                saveRepoQuickInputButton,
-                openExternalTerminalQuickInputButton,
-                openTerminalQuickInputButton,
-                revealInSystemExplorerQuickInputButton,
-                openRepositoryQuickInputButton,
-                addToWorkspaceQuickInputButton,
-                openInNewWindowQuickInputButton,
-            ].filter((i) => i.enabled),
+            buttons: buttons,
         };
     });
 };
