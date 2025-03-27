@@ -54,6 +54,13 @@ const extensionConfig = {
     optimization: {
         usedExports: true,
         innerGraph: true,
+    },
+    cache: true,
+    experiments: {
+        cache: {
+            type: 'persistent',
+        },
+        parallelCodeSplitting: true,
     }
 };
 
