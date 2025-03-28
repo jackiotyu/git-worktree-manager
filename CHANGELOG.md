@@ -1,3 +1,10 @@
+## [1.1.9] 2025-03-28
+
+### Change
+
+- Optimize worktree item rendering and add loading state.
+- Improve tag identification and name revision handling.
+
 ## [1.1.8] 2025-03-12
 
 ### Change
