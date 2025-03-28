@@ -400,7 +400,7 @@ class ActionService implements IActionService {
         this.updateButtons(displayType);
         this.disposables.push(
             globalStateEvent.event((e) => {
-                e === 'global.recentFolderCache' && this.updateList();
+                e === 'global.recentFolderCache' && this.updateList(true);
             }),
             globalStateEvent.event((e) => {
                 e === 'workTreeCache' && this.updateList();

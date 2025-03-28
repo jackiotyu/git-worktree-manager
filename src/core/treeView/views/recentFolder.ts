@@ -1,18 +1,17 @@
 import * as vscode from 'vscode';
 import { Commands, ViewId } from '@/constants';
-import { updateRecentEvent, loadAllTreeDataEvent } from '@/core/event/events';
+import { loadAllTreeDataEvent, globalStateEvent } from '@/core/event/events';
 import throttle from 'lodash-es/throttle';
 import { IRecentFolderConfig, IRecentUriCache } from '@/types';
 import { FolderLoadMore, FolderItem } from '@/core/treeView/items';
 import path from 'path';
-import { updateRecentFolders, getRecentFolderCache } from '@/core/util/cache';
+import { getRecentFolderCache } from '@/core/util/cache';
 import logger from '@/core/log/logger';
 
 type RecentFolderItem = FolderLoadMore | FolderItem;
 
 export class RecentFoldersDataProvider implements vscode.TreeDataProvider<RecentFolderItem>, vscode.Disposable {
     static readonly id = ViewId.folderList;
-    private static readonly cacheTimeout = 5000; // 5s
     private static readonly defaultPageSize = 20;
     private static readonly refreshThrottle = 1000; // 1s
 
@@ -23,12 +22,11 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
     public readonly onDidChangeTreeData: vscode.Event<void> = this._onDidChangeTreeData.event;
 
     constructor(context: vscode.ExtensionContext) {
-        this.refresh = throttle(this.refresh, RecentFoldersDataProvider.refreshThrottle, { 
-            leading: true, 
-            trailing: true 
+        this.refresh = throttle(this.refresh, RecentFoldersDataProvider.refreshThrottle, {
+            leading: true,
+            trailing: true,
         });
         this.initializeEventListeners(context);
-        this.checkRecentFolderCache();
     }
 
     dispose() {
@@ -37,26 +35,14 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
 
     private initializeEventListeners(context: vscode.ExtensionContext) {
         context.subscriptions.push(
-            updateRecentEvent.event(this.updateRecentFolders),
+            globalStateEvent.event((e) => {
+                if (e === 'global.recentFolderCache') this.refresh();
+            }),
             vscode.commands.registerCommand(Commands.loadMoreRecentFolder, this.loadMoreFolder),
             loadAllTreeDataEvent.event(this.loadAllCheck),
-            this
+            this,
         );
     }
-
-    private checkRecentFolderCache() {
-        if (Date.now() - this.data.time <= RecentFoldersDataProvider.cacheTimeout) return;
-        this.updateRecentFolders();
-    }
-
-    private updateRecentFolders = async () => {
-        try {
-            await updateRecentFolders();
-            this.refresh();
-        } catch (error) {
-            logger.error(`Failed to update recent folders:${error}`);
-        }
-    };
 
     private refresh = () => {
         try {
@@ -94,12 +80,8 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
             const currentItems = this.data.list.slice(start, end);
 
             const itemList: RecentFolderItem[] = currentItems
-                .map(uri => this.createFolderConfig(uri))
-                .map(config => new FolderItem(
-                    config.name, 
-                    vscode.TreeItemCollapsibleState.None, 
-                    config
-                ));
+                .map((uri) => this.createFolderConfig(uri))
+                .map((config) => new FolderItem(config.name, vscode.TreeItemCollapsibleState.None, config));
 
             if (itemList.length < this.data.list.length) {
                 itemList.push(new FolderLoadMore());

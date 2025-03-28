@@ -6,7 +6,7 @@ module.exports = {
     "singleQuote": true, // 是否使用单引号
     "quoteProps": "as-needed", // 仅在需要时为对象的 key 添加引号
     "jsxSingleQuote": false, // 在 JSX 中使用单引号
-    "trailingComma": "es5", // 末尾逗号：none | es5 | all
+    "trailingComma": "all", // 末尾逗号：none | es5 | all
     "bracketSpacing": true, // 对象花括号内部是否有空格
     "bracketSameLine": false, // JSX 标签的 `>` 是否换行
     "arrowParens": "always", // 箭头函数参数是否使用括号（always | avoid）
