@@ -871,7 +871,7 @@
           "git-worktree-manager.treeView.showTerminalInTreeItem": {
             "scope": "application",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "%config.showTerminalInTreeItem.description%"
           },
           "git-worktree-manager.treeView.showFetchInTreeItem": {
@@ -915,7 +915,7 @@
           "git-worktree-manager.worktreePick.showTerminal": {
             "scope": "application",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "%config.worktreePick.showTerminal.description%"
           },
           "git-worktree-manager.worktreePick.showExternalTerminal": {
@@ -927,19 +927,19 @@
           "git-worktree-manager.worktreePick.showRevealInSystemExplorer": {
             "scope": "application",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "%config.worktreePick.showRevealInSystemExplorer.description%"
           },
           "git-worktree-manager.worktreePick.showCopy": {
             "scope": "application",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "%config.worktreePick.showCopy.description%"
           },
           "git-worktree-manager.worktreePick.showAddToWorkspace": {
             "scope": "application",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "%config.worktreePick.showAddToWorkspace.description%"
           },
           "git-worktree-manager.worktreePick.copyTemplate": {
