@@ -7,6 +7,7 @@ export enum Commands {
     addGitFolder = 'git-worktree-manager.addGitFolder',
     addRootsToRepo = 'git-worktree-manager.addRootsToRepo',
     removeGitFolder = 'git-worktree-manager.removeGitFolder',
+    removeMultiGitFolder = 'git-worktree-manager.removeMultiGitFolder',
     renameGitFolder = 'git-worktree-manager.renameGitFolder',
     repairWorktree = 'git-worktree-manager.repairWorktree',
     removeWorktree = 'git-worktree-manager.removeWorktree',

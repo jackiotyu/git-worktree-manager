@@ -15,6 +15,7 @@ import { openSettingCmd } from '@/core/command/openSettingCmd';
 import { addGitFolderCmd } from '@/core/command/addGitFolderCmd';
 import { refreshGitFolderCmd } from '@/core/command/refreshGitFolderCmd';
 import { removeGitFolderCmd } from '@/core/command/removeGitFolderCmd';
+import { removeMultiGitFolderCmd } from '@/core/command/removeMultiGitFolderCmd';
 import { renameGitFolderCmd } from '@/core/command/renameGitFolderCmd';
 import { openWalkthroughsCmd } from '@/core/command/openWalkthroughsCmd';
 import { openTerminalCmd } from '@/core/command/openTerminalCmd';
@@ -72,6 +73,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.addGitFolder, addGitFolderCmd),
         registerCommand(Commands.refreshGitFolder, refreshGitFolderCmd),
         registerCommand(Commands.removeGitFolder, removeGitFolderCmd),
+        registerCommand(Commands.removeMultiGitFolder, removeMultiGitFolderCmd),
         registerCommand(Commands.renameGitFolder, renameGitFolderCmd),
         registerCommand(Commands.openWalkthroughs, openWalkthroughsCmd),
         registerCommand(Commands.openTerminal, openTerminalCmd),

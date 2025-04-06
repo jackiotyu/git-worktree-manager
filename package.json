@@ -141,6 +141,11 @@
         "icon": "$(close)"
       },
       {
+        "command": "git-worktree-manager.removeMultiGitFolder",
+        "title": "%cmd.removeMultiGitFolder%",
+        "icon": "$(trash)"
+      },
+      {
         "command": "git-worktree-manager.renameGitFolder",
         "title": "%cmd.renameGitFolder%",
         "icon": "$(edit)"
@@ -372,9 +377,14 @@
           "group": "navigation@3"
         },
         {
-          "command": "git-worktree-manager.refreshGitFolder",
+          "command": "git-worktree-manager.removeMultiGitFolder",
           "when": "view === git-worktree-manager-folders",
           "group": "navigation@4"
+        },
+        {
+          "command": "git-worktree-manager.refreshGitFolder",
+          "when": "view === git-worktree-manager-folders",
+          "group": "navigation@5"
         },
         {
           "command": "git-worktree-manager.refreshRecentFolder",

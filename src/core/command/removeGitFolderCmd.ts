@@ -1,14 +1,15 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
 import { Alert } from '@/core/ui/message';
 import { worktreeEventRegister } from '@/core/event/git';
 import { confirmModal } from '@/core/ui/modal';
 import { GitFolderItem } from '@/core/treeView/items';
+import { comparePath } from '@/core/util/folder';
 
 export const removeGitFolderCmd = async (item: GitFolderItem) => {
     let path = item.path;
     let folders = getFolderConfig();
-    if (!folders.some((f) => f.path === path)) {
+    if (!folders.some((f) => comparePath(f.path, path))) {
         return;
     }
     let ok = await confirmModal(
@@ -22,7 +23,7 @@ export const removeGitFolderCmd = async (item: GitFolderItem) => {
     if (!ok) {
         return;
     }
-    folders = folders.filter((f) => f.path !== path);
+    folders = folders.filter((f) => !comparePath(f.path, path));
     await updateFolderConfig(folders);
     worktreeEventRegister.remove(vscode.Uri.file(path));
     Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
