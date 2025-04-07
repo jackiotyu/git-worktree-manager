@@ -1,3 +1,10 @@
+## [1.1.10] 2025-04-07
+
+### Change
+
+- Allow removing multiple Git repositories at once.
+- Reduce package size.
+
 ## [1.1.9] 2025-03-28
 
 ### Change
