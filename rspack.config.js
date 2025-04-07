@@ -6,7 +6,7 @@ const path = require('path');
 
 /** @type {import('@rspack/cli').Configuration} */
 const extensionConfig = {
-    target: 'node', // VS Code extensions run in a Node.js-context
+    target: 'node14', // VS Code extensions run in a Node.js-context
     mode: 'none', // this leaves the source code as close as possible to the original
 
     entry: './src/extension.ts', // the entry point of this extension
@@ -40,6 +40,7 @@ const extensionConfig = {
                         parser: {
                             syntax: 'typescript',
                         },
+                        target: 'es2020',
                         externalHelpers: true,
                     },
                 },
