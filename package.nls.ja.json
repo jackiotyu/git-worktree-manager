@@ -8,7 +8,7 @@
     "cmd.addGitFolder": "Gitリポジトリを追加",
     "cmd.renameGitFolder": "このGitリポジトリの名前を変更",
     "cmd.removeGitFolder": "このGitリポジトリを削除",
-    "cmd.removeMultiGitFolder": "Git リポジトリを削除",
+    "cmd.removeMultiGitFolder": "Git リポジトリを一括削除",
     "cmd.removeWorktree": "ワークツリーを削除",
     "cmd.addWorktreeFromBranch": "現在のブランチからワークツリーを作成",
     "cmd.revealInSystemExplorer": "システムエクスプローラーで表示",

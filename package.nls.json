@@ -8,7 +8,7 @@
     "cmd.addGitFolder": "Add Git repository",
     "cmd.renameGitFolder": "Rename this Git repository",
     "cmd.removeGitFolder": "Remove this Git repository",
-    "cmd.removeMultiGitFolder": "Remove Git repository",
+    "cmd.removeMultiGitFolder": "Batch Remove Git Repositories",
     "cmd.removeWorktree": "Delete worktree",
     "cmd.addWorktreeFromBranch": "Create a worktree from the current branch",
     "cmd.revealInSystemExplorer": "Reveal in the system explorer",

@@ -362,6 +362,11 @@
           "group": "navigation@1"
         },
         {
+          "command": "git-worktree-manager.removeMultiGitFolder",
+          "when": "view === git-worktree-manager-folders",
+          "group": "navigation@1"
+        },
+        {
           "command": "git-worktree-manager.gitFolderViewAsTree",
           "when": "view === git-worktree-manager-folders && gwm.context.gitFolderViewAsTree",
           "group": "navigation@2"
@@ -375,11 +380,6 @@
           "command": "git-worktree-manager.searchAllWorktree",
           "when": "view === git-worktree-manager-folders",
           "group": "navigation@3"
-        },
-        {
-          "command": "git-worktree-manager.removeMultiGitFolder",
-          "when": "view === git-worktree-manager-folders",
-          "group": "navigation@4"
         },
         {
           "command": "git-worktree-manager.refreshGitFolder",
