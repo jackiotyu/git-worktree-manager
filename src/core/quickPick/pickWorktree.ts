@@ -143,7 +143,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
         const buttons: vscode.QuickInputButton[] = list.filter((i) => i.show).map((i) => i.button);
         return {
             label: row.name,
-            detail: `${row.path}`,
+            detail: `$(blank)  ${row.path}`,
             description: `⇄ ${row.label}${row.isMain ? ' ✨' : ''}`,
             path: row.path,
             key: row.label,
