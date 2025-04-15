@@ -59,7 +59,7 @@ export enum Commands {
 
 export enum ContextKey {
     gitFolderViewAsTree = 'gwm.context.gitFolderViewAsTree',
-    addRootsToRepo = 'gwm.context.addRootsToRepo'
+    addRootsToRepo = 'gwm.context.addRootsToRepo',
 }
 
 export const WORK_TREE_SCHEME = 'git-worktree-manager-scheme';
@@ -87,10 +87,23 @@ export enum ViewId {
     settingList = 'git-worktree-manager-setting',
 }
 
-export const refArgList = ['refname', 'objectname:short', '*objectname', 'worktreepath', 'authordate', '*authordate', 'HEAD', 'refname:short'] as const;
+export const refArgList = [
+    'refname',
+    'objectname:short',
+    '*objectname',
+    'worktreepath',
+    'authordate',
+    '*authordate',
+    'HEAD',
+    'refname:short',
+    'subject',
+    'authorname',
+    'taggername',
+    '*subject',
+] as const;
 
 export enum HEAD {
-    current = '*'
+    current = '*',
 }
 
 export enum StateKey {
