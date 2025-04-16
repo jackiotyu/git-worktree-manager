@@ -11,6 +11,7 @@ import { getLastCommitHash } from '@/core/git/getLastCommitHash';
 import { withResolvers } from '@/core/util/promise';
 import { createBranchFrom } from '@/core/git/createBranch';
 import { inputNewBranch } from '@/core/ui/inputNewBranch';
+import { comparePath } from '@/core/util/folder';
 import logger from '@/core/log/logger';
 
 type ResolveValue = IPickBranchResolveValue;
@@ -357,9 +358,8 @@ const getRefListCache = async (mainFolder: string, cwd: string) => {
     if (!refList.branchList.length && !refList.remoteBranchList.length && !refList.tagList.length) {
         return false;
     }
-    const hash = await getLastCommitHash(cwd, true);
     refList.branchList.some((item) => {
-        if (item['objectname:short'] !== hash) return false;
+        if (!comparePath(item['worktreepath'], cwd)) return false;
         item.HEAD = HEAD.current;
         return true;
     });
