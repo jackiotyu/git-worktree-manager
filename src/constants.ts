@@ -96,9 +96,10 @@ export const refArgList = [
     '*authordate',
     'HEAD',
     'refname:short',
-    'subject',
-    'authorname',
     'taggername',
+    'authorname',
+    '*authorname',
+    'subject',
     '*subject',
 ] as const;
 

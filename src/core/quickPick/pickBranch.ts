@@ -180,9 +180,12 @@ const buildRemoteBranchDesc = (hash: string, authordate: string) =>
     `${vscode.l10n.t('remote branch')} $(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
 const buildTagDesc = (hash: string, authordate: string) =>
     `${vscode.l10n.t('tag')} $(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
-const buildCommitDesc = (authorName: string, subject: string) => {
+const buildCommitDesc = (commitRef: RefItem): string | undefined => {
     const showReferenceDetails = vscode.workspace.getConfiguration('git').get('showReferenceDetails', false);
-    if(!showReferenceDetails || !authorName) return void 0;
+    const authorName = commitRef.authorname || commitRef['*authorname'] || commitRef.taggername;
+    const subject = commitRef.subject || commitRef['*subject'];
+
+    if (!showReferenceDetails || !authorName) return void 0;
     return `$(blank)  ${authorName} $(circle-small-filled) ${subject}`;
 };
 
@@ -213,7 +216,7 @@ const mapBranchItems = (branchList: RefList, mainFolder: string): vscode.QuickPi
                 branch: shortRefName,
                 buttons,
                 mainFolder,
-                detail: buildCommitDesc(item.authorname, item.subject),
+                detail: buildCommitDesc(item),
             };
         }),
     ];
@@ -240,7 +243,7 @@ const mapWorktreeBranchItems = (branchList: RefList, mainFolder: string, default
             description: vscode.l10n.t('Current commit hash'),
             iconPath: new vscode.ThemeIcon('git-commit'),
             hash: defaultBranch['objectname:short'],
-            detail: buildCommitDesc(defaultBranch.authorname, defaultBranch.subject),
+            detail: buildCommitDesc(defaultBranch),
         });
     const buttons: vscode.QuickInputButton[] = mapWorktreeItemButtons();
     worktreeBranchItems.push(
@@ -256,7 +259,7 @@ const mapWorktreeBranchItems = (branchList: RefList, mainFolder: string, default
                 branch: shortName,
                 buttons,
                 mainFolder,
-                detail: buildCommitDesc(item.authorname, item.subject),
+                detail: buildCommitDesc(item),
             };
         }),
     );
@@ -275,7 +278,7 @@ const mapRemoteBranchItems = (remoteBranchList: RefList) => {
                 iconPath: new vscode.ThemeIcon('cloud'),
                 description: buildRemoteBranchDesc(item['objectname:short'], item['authordate']),
                 branch: item['refname:short'],
-                detail: buildCommitDesc(item.authorname, item.subject),
+                detail: buildCommitDesc(item),
             };
         }),
     ];
@@ -296,7 +299,7 @@ const mapTagItems = (tagList: RefList) => {
                 iconPath: new vscode.ThemeIcon('tag'),
                 description: buildTagDesc(hash, authordate),
                 hash,
-                detail: buildCommitDesc(item.authorname || item.taggername, item['*subject'] || item.subject),
+                detail: buildCommitDesc(item),
             };
         }),
     ];
