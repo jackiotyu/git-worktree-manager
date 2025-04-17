@@ -1,3 +1,17 @@
+## [1.1.11] 2025-04-17
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v1.1.10...v1.1.11)
+
+### 🚀 Enhancements
+
+- **core:** Control commit detail display in branch items via git.showReferenceDetails ([cc2f9da](https://github.com/jackiotyu/git-worktree-manager/commit/cc2f9da))
+- **quickPick:** Add leading blank to worktree path ([f29afe3](https://github.com/jackiotyu/git-worktree-manager/commit/f29afe3))
+- **core:** Enhance commit description and refactoring ([5bf2f22](https://github.com/jackiotyu/git-worktree-manager/commit/5bf2f22))
+
+### 🩹 Fixes
+
+- **quickPick:** Improve branch detection for worktree ([13fdc47](https://github.com/jackiotyu/git-worktree-manager/commit/13fdc47))
+
 ## [1.1.10] 2025-04-07
 
 ### Change
