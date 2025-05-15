@@ -9,7 +9,6 @@ import throttle from 'lodash-es/throttle';
 import { IWorktreeDetail } from '@/types';
 
 export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMainGitFolderItem | WorktreeItem>, vscode.Disposable {
-    static readonly id = ViewId.worktreeList;
     private static readonly refreshThrottle = 800; // 800ms
 
     private _onDidChangeTreeData = new vscode.EventEmitter<WorkspaceMainGitFolderItem | WorktreeItem | void>();
@@ -75,19 +74,19 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
 
         if (workspaceFolderNum === 1 || mainFolders.length === 1) {
             const data = await this.getWorktreeListWithCache(mainFolders[0]?.path);
-            return data.map((item) => 
+            return data.map((item) =>
                 new WorktreeItem(item, vscode.TreeItemCollapsibleState.None)
             );
         }
 
-        return mainFolders.map((item) => 
+        return mainFolders.map((item) =>
             new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded)
         );
     }
 
     private async getWorktreeItems(element: WorkspaceMainGitFolderItem): Promise<WorktreeItem[]> {
         const data = await this.getWorktreeListWithCache(element.path);
-        return data.map((item) => 
+        return data.map((item) =>
             new WorktreeItem(item, vscode.TreeItemCollapsibleState.None, element)
         );
     }

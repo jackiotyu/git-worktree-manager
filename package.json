@@ -295,12 +295,14 @@
         {
           "id": "git-worktree-manager-list",
           "name": "%view.git-worktree-manager-list%",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!config.git-worktree-manager.treeView.toSCM"
         },
         {
           "id": "git-worktree-manager-folders",
           "name": "%view.git-worktree-manager-folders%",
-          "visibility": "visible"
+          "visibility": "visible",
+          "when": "!config.git-worktree-manager.treeView.toSCM"
         },
         {
           "id": "git-worktree-manager-recent",
@@ -312,78 +314,92 @@
           "name": "%view.git-worktree-manager-setting%",
           "visibility": "visible"
         }
+      ],
+      "scm": [
+        {
+          "id": "git-worktree-manager-list.scm",
+          "name": "%view.git-worktree-manager-list%",
+          "visibility": "visible",
+          "when": "config.git-worktree-manager.treeView.toSCM"
+        },
+        {
+          "id": "git-worktree-manager-folders.scm",
+          "name": "%view.git-worktree-manager-folders%",
+          "visibility": "visible",
+          "when": "config.git-worktree-manager.treeView.toSCM"
+        }
       ]
     },
     "menus": {
       "view/title": [
         {
           "command": "git-worktree-manager.refreshWorktree",
-          "when": "view == git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@100"
         },
         {
           "command": "git-worktree-manager.openSetting",
-          "when": "view == git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@90"
         },
         {
           "command": "git-worktree-manager.viewHistory",
-          "when": "view == git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@20"
         },
         {
           "command": "git-worktree-manager.addRootsToRepo",
-          "when": "view === git-worktree-manager-list && gwm.context.addRootsToRepo",
+          "when": "view =~ /git-worktree-manager-list/ && gwm.context.addRootsToRepo",
           "group": "navigation@1"
         },
         {
           "command": "git-worktree-manager.addWorktree",
-          "when": "view === git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@2"
         },
         {
           "command": "git-worktree-manager.openWorkspaceWorktree",
-          "when": "view === git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@3"
         },
         {
           "command": "git-worktree-manager.pruneWorktree",
-          "when": "view === git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@5"
         },
         {
           "command": "git-worktree-manager.toggleLog",
-          "when": "view === git-worktree-manager-list",
+          "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@10"
         },
         {
           "command": "git-worktree-manager.addGitFolder",
-          "when": "view === git-worktree-manager-folders",
+          "when": "view =~ /git-worktree-manager-folders/",
           "group": "navigation@1"
         },
         {
           "command": "git-worktree-manager.removeMultiGitFolder",
-          "when": "view === git-worktree-manager-folders",
+          "when": "view =~ /git-worktree-manager-folders/",
           "group": "navigation@1"
         },
         {
           "command": "git-worktree-manager.gitFolderViewAsTree",
-          "when": "view === git-worktree-manager-folders && gwm.context.gitFolderViewAsTree",
+          "when": "view =~ /git-worktree-manager-folders/ && gwm.context.gitFolderViewAsTree",
           "group": "navigation@2"
         },
         {
           "command": "git-worktree-manager.gitFolderViewAsList",
-          "when": "view === git-worktree-manager-folders && !gwm.context.gitFolderViewAsTree",
+          "when": "view =~ /git-worktree-manager-folders/ && !gwm.context.gitFolderViewAsTree",
           "group": "navigation@2"
         },
         {
           "command": "git-worktree-manager.searchAllWorktree",
-          "when": "view === git-worktree-manager-folders",
+          "when": "view =~ /git-worktree-manager-folders/",
           "group": "navigation@3"
         },
         {
           "command": "git-worktree-manager.refreshGitFolder",
-          "when": "view === git-worktree-manager-folders",
+          "when": "view =~ /git-worktree-manager-folders/",
           "group": "navigation@5"
         },
         {
@@ -410,7 +426,7 @@
         },
         {
           "command": "git-worktree-manager.addWorktreeFromBranch",
-          "when": "view === git-worktree-manager-list && viewItem == git-worktree-manager.branchItem",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem == git-worktree-manager.branchItem",
           "group": "worktree-action"
         },
         {
@@ -854,6 +870,12 @@
       {
         "title": "%config.treeView.title%",
         "properties": {
+          "git-worktree-manager.treeView.toSCM": {
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.treeView.toSCM.description%"
+          },
           "git-worktree-manager.treeView.showLockInWorktreeItem": {
             "scope": "application",
             "type": "boolean",

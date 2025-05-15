@@ -17,7 +17,6 @@ interface WorktreeCache {
 }
 
 export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWorktreeItem>, vscode.Disposable {
-    static readonly id = ViewId.gitFolderList;
     private static readonly cacheTimeout = 30000; // 30s
     private static readonly refreshThrottle = 800; // 800ms
 
@@ -28,9 +27,9 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     public readonly onDidChangeTreeData: vscode.Event<GitFolderItem | WorktreeItem | void> = this._onDidChangeTreeData.event;
 
     constructor(context: vscode.ExtensionContext) {
-        this.refresh = throttle(this.refresh, GitFoldersDataProvider.refreshThrottle, { 
-            leading: true, 
-            trailing: true 
+        this.refresh = throttle(this.refresh, GitFoldersDataProvider.refreshThrottle, {
+            leading: true,
+            trailing: true
         });
         this.initializeEventListeners(context);
         this.initializeViewState();
@@ -147,7 +146,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     private async getWorktreeItems(element: GitFolderItem): Promise<WorktreeItem[]> {
         const worktreeList = await this.getWorktreeListWithCache(element.path);
-        return worktreeList.map((item) => 
+        return worktreeList.map((item) =>
             new WorktreeItem(item, vscode.TreeItemCollapsibleState.None, element)
         );
     }

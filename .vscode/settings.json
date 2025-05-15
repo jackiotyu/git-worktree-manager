@@ -14,5 +14,5 @@
         "worktree"
     ],
     "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",<>/?.",
-    "files.trimTrailingWhitespace": false,
+    // "files.trimTrailingWhitespace": false,
 }

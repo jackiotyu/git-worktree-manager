@@ -85,6 +85,8 @@ export enum ViewId {
     worktreeList = 'git-worktree-manager-list',
     gitFolderList = 'git-worktree-manager-folders',
     settingList = 'git-worktree-manager-setting',
+    worktreeListSCM = 'git-worktree-manager-list.scm',
+    gitFolderListSCM = 'git-worktree-manager-folders.scm',
 }
 
 export const refArgList = [

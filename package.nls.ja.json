@@ -83,7 +83,7 @@
     "config.defaultDisplayList.enum.workspace": "ワークスペース内のワークツリーリストを表示",
     "config.defaultDisplayList.enum.all": "すべてのワークツリーリストを表示",
     "config.gitHistoryExtension.enum.vscode.git": "VSCode Git ⇄ 内蔵Git履歴ビュー",
-    "config.workspacePathFormat.description": "ワークスペースパスの表示テンプレートをカスタマイズ。テンプレートで使用できる変数：\n\n- `$FULL_PATH`：リポジトリの完全パス\n- `$BASE_NAME`：リポジトリのフォルダ名\n\n例：\n`$BASE_NAME - $FULL_PATH` は `my-project - /Users/username/projects/my-project` として表示されます",
+    "config.workspacePathFormat.description": "ワークスペースパスの表示テンプレートをカスタマイゼ。テンプレートで使用できる変数：\n\n- `$FULL_PATH`：リポジトリの完全パス\n- `$BASE_NAME`：リポジトリのフォルダ名\n\n例：\n`$BASE_NAME - $FULL_PATH` は `my-project - /Users/username/projects/my-project` として表示されます",
     "config.worktreePick.showDeleteWorktree.description": "「ワークツリーを検索」の結果に「ワークツリーを削除」ボタンを表示",
     "config.branchPick.showDeleteBranch.description": "「ブランチを選択」の結果に「ブランチを削除」ボタンを表示",
     "config.promptDeleteBranchAfterWorktreeDeletion.description": "ワークツリー削除後、以前関連付けられていたブランチの削除を促す",
@@ -91,5 +91,6 @@
     "config.worktreeCopyIgnores.description": "新しいワークツリーを作成する際に除外するファイルのGlobパターン。[globパターンの説明](https://code.visualstudio.com/docs/editor/glob-patterns)を参照",
     "submenus.worktree-action": "ワークツリー操作",
     "config.checkoutIgnoreOtherWorktree.description": "有効にすると、ブランチの切り替え時に他のワークツリーの状態を無視し、複数のワークツリーで同じブランチを使用できるようになります",
-    "config.branchPick.showRenameBranch.description": "「ブランチを選択」の結果に「ブランチのリネーム」ボタンを表示"
+    "config.branchPick.showRenameBranch.description": "「ブランチを選択」の結果に「ブランチのリネーム」ボタンを表示",
+    "config.treeView.toSCM.description": "ビューをソース管理コンテナに表示"
 }
