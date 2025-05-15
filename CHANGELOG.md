@@ -1,3 +1,11 @@
+## v2.0.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v1.1.11...v2.0.0)
+
+### 🚀 Enhancements
+
+- **tree-view:** Add option to display views in Source Control container ([7aad0ac](https://github.com/jackiotyu/git-worktree-manager/commit/7aad0ac))
+
 ## [1.1.11] 2025-04-17
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v1.1.10...v1.1.11)
