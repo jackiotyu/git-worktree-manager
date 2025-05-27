@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 // 加载dayjs中文语言包
 import 'dayjs/locale/zh-cn';
+import 'dayjs/locale/ja';
+import 'dayjs/locale/zh-tw';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 

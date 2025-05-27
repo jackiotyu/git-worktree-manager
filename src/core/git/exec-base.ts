@@ -18,8 +18,8 @@ export const execBase = (cwd: string, args?: string[], token?: vscode.Cancellati
             env: {
                 ...env,
                 GCM_INTERACTIVE: 'NEVER',
-				GCM_PRESERVE_CREDS: 'TRUE',
-				LC_ALL: 'C',
+                GCM_PRESERVE_CREDS: 'TRUE',
+                LC_ALL: 'C',
             },
         });
         let out: Buffer = Buffer.from('', 'utf-8');
