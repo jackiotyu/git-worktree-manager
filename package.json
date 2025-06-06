@@ -762,14 +762,17 @@
     "configuration": [
       {
         "title": "%config.general.title%",
+        "order": 0,
         "properties": {
           "git-worktree-manager.terminalLocationInEditor": {
+            "order": 3,
             "scope": "application",
             "type": "boolean",
             "default": false,
             "description": "%config.terminalLocationInEditor.description%"
           },
           "git-worktree-manager.terminalCmdList": {
+            "order": 10,
             "scope": "application",
             "type": "array",
             "default": [],
@@ -779,6 +782,7 @@
             "description": "%config.terminalCmdList.description%"
           },
           "git-worktree-manager.alertLevel": {
+            "order": 0,
             "scope": "application",
             "enum": [
               "info",
@@ -794,6 +798,7 @@
             "description": "%config.alertLevel.description%"
           },
           "git-worktree-manager.gitHistoryExtension": {
+            "order": 1,
             "scope": "application",
             "enum": [
               "mhutchie.git-graph",
@@ -807,30 +812,35 @@
             "description": "%config.gitHistoryExtension.description%"
           },
           "git-worktree-manager.openInsideFolder": {
+            "order": 2,
             "scope": "application",
             "type": "boolean",
             "default": false,
             "markdownDescription": "%config.openInsideFolder.description%"
           },
           "git-worktree-manager.httpProxy": {
+            "order": 9,
             "scope": "machine",
             "type": "string",
             "default": "",
             "markdownDescription": "%config.httpProxy.description%"
           },
           "git-worktree-manager.workspacePathFormat": {
+            "order": 6,
             "scope": "application",
             "type": "string",
             "default": "$BASE_NAME - $FULL_PATH",
             "markdownDescription": "%config.workspacePathFormat.description%"
           },
           "git-worktree-manager.promptDeleteBranchAfterWorktreeDeletion": {
+            "order": 5,
             "scope": "application",
             "type": "boolean",
             "default": false,
             "description": "%config.promptDeleteBranchAfterWorktreeDeletion.description%"
           },
           "git-worktree-manager.worktreeCopyPatterns": {
+            "order": 7,
             "type": "array",
             "items": {
               "type": "string"
@@ -843,6 +853,7 @@
             "markdownDescription": "%config.worktreeCopyPatterns.description%"
           },
           "git-worktree-manager.worktreeCopyIgnores": {
+            "order": 8,
             "type": "array",
             "items": {
               "type": "string"
@@ -860,6 +871,7 @@
             "markdownDescription": "%config.worktreeCopyIgnores.description%"
           },
           "git-worktree-manager.checkoutIgnoreOtherWorktree": {
+            "order": 4,
             "scope": "application",
             "type": "boolean",
             "default": false,
@@ -871,48 +883,56 @@
         "title": "%config.treeView.title%",
         "properties": {
           "git-worktree-manager.treeView.toSCM": {
+            "order": 0,
             "scope": "application",
             "type": "boolean",
             "default": false,
             "description": "%config.treeView.toSCM.description%"
           },
           "git-worktree-manager.treeView.showLockInWorktreeItem": {
+            "order": 7,
             "scope": "application",
             "type": "boolean",
             "default": false,
             "description": "%config.showLockInWorktreeItem.description%"
           },
           "git-worktree-manager.treeView.showOpenExplorerInTreeItem": {
+            "order": 3,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.showOpenExplorerInTreeItem.description%"
           },
           "git-worktree-manager.treeView.showCheckoutInWorktreeItem": {
+            "order": 5,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.showCheckoutInWorktreeItem.description%"
           },
           "git-worktree-manager.treeView.showExternalTerminalInTreeItem": {
+            "order": 1,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.showExternalTerminalInTreeItem.description%"
           },
           "git-worktree-manager.treeView.showTerminalInTreeItem": {
+            "order": 2,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.showTerminalInTreeItem.description%"
           },
           "git-worktree-manager.treeView.showFetchInTreeItem": {
+            "order": 6,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.showFetchInTreeItem.description%"
           },
           "git-worktree-manager.treeView.showOpenRepositoryInTreeItem": {
+            "order": 4,
             "scope": "application",
             "type": "boolean",
             "default": true,
@@ -924,12 +944,14 @@
         "title": "%config.findWorktree.title%",
         "properties": {
           "git-worktree-manager.worktreePick.pinCurrentRepo": {
+            "order": 1,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.pinCurrentRepo.description%"
           },
           "git-worktree-manager.worktreePick.defaultDisplayList": {
+            "order": 2,
             "scope": "application",
             "enum": [
               "recentlyOpened",
@@ -945,60 +967,70 @@
             "description": "%config.defaultDisplayList.description%"
           },
           "git-worktree-manager.worktreePick.showTerminal": {
+            "order": 4,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.worktreePick.showTerminal.description%"
           },
           "git-worktree-manager.worktreePick.showExternalTerminal": {
+            "order": 5,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.worktreePick.showExternalTerminal.description%"
           },
           "git-worktree-manager.worktreePick.showRevealInSystemExplorer": {
+            "order": 6,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.worktreePick.showRevealInSystemExplorer.description%"
           },
           "git-worktree-manager.worktreePick.showCopy": {
+            "order": 8,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.worktreePick.showCopy.description%"
           },
           "git-worktree-manager.worktreePick.showAddToWorkspace": {
+            "order": 7,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "description": "%config.worktreePick.showAddToWorkspace.description%"
           },
           "git-worktree-manager.worktreePick.copyTemplate": {
+            "order": 9,
             "scope": "application",
             "type": "string",
             "default": "$LABEL",
             "markdownDescription": "%config.worktreePick.copyTemplate.description%"
           },
           "git-worktree-manager.worktreePick.showCheckout": {
+            "order": 3,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.worktreePick.showCheckout.description%"
           },
           "git-worktree-manager.worktreePick.showViewHistory": {
+            "order": 10,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.worktreePick.showViewHistory.description%"
           },
           "git-worktree-manager.worktreePick.showOpenRepository": {
+            "order": 11,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.worktreePick.showOpenRepository.description%"
           },
           "git-worktree-manager.worktreePick.showDeleteWorktree": {
+            "order": 12,
             "scope": "application",
             "type": "boolean",
             "default": true,
@@ -1010,12 +1042,14 @@
         "title": "%config.pickBranch.title%",
         "properties": {
           "git-worktree-manager.branchPick.showDeleteBranch": {
+            "order": 0,
             "scope": "application",
             "type": "boolean",
             "default": true,
             "markdownDescription": "%config.branchPick.showDeleteBranch.description%"
           },
           "git-worktree-manager.branchPick.showRenameBranch": {
+            "order": 1,
             "scope": "application",
             "type": "boolean",
             "default": true,
