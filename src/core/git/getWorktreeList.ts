@@ -17,7 +17,7 @@ function parseWorktreeOutput(output: string): IWorktreeOutputItem[] {
                 }
                 return list;
             },
-            [[]]
+            [[]],
         )
         .filter((lines) => lines.length)
         .map((lines) => {
@@ -34,7 +34,7 @@ function checkIsTag(nameRev: string) {
         nameRev &&
             /^tags\/[^~]+/.test(nameRev) &&
             // 排除 tags/xxx-<数字>-g<哈希>
-            !/^tags\/.+-\d+-g[0-9a-f]{7}$/.test(nameRev)
+            !/^tags\/.+-\d+-g[0-9a-f]{7}$/.test(nameRev),
     );
 }
 
@@ -82,7 +82,7 @@ export async function getWorktreeList(root?: string): Promise<IWorktreeDetail[]>
     const cwd = root || folderRoot.uri?.fsPath || '';
 
     try {
-        const [output, mainFolder] = await Promise.all([
+        const [{ stdout: output }, mainFolder] = await Promise.all([
             execBase(cwd, ['worktree', 'list', '--porcelain']),
             getMainFolder(cwd),
         ]);

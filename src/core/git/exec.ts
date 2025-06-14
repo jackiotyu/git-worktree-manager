@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import folderRoot from '@/core/folderRoot';
-import { execBase } from '@/core/git/exec-base';
+import { execBase, type ExecResult } from '@/core/git/exec-base';
 
-export const exec = (args?: string[], token?: vscode.CancellationToken): Promise<string> => {
+export const exec = (args?: string[], token?: vscode.CancellationToken): Promise<ExecResult> => {
     return execBase(folderRoot.uri?.fsPath || '', args, token);
 };
 

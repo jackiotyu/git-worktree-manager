@@ -10,8 +10,8 @@ export const pruneWorktreeCmd = async () => {
             return;
         }
         let ok = vscode.l10n.t('ok');
-        let confirm = await Alert.showInformationMessage(
-            vscode.l10n.t('The following Worktree folder will be deleted'),
+        let confirm = await vscode.window.showInformationMessage(
+            vscode.l10n.t('The following worktree folders will be pruned'),
             {
                 detail: output.join('  \n'),
                 modal: true,

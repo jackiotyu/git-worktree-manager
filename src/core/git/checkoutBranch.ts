@@ -46,7 +46,7 @@ const handleRemoteBranch = async (
         });
     }
 
-    return execAuto(cwd, ['checkout', '-q', '--track', branchName]);
+    return execAuto(cwd, ['checkout', '-q', '--track', branchName]).then(r => r.stdout);
 };
 
 const handleLocalBranch = (branchName: string, ignoreOtherWorktree: boolean, isBranch: boolean, cwd: string) => {

@@ -31,7 +31,7 @@
     "Select the folder where you want to create the worktree": "选择需要创建worktree的文件夹",
     "Select the new location to move the Worktree's folder from {0}": "请选择将 worktree 的文件夹从 {0} 移动到的新位置",
     "The worktree for the {0} folder will be deleted": "将删除 {0} 文件夹的worktree",
-    "The following Worktree folder will be deleted": "将删除以下 worktree 文件夹",
+    "The following worktree folders will be pruned": "将清理以下 worktree 文件夹",
     "Add a git repository folder path": "添加git仓库路径",
     "Please select the git repository folder path": "请选择git仓库文件夹",
     "Enter the name of the repository for the showcase": "输入展示用的仓库名称",

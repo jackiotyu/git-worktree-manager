@@ -5,14 +5,29 @@ import { Config } from '@/core/config/setting';
 import logger from '@/core/log/logger';
 import treeKill = require('tree-kill');
 
-export const execBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<string> => {
+export interface ExecResult {
+    stdout: string;
+    stderr: string;
+    code: number | null;
+}
+
+export const execBase = (
+    cwd: string,
+    args?: string[],
+    token?: vscode.CancellationToken
+): Promise<ExecResult> => {
     return new Promise((resolve, reject) => {
         logger.log(`'Running in' ${cwd}`);
         logger.log(`> ${['git'].concat(args || []).join(' ')}`);
         const httpProxy = Config.get('httpProxy', '');
         let env = process.env;
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        if (httpProxy) Object.assign(env, { http_proxy: httpProxy, https_proxy: httpProxy });
+        if (httpProxy) {
+            Object.assign(env, {
+                http_proxy: httpProxy,
+                https_proxy: httpProxy,
+            });
+        }
+
         const proc = cp.spawn('git', args, {
             cwd,
             env: {
@@ -22,31 +37,42 @@ export const execBase = (cwd: string, args?: string[], token?: vscode.Cancellati
                 LC_ALL: 'C',
             },
         });
+
         let out: Buffer = Buffer.from('', 'utf-8');
         let err: Buffer = Buffer.from('', 'utf-8');
 
         proc.stdout.on('data', (chunk) => {
             out = Buffer.concat([out, chunk]);
-            logger.trace(chunk.toString());
+            logger.trace(`[stdout] ${chunk.toString()}`);
         });
+
         proc.stderr.on('data', (chunk) => {
             err = Buffer.concat([err, chunk]);
-            logger.error(chunk.toString());
+            logger.error(`[stderr] ${chunk.toString()}`);
         });
+
         token?.onCancellationRequested(() => {
+            logger.error('[exec] Process cancellation requested');
             proc.kill('SIGTERM');
             if (proc.pid) {
                 treeKill(proc.pid, 'SIGTERM');
             }
         });
-        proc.once('error', reject);
+
+        proc.once('error', (e) => {
+            logger.error(`[exec error] ${e.message}`);
+            reject(e);
+        });
+
         proc.once('close', (code, signal) => {
             logger.trace('[exec close] ', code, signal);
+
             if (signal === 'SIGTERM') {
-                return resolve('');
+                return resolve({ stdout: '', stderr: 'Process cancelled', code });
             }
+
             if (code === 0) {
-                resolve(out.toString());
+                resolve({ stdout: out.toString(), stderr: err.toString(), code });
             } else {
                 reject(Error(err.toString()));
             }
