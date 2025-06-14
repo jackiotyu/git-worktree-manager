@@ -1,3 +1,11 @@
+## v2.3.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.2.1...v2.3.0)
+
+### 🚀 Enhancements
+
+- **core:** Add input dialog for moving worktree ([#24](https://github.com/jackiotyu/git-worktree-manager/pull/24))
+
 ## v2.2.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.2.0...v2.2.1)
