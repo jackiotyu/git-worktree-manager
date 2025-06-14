@@ -16,7 +16,7 @@ export const moveWorktreeCmd = async (item?: WorktreeItem) => {
             targetDirTip: vscode.l10n.t(`Select the new location to move the Worktree's folder from {0}`, item.path),
         });
         if (!folderPath) return;
-        await moveWorktree(item.path, folderPath, item.path);
+        await moveWorktree(item.path, folderPath, mainFolder);
         Alert.showInformationMessage(vscode.l10n.t('Worktree moved successfully'));
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Worktree move failed \n\n {0}', String(error)));
