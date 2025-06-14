@@ -84,7 +84,7 @@
     "config.defaultDisplayList.enum.all": "顯示所有的 worktree 清單",
     "config.gitHistoryExtension.enum.vscode.git": "vscode Git ⇄ 內建的 Git 歷史檢視",
     "config.workspacePathFormat.description": "自訂工作區路徑的顯示範本。你可以在範本中使用以下變數：\n\n- `$FULL_PATH`：儲存庫的完整路徑。\n- `$BASE_NAME`：儲存庫的資料夾名稱。\n\n範例：\n`$BASE_NAME - $FULL_PATH` 將會顯示為 `my-project - /Users/username/projects/my-project`",
-    "config.worktreePick.showDeleteWorktree.description": "在「尋找 Worktree」清單中顯示「刪除 worktree」按鈕",
+    "config.worktreePick.showRemoveWorktree.description": "在「尋找 Worktree」清單中顯示「移除 worktree」按鈕",
     "config.branchPick.showDeleteBranch.description": "在「挑選分支」清單中顯示「刪除分支」按鈕",
     "config.promptDeleteBranchAfterWorktreeDeletion.description": "在刪除 worktree 之後，是否提示刪除之前關聯的分支",
     "config.worktreeCopyPatterns.description": "建立新 worktree 時需要複製的檔案匹配模式，參考[glob patterns介紹](https://code.visualstudio.com/docs/editor/glob-patterns)",

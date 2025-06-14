@@ -124,7 +124,7 @@ class WorktreeActionPicker {
             }),
             this.buildCommandAction({
                 icon: 'trash',
-                label: 'Delete worktree',
+                label: 'Remove worktree',
                 action: Commands.removeWorktree,
             }),
         ];

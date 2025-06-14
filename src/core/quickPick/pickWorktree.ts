@@ -35,7 +35,7 @@ import {
     refreshRecentlyQuickInputButton,
     refreshAllWorktreeQuickInputButton,
     refreshWorkspaceWorktreeQuickInputButton,
-    deleteWorktreeQuickInputButton,
+    removeWorktreeQuickInputButton,
     saveRepoQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
@@ -127,8 +127,8 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
                 show: notBare && openRepositoryQuickInputButton.enabled,
             },
             {
-                button: deleteWorktreeQuickInputButton,
-                show: notBare && deleteWorktreeQuickInputButton.enabled,
+                button: removeWorktreeQuickInputButton,
+                show: notBare && removeWorktreeQuickInputButton.enabled,
             },
             {
                 button: moreQuickInputButton,
@@ -333,7 +333,7 @@ const handleTriggerItemButton = ({
         case saveRepoQuickInputButton:
             vscode.commands.executeCommand(Commands.addToGitFolder, viewItem);
             break;
-        case deleteWorktreeQuickInputButton:
+        case removeWorktreeQuickInputButton:
             vscode.commands.executeCommand(Commands.removeWorktree, viewItem);
             break;
         case copyItemQuickInputButton:

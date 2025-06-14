@@ -155,10 +155,10 @@ export const saveRepoQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('star-empty'),
     tooltip: vscode.l10n.t('Save git repository'),
 });
-export const deleteWorktreeQuickInputButton = new QuickInputButton({
+export const removeWorktreeQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: vscode.l10n.t('Delete worktree'),
-    configKey: 'worktreePick.showDeleteWorktree',
+    tooltip: vscode.l10n.t('Remove worktree'),
+    configKey: 'worktreePick.showRemoveWorktree',
     defaultValue: true,
 });
 export const deleteBranchQuickInputButton = new QuickInputButton({

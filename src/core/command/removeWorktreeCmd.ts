@@ -18,13 +18,13 @@ interface RemoveWorktreeOptions {
 
 async function showDeleteConfirmation(worktreePath: string): Promise<'ok' | 'force' | undefined> {
     const ok = vscode.l10n.t('ok');
-    const forceDelete = vscode.l10n.t('Force delete');
+    const forceDelete = vscode.l10n.t('Force remove');
 
     const selected = await vscode.window.showWarningMessage(
-        vscode.l10n.t('Delete worktree'),
+        vscode.l10n.t('Remove worktree'),
         {
             modal: true,
-            detail: vscode.l10n.t('The worktree for the {0} folder will be deleted', worktreePath),
+            detail: vscode.l10n.t('The worktree for the {0} folder will be removed', worktreePath),
         },
         ok,
         forceDelete
@@ -63,7 +63,7 @@ export const removeWorktreeCmd = async (item?: RemoveWorktreeOptions): Promise<v
             : { branchName: '', mainFolder: '' };
 
         actionProgressWrapper(
-            vscode.l10n.t('Deleting worktree {path}', { path: worktreePath }),
+            vscode.l10n.t('Removing worktree {path}', { path: worktreePath }),
             () => promise,
             () => {}
         );
@@ -72,7 +72,7 @@ export const removeWorktreeCmd = async (item?: RemoveWorktreeOptions): Promise<v
         resolve();
 
         Alert.showInformationMessage(
-            vscode.l10n.t('Successfully deleted the worktree for the {0} folder', worktreePath)
+            vscode.l10n.t('Successfully removed the worktree for the {0} folder', worktreePath)
         );
 
         await vscode.commands.executeCommand(Commands.refreshWorktree);

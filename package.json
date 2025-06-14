@@ -1029,12 +1029,12 @@
             "default": true,
             "markdownDescription": "%config.worktreePick.showOpenRepository.description%"
           },
-          "git-worktree-manager.worktreePick.showDeleteWorktree": {
+          "git-worktree-manager.worktreePick.showRemoveWorktree": {
             "order": 12,
             "scope": "application",
             "type": "boolean",
             "default": true,
-            "markdownDescription": "%config.worktreePick.showDeleteWorktree.description%"
+            "markdownDescription": "%config.worktreePick.showRemoveWorktree.description%"
           }
         }
       },

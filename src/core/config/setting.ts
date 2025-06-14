@@ -20,7 +20,7 @@ export class Config {
     static get(key: 'worktreePick.copyTemplate', defaultValue: '$LABEL'): string;
     static get(key: 'worktreePick.pinCurrentRepo', defaultValue: false): boolean;
     static get(key: 'worktreePick.showOpenRepository', defaultValue: true): boolean;
-    static get(key: 'worktreePick.showDeleteWorktree', defaultValue: true): boolean;
+    static get(key: 'worktreePick.showRemoveWorktree', defaultValue: true): boolean;
     static get(key: 'branchPick.showDeleteBranch', defaultValue: true): boolean;
     static get(key: 'terminalCmdList', defaultValue: []): string[];
     static get(key: 'terminalLocationInEditor', defaultValue: false): boolean;

@@ -77,7 +77,7 @@
 
 ### Change
 
-- add force delete option for worktree removal
+- add Force remove option for worktree removal
 
 ## [1.1.5] 2025-03-05
 
