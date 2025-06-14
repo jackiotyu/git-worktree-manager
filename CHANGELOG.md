@@ -1,3 +1,16 @@
+## v2.2.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.2.0...v2.2.1)
+
+### 🚀 Enhancements
+
+- **core:** Add repository selection for worktree prune ([15fe3b3](https://github.com/jackiotyu/git-worktree-manager/commit/15fe3b3))
+
+### 💅 Refactors
+
+- **git:** Remove unused getNameRevSafe function ([4f71fff](https://github.com/jackiotyu/git-worktree-manager/commit/4f71fff))
+- Replace "delete" with "remove" for worktree removal ([4c14dc4](https://github.com/jackiotyu/git-worktree-manager/commit/4c14dc4))
+
 ## v2.2.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.1.0...v2.2.0)
