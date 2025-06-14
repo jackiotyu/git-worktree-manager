@@ -5,14 +5,14 @@ import { comparePath, getBaseWorktreeDir } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
 import { withResolvers } from '@/core/util/promise';
 
-export const pickWorktreeDir = async (dir: string) => {
+export const pickWorktreeDir = async (dir: string, targetDirTip: string) => {
     let uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: vscode.Uri.file(dir),
         openLabel: vscode.l10n.t('Select the folder'),
-        title: vscode.l10n.t('Select the folder where you want to create the worktree'),
+        title: targetDirTip,
     });
     return uriList?.[0]?.fsPath;
 };
@@ -30,8 +30,15 @@ interface InputWorktreeDirOptions {
     baseWorktreeDir?: string;
     step?: number;
     totalSteps?: number;
+    targetDirTip?: string;
 }
-export const inputWorktreeDir = async ({ baseDir, baseWorktreeDir, step, totalSteps }: InputWorktreeDirOptions) => {
+export const inputWorktreeDir = async ({
+    baseDir,
+    baseWorktreeDir,
+    step,
+    totalSteps,
+    targetDirTip = vscode.l10n.t('Select the folder where you want to create the worktree'),
+}: InputWorktreeDirOptions) => {
     let canClose = true;
     const { promise, resolve, reject } = withResolvers<string | undefined>();
     // 最终路径
@@ -55,7 +62,7 @@ export const inputWorktreeDir = async ({ baseDir, baseWorktreeDir, step, totalSt
     }
     const selectDirBtn: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('new-folder'),
-        tooltip: vscode.l10n.t('Select the folder where you want to create the worktree'),
+        tooltip: targetDirTip,
     };
     inputBox.title = vscode.l10n.t('Input worktree directory');
     inputBox.value = finalWorktreeDir;
@@ -68,7 +75,7 @@ export const inputWorktreeDir = async ({ baseDir, baseWorktreeDir, step, totalSt
         canClose = false;
         inputBox.hide();
         try {
-            const dir = await pickWorktreeDir(path.dirname(baseDir));
+            const dir = await pickWorktreeDir(path.dirname(baseDir), targetDirTip);
             if (!dir) return inputBox.show();
             inputBox.value = verifySameDir(dir, workTreeDir) ? finalWorktreeDir : dir;
             inputBox.show();
