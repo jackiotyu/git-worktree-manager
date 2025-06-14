@@ -1,3 +1,11 @@
+## v2.2.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.1.0...v2.2.0)
+
+### 🩹 Fixes
+
+- **core:** Handle errors in getNameRev function ([7fbd2be](https://github.com/jackiotyu/git-worktree-manager/commit/7fbd2be))
+
 ## v2.1.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.0.0...v2.1.0)
