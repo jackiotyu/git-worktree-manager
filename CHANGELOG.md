@@ -1,3 +1,20 @@
+## v2.1.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.0.0...v2.1.0)
+
+### 🚀 Enhancements
+
+- **configuration:** Add order property to configuration items ([6be3898](https://github.com/jackiotyu/git-worktree-manager/commit/6be3898))
+- **l10n:** Add new translations for Japanese and Traditional Chinese ([a3ef751](https://github.com/jackiotyu/git-worktree-manager/commit/a3ef751))
+
+### 💅 Refactors
+
+- **core:** Format execBase and add locale support ([42abe4c](https://github.com/jackiotyu/git-worktree-manager/commit/42abe4c))
+
+### 🩹 Fixes
+
+- **git:**  improve worktree pruning and related git operations ([4da3d12](https://github.com/jackiotyu/git-worktree-manager/commit/4da3d12))
+
 ## v2.0.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v1.1.11...v2.0.0)
