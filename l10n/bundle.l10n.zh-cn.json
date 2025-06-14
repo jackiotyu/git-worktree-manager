@@ -133,5 +133,6 @@
     "Bundling repo..., {path}": "打包仓库中..., {path}",
     "Repository backup successful: {path}": "仓库备份成功: {path}",
     "The selected Git repository paths will be removed from the list": "选中的 Git 仓库路径将从列表中移除",
-    "Please select the Git repository paths you want to remove": "请选择需要移除的 Git 仓库路径"
+    "Please select the Git repository paths you want to remove": "请选择需要移除的 Git 仓库路径",
+    "Select git repository for prune worktree": "请选择需要清理 worktree 的 git 仓库"
 }

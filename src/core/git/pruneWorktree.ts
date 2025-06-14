@@ -54,7 +54,7 @@ export async function analyzePruneDryRun(
     return results;
 }
 
-export async function pruneWorktree(dryRun: boolean = false, cwd?: string) {
+export async function pruneWorktree(dryRun: boolean, cwd: string) {
     try {
         const res = await execAuto(
             cwd,

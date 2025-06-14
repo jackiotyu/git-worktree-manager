@@ -3,7 +3,7 @@ import { WorkspaceState } from '@/core/state';
 import path from 'path';
 import { withResolvers } from '@/core/util/promise';
 
-export const pickGitFolder = async (): Promise<string | undefined | null> => {
+export const pickGitFolder = async (title: string): Promise<string | undefined | null> => {
     const mainFolders = WorkspaceState.get('mainFolders', []).map((i) => i.path);
     if (mainFolders.length === 0) return null;
     if (mainFolders.length > 1) {
@@ -17,7 +17,7 @@ export const pickGitFolder = async (): Promise<string | undefined | null> => {
             }),
         ];
         const folderPath = await vscode.window.showQuickPick(items, {
-            title: vscode.l10n.t('Select git repository for create worktree'),
+            title,
             canPickMany: false,
         });
         return folderPath?.description;

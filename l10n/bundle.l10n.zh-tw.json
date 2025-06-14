@@ -133,5 +133,6 @@
     "Bundling repo..., {path}": "組合儲存庫..., {path}",
     "Repository backup successful: {path}": "儲存庫備份成功: {path}",
     "The selected Git repository paths will be removed from the list": "選取的 Git 儲存庫路徑將從清單中移除",
-    "Please select the Git repository paths you want to remove": "請選擇要移除的 Git 儲存庫路徑"
+    "Please select the Git repository paths you want to remove": "請選擇要移除的 Git 儲存庫路徑",
+    "Select git repository for prune worktree": "請選擇需要清理 worktree 的 git 儲存庫"
 }

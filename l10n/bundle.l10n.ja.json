@@ -133,5 +133,6 @@
     "Bundling repo..., {path}": "リポジトリをバンドル中..., {path}",
     "Repository backup successful: {path}": "リポジトリのバックアップに成功しました: {path}",
     "The selected Git repository paths will be removed from the list": "選択された Git リポジトリのパスはリストから削除されます",
-    "Please select the Git repository paths you want to remove": "削除したい Git リポジトリのパスを選択してください"
+    "Please select the Git repository paths you want to remove": "削除したい Git リポジトリのパスを選択してください",
+    "Select git repository for prune worktree": "ワークツリーを整理するGitリポジトリを選択してください"
 }
