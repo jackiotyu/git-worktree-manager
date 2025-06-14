@@ -54,6 +54,6 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
         label,
         folderPath,
         isBranch: !!branch,
-        cwd: gitFolder,
+        cwd: mainFolder,
     });
 };

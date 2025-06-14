@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { WorktreeItem } from '@/core/treeView/items';
 import { createWorktreeFromInfo } from '@/core/command/createWorktreeFromInfo';
+import { getMainFolder } from '@/core/git/getMainFolder';
 import folderRoot from "@/core/folderRoot";
 
 export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
@@ -18,10 +19,12 @@ export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
     }
     let folderUri = uriList[0];
     let folderPath = folderUri.fsPath;
+    const mainFolder = await getMainFolder(item.path);
     return createWorktreeFromInfo({
         name: item.name,
         label: '分支',
         folderPath,
         isBranch: !!item.isBranch,
+        cwd: mainFolder,
     });
 };

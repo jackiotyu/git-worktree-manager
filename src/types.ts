@@ -149,5 +149,5 @@ export interface ICreateWorktreeInfo {
     name: string;
     label: string;
     isBranch: boolean;
-    cwd?: string;
+    cwd: string;
 }
