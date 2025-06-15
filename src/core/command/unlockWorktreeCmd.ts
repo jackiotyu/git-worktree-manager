@@ -1,8 +1,9 @@
 import { WorktreeItem } from '@/core/treeView/items';
 import { Commands } from '@/constants';
 import { commonWorktreeCmd } from '@/core/command/commonWorktreeCmd';
+import { getMainFolder } from '@/core/git/getMainFolder';
 
-export const unlockWorktreeCmd = (item?: WorktreeItem) => {
+export const unlockWorktreeCmd = async (item?: WorktreeItem) => {
     if (!item) return;
-    commonWorktreeCmd(item.path, Commands.unlockWorktree, item.path);
+    commonWorktreeCmd(item.path, Commands.unlockWorktree, await getMainFolder(item.path));
 };

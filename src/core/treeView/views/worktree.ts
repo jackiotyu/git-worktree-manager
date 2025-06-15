@@ -9,14 +9,18 @@ import throttle from 'lodash-es/throttle';
 import { IWorktreeDetail } from '@/types';
 
 export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMainGitFolderItem | WorktreeItem>, vscode.Disposable {
-    private static readonly refreshThrottle = 800; // 800ms
+    private static readonly refreshThrottle = 150; // 150ms
 
     private _onDidChangeTreeData = new vscode.EventEmitter<WorkspaceMainGitFolderItem | WorktreeItem | void>();
     public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     constructor(context: vscode.ExtensionContext) {
         this.refresh = throttle(this.refresh, WorktreeDataProvider.refreshThrottle, {
-            leading: true,
+            leading: false,
+            trailing: true
+        });
+        this.triggerChangeTreeData = throttle(this.triggerChangeTreeData, WorktreeDataProvider.refreshThrottle, {
+            leading: false,
             trailing: true
         });
         this.initializeEventListeners(context);
@@ -29,11 +33,10 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
     private initializeEventListeners(context: vscode.ExtensionContext) {
         context.subscriptions.push(
             treeDataEvent.event(() => {
-                this._onDidChangeTreeData.fire();
+                this.triggerChangeTreeData();
             }),
             worktreeChangeEvent.event((uri) => {
-                // TODO 缓存
-                this._onDidChangeTreeData.fire();
+                this.triggerChangeTreeData();
             }),
             this
         );
@@ -41,6 +44,10 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
 
     update(item: WorkspaceMainGitFolderItem | WorktreeItem | void) {
         this._onDidChangeTreeData.fire(item);
+    }
+
+    triggerChangeTreeData() {
+        this._onDidChangeTreeData.fire();
     }
 
     refresh() {

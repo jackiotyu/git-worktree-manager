@@ -68,7 +68,7 @@ export const removeWorktreeCmd = async (item?: RemoveWorktreeOptions): Promise<v
             () => {}
         );
 
-        await removeWorktree(worktreePath, confirmation === 'force', worktreePath);
+        await removeWorktree(worktreePath, confirmation === 'force', mainFolder);
         resolve();
 
         Alert.showInformationMessage(
