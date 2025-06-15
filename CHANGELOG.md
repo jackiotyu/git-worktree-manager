@@ -1,3 +1,13 @@
+## v2.3.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.3.0...v2.3.1)
+
+### 🩹 Fixes
+
+- **core:** Ensure worktree move runs on the main worktree ([#24](https://github.com/jackiotyu/git-worktree-manager/pull/24))
+- **core:** Ensure `cwd` parameter is always provided for worktree creation ([#24](https://github.com/jackiotyu/git-worktree-manager/pull/24))
+- **core:** Update worktree commands and optimize refresh logic ([66071d9](https://github.com/jackiotyu/git-worktree-manager/commit/66071d9))
+
 ## v2.3.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.2.1...v2.3.0)
