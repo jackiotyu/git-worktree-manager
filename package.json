@@ -431,7 +431,7 @@
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer.context",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem|workspaceItem)/",
           "group": "file-action@0"
         },
         {
@@ -476,7 +476,7 @@
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/ && config.git-worktree-manager.treeView.showOpenExplorerInTreeItem",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem|workspaceItem)/ && config.git-worktree-manager.treeView.showOpenExplorerInTreeItem",
           "group": "inline@12"
         },
         {
