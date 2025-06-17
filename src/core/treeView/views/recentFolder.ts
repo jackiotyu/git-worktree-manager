@@ -2,9 +2,8 @@ import * as vscode from 'vscode';
 import { Commands, ViewId } from '@/constants';
 import { loadAllTreeDataEvent, globalStateEvent } from '@/core/event/events';
 import throttle from 'lodash-es/throttle';
-import { IRecentFolderConfig, IRecentItemCache, IRecentItem } from '@/types';
+import { IRecentItemCache } from '@/types';
 import { FolderLoadMore, FolderItem } from '@/core/treeView/items';
-import path from 'path';
 import { getRecentItemCache } from '@/core/util/cache';
 import logger from '@/core/log/logger';
 
@@ -73,8 +72,7 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
 
             const itemList: RecentFolderItem[] = currentItems
                 .map((config) => {
-                    const label = config.label || path.basename(vscode.Uri.parse(config.path).path);
-                    return new FolderItem(label, vscode.TreeItemCollapsibleState.None, config);
+                    return new FolderItem(config.label, vscode.TreeItemCollapsibleState.None, config);
                 });
 
             if (itemList.length < this.data.list.length) {

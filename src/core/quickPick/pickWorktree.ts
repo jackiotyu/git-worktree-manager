@@ -185,9 +185,8 @@ const mapRecentWorktreePickItems = (list: IRecentItem[]): WorktreePick[] => {
     return list.map((item) => {
         const isFolder = item.type === RecentItemType.folder;
         const uri = vscode.Uri.parse(item.path);
-        const baseName = item.label || path.basename(uri.fsPath);
         return {
-            label: baseName,
+            label: item.label,
             description: uri.fsPath,
             iconPath: isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers'),
             path: uri.fsPath,

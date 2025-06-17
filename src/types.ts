@@ -73,13 +73,8 @@ export interface IRecentWorkspace {
     readonly remoteAuthority?: string;
 }
 
-export interface IRecentCache {
-    time: number;
-    list: string[];
-}
-
 export interface IRecentItem {
-    label?: string;
+    label: string;
     path: string;
     remoteAuthority?: string;
     type: RecentItemType;

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { IFolderItemConfig, IWorktreeCacheItem, RepoRefList, IRecentCache, IRecentItemCache } from '@/types';
+import { IFolderItemConfig, IWorktreeCacheItem, RepoRefList, IRecentItemCache } from '@/types';
 import { globalStateEvent } from '@/core/event/events';
 
 type KeyGitRepoRefList = `global.gitRepo.refList.${string}`;

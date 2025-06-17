@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { getRecentItems, getWorkspaceMainFolders, isRecentWorkspace, isRecentFolder } from '@/core/util/workspace';
 import { comparePath, toSimplePath } from '@/core/util/folder';
@@ -6,6 +5,7 @@ import { WorkspaceState, GlobalState } from '@/core/state';
 import { groupBy } from 'lodash-es';
 import type { IFolderItemConfig, IWorktreeCacheItem, IRecentItemCache } from '@/types';
 import { RecentItemType } from '@/constants';
+import path from 'path';
 
 export const gitFolderToCache = async (item: IFolderItemConfig): Promise<IWorktreeCacheItem[]> => {
     const list = await getWorktreeList(item.path);
@@ -100,14 +100,14 @@ export const updateRecentItems = async () => {
                         path: item.folderUri.toString(),
                         remoteAuthority: item.remoteAuthority,
                         type: RecentItemType.folder,
-                        label: item.label,
+                        label: item.label || path.basename(item.folderUri.fsPath),
                     };
                 } else {
                     return {
                         path: item.workspace.configPath.toString(),
                         remoteAuthority: item.remoteAuthority,
                         type: RecentItemType.workspace,
-                        label: item.label,
+                        label: item.label || path.basename(item.workspace.configPath.path),
                     };
                 }
             }),
