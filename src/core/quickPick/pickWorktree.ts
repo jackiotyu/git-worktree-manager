@@ -251,6 +251,16 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         actionService.updateList();
         return;
     }
+    if (event === useRecentlyQuickInputButton) {
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.recentlyOpened);
+        actionService.updateList();
+        return;
+    }
+    if (event === useFavoriteQuickInputButton) {
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.favorite);
+        actionService.updateList();
+        return;
+    }
     if (event === addWorktreeQuickInputButton) {
         // FIXME 改造quickPick
         actionService.canClose = false;
@@ -289,6 +299,10 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
     }
     if (event === refreshRecentlyQuickInputButton) {
         vscode.commands.executeCommand(Commands.refreshRecentFolder);
+        return;
+    }
+    if (event === refreshFavoriteQuickInputButton) {
+        vscode.commands.executeCommand(Commands.refreshFavorites);
         return;
     }
 };

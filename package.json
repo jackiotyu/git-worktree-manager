@@ -414,7 +414,7 @@
         },
         {
           "command": "git-worktree-manager.removeMultiFavorite",
-          "when": "view =~ /git-worktree-manager-favorites/",
+          "when": "view =~ /git-worktree-manager-favorite/",
           "group": "navigation@1"
         },
         {
@@ -449,12 +449,12 @@
         },
         {
           "command": "git-worktree-manager.refreshFavorites",
-          "when": "view === git-worktree-manager-favorites",
+          "when": "view === git-worktree-manager-favorite",
           "group": "navigation@2"
         },
         {
           "command": "git-worktree-manager.openFavorites",
-          "when": "view === git-worktree-manager-favorites",
+          "when": "view === git-worktree-manager-favorite",
           "group": "navigation@1"
         }
       ],
