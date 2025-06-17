@@ -190,7 +190,7 @@ const mapRecentWorktreePickItems = (list: IRecentItem[]): WorktreePick[] => {
             label: baseName,
             description: uri.fsPath,
             iconPath: isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers'),
-            path: item.path,
+            path: uri.fsPath,
             buttons: isFolder ? folderButtons : workspaceButtons,
         };
     });
@@ -200,7 +200,7 @@ const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     let selectedItem = quickPick.selectedItems[0];
     if (selectedItem?.path) {
         vscode.commands
-            .executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.path), { forceNewWindow: true })
+            .executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), { forceNewWindow: true })
             .then(() => {
                 vscode.commands.executeCommand(Commands.refreshRecentFolder);
             });
@@ -309,7 +309,7 @@ const handleTriggerItemButton = ({
     };
     switch (button) {
         case openInNewWindowQuickInputButton:
-            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.path), {
+            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
                 forceNewWindow: false,
                 forceReuseWindow: true,
             });
