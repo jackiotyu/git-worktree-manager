@@ -7,10 +7,9 @@ type KeyGitFolderViewAsTree = 'gitFolderViewAsTree';
 type KeyGitFolders = 'gitFolders';
 type KeyWorkTreeCache = 'workTreeCache';
 type KeyMainFolders = 'mainFolders';
-type KeyGlobalRecentFolderCache = 'global.recentFolderCache';
 type KeyGlobalRecentItemCache = 'global.recentItemCache';
 
-export type StateKey = KeyGitRepoRefList | KeyGitFolderViewAsTree | KeyGitFolders | KeyWorkTreeCache | KeyMainFolders | KeyGlobalRecentFolderCache;
+export type StateKey = KeyGitRepoRefList | KeyGitFolderViewAsTree | KeyGitFolders | KeyWorkTreeCache | KeyMainFolders | KeyGlobalRecentItemCache;
 
 export class GlobalState {
     static context: vscode.ExtensionContext;
@@ -25,7 +24,6 @@ export class GlobalState {
             },
         });
     }
-    static get(key: KeyGlobalRecentFolderCache, defaultValue: IRecentCache): IRecentCache;
     static get(key: KeyGlobalRecentItemCache, defaultValue: IRecentItemCache): IRecentItemCache;
     static get(key: KeyGitRepoRefList, defaultValue: RepoRefList): RepoRefList;
     static get(key: KeyGitFolderViewAsTree, defaultValue: boolean): boolean;
@@ -35,7 +33,6 @@ export class GlobalState {
         return this.state.get<T>(key, defaultValue);
     }
 
-    static update(key: KeyGlobalRecentFolderCache, defaultValue: IRecentCache): Thenable<void>;
     static update(key: KeyGlobalRecentItemCache, defaultValue: IRecentItemCache): Thenable<void>;
     static update(key: KeyGitRepoRefList, value: RepoRefList): Thenable<void>;
     static update(key: KeyGitFolderViewAsTree, value: boolean): Thenable<void>;

@@ -34,14 +34,14 @@ export const removeFromWorkspace = (path: string) => {
     if (index >= 0) vscode.workspace.updateWorkspaceFolders(index, 1);
 };
 
-const isRecentFolder = (item: IRecentFolder | IRecentWorkspace): item is IRecentFolder => {
+export const isRecentFolder = (item: IRecentFolder | IRecentWorkspace): item is IRecentFolder => {
     const value = item as IRecentFolder;
     return value && value.folderUri && value.folderUri.scheme === 'file';
 };
 
-export const getRecentFolders = async (): Promise<Array<IRecentFolder>> => {
-    let data = (await vscode.commands.executeCommand('_workbench.getRecentlyOpened')) as IRecentlyOpened;
-    return data.workspaces.filter<IRecentFolder>(isRecentFolder);
+export const isRecentWorkspace = (item: IRecentFolder | IRecentWorkspace): item is IRecentWorkspace => {
+    const value = item as IRecentWorkspace;
+    return value && value.workspace && !!value.workspace.configPath;
 };
 
 export const getRecentItems = async (): Promise<Array<IRecentFolder | IRecentWorkspace>> => {

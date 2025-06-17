@@ -1,6 +1,6 @@
 {
     "cmd.switchWorktree": "ワークツリーを切り替え",
-    "cmd.switchToSelectFolder": "現在のウィンドウをこのフォルダに切り替える",
+    "cmd.switchToSelectWorkspace": "現在のウィンドウをこのフォルダに切り替える",
     "cmd.freshWorktree": "ワークツリーを更新",
     "cmd.refreshGitFolder": "Gitフォルダを更新",
     "cmd.refreshFolder": "フォルダを更新",

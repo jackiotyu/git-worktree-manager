@@ -51,8 +51,8 @@
         "category": "Worktree"
       },
       {
-        "command": "git-worktree-manager.switchToSelectFolder",
-        "title": "%cmd.switchToSelectFolder%",
+        "command": "git-worktree-manager.switchToSelectWorkspace",
+        "title": "%cmd.switchToSelectWorkspace%",
         "icon": "$(arrow-right)"
       },
       {
@@ -445,7 +445,7 @@
           "group": "inline@2"
         },
         {
-          "command": "git-worktree-manager.switchToSelectFolder",
+          "command": "git-worktree-manager.switchToSelectWorkspace",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/",
           "group": "inline@100"
         },
@@ -575,8 +575,8 @@
           "group": "workspace@1"
         },
         {
-          "command": "git-worktree-manager.switchToSelectFolder",
-          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "command": "git-worktree-manager.switchToSelectWorkspace",
+          "when": "viewItem =~ /git-worktree-manager.(folderItem|workspaceItem)/",
           "group": "inline@100"
         },
         {
@@ -619,7 +619,7 @@
       ],
       "commandPalette": [
         {
-          "command": "git-worktree-manager.switchToSelectFolder",
+          "command": "git-worktree-manager.switchToSelectWorkspace",
           "when": "false"
         },
         {

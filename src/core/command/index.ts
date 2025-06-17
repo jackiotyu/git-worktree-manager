@@ -7,7 +7,7 @@ import { removeWorktreeCmd } from '@/core/command/removeWorktreeCmd';
 import { moveWorktreeCmd } from '@/core/command/moveWorktreeCmd';
 import { lockWorktreeCmd } from '@/core/command/lockWorktreeCmd';
 import { unlockWorktreeCmd } from '@/core/command/unlockWorktreeCmd';
-import { switchToSelectFolderCmd } from '@/core/command/switchToSelectFolderCmd';
+import { switchToSelectWorkspaceCmd } from '@/core/command/switchToSelectWorkspaceCmd';
 import { revealInSystemExplorerCmd } from '@/core/command/revealInSystemExplorerCmd';
 import { addWorktreeFromBranchCmd } from '@/core/command/addWorktreeFromBranchCmd';
 import { pruneWorktreeCmd } from '@/core/command/pruneWorktreeCmd';
@@ -60,7 +60,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.moveWorktree, moveWorktreeCmd),
         registerCommand(Commands.lockWorktree, lockWorktreeCmd),
         registerCommand(Commands.unlockWorktree, unlockWorktreeCmd),
-        registerCommand(Commands.switchToSelectFolder, switchToSelectFolderCmd),
+        registerCommand(Commands.switchToSelectWorkspace, switchToSelectWorkspaceCmd),
         registerCommand(Commands.addWorktreeFromBranch, addWorktreeFromBranchCmd),
         registerCommand(Commands.revealInSystemExplorer, (item: AllViewItem) =>
             revealInSystemExplorerCmd(item),

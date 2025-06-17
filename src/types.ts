@@ -1,5 +1,5 @@
 import { Uri as URI, TreeItem } from 'vscode';
-import { Commands, ViewId, refArgList } from '@/constants';
+import { Commands, ViewId, refArgList, RecentItemType } from '@/constants';
 import * as vscode from 'vscode';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -78,16 +78,11 @@ export interface IRecentCache {
     list: string[];
 }
 
-export enum IRecentItemType {
-    workspace = 0,
-    folder = 1,
-}
-
 export interface IRecentItem {
     label?: string;
     path: string;
     remoteAuthority?: string;
-    type: IRecentItemType;
+    type: RecentItemType;
 }
 
 export interface IRecentItemCache {

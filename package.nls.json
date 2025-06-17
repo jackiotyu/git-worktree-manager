@@ -1,6 +1,6 @@
 {
     "cmd.switchWorktree": "Switch worktree",
-    "cmd.switchToSelectFolder": "Switch the current window to this folder.",
+    "cmd.switchToSelectWorkspace": "Switch the current window to this folder.",
     "cmd.freshWorktree": "Refresh worktree",
     "cmd.refreshGitFolder": "Refresh Git folder",
     "cmd.refreshFolder": "Refresh folder",

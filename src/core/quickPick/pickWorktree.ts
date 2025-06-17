@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { getRecentFolderCache } from '@/core/util/cache';
+import { getRecentItemCache } from '@/core/util/cache';
 import { GlobalState, WorkspaceState } from '@/core/state';
-import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentUriCache } from '@/types';
-import { Commands, RefreshCacheType } from '@/constants';
+import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentItemCache, IRecentItem } from '@/types';
+import { Commands, RefreshCacheType, RecentItemType } from '@/constants';
 import groupBy from 'lodash-es/groupBy';
 import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
@@ -48,7 +48,7 @@ interface WorktreePick extends vscode.QuickPickItem {
 interface IActionService extends vscode.Disposable {
     canClose: boolean;
     sortByBranch: boolean;
-    recentUriCache: IRecentUriCache;
+    recentUriCache: IRecentItemCache;
     recentPickCache: WorktreePick[];
     displayType: DefaultDisplayList;
     updateList: (forceUpdate?: boolean) => void;
@@ -166,8 +166,8 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     }, []);
 };
 
-const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
-    const buttons: vscode.QuickInputButton[] = [
+const mapRecentWorktreePickItems = (list: IRecentItem[]): WorktreePick[] => {
+    const folderButtons: vscode.QuickInputButton[] = [
         saveRepoQuickInputButton,
         openExternalTerminalQuickInputButton,
         openTerminalQuickInputButton,
@@ -176,14 +176,22 @@ const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
         addToWorkspaceQuickInputButton,
         openInNewWindowQuickInputButton,
     ].filter((i) => i.enabled);
-    return list.map((uri) => {
-        const baseName = path.basename(uri.fsPath);
+
+    const workspaceButtons: vscode.QuickInputButton[] = [
+        revealInSystemExplorerQuickInputButton,
+        openInNewWindowQuickInputButton,
+    ].filter((i) => i.enabled);
+
+    return list.map((item) => {
+        const isFolder = item.type === RecentItemType.folder;
+        const uri = vscode.Uri.parse(item.path);
+        const baseName = item.label || path.basename(uri.fsPath);
         return {
-            label: baseName || uri.fsPath,
-            description: baseName ? uri.fsPath : '',
-            iconPath: vscode.ThemeIcon.Folder,
-            path: uri.fsPath,
-            buttons: buttons,
+            label: baseName,
+            description: uri.fsPath,
+            iconPath: isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers'),
+            path: item.path,
+            buttons: isFolder ? folderButtons : workspaceButtons,
         };
     });
 };
@@ -301,7 +309,7 @@ const handleTriggerItemButton = ({
     };
     switch (button) {
         case openInNewWindowQuickInputButton:
-            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.path), {
                 forceNewWindow: false,
                 forceReuseWindow: true,
             });
@@ -393,14 +401,14 @@ class ActionService implements IActionService {
     sortByBranch: boolean = false;
     displayType: DefaultDisplayList = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all);
     worktreeButtons: vscode.QuickInputButton[] = [];
-    recentUriCache: IRecentUriCache = getRecentFolderCache();
+    recentUriCache: IRecentItemCache = getRecentItemCache();
     recentPickCache: WorktreePick[] = [];
     disposables: vscode.Disposable[] = [];
     constructor(private quickPick: vscode.QuickPick<WorktreePick>, displayType?: DefaultDisplayList) {
         this.updateButtons(displayType);
         this.disposables.push(
             globalStateEvent.event((e) => {
-                e === 'global.recentFolderCache' && this.updateList(true);
+                e === 'global.recentItemCache' && this.updateList(true);
             }),
             globalStateEvent.event((e) => {
                 e === 'workTreeCache' && this.updateList();
@@ -454,7 +462,7 @@ class ActionService implements IActionService {
         let items: WorktreePick[] = [];
         if (this.displayType === DefaultDisplayList.recentlyOpened) {
             if (forceUpdate) {
-                this.recentUriCache = getRecentFolderCache();
+                this.recentUriCache = getRecentItemCache();
                 this.recentPickCache.length = 0;
             }
             if (this.recentPickCache.length) {

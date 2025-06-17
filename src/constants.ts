@@ -17,7 +17,7 @@ export enum Commands {
     pullWorktree = 'git-worktree-manager.pullWorktree',
     pushWorktree = 'git-worktree-manager.pushWorktree',
     pruneWorktree = 'git-worktree-manager.pruneWorktree',
-    switchToSelectFolder = 'git-worktree-manager.switchToSelectFolder',
+    switchToSelectWorkspace = 'git-worktree-manager.switchToSelectWorkspace',
     addWorktreeFromBranch = 'git-worktree-manager.addWorktreeFromBranch',
     revealInSystemExplorer = 'git-worktree-manager.revealInSystemExplorer',
     revealInSystemExplorerContext = 'git-worktree-manager.revealInSystemExplorer.context',
@@ -119,4 +119,9 @@ export enum StateKey {
 export enum RefreshCacheType {
     all = 'all',
     workspace = 'workspace',
+}
+
+export enum RecentItemType {
+    workspace = 0,
+    folder = 1,
 }

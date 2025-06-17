@@ -18,6 +18,10 @@ export const verifyDirExistence = async (path: string) => {
     return true;
 };
 
+export const checkIsFolder = (path: string) => {
+    return fs.stat(path).then(stat => stat.isDirectory()).catch(() => false);
+};
+
 export function isDirEmpty(path: string) {
     return fs
         .readdir(path)

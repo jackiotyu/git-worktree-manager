@@ -1,37 +1,39 @@
 import * as vscode from 'vscode';
-import { TreeItemKind, Commands, ViewId } from '@/constants';
-import { ILoadMoreItem, IRecentFolderConfig } from '@/types';
+import { TreeItemKind, Commands, ViewId, RecentItemType } from '@/constants';
+import { ILoadMoreItem, IRecentItem } from '@/types';
 import path from 'path';
 
 export class FolderItem extends vscode.TreeItem {
     path: string = '';
     readonly type = TreeItemKind.folder;
 
-    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: IRecentFolderConfig) {
+    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: IRecentItem) {
         super(name, collapsible);
         this.setProperties(item);
         this.setTooltip(item);
         this.setCommand(item);
     }
 
-    private setProperties(item: IRecentFolderConfig) {
-        this.iconPath = vscode.ThemeIcon.Folder;
-        this.contextValue = 'git-worktree-manager.folderItem';
+    private setProperties(item: IRecentItem) {
+        const isFolder = item.type === RecentItemType.folder;
+        const uri = vscode.Uri.parse(item.path);
+        this.contextValue = isFolder ? 'git-worktree-manager.folderItem' : 'git-worktree-manager.workspaceItem';
         this.path = item.path;
-        this.description = item.path;
-        this.resourceUri = item.uri;
+        this.description = uri.fsPath;
+        this.iconPath = isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers');
+        if (isFolder) this.resourceUri = uri;
     }
 
-    private setTooltip(item: IRecentFolderConfig) {
+    private setTooltip(item: IRecentItem) {
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
     }
 
-    private setCommand(item: IRecentFolderConfig) {
+    private setCommand(item: IRecentItem) {
         this.command = {
             title: 'open folder',
             command: 'vscode.openFolder',
-            arguments: [vscode.Uri.file(item.path), { forceNewWindow: true }],
+            arguments: [vscode.Uri.parse(item.path), { forceNewWindow: true }],
         };
     }
 }
