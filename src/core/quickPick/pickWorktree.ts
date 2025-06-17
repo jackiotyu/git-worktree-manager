@@ -200,7 +200,7 @@ const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     let selectedItem = quickPick.selectedItems[0];
     if (selectedItem?.path) {
         vscode.commands
-            .executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), { forceNewWindow: true })
+            .executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.path), { forceNewWindow: true })
             .then(() => {
                 vscode.commands.executeCommand(Commands.refreshRecentFolder);
             });
