@@ -7,10 +7,11 @@ import { Alert } from '@/core/ui/message';
 
 export const openExternalTerminalCmd = async (item?: AllViewItem, needRevealTreeItem = true) => {
     if (!item) return;
-    if (!(await verifyDirExistence(item.path))) return;
+    const fsPath = vscode.Uri.parse(item.path).fsPath;
+    if (!(await verifyDirExistence(fsPath))) return;
     try {
         if (needRevealTreeItem) await revealTreeItem(item);
-        await openExternalTerminal(`${item.path}`);
+        await openExternalTerminal(`${fsPath}`);
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Opening External Terminal failed\n\n {0}', String(error)));
     }

@@ -7,7 +7,7 @@ export class FolderItem extends vscode.TreeItem {
     path: string = '';
     readonly type = TreeItemKind.folder;
 
-    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, item: IRecentItem) {
+    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, public item: IRecentItem) {
         super(name, collapsible);
         this.setProperties(item);
         this.setTooltip(item);
@@ -18,7 +18,7 @@ export class FolderItem extends vscode.TreeItem {
         const isFolder = item.type === RecentItemType.folder;
         const uri = vscode.Uri.parse(item.path);
         this.contextValue = isFolder ? 'git-worktree-manager.folderItem' : 'git-worktree-manager.workspaceItem';
-        this.path = item.path;
+        this.path = uri.path;
         this.description = uri.fsPath;
         this.iconPath = isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers');
         if (isFolder) this.resourceUri = uri;
@@ -26,7 +26,7 @@ export class FolderItem extends vscode.TreeItem {
 
     private setTooltip(item: IRecentItem) {
         this.tooltip = new vscode.MarkdownString('', true);
-        this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
+        this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', vscode.Uri.parse(item.path).fsPath));
     }
 
     private setCommand(item: IRecentItem) {

@@ -71,6 +71,11 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "git-worktree-manager.refreshFavorites",
+        "title": "%cmd.refreshFavorites%",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "git-worktree-manager.addWorktree",
         "title": "%cmd.addWorktree%",
         "icon": "$(new-folder)",
@@ -146,6 +151,16 @@
         "icon": "$(trash)"
       },
       {
+        "command": "git-worktree-manager.removeFavorite",
+        "title": "%cmd.removeFavorite%",
+        "icon": "$(close)"
+      },
+      {
+        "command": "git-worktree-manager.removeMultiFavorite",
+        "title": "%cmd.removeMultiFavorite%",
+        "icon": "$(trash)"
+      },
+      {
         "command": "git-worktree-manager.renameGitFolder",
         "title": "%cmd.renameGitFolder%",
         "icon": "$(edit)"
@@ -183,6 +198,11 @@
         "icon": "$(search)"
       },
       {
+        "command": "git-worktree-manager.openFavorites",
+        "title": "%cmd.openFavorites%",
+        "icon": "$(search)"
+      },
+      {
         "command": "git-worktree-manager.openWorkspaceWorktree",
         "title": "%cmd.searchAllWorktree%",
         "icon": "$(search)"
@@ -195,6 +215,11 @@
         "command": "git-worktree-manager.addRootsToRepo",
         "title": "%cmd.addToGitFolder%",
         "icon": "$(star-empty)"
+      },
+      {
+        "command": "git-worktree-manager.addToFavorite",
+        "title": "%cmd.addToFavorite%",
+        "icon": "$(pin)"
       },
       {
         "command": "git-worktree-manager.checkoutBranch",
@@ -310,6 +335,11 @@
           "visibility": "collapsed"
         },
         {
+          "id": "git-worktree-manager-favorite",
+          "name": "%view.git-worktree-manager-favorite%",
+          "visibility": "collapsed"
+        },
+        {
           "id": "git-worktree-manager-setting",
           "name": "%view.git-worktree-manager-setting%",
           "visibility": "visible"
@@ -383,6 +413,11 @@
           "group": "navigation@1"
         },
         {
+          "command": "git-worktree-manager.removeMultiFavorite",
+          "when": "view =~ /git-worktree-manager-favorites/",
+          "group": "navigation@1"
+        },
+        {
           "command": "git-worktree-manager.gitFolderViewAsTree",
           "when": "view =~ /git-worktree-manager-folders/ && gwm.context.gitFolderViewAsTree",
           "group": "navigation@2"
@@ -410,6 +445,16 @@
         {
           "command": "git-worktree-manager.openRecent",
           "when": "view === git-worktree-manager-recent",
+          "group": "navigation@1"
+        },
+        {
+          "command": "git-worktree-manager.refreshFavorites",
+          "when": "view === git-worktree-manager-favorites",
+          "group": "navigation@2"
+        },
+        {
+          "command": "git-worktree-manager.openFavorites",
+          "when": "view === git-worktree-manager-favorites",
           "group": "navigation@1"
         }
       ],
@@ -571,7 +616,12 @@
         },
         {
           "command": "git-worktree-manager.addToGitFolder",
-          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "when": "view === git-worktree-manager-recent && viewItem =~ /git-worktree-manager.folderItem/",
+          "group": "workspace@1"
+        },
+        {
+          "command": "git-worktree-manager.addToFavorite",
+          "when": "view === git-worktree-manager-recent && viewItem =~ /git-worktree-manager.(folderItem|workspaceItem)/",
           "group": "workspace@1"
         },
         {
@@ -632,6 +682,10 @@
         },
         {
           "command": "git-worktree-manager.refreshRecentFolder",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.refreshFavorites",
           "when": "false"
         },
         {

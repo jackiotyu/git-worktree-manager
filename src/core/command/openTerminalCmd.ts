@@ -10,11 +10,12 @@ interface CmdItem extends vscode.QuickPickItem {
 
 export const openTerminalCmd = async (item?: AllViewItem) => {
     if (!item) return;
-    if (!(await verifyDirExistence(item.path))) return;
+    const fsPath = vscode.Uri.parse(item.path).fsPath;
+    if (!(await verifyDirExistence(fsPath))) return;
     const terminal = vscode.window.createTerminal({
-        cwd: item.path,
-        name: `${item.name} ⇄ ${item.path}`,
-        color: judgeIncludeFolder(item.path) ? new vscode.ThemeColor('terminal.ansiBlue') : void 0,
+        cwd: fsPath,
+        name: `${item.name} ⇄ ${fsPath}`,
+        color: judgeIncludeFolder(fsPath) ? new vscode.ThemeColor('terminal.ansiBlue') : void 0,
         iconPath: new vscode.ThemeIcon('terminal-bash'),
         isTransient: false,
         hideFromUser: false,

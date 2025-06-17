@@ -3,7 +3,7 @@ import { getRecentItems, getWorkspaceMainFolders, isRecentWorkspace, isRecentFol
 import { comparePath, toSimplePath } from '@/core/util/folder';
 import { WorkspaceState, GlobalState } from '@/core/state';
 import { groupBy } from 'lodash-es';
-import type { IFolderItemConfig, IWorktreeCacheItem, IRecentItemCache } from '@/types';
+import type { IFolderItemConfig, IWorktreeCacheItem, IRecentItemCache, IRecentItem } from '@/types';
 import { RecentItemType } from '@/constants';
 import path from 'path';
 
@@ -117,6 +117,10 @@ export const updateRecentItems = async () => {
 export const getRecentItemCache = (): IRecentItemCache => {
     const res = GlobalState.get('global.recentItemCache', { time: -1, list: [] });
     return res;
+};
+
+export const getFavoriteCache = (): IRecentItem[] => {
+    return GlobalState.get('global.favorite', []);
 };
 
 export const checkRecentFolderCache = () => {

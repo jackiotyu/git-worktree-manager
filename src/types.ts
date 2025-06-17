@@ -85,10 +85,7 @@ export interface IRecentItemCache {
     list: IRecentItem[];
 }
 
-export interface IRecentUriCache {
-    time: number;
-    list: vscode.Uri[];
-}
+export type IFavoriteCache = IRecentItem[];
 
 export interface IRecentlyOpened {
     workspaces: Array<IRecentFolder | IRecentWorkspace>;
@@ -125,6 +122,7 @@ export interface IWorktreeLess {
 }
 
 export enum DefaultDisplayList {
+    favorite = 'favorite',
     recentlyOpened = 'recentlyOpened',
     workspace = 'workspace',
     all = 'all',

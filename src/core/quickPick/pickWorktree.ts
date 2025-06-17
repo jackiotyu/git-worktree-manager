@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { getRecentItemCache } from '@/core/util/cache';
+import { getRecentItemCache, getFavoriteCache } from '@/core/util/cache';
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentItemCache, IRecentItem } from '@/types';
 import { Commands, RefreshCacheType, RecentItemType } from '@/constants';
@@ -37,6 +37,9 @@ import {
     refreshWorkspaceWorktreeQuickInputButton,
     removeWorktreeQuickInputButton,
     saveRepoQuickInputButton,
+    useFavoriteQuickInputButton,
+    useRecentlyQuickInputButton,
+    refreshFavoriteQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
 import { withResolvers } from '@/core/util/promise';
@@ -166,7 +169,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     }, []);
 };
 
-const mapRecentWorktreePickItems = (list: IRecentItem[]): WorktreePick[] => {
+const mapWorkspacePickItems = (list: IRecentItem[]): WorktreePick[] => {
     const folderButtons: vscode.QuickInputButton[] = [
         saveRepoQuickInputButton,
         openExternalTerminalQuickInputButton,
@@ -402,14 +405,14 @@ class ActionService implements IActionService {
     worktreeButtons: vscode.QuickInputButton[] = [];
     recentUriCache: IRecentItemCache = getRecentItemCache();
     recentPickCache: WorktreePick[] = [];
+
     disposables: vscode.Disposable[] = [];
     constructor(private quickPick: vscode.QuickPick<WorktreePick>, displayType?: DefaultDisplayList) {
         this.updateButtons(displayType);
         this.disposables.push(
             globalStateEvent.event((e) => {
                 e === 'global.recentItemCache' && this.updateList(true);
-            }),
-            globalStateEvent.event((e) => {
+                e === 'global.favorite' && this.updateList();
                 e === 'workTreeCache' && this.updateList();
             }),
             workspaceStateEvent.event((e) => {
@@ -419,6 +422,9 @@ class ActionService implements IActionService {
     }
     get displayAll() {
         return this.displayType === DefaultDisplayList.all;
+    }
+    get displayFavorite() {
+        return this.displayType === DefaultDisplayList.favorite;
     }
     updateButtons = (displayType: DefaultDisplayList = this.displayType) => {
         this.displayType = displayType;
@@ -430,6 +436,13 @@ class ActionService implements IActionService {
         const refreshWorktreeButton = this.displayAll
             ? refreshAllWorktreeQuickInputButton
             : refreshWorkspaceWorktreeQuickInputButton;
+        const showFolderButton = this.displayFavorite
+            ? useRecentlyQuickInputButton
+            : useFavoriteQuickInputButton;
+        const refreshFolderButton = this.displayFavorite
+            ? refreshRecentlyQuickInputButton
+            : refreshFavoriteQuickInputButton;
+
         switch (displayList) {
             case DefaultDisplayList.all:
             case DefaultDisplayList.workspace:
@@ -446,6 +459,15 @@ class ActionService implements IActionService {
             case DefaultDisplayList.recentlyOpened:
                 this.worktreeButtons = [
                     refreshRecentlyQuickInputButton,
+                    showFolderButton,
+                    settingQuickInputButton,
+                    backWorkspaceQuickInputButton,
+                ];
+                break;
+            case DefaultDisplayList.favorite:
+                this.worktreeButtons = [
+                    refreshFolderButton,
+                    showFolderButton,
                     settingQuickInputButton,
                     backWorkspaceQuickInputButton,
                 ];
@@ -468,10 +490,12 @@ class ActionService implements IActionService {
                 this.quickPick.items = this.recentPickCache;
             } else {
                 this.quickPick.items = [];
-                const list = mapRecentWorktreePickItems(this.recentUriCache.list);
+                const list = mapWorkspacePickItems(this.recentUriCache.list);
                 this.recentPickCache = list;
                 this.quickPick.items = list;
             }
+        } else if (this.displayType === DefaultDisplayList.favorite) {
+            this.quickPick.items = mapWorkspacePickItems(getFavoriteCache());
         } else {
             items = this.displayAll
                 ? mapWorktreePickItems(GlobalState.get('workTreeCache', []))

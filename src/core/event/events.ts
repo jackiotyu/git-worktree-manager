@@ -11,6 +11,7 @@ export const updateFolderEvent = new vscode.EventEmitter<void>();
 export const globalStateEvent = new vscode.EventEmitter<StateKey>();
 export const workspaceStateEvent = new vscode.EventEmitter<StateKey>();
 export const updateRecentEvent = new vscode.EventEmitter<void>();
+export const updateFavoriteEvent = new vscode.EventEmitter<void>();
 export const toggleGitFolderViewAsEvent = new vscode.EventEmitter<boolean>();
 export const loadAllTreeDataEvent = new vscode.EventEmitter<ViewId>();
 export const revealTreeItemEvent = new vscode.EventEmitter<AllViewItem>();
@@ -26,6 +27,7 @@ export const collectEvent = (context: vscode.ExtensionContext) => {
         globalStateEvent,
         workspaceStateEvent,
         updateRecentEvent,
+        updateFavoriteEvent,
         toggleGitFolderViewAsEvent,
         loadAllTreeDataEvent,
         revealTreeItemEvent,
