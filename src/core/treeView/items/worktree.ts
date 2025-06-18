@@ -28,12 +28,12 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     private updatingAheadBehind: boolean = false;
 
     constructor(
-        private item: IWorktreeDetail,
+        private viewItem: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
         public parent?: GitFolderItem | WorkspaceMainGitFolderItem
     ) {
-        super(WorktreeItem.generateLabel(item), collapsible);
-        this.isCurrent = judgeIncludeFolder(item.path);
+        super(WorktreeItem.generateLabel(viewItem), collapsible);
+        this.isCurrent = judgeIncludeFolder(viewItem.path);
 
         this.setProperties();
         this.initUpstreamInfo();
@@ -54,7 +54,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     }
 
     private setProperties() {
-        const item = this.item;
+        const item = this.viewItem;
         this.id = item.path;
         const uri = vscode.Uri.file(item.path);
         this.uriPath = uri.toString();
@@ -65,10 +65,10 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
 
     private setDescription() {
         let descriptionList = [];
-        if (this.item.isMain) descriptionList.push('✨ ');
+        if (this.viewItem.isMain) descriptionList.push('✨ ');
         if (this.ahead) descriptionList.push(`${this.ahead}↑ `);
         if (this.behind) descriptionList.push(`${this.behind}↓ `);
-        descriptionList.push(this.item.path);
+        descriptionList.push(this.viewItem.path);
         this.description = descriptionList.join('');
     }
 
@@ -76,12 +76,12 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         this.command = {
             title: 'open worktree',
             command: 'vscode.openFolder',
-            arguments: [vscode.Uri.file(this.item.path), { forceNewWindow: true }],
+            arguments: [vscode.Uri.file(this.viewItem.path), { forceNewWindow: true }],
         };
     }
 
     private setIcon() {
-        const item = this.item;
+        const item = this.viewItem;
         const isCurrent = this.isCurrent;
         const themeColor = isCurrent ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
         switch (true) {
@@ -101,7 +101,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     }
 
     private setContextValue() {
-        const item = this.item;
+        const item = this.viewItem;
         const lockPost = (!item.isMain && (item.locked ? '.lock' : '.unlock')) || '';
         const mainPost = item.isMain ? '.main' : '';
         const currentPost = judgeIncludeFolder(item.path) ? '.current' : '';
@@ -113,7 +113,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     }
 
     private setTooltip() {
-        const item = this.item;
+        const item = this.viewItem;
         const isCurrent = this.isCurrent;
         const tooltip = new vscode.MarkdownString('', true);
         tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', item.path));
@@ -153,7 +153,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
 
         try {
 
-            const item = this.item;
+            const item = this.viewItem;
 
             if (item.isBare) return;
             if (!item.isBranch) return;
@@ -189,7 +189,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     }
 
     private setResourceUri() {
-        if (this.item.isBranch) {
+        if (this.viewItem.isBranch) {
             this.resourceUri = vscode.Uri.parse(
                 `${WORK_TREE_SCHEME}://status/worktree/${getWorktreeStatus({ ahead: this.ahead, behind: this.behind })}`
             );

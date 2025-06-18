@@ -1015,11 +1015,13 @@
             "order": 2,
             "scope": "application",
             "enum": [
+              "favorites",
               "recentlyOpened",
               "workspace",
               "all"
             ],
             "enumDescriptions": [
+              "%config.defaultDisplayList.enum.favorites%",
               "%config.defaultDisplayList.enum.recentlyOpened%",
               "%config.defaultDisplayList.enum.workspace%",
               "%config.defaultDisplayList.enum.all%"

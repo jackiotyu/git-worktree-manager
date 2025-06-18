@@ -124,7 +124,7 @@ export interface IWorktreeLess {
 }
 
 export enum DefaultDisplayList {
-    favorite = 'favorite',
+    favorites = 'favorites',
     recentlyOpened = 'recentlyOpened',
     workspace = 'workspace',
     all = 'all',

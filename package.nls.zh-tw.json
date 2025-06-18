@@ -85,6 +85,7 @@
     "config.worktreePick.showViewHistory.description": "在「尋找 Worktree」清單中顯示「檢視 Git 歷史」按鈕",
     "config.worktreePick.showOpenRepository.description": "在「尋找 Worktree」清單中顯示「在原始碼控制中開啟該儲存庫」按鈕",
     "config.defaultDisplayList.description": "預設顯示清單",
+    "config.defaultDisplayList.enum.favorites": "收藏夾",
     "config.defaultDisplayList.enum.recentlyOpened": "最近使用的資料夾清單",
     "config.defaultDisplayList.enum.workspace": "顯示工作區內的 worktree 清單",
     "config.defaultDisplayList.enum.all": "顯示所有的 worktree 清單",

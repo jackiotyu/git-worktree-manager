@@ -85,6 +85,7 @@
     "config.worktreePick.showViewHistory.description": "「ワークツリーを検索」の結果に「Git履歴を表示」ボタンを表示",
     "config.worktreePick.showOpenRepository.description": "「ワークツリーを検索」の結果に「ソース管理ビューでリポジトリを開く」ボタンを表示",
     "config.defaultDisplayList.description": "デフォルトの表示リスト",
+    "config.defaultDisplayList.enum.favorites": "お気に入り",
     "config.defaultDisplayList.enum.recentlyOpened": "最近開いたフォルダリストを表示",
     "config.defaultDisplayList.enum.workspace": "ワークスペース内のワークツリーリストを表示",
     "config.defaultDisplayList.enum.all": "すべてのワークツリーリストを表示",

@@ -203,7 +203,7 @@ const mapWorkspacePickItems = (list: IRecentItem[], disPlayType: DefaultDisplayL
         openInNewWindowQuickInputButton,
     ].filter((i) => i.enabled);
 
-    if (disPlayType === DefaultDisplayList.favorite) {
+    if (disPlayType === DefaultDisplayList.favorites) {
        folderButtons = folderButtons.filter(button => button !== saveFavoriteQuickInputButton);
        workspaceButtons = workspaceButtons.filter(button => button !== saveFavoriteQuickInputButton);
     }
@@ -283,7 +283,7 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         return;
     }
     if (event === useFavoriteQuickInputButton) {
-        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.favorite);
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.favorites);
         actionService.updateList();
         return;
     }
@@ -468,8 +468,8 @@ class ActionService implements IActionService {
     get displayAll() {
         return this.displayType === DefaultDisplayList.all;
     }
-    get displayFavorite() {
-        return this.displayType === DefaultDisplayList.favorite;
+    get displayFavorites() {
+        return this.displayType === DefaultDisplayList.favorites;
     }
     updateButtons = (displayType: DefaultDisplayList = this.displayType) => {
         this.displayType = displayType;
@@ -481,10 +481,10 @@ class ActionService implements IActionService {
         const refreshWorktreeButton = this.displayAll
             ? refreshAllWorktreeQuickInputButton
             : refreshWorkspaceWorktreeQuickInputButton;
-        const showFolderButton = this.displayFavorite
+        const showFolderButton = this.displayFavorites
             ? useRecentlyQuickInputButton
             : useFavoriteQuickInputButton;
-        const refreshFolderButton = this.displayFavorite
+        const refreshFolderButton = this.displayFavorites
             ? refreshRecentlyQuickInputButton
             : refreshFavoriteQuickInputButton;
 
@@ -509,7 +509,7 @@ class ActionService implements IActionService {
                     backWorkspaceQuickInputButton,
                 ];
                 break;
-            case DefaultDisplayList.favorite:
+            case DefaultDisplayList.favorites:
                 this.worktreeButtons = [
                     refreshFolderButton,
                     showFolderButton,
@@ -539,8 +539,8 @@ class ActionService implements IActionService {
                 this.recentPickCache = list;
                 this.quickPick.items = list;
             }
-        } else if (this.displayType === DefaultDisplayList.favorite) {
-            this.quickPick.items = mapWorkspacePickItems(getFavoriteCache(), DefaultDisplayList.favorite);
+        } else if (this.displayType === DefaultDisplayList.favorites) {
+            this.quickPick.items = mapWorkspacePickItems(getFavoriteCache(), DefaultDisplayList.favorites);
         } else {
             items = this.displayAll
                 ? mapWorktreePickItems(GlobalState.get('workTreeCache', []))
