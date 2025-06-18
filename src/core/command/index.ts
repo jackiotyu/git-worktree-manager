@@ -46,8 +46,8 @@ import { refreshWorktreeCacheCmd } from '@/core/command/refreshWorktreeCacheCmd'
 import { deleteBranchCmd } from '@/core/command/deleteBranchCmd';
 import { renameBranchCmd } from '@/core/command/renameBranchCmd';
 import { bundleRepoCmd } from '@/core/command/bundleRepoCmd';
-import { openFavoritesCmd } from '@/core/command/openFavoritesCmd';
-import { refreshFavoritesCmd } from '@/core/command/refreshFavoritesCmd';
+import { openFavoriteCmd } from '@/core/command/openFavoriteCmd';
+import { refreshFavoriteCmd } from '@/core/command/refreshFavoriteCmd';
 import { removeFavoriteCmd } from '@/core/command/removeFavoriteCmd';
 import { removeMultiFavoriteCmd } from '@/core/command/removeMultiFavoriteCmd';
 import { addToFavoriteCmd } from '@/core/command/addToFavoriteCmd';
@@ -120,8 +120,8 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.deleteBranch, deleteBranchCmd),
         registerCommand(Commands.renameBranch, renameBranchCmd),
         registerCommand(Commands.bundleRepo, bundleRepoCmd),
-        registerCommand(Commands.refreshFavorites, refreshFavoritesCmd),
-        registerCommand(Commands.openFavorites, openFavoritesCmd),
+        registerCommand(Commands.refreshFavorite, refreshFavoriteCmd),
+        registerCommand(Commands.openFavorite, openFavoriteCmd),
         registerCommand(Commands.removeFavorite, removeFavoriteCmd),
         registerCommand(Commands.removeMultiFavorite, removeMultiFavoriteCmd),
         registerCommand(Commands.addToFavorite, addToFavoriteCmd),

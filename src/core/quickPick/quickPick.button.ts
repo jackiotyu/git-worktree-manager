@@ -141,11 +141,11 @@ export const backWorkspaceQuickInputButton = new QuickInputButton({
 });
 export const useRecentlyQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('pass'),
-    tooltip: vscode.l10n.t('Use recently used folders'),
+    tooltip: vscode.l10n.t('Click to display recently used folders'),
 });
 export const useFavoriteQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('pass-filled'),
-    tooltip: vscode.l10n.t('Use favorite folders'),
+    tooltip: vscode.l10n.t('Click to display favorite'),
 });
 export const refreshRecentlyQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('refresh'),

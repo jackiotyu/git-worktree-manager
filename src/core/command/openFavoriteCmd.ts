@@ -1,6 +1,6 @@
 import { pickWorktree } from "@/core/quickPick/pickWorktree";
 import { DefaultDisplayList } from '@/types';
 
-export const openFavoritesCmd = () => {
+export const openFavoriteCmd = () => {
     pickWorktree(DefaultDisplayList.favorite);
 };

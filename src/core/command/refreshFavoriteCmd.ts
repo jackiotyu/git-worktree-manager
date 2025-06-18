@@ -1,5 +1,5 @@
 import { updateFavoriteEvent } from '@/core/event/events';
 
-export const refreshFavoritesCmd = async () => {
+export const refreshFavoriteCmd = async () => {
     updateFavoriteEvent.fire();
 };

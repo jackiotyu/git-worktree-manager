@@ -71,8 +71,8 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "git-worktree-manager.refreshFavorites",
-        "title": "%cmd.refreshFavorites%",
+        "command": "git-worktree-manager.refreshFavorite",
+        "title": "%cmd.refreshFavorite%",
         "icon": "$(refresh)"
       },
       {
@@ -198,8 +198,8 @@
         "icon": "$(search)"
       },
       {
-        "command": "git-worktree-manager.openFavorites",
-        "title": "%cmd.openFavorites%",
+        "command": "git-worktree-manager.openFavorite",
+        "title": "%cmd.openFavorite%",
         "icon": "$(search)"
       },
       {
@@ -448,12 +448,12 @@
           "group": "navigation@1"
         },
         {
-          "command": "git-worktree-manager.refreshFavorites",
+          "command": "git-worktree-manager.refreshFavorite",
           "when": "view === git-worktree-manager-favorite",
           "group": "navigation@2"
         },
         {
-          "command": "git-worktree-manager.openFavorites",
+          "command": "git-worktree-manager.openFavorite",
           "when": "view === git-worktree-manager-favorite",
           "group": "navigation@1"
         }
@@ -685,7 +685,7 @@
           "when": "false"
         },
         {
-          "command": "git-worktree-manager.refreshFavorites",
+          "command": "git-worktree-manager.refreshFavorite",
           "when": "false"
         },
         {

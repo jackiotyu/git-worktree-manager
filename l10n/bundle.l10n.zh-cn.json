@@ -86,6 +86,8 @@
     "Copy • {0}": "复制 • {0}",
     "Click to display worktree list in workspace": "点击以展示工作区内的 worktree 列表",
     "Click to display all worktree list": "点击以展示全部的 worktree 列表",
+    "Click to display recently used folders": "点击以展示最近使用的文件夹",
+    "Click to display favorite": "点击以展示收藏夹",
     "Please select an action": "请选择一个操作",
     "template content": "模板内容",
     "folder path": "目录路径",

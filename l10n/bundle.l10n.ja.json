@@ -86,6 +86,8 @@
     "Copy • {0}": "コピー • {0}",
     "Click to display worktree list in workspace": "ワークスペース内のワークツリー一覧を表示するにはクリック",
     "Click to display all worktree list": "すべてのワークツリー一覧を表示するにはクリック",
+    "Click to display recently used folders": "最近使用したフォルダを表示するにはクリック",
+    "Click to display favorite": "お気に入りを表示するにはクリック",
     "Please select an action": "操作を選択してください",
     "template content": "テンプレート内容",
     "folder path": "フォルダパス",

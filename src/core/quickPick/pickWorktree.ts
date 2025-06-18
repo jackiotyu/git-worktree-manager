@@ -317,7 +317,7 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         return;
     }
     if (event === refreshFavoriteQuickInputButton) {
-        vscode.commands.executeCommand(Commands.refreshFavorites);
+        vscode.commands.executeCommand(Commands.refreshFavorite);
         return;
     }
 };
