@@ -48,7 +48,7 @@ export class FavoriteDataProvider implements vscode.TreeDataProvider<FolderItem>
     async getChildren(element?: FolderItem): Promise<FolderItem[]> {
         try {
             return this.data.map(item => {
-                return new FolderItem(item.label, vscode.TreeItemCollapsibleState.None, item);
+                return new FolderItem(item.label, vscode.TreeItemCollapsibleState.None, item, ViewId.favorite);
             });
         } catch (error) {
             logger.error(`Failed to get children:${error}`);

@@ -72,7 +72,7 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
 
             const itemList: RecentFolderItem[] = currentItems
                 .map((config) => {
-                    return new FolderItem(config.label, vscode.TreeItemCollapsibleState.None, config);
+                    return new FolderItem(config.label, vscode.TreeItemCollapsibleState.None, config, ViewId.folderList);
                 });
 
             if (itemList.length < this.data.list.length) {

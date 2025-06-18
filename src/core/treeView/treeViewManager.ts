@@ -55,8 +55,8 @@ export class TreeViewManager {
             const _worktreeView = viewsToSCM ? worktreeViewSCM : worktreeView;
 
             if (item.type === TreeItemKind.folder) {
-                recentFolderView.reveal(item, { focus: true, select: true });
-                favoriteView.reveal(item, { focus: true, select: true });
+                if (item.from === ViewId.favorite) favoriteView.reveal(item, { focus: true, select: true });
+                if (item.from === ViewId.folderList) recentFolderView.reveal(item, { focus: true, select: true });
                 return;
             }
 
