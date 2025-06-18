@@ -7,24 +7,24 @@ import { GitFolderItem } from '@/core/treeView/items';
 import { comparePath } from '@/core/util/folder';
 
 export const removeGitFolderCmd = async (item: GitFolderItem) => {
-    let path = item.path;
+    let fsPath = item.fsPath;
     let folders = getFolderConfig();
-    if (!folders.some((f) => comparePath(f.path, path))) {
+    if (!folders.some((f) => comparePath(f.path, fsPath))) {
         return;
     }
     let ok = await confirmModal(
-        vscode.l10n.t('Remove the git repository reference in list'),
+        vscode.l10n.t('Remove the git repository reference from the list'),
         vscode.l10n.t(
             'Are you sure to delete this repository reference with path {0} and alias {1}?',
-            item.path,
+            item.fsPath,
             item.name,
         ),
     );
     if (!ok) {
         return;
     }
-    folders = folders.filter((f) => !comparePath(f.path, path));
+    folders = folders.filter((f) => !comparePath(f.path, fsPath));
     await updateFolderConfig(folders);
-    worktreeEventRegister.remove(vscode.Uri.file(path));
+    worktreeEventRegister.remove(vscode.Uri.file(fsPath));
     Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
 };

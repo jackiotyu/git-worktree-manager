@@ -1,5 +1,5 @@
 import { Uri as URI, TreeItem } from 'vscode';
-import { Commands, ViewId, refArgList } from '@/constants';
+import { Commands, ViewId, refArgList, RecentItemType } from '@/constants';
 import * as vscode from 'vscode';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -48,18 +48,47 @@ export interface IRecentFolder {
     readonly remoteAuthority?: string;
 }
 
-export interface IRecentCache {
-    time: number;
-    list: string[];
+export interface IBaseWorkspaceIdentifier {
+    /**
+     * Every workspace (multi-root, single folder or empty)
+     * has a unique identifier. It is not possible to open
+     * a workspace with the same `id` in multiple windows
+     */
+    readonly id: string;
 }
 
-export interface IRecentUriCache {
-    time: number;
-    list: vscode.Uri[];
+/**
+ * A multi-root workspace identifier is a path to a workspace file + id.
+ */
+export interface IWorkspaceIdentifier extends IBaseWorkspaceIdentifier {
+    /**
+     * Workspace config file path as `URI`.
+     */
+    configPath: URI;
 }
+
+export interface IRecentWorkspace {
+    readonly workspace: IWorkspaceIdentifier;
+    label?: string;
+    readonly remoteAuthority?: string;
+}
+
+export interface IRecentItem {
+    label: string;
+    path: string;
+    remoteAuthority?: string;
+    type: RecentItemType;
+}
+
+export interface IRecentItemCache {
+    time: number;
+    list: IRecentItem[];
+}
+
+export type IFavoriteCache = IRecentItem[];
 
 export interface IRecentlyOpened {
-    workspaces: Array<IRecentFolder>;
+    workspaces: Array<IRecentFolder | IRecentWorkspace>;
 }
 
 export interface ILoadMoreItem extends TreeItem {
@@ -89,10 +118,13 @@ export type RepoRefList = {
 
 export interface IWorktreeLess {
     name: string;
-    path: string;
+    fsPath: string;
+    uriPath: string;
+    item?: IRecentItem;
 }
 
 export enum DefaultDisplayList {
+    favorite = 'favorite',
     recentlyOpened = 'recentlyOpened',
     workspace = 'workspace',
     all = 'all',

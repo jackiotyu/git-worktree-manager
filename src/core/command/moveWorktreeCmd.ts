@@ -9,14 +9,14 @@ import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
 export const moveWorktreeCmd = async (item?: WorktreeItem) => {
     if (!item) return;
     try {
-        const mainFolder = await getMainFolder(item.path);
+        const mainFolder = await getMainFolder(item.fsPath);
         if (!mainFolder) return false;
         let folderPath = await inputWorktreeDir({
             baseDir: mainFolder,
-            targetDirTip: vscode.l10n.t(`Select the new location to move the Worktree's folder from {0}`, item.path),
+            targetDirTip: vscode.l10n.t(`Select the new location to move the Worktree's folder from {0}`, item.fsPath),
         });
         if (!folderPath) return;
-        await moveWorktree(item.path, folderPath, mainFolder);
+        await moveWorktree(item.fsPath, folderPath, mainFolder);
         Alert.showInformationMessage(vscode.l10n.t('Worktree moved successfully'));
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Worktree move failed \n\n {0}', String(error)));

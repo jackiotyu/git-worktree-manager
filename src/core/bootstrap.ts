@@ -23,7 +23,7 @@ import { WorktreeDecorator } from '@/core/util/worktree';
 import { worktreeEventRegister } from '@/core/event/git';
 import { Config } from '@/core/config/setting';
 import { Commands, RefreshCacheType } from '@/constants';
-import { updateWorkspaceListCache, updateWorktreeCache, updateRecentFolders } from '@/core/util/cache';
+import { updateWorkspaceListCache, updateWorktreeCache, updateRecentItems } from '@/core/util/cache';
 
 const setupCacheEvents = (context: vscode.ExtensionContext) => {
     const updateWorktreeCacheHandler = updateWorktreeCacheEvent.event((repoPath) => {
@@ -43,7 +43,7 @@ const setupCacheEvents = (context: vscode.ExtensionContext) => {
             { leading: true },
         ),
     );
-    const updateRecentCacheEvent = updateRecentEvent.event(debounce(updateRecentFolders, 1000, { leading: true }));
+    const updateRecentCacheEvent = updateRecentEvent.event(debounce(updateRecentItems, 1000, { leading: true }));
     context.subscriptions.push(updateWorktreeCacheHandler, updateCacheHandler, updateRecentCacheEvent);
 };
 

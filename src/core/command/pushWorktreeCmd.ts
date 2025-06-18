@@ -5,7 +5,7 @@ export const pushWorktreeCmd = (item?: WorktreeItem) => {
     if (!item || !item.remoteRef || !item.remote) return;
     pullOrPushAction('push', {
         branch: item.name,
-        cwd: item.path,
+        cwd: item.fsPath,
         remote: item.remote,
         remoteRef: item.remoteRef,
     });

@@ -11,7 +11,7 @@ import { actionProgressWrapper } from '@/core/ui/progress';
 
 interface WorktreeInfo {
     name: string;
-    path: string;
+    fsPath: string;
 }
 
 /** 获取当前工作目录信息 */
@@ -22,30 +22,30 @@ async function getCurrentWorkingDirectory(): Promise<WorktreeInfo | false> {
         return false;
     }
 
-    const path = folderRoot.uri?.fsPath || '';
-    const name = (await getNameRev(path))
+    const fsPath = folderRoot.uri?.fsPath || '';
+    const name = (await getNameRev(fsPath))
         .replace(/^tags\//, '')
         .replace(/^heads\//, '')
         .trim();
 
-    return { path, name };
+    return { fsPath, name };
 }
 
 /** 构建标题 */
 function buildTitle(info: WorktreeInfo): string {
     const maxPathLength = 35;
-    const truncatedPath = info.path.length > maxPathLength ? `...${info.path.slice(-34)}` : info.path;
+    const truncatedPath = info.fsPath.length > maxPathLength ? `...${info.fsPath.slice(-34)}` : info.fsPath;
 
     return `${info.name} ⇄ ${truncatedPath}`;
 }
 
 /** 执行分支切换操作 */
 async function performCheckout(info: WorktreeInfo, refName: string, isBranch: boolean): Promise<void> {
-    const progressMessage = vscode.l10n.t('Checkout branch ( {0} ) on {1}', refName, info.path);
+    const progressMessage = vscode.l10n.t('Checkout branch ( {0} ) on {1}', refName, info.fsPath);
 
     actionProgressWrapper(
         progressMessage,
-        () => checkoutBranch(info.path, refName, isBranch),
+        () => checkoutBranch(info.fsPath, refName, isBranch),
         () => {} // 成功回调为空
     );
 }
@@ -54,13 +54,13 @@ async function performCheckout(info: WorktreeInfo, refName: string, isBranch: bo
 export const checkoutBranchCmd = async (item?: IWorktreeLess): Promise<boolean | void> => {
     // 获取工作目录信息
     let worktreeInfo: WorktreeInfo | false = item
-        ? { name: item.name, path: item.path }
+        ? { name: item.name, fsPath: item.fsPath }
         : await getCurrentWorkingDirectory();
 
     if (!worktreeInfo) return false;
 
     // 获取主文件夹
-    const mainFolder = await getMainFolder(worktreeInfo.path);
+    const mainFolder = await getMainFolder(worktreeInfo.fsPath);
     if (!mainFolder) return false;
 
     // 构建标题并选择分支
@@ -69,7 +69,7 @@ export const checkoutBranchCmd = async (item?: IWorktreeLess): Promise<boolean |
         title: vscode.l10n.t('Checkout branch ( {0} )', title),
         placeholder: vscode.l10n.t('Select branch for checkout'),
         mainFolder,
-        cwd: worktreeInfo.path,
+        cwd: worktreeInfo.fsPath,
         showCreate: true,
     });
 

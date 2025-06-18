@@ -9,13 +9,13 @@ import path from 'path';
 import { actionProgressWrapper } from '@/core/ui/progress';
 
 export async function bundleRepoCmd(item: GitFolderItem) {
-    const baseBundleDir = getBaseBundleDir(item.path);
+    const baseBundleDir = getBaseBundleDir(item.fsPath);
     const bundlePath = path.join(baseBundleDir, `${dayjs().format('YYYY-MM-DD-HH-mm-ss')}.bundle`);
     actionProgressWrapper(
         vscode.l10n.t('Bundling repo..., {path}', { path: bundlePath }),
         async () => {
             await fs.mkdir(baseBundleDir, { recursive: true });
-            await bundleRepo(item.path, bundlePath);
+            await bundleRepo(item.fsPath, bundlePath);
             Alert.showInformationMessage(vscode.l10n.t('Repository backup successful: {path}', { path: bundlePath }));
         },
         () => {}

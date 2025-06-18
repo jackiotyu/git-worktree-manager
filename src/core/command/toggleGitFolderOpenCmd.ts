@@ -19,7 +19,7 @@ export const toggleGitFolderOpenCmd = async (item?: GitFolderItem) => {
     item.defaultOpen = !item.defaultOpen;
     await updateFolderItem({
         name: item.name,
-        path: item.path,
+        path: item.fsPath,
         defaultOpen: item.defaultOpen,
     });
 };

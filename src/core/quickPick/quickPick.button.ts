@@ -43,7 +43,7 @@ class QuickInputButton implements IQuickInputButton {
 
 export const openInNewWindowQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('arrow-right'),
-    tooltip: vscode.l10n.t('Switch the current window to this folder.'),
+    tooltip: vscode.l10n.t('Open in Current Window'),
 });
 export const revealInSystemExplorerQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('folder-opened'),
@@ -139,7 +139,19 @@ export const backWorkspaceQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('arrow-swap'),
     tooltip: vscode.l10n.t('Open worktree list'),
 });
+export const useRecentlyQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('pass'),
+    tooltip: vscode.l10n.t('Click to display recently used folders'),
+});
+export const useFavoriteQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('pass-filled'),
+    tooltip: vscode.l10n.t('Click to display Favorites'),
+});
 export const refreshRecentlyQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('refresh'),
+    tooltip: vscode.l10n.t('Refresh'),
+});
+export const refreshFavoriteQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('refresh'),
     tooltip: vscode.l10n.t('Refresh'),
 });
@@ -154,6 +166,10 @@ export const refreshWorkspaceWorktreeQuickInputButton = new QuickInputButton({
 export const saveRepoQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('star-empty'),
     tooltip: vscode.l10n.t('Save git repository'),
+});
+export const saveFavoriteQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('tag'),
+    tooltip: vscode.l10n.t('Add to Favorites'),
 });
 export const removeWorktreeQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('trash'),

@@ -3,10 +3,10 @@ import { WorktreeItem } from '@/core/treeView/items';
 import { Alert } from '@/core/ui/message';
 import logger from '@/core/log/logger';
 
-export const switchToSelectFolderCmd = async (item?: WorktreeItem) => {
+export const switchToSelectWorkspaceCmd = async (item?: WorktreeItem) => {
     if (!item) return;
     try {
-        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(item.path), {
+        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(item.uriPath), {
             forceNewWindow: false,
             forceReuseWindow: true,
         });

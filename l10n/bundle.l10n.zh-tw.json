@@ -1,5 +1,5 @@
 {
-    "Switch the current window to this folder.": "當前視窗切換到這個資料夾",
+    "Open in Current Window": "在目前視窗中開啟",
     "Reveal in the system explorer": "在系統檔案總管中顯示",
     "Open in External Terminal": "在外部終端機中開啟",
     "Open in Built-in Terminal": "在內建終端機中開啟",
@@ -36,7 +36,7 @@
     "Please select the git repository folder path": "請選擇 git 儲存庫資料夾",
     "Enter the name of the repository for the showcase": "輸入展示用的儲存庫名稱",
     "Rename the git repository alias": "重命名 git 儲存庫別名",
-    "Remove the git repository reference in list": "刪除 git 儲存庫引用",
+    "Remove the git repository reference from the list": "刪除 git 儲存庫引用",
     "Are you sure to delete this repository reference with path {0} and alias {1}?": "確定刪除路徑為 {0}、別名為 {1} 的這個儲存庫引用？",
     "Please enter a name for the presentation": "請輸入展示用的名稱",
     "Select command": "選擇命令",
@@ -86,6 +86,8 @@
     "Copy • {0}": "複製 • {0}",
     "Click to display worktree list in workspace": "點擊以顯示工作區內的 worktree 清單",
     "Click to display all worktree list": "點擊以顯示所有的 worktree 清單",
+    "Click to display recently used folders": "點擊以顯示最近使用的資料夾",
+    "Click to display Favorites": "點擊以顯示收藏夾",
     "Please select an action": "請選擇一個操作",
     "template content": "範本內容",
     "folder path": "資料夾路徑",
@@ -107,6 +109,7 @@
     "All folders have been added, there are no more folders to add": "已新增所有資料夾，沒有更多可新增的資料夾",
     "Refresh": "重新整理",
     "Save git repository": "儲存 git 儲存庫",
+    "Add to Favorites": "新增到收藏夾",
     "Open recently used folders": "開啟最近使用的資料夾",
     "Open worktree list": "開啟 worktree 清單",
     "Input worktree directory": "輸入 worktree 目錄",
@@ -132,7 +135,8 @@
     "Loading...": "載入中...",
     "Bundling repo..., {path}": "組合儲存庫..., {path}",
     "Repository backup successful: {path}": "儲存庫備份成功: {path}",
-    "The selected Git repository paths will be removed from the list": "選取的 Git 儲存庫路徑將從清單中移除",
-    "Please select the Git repository paths you want to remove": "請選擇要移除的 Git 儲存庫路徑",
-    "Select git repository for prune worktree": "請選擇需要清理 worktree 的 git 儲存庫"
+    "The selected items will be removed from the list": "選取的項目將會從列表中移除",
+    "Please select the items you want to remove": "請選取您要移除的項目",
+    "Select git repository for prune worktree": "請選擇需要清理 worktree 的 git 儲存庫",
+    "Remove the items from the list": "從列表中移除項目"
 }

@@ -5,7 +5,10 @@ export enum Commands {
     switchWorktree = 'git-worktree-manager.switchWorktree',
     addWorktree = 'git-worktree-manager.addWorktree',
     addGitFolder = 'git-worktree-manager.addGitFolder',
+    addToFavorite = 'git-worktree-manager.addToFavorite',
     addRootsToRepo = 'git-worktree-manager.addRootsToRepo',
+    removeFavorite = 'git-worktree-manager.removeFavorite',
+    removeMultiFavorite = 'git-worktree-manager.removeMultiFavorite',
     removeGitFolder = 'git-worktree-manager.removeGitFolder',
     removeMultiGitFolder = 'git-worktree-manager.removeMultiGitFolder',
     renameGitFolder = 'git-worktree-manager.renameGitFolder',
@@ -17,7 +20,7 @@ export enum Commands {
     pullWorktree = 'git-worktree-manager.pullWorktree',
     pushWorktree = 'git-worktree-manager.pushWorktree',
     pruneWorktree = 'git-worktree-manager.pruneWorktree',
-    switchToSelectFolder = 'git-worktree-manager.switchToSelectFolder',
+    switchToSelectWorkspace = 'git-worktree-manager.switchToSelectWorkspace',
     addWorktreeFromBranch = 'git-worktree-manager.addWorktreeFromBranch',
     revealInSystemExplorer = 'git-worktree-manager.revealInSystemExplorer',
     revealInSystemExplorerContext = 'git-worktree-manager.revealInSystemExplorer.context',
@@ -31,6 +34,7 @@ export enum Commands {
     removeFromWorkspace = 'git-worktree-manager.removeFromWorkspace',
     copyFolderPath = 'git-worktree-manager.copyFolderPath',
     refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',
+    refreshFavorite = 'git-worktree-manager.refreshFavorite',
     addToGitFolder = 'git-worktree-manager.addToGitFolder',
     checkoutBranch = 'git-worktree-manager.checkoutBranch',
     deleteBranch = 'git-worktree-manager.deleteBranch',
@@ -43,6 +47,7 @@ export enum Commands {
     loadAllTreeData = 'git-worktree-manager.loadAllTreeData',
     viewHistory = 'git-worktree-manager.viewHistory',
     openRecent = 'git-worktree-manager.openRecent',
+    openFavorite = 'git-worktree-manager.openFavorite',
     openWorkspaceWorktree = 'git-worktree-manager.openWorkspaceWorktree',
     fetchWorktree = 'git-worktree-manager.fetchWorktree',
     fetchRepo = 'git-worktree-manager.fetchRepo',
@@ -87,6 +92,7 @@ export enum ViewId {
     settingList = 'git-worktree-manager-setting',
     worktreeListSCM = 'git-worktree-manager-list.scm',
     gitFolderListSCM = 'git-worktree-manager-folders.scm',
+    favorite = 'git-worktree-manager-favorite',
 }
 
 export const refArgList = [
@@ -119,4 +125,9 @@ export enum StateKey {
 export enum RefreshCacheType {
     all = 'all',
     workspace = 'workspace',
+}
+
+export enum RecentItemType {
+    workspace = 0,
+    folder = 1,
 }

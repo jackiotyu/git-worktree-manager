@@ -7,7 +7,7 @@ import { removeWorktreeCmd } from '@/core/command/removeWorktreeCmd';
 import { moveWorktreeCmd } from '@/core/command/moveWorktreeCmd';
 import { lockWorktreeCmd } from '@/core/command/lockWorktreeCmd';
 import { unlockWorktreeCmd } from '@/core/command/unlockWorktreeCmd';
-import { switchToSelectFolderCmd } from '@/core/command/switchToSelectFolderCmd';
+import { switchToSelectWorkspaceCmd } from '@/core/command/switchToSelectWorkspaceCmd';
 import { revealInSystemExplorerCmd } from '@/core/command/revealInSystemExplorerCmd';
 import { addWorktreeFromBranchCmd } from '@/core/command/addWorktreeFromBranchCmd';
 import { pruneWorktreeCmd } from '@/core/command/pruneWorktreeCmd';
@@ -46,6 +46,11 @@ import { refreshWorktreeCacheCmd } from '@/core/command/refreshWorktreeCacheCmd'
 import { deleteBranchCmd } from '@/core/command/deleteBranchCmd';
 import { renameBranchCmd } from '@/core/command/renameBranchCmd';
 import { bundleRepoCmd } from '@/core/command/bundleRepoCmd';
+import { openFavoriteCmd } from '@/core/command/openFavoriteCmd';
+import { refreshFavoriteCmd } from '@/core/command/refreshFavoriteCmd';
+import { removeFavoriteCmd } from '@/core/command/removeFavoriteCmd';
+import { removeMultiFavoriteCmd } from '@/core/command/removeMultiFavoriteCmd';
+import { addToFavoriteCmd } from '@/core/command/addToFavoriteCmd';
 import { Commands } from '@/constants';
 import { AllViewItem } from '@/core/treeView/items';
 
@@ -60,7 +65,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.moveWorktree, moveWorktreeCmd),
         registerCommand(Commands.lockWorktree, lockWorktreeCmd),
         registerCommand(Commands.unlockWorktree, unlockWorktreeCmd),
-        registerCommand(Commands.switchToSelectFolder, switchToSelectFolderCmd),
+        registerCommand(Commands.switchToSelectWorkspace, switchToSelectWorkspaceCmd),
         registerCommand(Commands.addWorktreeFromBranch, addWorktreeFromBranchCmd),
         registerCommand(Commands.revealInSystemExplorer, (item: AllViewItem) =>
             revealInSystemExplorerCmd(item),
@@ -115,5 +120,10 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.deleteBranch, deleteBranchCmd),
         registerCommand(Commands.renameBranch, renameBranchCmd),
         registerCommand(Commands.bundleRepo, bundleRepoCmd),
+        registerCommand(Commands.refreshFavorite, refreshFavoriteCmd),
+        registerCommand(Commands.openFavorite, openFavoriteCmd),
+        registerCommand(Commands.removeFavorite, removeFavoriteCmd),
+        registerCommand(Commands.removeMultiFavorite, removeMultiFavoriteCmd),
+        registerCommand(Commands.addToFavorite, addToFavoriteCmd),
     );
 }

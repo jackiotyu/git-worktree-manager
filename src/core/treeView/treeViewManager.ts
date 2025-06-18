@@ -4,6 +4,7 @@ import {
     RecentFoldersDataProvider,
     WorktreeDataProvider,
     SettingDataProvider,
+    FavoriteDataProvider,
 } from '@/core/treeView/views';
 import { TreeItemKind, ViewId } from '@/constants';
 import { revealTreeItemEvent } from '@/core/event/events';
@@ -43,6 +44,10 @@ export class TreeViewManager {
             treeDataProvider: new RecentFoldersDataProvider(context),
         });
 
+        const favoriteView = vscode.window.createTreeView(FavoriteDataProvider.id, {
+            treeDataProvider: new FavoriteDataProvider(context),
+        });
+
         // FIXME 需要选中treeItem才能保证`revealFileInOS`和`openInTerminal`成功执行
         revealTreeItemEvent.event((item) => {
             const viewsToSCM = Config.get('treeView.toSCM', false);
@@ -50,7 +55,9 @@ export class TreeViewManager {
             const _worktreeView = viewsToSCM ? worktreeViewSCM : worktreeView;
 
             if (item.type === TreeItemKind.folder) {
-                return recentFolderView.reveal(item, { focus: true, select: true });
+                if (item.from === ViewId.favorite) favoriteView.reveal(item, { focus: true, select: true });
+                if (item.from === ViewId.folderList) recentFolderView.reveal(item, { focus: true, select: true });
+                return;
             }
 
             if (item.type === TreeItemKind.gitFolder) {
@@ -71,6 +78,7 @@ export class TreeViewManager {
             recentFolderView,
             worktreeViewSCM,
             gitFolderViewSCM,
+            favoriteView,
         );
     }
 

@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import { TreeItemKind } from '@/constants';
-import { IFolderItemConfig } from '@/types';
+import { IFolderItemConfig, IWorktreeLess } from '@/types';
 
-export class GitFolderItem extends vscode.TreeItem {
+export class GitFolderItem extends vscode.TreeItem implements IWorktreeLess {
     readonly type = TreeItemKind.gitFolder;
     name: string = '';
-    path: string = '';
+    fsPath: string = '';
+    uriPath: string = '';
     defaultOpen?: boolean = false;
     readonly parent = void 0;
 
@@ -18,7 +19,9 @@ export class GitFolderItem extends vscode.TreeItem {
     private setProperties(item: IFolderItemConfig) {
         this.id = `${item.name} ~~ ${item.path}`;
         this.name = item.name;
-        this.path = item.path;
+        const uri = vscode.Uri.file(item.path);
+        this.uriPath = uri.toString();
+        this.fsPath = uri.fsPath;
         this.defaultOpen = !!item.defaultOpen;
         this.iconPath = new vscode.ThemeIcon('repo');
         this.contextValue = `git-worktree-manager.gitFolderItem.${this.defaultOpen ? 'defaultOpen' : 'defaultClose'}`;

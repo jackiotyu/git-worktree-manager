@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { getRecentFolderCache } from '@/core/util/cache';
+import { getRecentItemCache, getFavoriteCache } from '@/core/util/cache';
 import { GlobalState, WorkspaceState } from '@/core/state';
-import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentUriCache } from '@/types';
-import { Commands, RefreshCacheType } from '@/constants';
+import { IWorktreeCacheItem, DefaultDisplayList, IWorktreeLess, IRecentItemCache, IRecentItem } from '@/types';
+import { Commands, RefreshCacheType, RecentItemType } from '@/constants';
 import groupBy from 'lodash-es/groupBy';
 import { Alert } from '@/core/ui/message';
 import { Config } from '@/core/config/setting';
@@ -37,18 +37,34 @@ import {
     refreshWorkspaceWorktreeQuickInputButton,
     removeWorktreeQuickInputButton,
     saveRepoQuickInputButton,
+    saveFavoriteQuickInputButton,
+    useFavoriteQuickInputButton,
+    useRecentlyQuickInputButton,
+    refreshFavoriteQuickInputButton,
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
 import { withResolvers } from '@/core/util/promise';
 
-interface WorktreePick extends vscode.QuickPickItem {
-    path?: string;
+interface IWorktreePick extends vscode.QuickPickItem {
+    kind: vscode.QuickPickItemKind.Default;
+    fsPath: string;
+    uriPath: string;
+    item?: IRecentItem;
 }
+
+interface IWorktreeSeparator extends vscode.QuickPickItem {
+    kind: vscode.QuickPickItemKind.Separator;
+    uriPath: '';
+    fsPath: '';
+    item?: IRecentItem;
+}
+
+type WorktreePick = IWorktreePick | IWorktreeSeparator;
 
 interface IActionService extends vscode.Disposable {
     canClose: boolean;
     sortByBranch: boolean;
-    recentUriCache: IRecentUriCache;
+    recentUriCache: IRecentItemCache;
     recentPickCache: WorktreePick[];
     displayType: DefaultDisplayList;
     updateList: (forceUpdate?: boolean) => void;
@@ -86,7 +102,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
     const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
-    let items = list.map((row) => {
+    let items: WorktreePick[] = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
         const notBare = !row.isBare;
         const list: { button: vscode.QuickInputButton; show: boolean }[] = [
@@ -141,11 +157,14 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
         ];
 
         const buttons: vscode.QuickInputButton[] = list.filter((i) => i.show).map((i) => i.button);
+        const uri = vscode.Uri.file(row.path);
         return {
+            kind: vscode.QuickPickItemKind.Default,
             label: row.name,
             detail: `$(blank)  ${row.path}`,
             description: `⇄ ${row.label}${row.isMain ? ' ✨' : ''}`,
-            path: row.path,
+            fsPath: uri.fsPath,
+            uriPath: uri.toString(),
             key: row.label,
             iconPath: isCurrent ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
             buttons: buttons,
@@ -154,21 +173,22 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     let groupMap = groupBy(items, 'key');
     let pathSize = folderRoot.folderPathSet.size;
     return Object.keys(groupMap).reduce<WorktreePick[]>((list, key) => {
-        if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.path))) {
-            list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+        if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.fsPath))) {
+            list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '', fsPath: '', uriPath: '' });
             list.unshift(...groupMap[key]);
             pathSize--;
         } else {
             list.push(...groupMap[key]);
-            list.push({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+            list.push({ kind: vscode.QuickPickItemKind.Separator, label: '', fsPath: '', uriPath: '' });
         }
         return list;
     }, []);
 };
 
-const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
-    const buttons: vscode.QuickInputButton[] = [
+const mapWorkspacePickItems = (list: IRecentItem[], disPlayType: DefaultDisplayList): WorktreePick[] => {
+    let folderButtons: vscode.QuickInputButton[] = [
         saveRepoQuickInputButton,
+        saveFavoriteQuickInputButton,
         openExternalTerminalQuickInputButton,
         openTerminalQuickInputButton,
         revealInSystemExplorerQuickInputButton,
@@ -176,23 +196,39 @@ const mapRecentWorktreePickItems = (list: vscode.Uri[]): WorktreePick[] => {
         addToWorkspaceQuickInputButton,
         openInNewWindowQuickInputButton,
     ].filter((i) => i.enabled);
-    return list.map((uri) => {
-        const baseName = path.basename(uri.fsPath);
+
+    let workspaceButtons: vscode.QuickInputButton[] = [
+        saveFavoriteQuickInputButton,
+        revealInSystemExplorerQuickInputButton,
+        openInNewWindowQuickInputButton,
+    ].filter((i) => i.enabled);
+
+    if (disPlayType === DefaultDisplayList.favorite) {
+       folderButtons = folderButtons.filter(button => button !== saveFavoriteQuickInputButton);
+       workspaceButtons = workspaceButtons.filter(button => button !== saveFavoriteQuickInputButton);
+    }
+
+    return list.map((item) => {
+        const isFolder = item.type === RecentItemType.folder;
+        const uri = vscode.Uri.parse(item.path);
         return {
-            label: baseName || uri.fsPath,
-            description: baseName ? uri.fsPath : '',
-            iconPath: vscode.ThemeIcon.Folder,
-            path: uri.fsPath,
-            buttons: buttons,
+            kind: vscode.QuickPickItemKind.Default,
+            label: item.label,
+            description: uri.fsPath,
+            iconPath: isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers'),
+            uriPath: uri.toString(),
+            fsPath: uri.fsPath,
+            buttons: isFolder ? folderButtons : workspaceButtons,
+            item: item,
         };
     });
 };
 
 const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     let selectedItem = quickPick.selectedItems[0];
-    if (selectedItem?.path) {
+    if (selectedItem.uriPath) {
         vscode.commands
-            .executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), { forceNewWindow: true })
+            .executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.uriPath), { forceNewWindow: true })
             .then(() => {
                 vscode.commands.executeCommand(Commands.refreshRecentFolder);
             });
@@ -241,6 +277,16 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         actionService.updateList();
         return;
     }
+    if (event === useRecentlyQuickInputButton) {
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.recentlyOpened);
+        actionService.updateList();
+        return;
+    }
+    if (event === useFavoriteQuickInputButton) {
+        quickPick.buttons = actionService.updateButtons(DefaultDisplayList.favorite);
+        actionService.updateList();
+        return;
+    }
     if (event === addWorktreeQuickInputButton) {
         // FIXME 改造quickPick
         actionService.canClose = false;
@@ -281,6 +327,10 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         vscode.commands.executeCommand(Commands.refreshRecentFolder);
         return;
     }
+    if (event === refreshFavoriteQuickInputButton) {
+        vscode.commands.executeCommand(Commands.refreshFavorite);
+        return;
+    }
 };
 
 const handleTriggerItemButton = ({
@@ -292,16 +342,18 @@ const handleTriggerItemButton = ({
 }: TriggerItemButtonHandlerArgs) => {
     const selectedItem = event.item;
     const button = event.button;
-    if (!selectedItem.path) {
+    if (!selectedItem.fsPath || !selectedItem.uriPath) {
         return;
     }
     const viewItem: IWorktreeLess = {
         name: selectedItem.label,
-        path: selectedItem.path,
+        fsPath: selectedItem.fsPath,
+        uriPath: selectedItem.uriPath,
+        item: selectedItem.item,
     };
     switch (button) {
         case openInNewWindowQuickInputButton:
-            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.uriPath), {
                 forceNewWindow: false,
                 forceReuseWindow: true,
             });
@@ -333,21 +385,24 @@ const handleTriggerItemButton = ({
         case saveRepoQuickInputButton:
             vscode.commands.executeCommand(Commands.addToGitFolder, viewItem);
             break;
+        case saveFavoriteQuickInputButton:
+            vscode.commands.executeCommand(Commands.addToFavorite, viewItem);
+            break;
         case removeWorktreeQuickInputButton:
             vscode.commands.executeCommand(Commands.removeWorktree, viewItem);
             break;
         case copyItemQuickInputButton:
             const template = Config.get('worktreePick.copyTemplate', '$LABEL');
             (/\$HASH|\$MESSAGE/.test(template)
-                ? getLashCommitDetail(viewItem.path, ['s', 'H'])
+                ? getLashCommitDetail(viewItem.fsPath, ['s', 'H'])
                 : Promise.resolve({} as Record<string, void>)
             )
                 .then((commitDetail) => {
                     const text = template
                         .replace(/\$HASH/g, commitDetail.H || '')
                         .replace(/\$MESSAGE/g, commitDetail.s || '')
-                        .replace(/\$FULL_PATH/g, viewItem.path)
-                        .replace(/\$BASE_NAME/g, path.basename(viewItem.path))
+                        .replace(/\$FULL_PATH/g, viewItem.fsPath)
+                        .replace(/\$BASE_NAME/g, path.basename(viewItem.fsPath))
                         .replace(/\$LABEL/g, viewItem.name);
                     vscode.env.clipboard.writeText(text).then(() => {
                         Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', text));
@@ -393,16 +448,16 @@ class ActionService implements IActionService {
     sortByBranch: boolean = false;
     displayType: DefaultDisplayList = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all);
     worktreeButtons: vscode.QuickInputButton[] = [];
-    recentUriCache: IRecentUriCache = getRecentFolderCache();
+    recentUriCache: IRecentItemCache = getRecentItemCache();
     recentPickCache: WorktreePick[] = [];
+
     disposables: vscode.Disposable[] = [];
     constructor(private quickPick: vscode.QuickPick<WorktreePick>, displayType?: DefaultDisplayList) {
         this.updateButtons(displayType);
         this.disposables.push(
             globalStateEvent.event((e) => {
-                e === 'global.recentFolderCache' && this.updateList(true);
-            }),
-            globalStateEvent.event((e) => {
+                e === 'global.recentItemCache' && this.updateList(true);
+                e === 'global.favorite' && this.updateList();
                 e === 'workTreeCache' && this.updateList();
             }),
             workspaceStateEvent.event((e) => {
@@ -412,6 +467,9 @@ class ActionService implements IActionService {
     }
     get displayAll() {
         return this.displayType === DefaultDisplayList.all;
+    }
+    get displayFavorite() {
+        return this.displayType === DefaultDisplayList.favorite;
     }
     updateButtons = (displayType: DefaultDisplayList = this.displayType) => {
         this.displayType = displayType;
@@ -423,6 +481,13 @@ class ActionService implements IActionService {
         const refreshWorktreeButton = this.displayAll
             ? refreshAllWorktreeQuickInputButton
             : refreshWorkspaceWorktreeQuickInputButton;
+        const showFolderButton = this.displayFavorite
+            ? useRecentlyQuickInputButton
+            : useFavoriteQuickInputButton;
+        const refreshFolderButton = this.displayFavorite
+            ? refreshRecentlyQuickInputButton
+            : refreshFavoriteQuickInputButton;
+
         switch (displayList) {
             case DefaultDisplayList.all:
             case DefaultDisplayList.workspace:
@@ -439,6 +504,15 @@ class ActionService implements IActionService {
             case DefaultDisplayList.recentlyOpened:
                 this.worktreeButtons = [
                     refreshRecentlyQuickInputButton,
+                    showFolderButton,
+                    settingQuickInputButton,
+                    backWorkspaceQuickInputButton,
+                ];
+                break;
+            case DefaultDisplayList.favorite:
+                this.worktreeButtons = [
+                    refreshFolderButton,
+                    showFolderButton,
                     settingQuickInputButton,
                     backWorkspaceQuickInputButton,
                 ];
@@ -454,17 +528,19 @@ class ActionService implements IActionService {
         let items: WorktreePick[] = [];
         if (this.displayType === DefaultDisplayList.recentlyOpened) {
             if (forceUpdate) {
-                this.recentUriCache = getRecentFolderCache();
+                this.recentUriCache = getRecentItemCache();
                 this.recentPickCache.length = 0;
             }
             if (this.recentPickCache.length) {
                 this.quickPick.items = this.recentPickCache;
             } else {
                 this.quickPick.items = [];
-                const list = mapRecentWorktreePickItems(this.recentUriCache.list);
+                const list = mapWorkspacePickItems(this.recentUriCache.list, DefaultDisplayList.recentlyOpened);
                 this.recentPickCache = list;
                 this.quickPick.items = list;
             }
+        } else if (this.displayType === DefaultDisplayList.favorite) {
+            this.quickPick.items = mapWorkspacePickItems(getFavoriteCache(), DefaultDisplayList.favorite);
         } else {
             items = this.displayAll
                 ? mapWorktreePickItems(GlobalState.get('workTreeCache', []))

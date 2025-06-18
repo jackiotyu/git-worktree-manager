@@ -3,7 +3,7 @@ import folderRoot from '@/core/folderRoot';
 import { treeDataEvent } from '@/core/event/events';
 import { comparePath } from '@/core/util/folder';
 import { getMainFolder } from '@/core/git/getMainFolder';
-import type { IRecentlyOpened, IFolderItemConfig } from '@/types';
+import type { IRecentlyOpened, IFolderItemConfig, IRecentFolder, IRecentWorkspace } from '@/types';
 import { ContextKey } from '@/constants';
 import { WorkspaceState } from '@/core/state';
 import { getFolderConfig } from '@/core/util/state';
@@ -34,9 +34,19 @@ export const removeFromWorkspace = (path: string) => {
     if (index >= 0) vscode.workspace.updateWorkspaceFolders(index, 1);
 };
 
-export const getRecentFolders = async () => {
+export const isRecentFolder = (item: IRecentFolder | IRecentWorkspace): item is IRecentFolder => {
+    const value = item as IRecentFolder;
+    return value && value.folderUri && value.folderUri.scheme === 'file';
+};
+
+export const isRecentWorkspace = (item: IRecentFolder | IRecentWorkspace): item is IRecentWorkspace => {
+    const value = item as IRecentWorkspace;
+    return value && value.workspace && !!value.workspace.configPath;
+};
+
+export const getRecentItems = async (): Promise<Array<IRecentFolder | IRecentWorkspace>> => {
     let data = (await vscode.commands.executeCommand('_workbench.getRecentlyOpened')) as IRecentlyOpened;
-    return data.workspaces.filter((item) => item.folderUri && item.folderUri.scheme === 'file');
+    return data.workspaces;
 };
 
 export const getWorkspaceMainFolders = async (): Promise<IFolderItemConfig[]> => {

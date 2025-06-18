@@ -1,10 +1,11 @@
-import * as vscode from 'vscode';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
-import { getRecentFolders, getWorkspaceMainFolders } from '@/core/util/workspace';
+import { getRecentItems, getWorkspaceMainFolders, isRecentWorkspace, isRecentFolder } from '@/core/util/workspace';
 import { comparePath, toSimplePath } from '@/core/util/folder';
 import { WorkspaceState, GlobalState } from '@/core/state';
 import { groupBy } from 'lodash-es';
-import type { IFolderItemConfig, IWorktreeCacheItem, IRecentUriCache, IWorktreeDetail } from '@/types';
+import type { IFolderItemConfig, IWorktreeCacheItem, IRecentItemCache, IRecentItem } from '@/types';
+import { RecentItemType } from '@/constants';
+import path from 'path';
 
 export const gitFolderToCache = async (item: IFolderItemConfig): Promise<IWorktreeCacheItem[]> => {
     const list = await getWorktreeList(item.path);
@@ -25,7 +26,9 @@ const getUpdatedWorktreeCache = async (
 ) => {
     const nextWorkTreeCache: IWorktreeCacheItem[] = [];
     const preCacheGroup = groupBy(
-        preWorkTreeCache.filter(i => i.mainFolder).map((item) => ({ ...item, mainFolder: toSimplePath(item.mainFolder) })),
+        preWorkTreeCache
+            .filter((i) => i.mainFolder)
+            .map((item) => ({ ...item, mainFolder: toSimplePath(item.mainFolder) })),
         'mainFolder',
     );
     for (const item of configList) {
@@ -85,23 +88,46 @@ export const updateWorkspaceListCache = async (repoPath: string | void) => {
     }
 };
 
-export const updateRecentFolders = async () => {
-    const list = await getRecentFolders();
-    GlobalState.update('global.recentFolderCache', {
+export const updateRecentItems = async () => {
+    const list = await getRecentItems();
+    GlobalState.update('global.recentItemCache', {
         time: +new Date(),
-        list: list.map((i) => i.folderUri.toString()),
+        list: list
+            .filter((item) => isRecentWorkspace(item) || isRecentFolder(item))
+            .map((item) => {
+                if (isRecentFolder(item)) {
+                    return {
+                        path: item.folderUri.toString(),
+                        remoteAuthority: item.remoteAuthority,
+                        type: RecentItemType.folder,
+                        label: item.label || path.basename(item.folderUri.fsPath),
+                    };
+                } else {
+                    return {
+                        path: item.workspace.configPath.toString(),
+                        remoteAuthority: item.remoteAuthority,
+                        type: RecentItemType.workspace,
+                        label: item.label || path.basename(item.workspace.configPath.path),
+                    };
+                }
+            }),
     });
 };
 
-export const getRecentFolderCache = (): IRecentUriCache => {
-    const res = GlobalState.get('global.recentFolderCache', { time: -1, list: [] });
-    return {
-        time: res.time,
-        list: res.list.map((str) => vscode.Uri.parse(str)),
-    };
+export const getRecentItemCache = (): IRecentItemCache => {
+    const res = GlobalState.get('global.recentItemCache', { time: -1, list: [] });
+    return res;
+};
+
+export const getFavoriteCache = (): IRecentItem[] => {
+    return GlobalState.get('global.favorite', []);
+};
+
+export const updateFavoriteCache = (value: IRecentItem[]) => {
+    return GlobalState.update('global.favorite', value);
 };
 
 export const checkRecentFolderCache = () => {
-    const res = GlobalState.get('global.recentFolderCache', { time: -1, list: [] });
-    if (+new Date() - res.time > 5000) updateRecentFolders();
+    const res = GlobalState.get('global.recentItemCache', { time: -1, list: [] });
+    if (+new Date() - res.time > 5000) updateRecentItems();
 };

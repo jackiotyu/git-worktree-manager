@@ -5,5 +5,5 @@ import { getMainFolder } from '@/core/git/getMainFolder';
 
 export const unlockWorktreeCmd = async (item?: WorktreeItem) => {
     if (!item) return;
-    commonWorktreeCmd(item.path, Commands.unlockWorktree, await getMainFolder(item.path));
+    commonWorktreeCmd(item.fsPath, Commands.unlockWorktree, await getMainFolder(item.fsPath));
 };
