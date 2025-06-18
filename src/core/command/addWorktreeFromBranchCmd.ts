@@ -19,7 +19,7 @@ export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
     }
     let folderUri = uriList[0];
     let folderPath = folderUri.fsPath;
-    const mainFolder = await getMainFolder(item.path);
+    const mainFolder = await getMainFolder(item.fsPath);
     return createWorktreeFromInfo({
         name: item.name,
         label: '分支',

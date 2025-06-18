@@ -6,7 +6,7 @@ import logger from '@/core/log/logger';
 export const switchToSelectWorkspaceCmd = async (item?: WorktreeItem) => {
     if (!item) return;
     try {
-        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(item.path), {
+        await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(item.uriPath), {
             forceNewWindow: false,
             forceReuseWindow: true,
         });

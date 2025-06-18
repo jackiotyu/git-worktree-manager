@@ -4,7 +4,7 @@ import { judgeIncludeFolder, getFolderIcon } from '@/core/util/folder';
 import { getWorktreeStatus } from '@/core/util/worktree';
 import { getAheadBehindCommitCount } from '@/core/git/getAheadBehindCommitCount';
 import { getUpstream } from '@/core/git/getUpstream';
-import { IWorktreeDetail } from '@/types';
+import { IWorktreeDetail, IWorktreeLess } from '@/types';
 import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
@@ -12,9 +12,10 @@ import { parseUpstream } from '@/core/util/ref';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
 
-export class WorktreeItem extends vscode.TreeItem {
+export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     iconPath: vscode.ThemeIcon = new vscode.ThemeIcon('folder');
-    path: string = '';
+    fsPath: string = '';
+    uriPath: string = '';
     name: string = '';
     readonly type = TreeItemKind.worktree;
     upstream: string = '';
@@ -55,7 +56,9 @@ export class WorktreeItem extends vscode.TreeItem {
     private setProperties() {
         const item = this.item;
         this.id = item.path;
-        this.path = item.path;
+        const uri = vscode.Uri.file(item.path);
+        this.uriPath = uri.toString();
+        this.fsPath = uri.fsPath;
         this.name = item.name;
         this.isBranch = item.isBranch;
     }

@@ -44,9 +44,19 @@ import {
 import { pickAction } from '@/core/quickPick/pickAction';
 import { withResolvers } from '@/core/util/promise';
 
-interface WorktreePick extends vscode.QuickPickItem {
-    path?: string;
+interface IWorktreePick extends vscode.QuickPickItem {
+    kind: vscode.QuickPickItemKind.Default;
+    fsPath: string;
+    uriPath: string;
 }
+
+interface IWorktreeSeparator extends vscode.QuickPickItem {
+    kind: vscode.QuickPickItemKind.Separator;
+    uriPath: '';
+    fsPath: '';
+}
+
+type WorktreePick = IWorktreePick | IWorktreeSeparator;
 
 interface IActionService extends vscode.Disposable {
     canClose: boolean;
@@ -89,7 +99,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
     const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
-    let items = list.map((row) => {
+    let items: WorktreePick[] = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
         const notBare = !row.isBare;
         const list: { button: vscode.QuickInputButton; show: boolean }[] = [
@@ -144,11 +154,14 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
         ];
 
         const buttons: vscode.QuickInputButton[] = list.filter((i) => i.show).map((i) => i.button);
+        const uri = vscode.Uri.file(row.path);
         return {
+            kind: vscode.QuickPickItemKind.Default,
             label: row.name,
             detail: `$(blank)  ${row.path}`,
             description: `⇄ ${row.label}${row.isMain ? ' ✨' : ''}`,
-            path: row.path,
+            fsPath: uri.fsPath,
+            uriPath: uri.toString(),
             key: row.label,
             iconPath: isCurrent ? new vscode.ThemeIcon('check') : new vscode.ThemeIcon('window'),
             buttons: buttons,
@@ -157,13 +170,13 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     let groupMap = groupBy(items, 'key');
     let pathSize = folderRoot.folderPathSet.size;
     return Object.keys(groupMap).reduce<WorktreePick[]>((list, key) => {
-        if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.path))) {
-            list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+        if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.fsPath))) {
+            list.unshift({ kind: vscode.QuickPickItemKind.Separator, label: '', fsPath: '', uriPath: '' });
             list.unshift(...groupMap[key]);
             pathSize--;
         } else {
             list.push(...groupMap[key]);
-            list.push({ kind: vscode.QuickPickItemKind.Separator, label: '' });
+            list.push({ kind: vscode.QuickPickItemKind.Separator, label: '', fsPath: '', uriPath: '' });
         }
         return list;
     }, []);
@@ -189,10 +202,12 @@ const mapWorkspacePickItems = (list: IRecentItem[]): WorktreePick[] => {
         const isFolder = item.type === RecentItemType.folder;
         const uri = vscode.Uri.parse(item.path);
         return {
+            kind: vscode.QuickPickItemKind.Default,
             label: item.label,
             description: uri.fsPath,
             iconPath: isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers'),
-            path: uri.fsPath,
+            uriPath: uri.toString(),
+            fsPath: uri.fsPath,
             buttons: isFolder ? folderButtons : workspaceButtons,
         };
     });
@@ -200,9 +215,9 @@ const mapWorkspacePickItems = (list: IRecentItem[]): WorktreePick[] => {
 
 const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     let selectedItem = quickPick.selectedItems[0];
-    if (selectedItem?.path) {
+    if (selectedItem.uriPath) {
         vscode.commands
-            .executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), { forceNewWindow: true })
+            .executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.uriPath), { forceNewWindow: true })
             .then(() => {
                 vscode.commands.executeCommand(Commands.refreshRecentFolder);
             });
@@ -316,16 +331,17 @@ const handleTriggerItemButton = ({
 }: TriggerItemButtonHandlerArgs) => {
     const selectedItem = event.item;
     const button = event.button;
-    if (!selectedItem.path) {
+    if (!selectedItem.fsPath || !selectedItem.uriPath) {
         return;
     }
     const viewItem: IWorktreeLess = {
         name: selectedItem.label,
-        path: selectedItem.path,
+        fsPath: selectedItem.fsPath,
+        uriPath: selectedItem.uriPath,
     };
     switch (button) {
         case openInNewWindowQuickInputButton:
-            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedItem.path), {
+            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.uriPath), {
                 forceNewWindow: false,
                 forceReuseWindow: true,
             });
@@ -363,15 +379,15 @@ const handleTriggerItemButton = ({
         case copyItemQuickInputButton:
             const template = Config.get('worktreePick.copyTemplate', '$LABEL');
             (/\$HASH|\$MESSAGE/.test(template)
-                ? getLashCommitDetail(viewItem.path, ['s', 'H'])
+                ? getLashCommitDetail(viewItem.fsPath, ['s', 'H'])
                 : Promise.resolve({} as Record<string, void>)
             )
                 .then((commitDetail) => {
                     const text = template
                         .replace(/\$HASH/g, commitDetail.H || '')
                         .replace(/\$MESSAGE/g, commitDetail.s || '')
-                        .replace(/\$FULL_PATH/g, viewItem.path)
-                        .replace(/\$BASE_NAME/g, path.basename(viewItem.path))
+                        .replace(/\$FULL_PATH/g, viewItem.fsPath)
+                        .replace(/\$BASE_NAME/g, path.basename(viewItem.fsPath))
                         .replace(/\$LABEL/g, viewItem.name);
                     vscode.env.clipboard.writeText(text).then(() => {
                         Alert.showInformationMessage(vscode.l10n.t('Copied successfully: {0}', text));

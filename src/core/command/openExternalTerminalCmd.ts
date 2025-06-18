@@ -7,7 +7,7 @@ import { Alert } from '@/core/ui/message';
 
 export const openExternalTerminalCmd = async (item?: AllViewItem, needRevealTreeItem = true) => {
     if (!item) return;
-    const fsPath = vscode.Uri.parse(item.path).fsPath;
+    const fsPath = item.fsPath;
     if (!(await verifyDirExistence(fsPath))) return;
     try {
         if (needRevealTreeItem) await revealTreeItem(item);

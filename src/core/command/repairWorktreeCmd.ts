@@ -5,5 +5,5 @@ import { getMainFolder } from '@/core/git/getMainFolder';
 
 export const repairWorktreeCmd = async (item?: WorktreeItem) => {
     if (!item) return;
-    commonWorktreeCmd(item.path, Commands.repairWorktree, await getMainFolder(item.path));
+    commonWorktreeCmd(item.fsPath, Commands.repairWorktree, await getMainFolder(item.fsPath));
 };

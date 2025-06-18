@@ -65,15 +65,15 @@ class WorktreeActionPicker {
     }
 
     private static async getPickActionsByWorktree(viewItem: IWorktreeLess): Promise<QuickPickAction[]> {
-        const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.path, ['s', 'H'])]);
+        const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.fsPath, ['s', 'H'])]);
         const template = Config.get('worktreePick.copyTemplate', '$LABEL');
-        const isCurrent = judgeIncludeFolder(viewItem.path);
+        const isCurrent = judgeIncludeFolder(viewItem.fsPath);
 
         const templateVars: TemplateVars = {
             hash: commitDetail.H || '',
             message: commitDetail.s || '',
-            fullPath: viewItem.path,
-            baseName: path.basename(viewItem.path),
+            fullPath: viewItem.fsPath,
+            baseName: path.basename(viewItem.fsPath),
             label: viewItem.name,
         };
 
@@ -85,7 +85,7 @@ class WorktreeActionPicker {
             this.buildCopyAction({ label: 'ref name', description: viewItem.name }),
             this.buildCopyAction({ label: 'commit hash', description: templateVars.hash }),
             this.buildCopyAction({ label: 'commit message', description: templateVars.message }),
-            this.buildCopyAction({ label: 'folder path', description: viewItem.path }),
+            this.buildCopyAction({ label: 'folder path', description: viewItem.fsPath }),
         ];
 
         const commandActions: QuickPickAction[] = [
@@ -198,7 +198,7 @@ class WorktreeActionPicker {
 
     private static buildTitle(viewItem: IWorktreeLess): string {
         const maxPathLength = 35;
-        const path = viewItem.path;
+        const path = viewItem.fsPath;
         const truncatedPath = path.length > maxPathLength ? `...${path.slice(-maxPathLength + 1)}` : path;
         return `${viewItem.name} ⇄ ${truncatedPath}`;
     }

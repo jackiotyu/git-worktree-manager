@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import { TreeItemKind, Commands, ViewId, RecentItemType } from '@/constants';
-import { ILoadMoreItem, IRecentItem } from '@/types';
+import { ILoadMoreItem, IRecentItem, IWorktreeLess } from '@/types';
 import path from 'path';
 
-export class FolderItem extends vscode.TreeItem {
-    path: string = '';
+export class FolderItem extends vscode.TreeItem implements IWorktreeLess {
+    fsPath: string = '';
+    uriPath: string = '';
     readonly type = TreeItemKind.folder;
 
     constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, public item: IRecentItem) {
@@ -18,7 +19,8 @@ export class FolderItem extends vscode.TreeItem {
         const isFolder = item.type === RecentItemType.folder;
         const uri = vscode.Uri.parse(item.path);
         this.contextValue = isFolder ? 'git-worktree-manager.folderItem' : 'git-worktree-manager.workspaceItem';
-        this.path = uri.path;
+        this.uriPath = uri.toString();
+        this.fsPath = uri.fsPath;
         this.description = uri.fsPath;
         this.iconPath = isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers');
         if (isFolder) this.resourceUri = uri;

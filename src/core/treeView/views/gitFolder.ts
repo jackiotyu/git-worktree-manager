@@ -145,7 +145,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     }
 
     private async getWorktreeItems(element: GitFolderItem): Promise<WorktreeItem[]> {
-        const worktreeList = await this.getWorktreeListWithCache(element.path);
+        const worktreeList = await this.getWorktreeListWithCache(element.fsPath);
         return worktreeList.map((item) =>
             new WorktreeItem(item, vscode.TreeItemCollapsibleState.None, element)
         );

@@ -6,7 +6,7 @@ import path from 'path';
 
 const pickFolderConfig = (item?: GitFolderItem) => {
     if (!item) return;
-    return getFolderConfig().find((row) => row.path === item.path);
+    return getFolderConfig().find((row) => row.path === item.fsPath);
 };
 
 export const renameGitFolderCmd = async (item?: GitFolderItem) => {

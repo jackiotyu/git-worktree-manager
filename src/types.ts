@@ -118,7 +118,8 @@ export type RepoRefList = {
 
 export interface IWorktreeLess {
     name: string;
-    path: string;
+    fsPath: string;
+    uriPath: string;
 }
 
 export enum DefaultDisplayList {

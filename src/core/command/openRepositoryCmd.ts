@@ -2,5 +2,5 @@ import * as vscode from "vscode";
 import { IWorktreeLess } from '@/types';
 
 export const openRepositoryCmd = (item: IWorktreeLess) => {
-    vscode.commands.executeCommand('git.openRepository', item.path);
+    vscode.commands.executeCommand('git.openRepository', item.fsPath);
 };

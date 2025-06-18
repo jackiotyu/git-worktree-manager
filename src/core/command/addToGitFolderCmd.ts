@@ -4,5 +4,5 @@ import { FolderItem } from '@/core/treeView/items';
 
 export const addToGitFolderCmd = (item?: FolderItem) => {
     if (!item) return;
-    return addToGitFolder(vscode.Uri.parse(item.path).fsPath);
+    return addToGitFolder(item.fsPath);
 };

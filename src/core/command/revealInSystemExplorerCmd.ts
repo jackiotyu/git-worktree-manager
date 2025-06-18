@@ -8,11 +8,10 @@ import path from 'path';
 
 export const revealInSystemExplorerCmd = async (item?: AllViewItem, needRevealTreeItem = true) => {
     if (!item) return;
-    const uri = vscode.Uri.parse(item.path);
-    if (!(await verifyDirExistence(uri.fsPath))) return;
+    if (!(await verifyDirExistence(item.fsPath))) return;
     if (needRevealTreeItem) await revealTreeItem(item);
     const openInsideFolder = Config.get('openInsideFolder', false);
-    const isFolder = await checkIsFolder(uri.fsPath);
-    if (openInsideFolder && isFolder) revealFolderInOS(path.resolve(uri.fsPath));
-    else vscode.commands.executeCommand('revealFileInOS', uri);
+    const isFolder = await checkIsFolder(item.fsPath);
+    if (openInsideFolder && isFolder) revealFolderInOS(path.resolve(item.fsPath));
+    else vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(item.fsPath));
 };

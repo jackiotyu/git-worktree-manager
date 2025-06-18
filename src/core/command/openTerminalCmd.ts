@@ -10,7 +10,7 @@ interface CmdItem extends vscode.QuickPickItem {
 
 export const openTerminalCmd = async (item?: AllViewItem) => {
     if (!item) return;
-    const fsPath = vscode.Uri.parse(item.path).fsPath;
+    const fsPath = item.fsPath;
     if (!(await verifyDirExistence(fsPath))) return;
     const terminal = vscode.window.createTerminal({
         cwd: fsPath,
