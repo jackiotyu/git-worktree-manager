@@ -1,3 +1,11 @@
+## v3.0.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.3.1...v3.0.0)
+
+### 🚀 Enhancements
+
+- **core:** Add favorite folder feature and support opening workspaces ([#25](https://github.com/jackiotyu/git-worktree-manager/pull/25))
+
 ## v2.3.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.3.0...v2.3.1)
