@@ -11,6 +11,8 @@
     "cmd.removeGitFolder": "このGitリポジトリを削除",
     "cmd.removeMultiGitFolder": "Git リポジトリを一括削除",
     "cmd.removeWorktree": "ワークツリーを削除",
+    "cmd.removeFavorite": "この項目を削除",
+    "cmd.removeMultiFavorite": "気に入ったリポジトリを一括削除",
     "cmd.addWorktreeFromBranch": "現在のブランチからワークツリーを作成",
     "cmd.revealInSystemExplorer": "システムエクスプローラーで表示",
     "cmd.repairWorktree": "ワークツリーを修復",

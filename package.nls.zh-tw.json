@@ -11,6 +11,8 @@
     "cmd.removeGitFolder": "移除此 Git 儲存庫",
     "cmd.removeMultiGitFolder": "批次移除 Git 倉庫",
     "cmd.removeWorktree": "刪除 worktree",
+    "cmd.removeFavorite": "移除此收藏項目",
+    "cmd.removeMultiFavorite": "批次移除收藏項目",
     "cmd.addWorktreeFromBranch": "從目前分支建立 worktree",
     "cmd.revealInSystemExplorer": "在系統檔案總管中顯示",
     "cmd.repairWorktree": "修復 worktree",

@@ -13,7 +13,7 @@ export const removeGitFolderCmd = async (item: GitFolderItem) => {
         return;
     }
     let ok = await confirmModal(
-        vscode.l10n.t('Remove the git repository reference in list'),
+        vscode.l10n.t('Remove the git repository reference from the list'),
         vscode.l10n.t(
             'Are you sure to delete this repository reference with path {0} and alias {1}?',
             item.fsPath,

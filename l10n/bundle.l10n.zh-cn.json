@@ -36,7 +36,7 @@
     "Please select the git repository folder path": "请选择git仓库文件夹",
     "Enter the name of the repository for the showcase": "输入展示用的仓库名称",
     "Rename the git repository alias": "重命名git仓库别名",
-    "Remove the git repository reference in list": "删除git仓库引用",
+    "Remove the git repository reference from the list": "删除git仓库引用",
     "Are you sure to delete this repository reference with path {0} and alias {1}?": "确定删除 路径为 {0} , 别名为 {1} 的这个仓库引用?",
     "Please enter a name for the presentation": "请输入展示用的名称",
     "Select command": "选择命令",
@@ -134,7 +134,8 @@
     "Loading...": "正在加载...",
     "Bundling repo..., {path}": "打包仓库中..., {path}",
     "Repository backup successful: {path}": "仓库备份成功: {path}",
-    "The selected Git repository paths will be removed from the list": "选中的 Git 仓库路径将从列表中移除",
-    "Please select the Git repository paths you want to remove": "请选择需要移除的 Git 仓库路径",
-    "Select git repository for prune worktree": "请选择需要清理 worktree 的 git 仓库"
+    "The selected items will be removed from the list": "将会从列表中移除所选项目",
+    "Please select the items you want to remove": "请选择要移除的项目",
+    "Select git repository for prune worktree": "请选择需要清理 worktree 的 git 仓库",
+    "Remove the items from the list": "从列表中移除项目"
 }

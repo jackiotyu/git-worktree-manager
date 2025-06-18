@@ -590,6 +590,11 @@
           "group": "inline@100"
         },
         {
+          "command": "git-worktree-manager.removeFavorite",
+          "when": "view === git-worktree-manager-favorite && viewItem =~ /git-worktree-manager.(folderItem|workspaceItem)/",
+          "group": "inline@100"
+        },
+        {
           "command": "git-worktree-manager.addToWorkspace",
           "when": "viewItem =~ /git-worktree-manager.worktreeItem/ && !(viewItem =~ /git-worktree-manager\\.worktreeItem(.*)\\.current/)",
           "group": "workspace@1"

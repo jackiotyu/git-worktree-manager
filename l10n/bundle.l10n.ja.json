@@ -36,7 +36,7 @@
     "Please select the git repository folder path": "Gitリポジトリのフォルダパスを選択してください",
     "Enter the name of the repository for the showcase": "表示用のリポジトリ名を入力",
     "Rename the git repository alias": "Gitリポジトリのエイリアスを変更",
-    "Remove the git repository reference in list": "リストからGitリポジトリの参照を削除",
+    "Remove the git repository reference from the list": "リストからGitリポジトリの参照を削除",
     "Are you sure to delete this repository reference with path {0} and alias {1}?": "パス {0} とエイリアス {1} のリポジトリ参照を削除してもよろしいですか？",
     "Please enter a name for the presentation": "表示用の名前を入力してください",
     "Select command": "コマンドを選択",
@@ -134,7 +134,8 @@
     "Loading...": "ロード中...",
     "Bundling repo..., {path}": "リポジトリをバンドル中..., {path}",
     "Repository backup successful: {path}": "リポジトリのバックアップに成功しました: {path}",
-    "The selected Git repository paths will be removed from the list": "選択された Git リポジトリのパスはリストから削除されます",
-    "Please select the Git repository paths you want to remove": "削除したい Git リポジトリのパスを選択してください",
-    "Select git repository for prune worktree": "ワークツリーを整理するGitリポジトリを選択してください"
+    "The selected items will be removed from the list": "選択した項目がリストから削除されます",
+    "Please select the items you want to remove": "削除する項目を選択してください",
+    "Select git repository for prune worktree": "ワークツリーを整理するGitリポジトリを選択してください",
+    "Remove the items from the list": "リストから項目を削除します"
 }

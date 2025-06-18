@@ -11,6 +11,8 @@
     "cmd.removeGitFolder": "Remove this Git repository",
     "cmd.removeMultiGitFolder": "Batch Remove Git Repositories",
     "cmd.removeWorktree": "Remove worktree",
+    "cmd.removeFavorite": "Remove this item",
+    "cmd.removeMultiFavorite": "Batch Remove Favorites",
     "cmd.addWorktreeFromBranch": "Create a worktree from the current branch",
     "cmd.revealInSystemExplorer": "Reveal in the system explorer",
     "cmd.repairWorktree": "Repair worktree",

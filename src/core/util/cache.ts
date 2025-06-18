@@ -123,6 +123,10 @@ export const getFavoriteCache = (): IRecentItem[] => {
     return GlobalState.get('global.favorite', []);
 };
 
+export const updateFavoriteCache = (value: IRecentItem[]) => {
+    return GlobalState.update('global.favorite', value);
+};
+
 export const checkRecentFolderCache = () => {
     const res = GlobalState.get('global.recentItemCache', { time: -1, list: [] });
     if (+new Date() - res.time > 5000) updateRecentItems();

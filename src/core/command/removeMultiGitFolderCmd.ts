@@ -14,7 +14,7 @@ export const removeMultiGitFolderCmd = async () => {
         };
     });
     const selected = await vscode.window.showQuickPick(items, {
-        title: vscode.l10n.t('Please select the Git repository paths you want to remove'),
+        title: vscode.l10n.t('Please select the items you want to remove'),
         matchOnDetail: true,
         canPickMany: true,
     });
@@ -22,7 +22,7 @@ export const removeMultiGitFolderCmd = async () => {
     if (!selected?.length) return;
 
     const confirm = await confirmModal(
-        vscode.l10n.t('The selected Git repository paths will be removed from the list'),
+        vscode.l10n.t('The selected items will be removed from the list'),
         selected.map((item) => item.description!).join('\n'),
     );
     if (!confirm) return;
