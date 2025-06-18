@@ -92,7 +92,7 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorkspaceMa
     }
 
     private async getWorktreeItems(element: WorkspaceMainGitFolderItem): Promise<WorktreeItem[]> {
-        const data = await this.getWorktreeListWithCache(element.path);
+        const data = await this.getWorktreeListWithCache(element.fsPath);
         return data.map((item) =>
             new WorktreeItem(item, vscode.TreeItemCollapsibleState.None, element)
         );

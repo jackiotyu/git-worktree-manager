@@ -61,10 +61,11 @@ export class FolderLoadMore extends vscode.TreeItem implements ILoadMoreItem {
     }
 }
 
-export class WorkspaceMainGitFolderItem extends vscode.TreeItem {
+export class WorkspaceMainGitFolderItem extends vscode.TreeItem implements IWorktreeLess {
     readonly type = TreeItemKind.workspaceGitMainFolder;
     label?: string;
-    path: string = '';
+    fsPath: string = '';
+    uriPath: string = '';
     name: string = '';
 
     constructor(filepath: string, collapsible: vscode.TreeItemCollapsibleState) {
@@ -75,7 +76,9 @@ export class WorkspaceMainGitFolderItem extends vscode.TreeItem {
     }
 
     private setProperties(filepath: string, name: string) {
-        this.path = filepath;
+        const uri = vscode.Uri.file(filepath);
+        this.fsPath = uri.fsPath;
+        this.uriPath = uri.toString();
         this.name = name;
         this.description = filepath;
         this.contextValue = `git-worktree-manager.workspaceGitMainFolder`;
