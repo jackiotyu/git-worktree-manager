@@ -1,3 +1,11 @@
+## v3.0.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.0.1...v3.0.2)
+
+### 🩹 Fixes
+
+- **core:** Remove worktree process ([8e6ecc0](https://github.com/jackiotyu/git-worktree-manager/commit/8e6ecc0))
+
 ## v3.0.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.0.0...v3.0.1)
