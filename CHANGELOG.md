@@ -1,3 +1,15 @@
+## v3.0.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.0.0...v3.0.1)
+
+### 🚀 Enhancements
+
+- **core:** Add setting to show favorites by default in quick pick ([8dfbc13](https://github.com/jackiotyu/git-worktree-manager/commit/8dfbc13))
+
+### 🩹 Fixes
+
+- **tree-view:** Fix handling of new worktree created inside workspace ([471a1a6](https://github.com/jackiotyu/git-worktree-manager/commit/471a1a6))
+
 ## v3.0.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v2.3.1...v3.0.0)
