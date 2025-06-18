@@ -9,12 +9,7 @@ import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
-import { IBranchForWorktree } from '@/types';
-
-interface RemoveWorktreeOptions {
-    path: string;
-    force?: boolean;
-}
+import { IBranchForWorktree, IWorktreeLess } from '@/types';
 
 async function showDeleteConfirmation(worktreePath: string): Promise<'ok' | 'force' | undefined> {
     const ok = vscode.l10n.t('ok');
@@ -47,10 +42,10 @@ async function getBranchInfo(worktreePath: string): Promise<{ branchName: string
     }
 }
 
-export const removeWorktreeCmd = async (item?: RemoveWorktreeOptions): Promise<void> => {
-    if (!item?.path) return;
+export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => {
+    if (!item?.fsPath) return;
 
-    const worktreePath = item.path;
+    const worktreePath = item.fsPath;
     const { promise, resolve } = withResolvers<void>();
 
     try {
