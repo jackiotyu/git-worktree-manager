@@ -70,6 +70,10 @@
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
+5. [拖拽文件到收藏夹](./images/drop-to-favorites.mp4)
+
+<video src="./images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video>
+
 <p align="right">(<a href="#readme-top">回到顶部</a>)</p>
 
 ## 技巧
@@ -138,6 +142,7 @@
 - [x] 切换分支或者创建 worktree 时支持新建分支 (#14)
 - [x] 创建 worktree 时支持复制主仓库中 git 未跟踪的文件 (#16)
 - [x] git 仓库快照 (备份)
+- [x] 拖拽文件到收藏夹
 - [ ] 多语言支持
     - [x] 简体中文
     - [x] 繁体中文

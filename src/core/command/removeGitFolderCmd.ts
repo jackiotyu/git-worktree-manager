@@ -3,10 +3,10 @@ import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
 import { Alert } from '@/core/ui/message';
 import { worktreeEventRegister } from '@/core/event/git';
 import { confirmModal } from '@/core/ui/modal';
-import { GitFolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 import { comparePath } from '@/core/util/folder';
 
-export const removeGitFolderCmd = async (item: GitFolderItem) => {
+export const removeGitFolderCmd = async (item: IWorktreeLess) => {
     let fsPath = item.fsPath;
     let folders = getFolderConfig();
     if (!folders.some((f) => comparePath(f.path, fsPath))) {

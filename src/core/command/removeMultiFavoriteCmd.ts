@@ -2,16 +2,14 @@ import * as vscode from 'vscode';
 import { getFavoriteCache, updateFavoriteCache } from '@/core/util/cache';
 import { Alert } from '@/core/ui/message';
 import { confirmModal } from '@/core/ui/modal';
-import { toSimplePath } from '@/core/util/folder';
+import { toSimplePath, getRecentItemIcon } from '@/core/util/folder';
 import { IRecentItem } from '@/types';
-import { RecentItemType } from '@/constants';
 
 export const removeMultiFavoriteCmd = async () => {
     const items: (vscode.QuickPickItem & { description: string, path: string })[] = getFavoriteCache().map((item) => {
-        const isFolder = item.type === RecentItemType.folder;
         const uri = vscode.Uri.parse(item.path);
         return {
-            iconPath: isFolder ? vscode.ThemeIcon.Folder : new vscode.ThemeIcon('layers'),
+            iconPath: getRecentItemIcon(item.type),
             label: item.label,
             description: uri.fsPath,
             path: item.path,

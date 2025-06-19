@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { GitFolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 import folderRoot from '@/core/folderRoot';
 import { GitHistory } from '@/core/gitHistory';
 
-export const viewHistoryCmd = (item?: GitFolderItem) => {
+export const viewHistoryCmd = (item?: IWorktreeLess) => {
     let uri = item ? vscode.Uri.file(item.fsPath) : folderRoot.uri;
     uri && GitHistory.openHistory(uri);
 };

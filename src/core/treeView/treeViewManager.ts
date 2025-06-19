@@ -5,6 +5,7 @@ import {
     WorktreeDataProvider,
     SettingDataProvider,
     FavoriteDataProvider,
+    FavoriteAndDropController,
 } from '@/core/treeView/views';
 import { TreeItemKind, ViewId } from '@/constants';
 import { revealTreeItemEvent } from '@/core/event/events';
@@ -46,6 +47,7 @@ export class TreeViewManager {
 
         const favoriteView = vscode.window.createTreeView(FavoriteDataProvider.id, {
             treeDataProvider: new FavoriteDataProvider(context),
+            dragAndDropController: new FavoriteAndDropController(),
         });
 
         // FIXME 需要选中treeItem才能保证`revealFileInOS`和`openInTerminal`成功执行

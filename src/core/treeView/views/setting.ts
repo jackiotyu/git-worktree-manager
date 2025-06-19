@@ -44,15 +44,15 @@ function createTreeItem(config: MenuItemConfig): vscode.TreeItem {
     return item;
 }
 
-export class SettingDataProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class SettingDataProvider implements vscode.TreeDataProvider<MenuItemConfig> {
     static readonly id = ViewId.settingList;
-    private readonly items: vscode.TreeItem[] = menuItems.map(config => createTreeItem(config));
+    private readonly items: MenuItemConfig[] = menuItems;
 
-    getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
-        return element;
+    getTreeItem(element: MenuItemConfig): vscode.TreeItem {
+        return createTreeItem(element);
     }
 
-    getChildren(): vscode.TreeItem[] {
+    getChildren(): MenuItemConfig[] {
         return this.items;
     }
 }

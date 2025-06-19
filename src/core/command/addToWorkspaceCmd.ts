@@ -1,8 +1,8 @@
 import { verifyDirExistence } from '@/core/util/file';
 import { addToWorkspace } from '@/core/util/workspace';
-import { WorktreeItem, FolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 
-export const addToWorkspaceCmd = async (item: WorktreeItem | FolderItem) => {
+export const addToWorkspaceCmd = async (item: IWorktreeLess) => {
     const fsPath = item.fsPath;
     if (!(await verifyDirExistence(fsPath))) return;
     return addToWorkspace(fsPath);

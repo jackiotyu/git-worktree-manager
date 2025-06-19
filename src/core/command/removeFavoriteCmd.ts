@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import { getFavoriteCache, updateFavoriteCache } from '@/core/util/cache';
 import { Alert } from '@/core/ui/message';
 import { confirmModal } from '@/core/ui/modal';
-import { FolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 import { comparePath } from '@/core/util/folder';
 
-export const removeFavoriteCmd = async (item: FolderItem) => {
+export const removeFavoriteCmd = async (item: IWorktreeLess) => {
     let uriPath = item.uriPath;
     let folders = getFavoriteCache();
     if (!folders.some((f) => comparePath(f.path, uriPath))) {
@@ -13,7 +13,7 @@ export const removeFavoriteCmd = async (item: FolderItem) => {
     }
     let ok = await confirmModal(
         vscode.l10n.t('Remove the items from the list'),
-        item.label as string,
+        item.fsPath,
     );
     if (!ok) {
         return;

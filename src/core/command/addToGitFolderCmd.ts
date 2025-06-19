@@ -1,8 +1,7 @@
-import * as vscode from 'vscode';
 import { addToGitFolder } from '@/core/command/addToGitFolder';
-import { FolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 
-export const addToGitFolderCmd = (item?: FolderItem) => {
+export const addToGitFolderCmd = (item?: IWorktreeLess) => {
     if (!item) return;
     return addToGitFolder(item.fsPath);
 };

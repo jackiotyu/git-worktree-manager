@@ -1,6 +1,6 @@
 import vscode from 'vscode';
 import { Alert } from '@/core/ui/message';
-import { GitFolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 import { bundleRepo } from '@/core/git/bundleRepo';
 import { getBaseBundleDir } from '@/core/util/folder';
 import dayjs from 'dayjs';
@@ -8,7 +8,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { actionProgressWrapper } from '@/core/ui/progress';
 
-export async function bundleRepoCmd(item: GitFolderItem) {
+export async function bundleRepoCmd(item: IWorktreeLess) {
     const baseBundleDir = getBaseBundleDir(item.fsPath);
     const bundlePath = path.join(baseBundleDir, `${dayjs().format('YYYY-MM-DD-HH-mm-ss')}.bundle`);
     actionProgressWrapper(

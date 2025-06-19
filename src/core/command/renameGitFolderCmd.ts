@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
 import { Alert } from '@/core/ui/message';
-import { GitFolderItem } from '@/core/treeView/items';
+import { IWorktreeLess } from '@/types';
 import path from 'path';
 
-const pickFolderConfig = (item?: GitFolderItem) => {
+const pickFolderConfig = (item?: IWorktreeLess) => {
     if (!item) return;
     return getFolderConfig().find((row) => row.path === item.fsPath);
 };
 
-export const renameGitFolderCmd = async (item?: GitFolderItem) => {
+export const renameGitFolderCmd = async (item?: IWorktreeLess) => {
     if (!item) return;
     let folder = pickFolderConfig(item);
     if (!folder) return;

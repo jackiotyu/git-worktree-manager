@@ -478,7 +478,7 @@
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer.context",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem|workspaceItem)/",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem|workspaceItem|fileItem)/",
           "group": "file-action@0"
         },
         {
@@ -523,7 +523,7 @@
         },
         {
           "command": "git-worktree-manager.revealInSystemExplorer",
-          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem|workspaceItem)/ && config.git-worktree-manager.treeView.showOpenExplorerInTreeItem",
+          "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem|workspaceItem|fileItem)/ && config.git-worktree-manager.treeView.showOpenExplorerInTreeItem",
           "group": "inline@12"
         },
         {
@@ -593,7 +593,7 @@
         },
         {
           "command": "git-worktree-manager.removeFavorite",
-          "when": "view === git-worktree-manager-favorite && viewItem =~ /git-worktree-manager.(folderItem|workspaceItem)/",
+          "when": "view === git-worktree-manager-favorite && viewItem =~ /git-worktree-manager.(folderItem|workspaceItem|fileItem)/",
           "group": "inline@100"
         },
         {
@@ -618,7 +618,7 @@
         },
         {
           "command": "git-worktree-manager.copyFolderPath",
-          "when": "viewItem =~ /git-worktree-manager.folderItem/",
+          "when": "viewItem =~ /git-worktree-manager.(folderItem|fileItem)/",
           "group": "workspace@3"
         },
         {
@@ -628,12 +628,12 @@
         },
         {
           "command": "git-worktree-manager.addToFavorite",
-          "when": "view === git-worktree-manager-recent && viewItem =~ /git-worktree-manager.(folderItem|workspaceItem)/",
+          "when": "view === git-worktree-manager-recent && viewItem =~ /git-worktree-manager.(folderItem|workspaceItem|fileItem)/",
           "group": "workspace@1"
         },
         {
           "command": "git-worktree-manager.switchToSelectWorkspace",
-          "when": "viewItem =~ /git-worktree-manager.(folderItem|workspaceItem)/",
+          "when": "viewItem =~ /git-worktree-manager.(folderItem|workspaceItem|fileItem)/",
           "group": "inline@100"
         },
         {

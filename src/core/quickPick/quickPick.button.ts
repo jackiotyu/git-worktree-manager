@@ -41,7 +41,7 @@ class QuickInputButton implements IQuickInputButton {
     };
 }
 
-export const openInNewWindowQuickInputButton = new QuickInputButton({
+export const openInCurrentWindowQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('arrow-right'),
     tooltip: vscode.l10n.t('Open in Current Window'),
 });

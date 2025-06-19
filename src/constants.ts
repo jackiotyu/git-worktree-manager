@@ -77,6 +77,7 @@ export enum TreeItemKind {
     gitFolder = 'gitFolder',
     folder = 'folder',
     setting = 'setting',
+    file = 'file',
 }
 
 export enum QuickPickKind {
@@ -130,4 +131,5 @@ export enum RefreshCacheType {
 export enum RecentItemType {
     workspace = 0,
     folder = 1,
+    file = 2,
 }
