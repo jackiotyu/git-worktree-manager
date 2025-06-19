@@ -70,9 +70,9 @@
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
-5. [拖拽文件到收藏夹](./images/drop-to-favorites.mp4)
+5. [拖拽文件到收藏夹](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4)
 
-<video src="./images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video>
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video>
 
 <p align="right">(<a href="#readme-top">回到顶部</a>)</p>
 

@@ -1,3 +1,7 @@
+## v3.1.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/i0.0.1...v3.1.0)
+
 ## v3.0.2
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.0.1...v3.0.2)

@@ -90,9 +90,9 @@ In summary, git worktree offers a flexible way to manage multiple tasks or versi
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
 
-5. [Drop items to Favorites](./images/drop-to-favorites.mp4)
+5. [Drop items to Favorites](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4)
 
-<video src="./images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video>
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
