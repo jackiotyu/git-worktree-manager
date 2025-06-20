@@ -24,7 +24,7 @@
     "cmd.openExternalTerminal": "外部ターミナルで開く",
     "cmd.addToWorkspace": "ワークスペースにフォルダを追加",
     "cmd.removeFromWorkspace": "ワークスペースからフォルダを削除",
-    "cmd.copyFolderPath": "フォルダパスをコピー",
+    "cmd.copyFilePath": "パスをコピー",
     "cmd.openRecent": "最近使用したフォルダを開く",
     "cmd.openFavorite": "お気に入りを開く",
     "cmd.addToGitFolder": "Gitリポジトリを保存",

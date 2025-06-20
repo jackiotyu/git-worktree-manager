@@ -24,7 +24,7 @@
     "cmd.openExternalTerminal": "Open in External Terminal",
     "cmd.addToWorkspace": "Add folder to workspace",
     "cmd.removeFromWorkspace": "Remove folder from workspace",
-    "cmd.copyFolderPath": "Copy folder path",
+    "cmd.copyFilePath": "Copy Path",
     "cmd.openRecent": "Open recently used folders",
     "cmd.openFavorite": "Open Favorites",
     "cmd.addToGitFolder": "Save Git repository",

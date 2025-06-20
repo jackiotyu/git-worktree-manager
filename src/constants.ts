@@ -32,7 +32,7 @@ export enum Commands {
     openExternalTerminalContext = 'git-worktree-manager.openExternalTerminal.context',
     addToWorkspace = 'git-worktree-manager.addToWorkspace',
     removeFromWorkspace = 'git-worktree-manager.removeFromWorkspace',
-    copyFolderPath = 'git-worktree-manager.copyFolderPath',
+    copyFilePath = 'git-worktree-manager.copyFilePath',
     refreshRecentFolder = 'git-worktree-manager.refreshRecentFolder',
     refreshFavorite = 'git-worktree-manager.refreshFavorite',
     addToGitFolder = 'git-worktree-manager.addToGitFolder',

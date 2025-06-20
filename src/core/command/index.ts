@@ -24,7 +24,7 @@ import { addToWorkspaceCmd } from '@/core/command/addToWorkspaceCmd';
 import { removeFromWorkspaceCmd } from '@/core/command/removeFromWorkspaceCmd';
 import { refreshRecentFolderCmd } from '@/core/command/refreshRecentFolderCmd';
 import { addToGitFolderCmd } from '@/core/command/addToGitFolderCmd';
-import { copyFolderPathCmd } from '@/core/command/copyFolderPathCmd';
+import { copyFilePathCmd } from '@/core/command/copyFilePathCmd';
 import { checkoutBranchCmd } from '@/core/command/checkoutBranchCmd';
 import { toggleGitFolderOpenCmd } from '@/core/command/toggleGitFolderOpenCmd';
 import { searchAllWorktreeCmd } from '@/core/command/searchAllWorktreeCmd';
@@ -90,7 +90,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         ),
         registerCommand(Commands.addToWorkspace, addToWorkspaceCmd),
         registerCommand(Commands.removeFromWorkspace, removeFromWorkspaceCmd),
-        registerCommand(Commands.copyFolderPath, copyFolderPathCmd),
+        registerCommand(Commands.copyFilePath, copyFilePathCmd),
         registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),
         registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
         registerCommand(Commands.checkoutBranch, checkoutBranchCmd),

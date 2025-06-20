@@ -24,7 +24,7 @@
     "cmd.openExternalTerminal": "在外部終端機中開啟",
     "cmd.addToWorkspace": "新增至工作區",
     "cmd.removeFromWorkspace": "從工作區中移除",
-    "cmd.copyFolderPath": "複製資料夾路徑",
+    "cmd.copyFilePath": "複製路徑",
     "cmd.openRecent": "開啟最近使用的資料夾",
     "cmd.openFavorite": "打開收藏夾",
     "cmd.addToGitFolder": "儲存至 Git 儲存庫管理",

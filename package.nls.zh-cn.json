@@ -24,7 +24,7 @@
     "cmd.openExternalTerminal": "在外部终端中打开",
     "cmd.addToWorkspace": "添加到工作区",
     "cmd.removeFromWorkspace": "从工作区中移除",
-    "cmd.copyFolderPath": "复制文件夹路径",
+    "cmd.copyFilePath": "复制路径",
     "cmd.openRecent": "打开最近使用的文件夹",
     "cmd.openFavorite": "打开收藏夹",
     "cmd.addToGitFolder": "保存到 Git 仓库管理",
