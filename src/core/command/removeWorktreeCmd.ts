@@ -12,8 +12,8 @@ import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
 import { IBranchForWorktree, IWorktreeLess } from '@/types';
 
-async function showDeleteConfirmation(worktreePath: string): Promise<'ok' | 'force' | undefined> {
-    const ok = vscode.l10n.t('ok');
+async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 'force' | undefined> {
+    const remove = vscode.l10n.t('Remove');
     const forceDelete = vscode.l10n.t('Force remove');
 
     let detail = vscode.l10n.t('The worktree for the {0} folder will be removed', worktreePath);
@@ -29,11 +29,11 @@ async function showDeleteConfirmation(worktreePath: string): Promise<'ok' | 'for
             modal: true,
             detail: detail,
         },
-        ok,
+        remove,
         forceDelete,
     );
 
-    if (selected === ok) return 'ok';
+    if (selected === remove) return 'remove';
     if (selected === forceDelete) return 'force';
     return undefined;
 }

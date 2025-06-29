@@ -10,6 +10,7 @@ export const deleteBranchCmd = async (item: BranchForWorktree) => {
     try {
         const confirm = await confirmModal(
             vscode.l10n.t('Delete branch'),
+            vscode.l10n.t('Delete'),
             vscode.l10n.t('The branch {0} based on {1} will be deleted', item.branch, item.mainFolder),
         );
         if(!confirm) return;

@@ -142,5 +142,10 @@
     "Please select the items you want to remove": "請選取您要移除的項目",
     "Select git repository for prune worktree": "請選擇需要清理 worktree 的 git 儲存庫",
     "Remove the items from the list": "從列表中移除項目",
-    "Contains uncommitted changes:\n\n{changes}": "含有未提交的變更:\n\n{changes}"
+    "Contains uncommitted changes:\n\n{changes}": "含有未提交的變更:\n\n{changes}",
+    "Create": "建立",
+    "Open": "開啟",
+    "Delete": "刪除",
+    "Prune": "清理",
+    "Remove": "移除"
 }

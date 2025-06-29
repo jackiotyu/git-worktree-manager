@@ -23,6 +23,7 @@ export const removeMultiGitFolderCmd = async () => {
 
     const confirm = await confirmModal(
         vscode.l10n.t('The selected items will be removed from the list'),
+        vscode.l10n.t('Remove'),
         selected.map((item) => item.description!).join('\n'),
     );
     if (!confirm) return;

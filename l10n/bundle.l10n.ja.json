@@ -142,5 +142,10 @@
     "Please select the items you want to remove": "削除する項目を選択してください",
     "Select git repository for prune worktree": "ワークツリーを整理するGitリポジトリを選択してください",
     "Remove the items from the list": "リストから項目を削除します",
-    "Contains uncommitted changes:\n\n{changes}": "未コミットの変更が含まれています:\n\n{changes}"
+    "Contains uncommitted changes:\n\n{changes}": "未コミットの変更が含まれています:\n\n{changes}",
+    "Create": "作成",
+    "Open": "開く",
+    "Delete": "削除",
+    "Prune": "整理",
+    "Remove": "削除"
 }

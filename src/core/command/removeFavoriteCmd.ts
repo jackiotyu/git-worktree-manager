@@ -13,6 +13,7 @@ export const removeFavoriteCmd = async (item: IWorktreeLess) => {
     }
     let ok = await confirmModal(
         vscode.l10n.t('Remove the items from the list'),
+        vscode.l10n.t('Remove'),
         item.fsPath,
     );
     if (!ok) {

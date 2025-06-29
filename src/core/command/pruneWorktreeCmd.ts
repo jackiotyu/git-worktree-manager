@@ -11,7 +11,7 @@ export const pruneWorktreeCmd = async () => {
         if (!output?.length) {
             return;
         }
-        let ok = vscode.l10n.t('ok');
+        let ok = vscode.l10n.t('Prune');
         let confirm = await vscode.window.showInformationMessage(
             vscode.l10n.t('The following worktree folders will be pruned'),
             {
