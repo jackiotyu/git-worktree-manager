@@ -1,3 +1,12 @@
+## v3.3.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.2.0...v3.3.0)
+
+### 💅 Refactors
+
+- **removeWorktreeCmd:** Optimize worktree removal process ([#19](https://github.com/jackiotyu/git-worktree-manager/pull/19))
+- **core:** Update confirm modal usage across commands ([#19](https://github.com/jackiotyu/git-worktree-manager/pull/19))
+
 ## v3.2.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.1.0...v3.2.0)
