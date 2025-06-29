@@ -16,11 +16,18 @@ async function showDeleteConfirmation(worktreePath: string): Promise<'ok' | 'for
     const ok = vscode.l10n.t('ok');
     const forceDelete = vscode.l10n.t('Force remove');
 
+    let detail = vscode.l10n.t('The worktree for the {0} folder will be removed', worktreePath);
+    const changes = await getChanges(worktreePath);
+    if (changes.length) {
+        detail += '\n\n';
+        detail += vscode.l10n.t('Contains uncommitted changes:\n\n{changes}', { changes: changes.map(change => change.raw).join('\n') });
+    }
+
     const selected = await vscode.window.showWarningMessage(
         vscode.l10n.t('Remove worktree'),
         {
             modal: true,
-            detail: vscode.l10n.t('The worktree for the {0} folder will be removed', worktreePath),
+            detail: detail,
         },
         ok,
         forceDelete,
@@ -43,23 +50,6 @@ async function getBranchInfo(worktreePath: string): Promise<{ branchName: string
     }
 }
 
-async function showDeleteWithChanges(changes: IChanges[]): Promise<'ok' | undefined> {
-    const ok = vscode.l10n.t('ok');
-    const message = vscode.l10n.t(
-        'This worktree contains uncommitted changes:\n\n{changes}\n\nAre you sure you want to remove it?',
-        { changes: changes.map((item) => item.raw).join('\n') },
-    );
-    const selected = await vscode.window.showWarningMessage(message, { modal: true }, ok);
-    if (selected === ok) return 'ok';
-    return undefined;
-}
-
-async function checkSafeRemove(worktreePath: string): Promise<boolean> {
-    const changes = await getChanges(worktreePath);
-    if (changes.length === 0) return true;
-    const selected = await showDeleteWithChanges(changes);
-    return selected === 'ok';
-}
 
 export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => {
     if (!item?.fsPath) return;
@@ -71,11 +61,6 @@ export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => 
         const confirmation = await showDeleteConfirmation(worktreePath);
         if (!confirmation) return;
         const isForceDelete = confirmation === 'force';
-
-        if (isForceDelete) {
-            const canRemove = await checkSafeRemove(worktreePath);
-            if (!canRemove) return;
-        }
 
         const needDeleteBranch = Config.get('promptDeleteBranchAfterWorktreeDeletion', false);
         const { branchName, mainFolder } = needDeleteBranch
