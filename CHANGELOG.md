@@ -1,3 +1,15 @@
+## v3.2.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.1.0...v3.2.0)
+
+### 🚀 Enhancements
+
+- **core:** Add safety check for uncommitted changes in worktree ([#19](https://github.com/jackiotyu/git-worktree-manager/pull/19))
+
+### 💅 Refactors
+
+- **core:** Rename copyFolderPath to copyFilePath ([5020ccb](https://github.com/jackiotyu/git-worktree-manager/commit/5020ccb))
+
 ## v3.1.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/i0.0.1...v3.1.0)
