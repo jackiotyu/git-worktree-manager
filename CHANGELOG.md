@@ -1,3 +1,16 @@
+## v3.4.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.3.0...v3.4.0)
+
+### 🚀 Enhancements
+
+- **core:** Add configurable worktree path template ([#28](https://github.com/jackiotyu/git-worktree-manager/pull/28))
+
+### 📖 Documentation
+
+- **README:** Update README ([cb5f6a1](https://github.com/jackiotyu/git-worktree-manager/commit/cb5f6a1))
+- **README:** Update README ([af5252a](https://github.com/jackiotyu/git-worktree-manager/commit/af5252a))
+
 ## v3.3.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.2.0...v3.3.0)
