@@ -99,5 +99,6 @@
     "submenus.worktree-action": "worktree 操作",
     "config.checkoutIgnoreOtherWorktree.description": "启用后，在切换分支时会忽略其他工作树的状态，允许多个工作树使用相同分支",
     "config.branchPick.showRenameBranch.description": "在 \"挑选分支\" 列表中展示 \"重命名分支\" 按钮",
-    "config.treeView.toSCM.description": "视图展示在源代码管理容器中"
+    "config.treeView.toSCM.description": "视图展示在源代码管理容器中",
+    "config.worktreePathTemplate.description": "工作区路径的模板。可用的变量：$BASE_PATH（仓库根目录）"
 }

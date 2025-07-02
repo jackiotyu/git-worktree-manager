@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import folderRoot from '@/core/folderRoot';
 import path from 'path';
 import { RecentItemType } from '@/constants';
+import { Config } from '@/core/config/setting';
 
 export function judgeIsCurrentFolder(path: string) {
     return comparePath(folderRoot.uri?.fsPath, path);
@@ -38,7 +39,10 @@ export function getGitFolderByUri(uri: vscode.Uri) {
     return repoPath;
 }
 
-// 暂时写死主文件夹加.worktree后缀
-export const getBaseWorktreeDir = (baseDir: string) => `${baseDir}.worktree`;
+// get worktree base dir
+export const getBaseWorktreeDir = (baseDir: string) => {
+    const worktreePathTemplate = Config.get('worktreePathTemplate', "$BASE_PATH.worktree");
+    return worktreePathTemplate.replace('$BASE_PATH', baseDir);
+};
 
 export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;
