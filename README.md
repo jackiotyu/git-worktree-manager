@@ -20,21 +20,21 @@ If you enjoy this extension, consider giving it a [star ⭐](https://github.com/
 Tired of juggling branches, stashing changes, or resolving merge conflicts? **Git Worktree Manager** makes parallel development a breeze by leveraging Git worktrees, letting you work on multiple branches in separate directories without leaving VSCode. Whether you’re tackling hotfixes, experimenting with features, or managing complex projects, this extension saves time, reduces friction, and keeps your workspace organized. With seamless integration and intuitive controls, it’s the ultimate tool for developers who want a smoother Git experience.
 
 <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video> 
-*Manage multiple repositories effortlessly within VSCode.*
+> [Manage multiple repositories effortlessly within VSCode.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4)
 
 ### Key Features 🎯
-- **Quick Worktree Switching**: Switch between worktrees using `Ctrl+Shift+R` or the Source Control view.
+- **Quick Worktree Switching**: Switch between worktrees using `Ctrl+Shift+R` or the Source Control view. 
   <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4" controls="controls" width="800" height="450"></video> 
-  *Switch branches seamlessly with a single command.*
-- **Effortless Worktree Creation**: Create new worktrees without touching the command line.
+  > [Switch branches seamlessly with a single command.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4) 
+- **Effortless Worktree Creation**: Create new worktrees without touching the command line. 
   <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4" controls="controls" width="800" height="450"></video> 
-  *Create a new worktree in seconds.*
-- **Workspace Integration**: Add worktrees to your VSCode workspace for easy access.
+  > [Create a new worktree in seconds.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4) 
+- **Workspace Integration**: Add worktrees to your VSCode workspace for easy access. 
   <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video> 
-  *Add worktrees to your workspace with a click.*
-- **Favorites Management**: Save frequently used worktrees for quick access.
+  > [Add worktrees to your workspace with a click.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4) 
+- **Favorites Management**: Save frequently used worktrees for quick access. 
   <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video> 
-  *Drop worktrees to favorites for instant access.*
+  > [Drop worktrees to favorites for instant access.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4) 
 - **Copy Untracked Files**: Automatically include untracked files when creating a new worktree.
 - **Multi-Language Support**: Available in English, Simplified Chinese, Traditional Chinese and Japanese.
 - **Customizable Terminal**: Use your preferred terminal (e.g., iTerm on macOS, Git Bash on Windows).
