@@ -15,16 +15,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
-
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '>=20.18.2'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
 
       - run: npx changelogithub
         env:
