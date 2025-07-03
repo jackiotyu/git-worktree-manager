@@ -6,5 +6,6 @@ export const openExternalTerminal = (path: string) => {
 };
 
 export const revealFolderInOS = (folder: string) => {
+    // vscode.env.openExternal(vscode.Uri.file(folder)); // open 'vscode' folder error
     return open(folder);
 };

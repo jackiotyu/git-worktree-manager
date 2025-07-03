@@ -876,7 +876,7 @@
             "order": 2,
             "scope": "application",
             "type": "boolean",
-            "default": false,
+            "default": true,
             "markdownDescription": "%config.openInsideFolder.description%"
           },
           "git-worktree-manager.httpProxy": {
