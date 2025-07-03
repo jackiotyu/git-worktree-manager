@@ -45,4 +45,26 @@ export const getBaseWorktreeDir = (baseDir: string) => {
     return worktreePathTemplate.replace('$BASE_PATH', baseDir);
 };
 
+// Validate template for invalid path characters
+export const validateSubdirectoryTemplate = (template: string): boolean => {
+    // Check for invalid path characters
+    const invalidChars = /[/\\:*?"<>|]/;
+    return !invalidChars.test(template);
+};
+
+// get worktree subdirectory name with baseName and index
+export const getSubDir = (baseName: string, index: string | number) => {
+    const template = Config.get('worktreeSubdirectoryTemplate', 'worktree$INDEX');
+    
+    // Validate template
+    if (!validateSubdirectoryTemplate(template)) {
+        console.warn('Invalid worktree subdirectory template, using default');
+        return `worktree${String(index)}`;
+    }
+    
+    return template
+        .replace('$BASE_NAME', baseName)
+        .replace('$INDEX', String(index));
+};
+
 export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;

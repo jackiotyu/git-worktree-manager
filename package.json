@@ -943,6 +943,14 @@
             "type": "string",
             "default": "$BASE_PATH.worktree",
             "description": "%config.worktreePathTemplate.description%"
+          },
+          "git-worktree-manager.worktreeSubdirectoryTemplate": {
+            "order": 12,
+            "type": "string",
+            "default": "worktree$INDEX",
+            "pattern": "^[^/\\\\:*?\"<>|]+$",
+            "patternErrorMessage": "Template cannot contain characters: / \\ : * ? \" < > |",
+            "description": "%config.worktreeSubdirectoryTemplate.description%"
           }
         }
       },
@@ -1153,6 +1161,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^3.6.0",
     "eslint": "^8.39.0",
     "mocha": "^10.2.0",
     "typescript": "~5.0.4"

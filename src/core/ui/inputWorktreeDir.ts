@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import path from 'path';
 import { checkExist, isDirEmpty } from '@/core/util/file';
-import { comparePath, getBaseWorktreeDir } from '@/core/util/folder';
+import { comparePath, getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
 import { withResolvers } from '@/core/util/promise';
 
@@ -43,8 +43,9 @@ export const inputWorktreeDir = async ({
     const { promise, resolve, reject } = withResolvers<string | undefined>();
     // 最终路径
     const workTreeDir = getBaseWorktreeDir(baseDir);
-    let finalWorktreeDir = path.join(workTreeDir, 'worktree1');
-    const dirReg = /worktree(\d+)/;
+    const baseName = path.basename(baseDir);
+    const dirReg = new RegExp(getSubDir(baseName, '(\\d+)'));
+    let finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, 1));
     const inputBox = vscode.window.createInputBox();
     // 传入的 baseWorktreeDir 有值，且和 workTreeDir 不同，说明是从已选择的 worktree 切换过来
     if (baseWorktreeDir && !comparePath(workTreeDir, baseWorktreeDir)) {
@@ -57,7 +58,7 @@ export const inputWorktreeDir = async ({
         if (worktreeDirList.length) {
             worktreeDirList.sort((a, b) => Number(b.replace(dirReg, '$1')) - Number(a.replace(dirReg, '$1')));
             const index = worktreeDirList[0].match(dirReg)![1];
-            finalWorktreeDir = path.join(workTreeDir, `worktree${Number(index) + 1}`);
+            finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, Number(index) + 1));
         }
     }
     const selectDirBtn: vscode.QuickInputButton = {

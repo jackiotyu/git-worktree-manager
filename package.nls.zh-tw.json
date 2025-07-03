@@ -100,5 +100,6 @@
     "config.checkoutIgnoreOtherWorktree.description": "啟用後，在切換分支時會忽略其他工作樹的狀態，允許多個工作樹使用相同分支",
     "config.branchPick.showRenameBranch.description": "在「挑選分支」清單中顯示「重命名分支」按鈕",
     "config.treeView.toSCM.description": "視圖顯示在原始碼控制容器中",
-    "config.worktreePathTemplate.description": "工作區路徑的模板。可用的變數：$BASE_PATH（倉庫根目錄）"
+    "config.worktreePathTemplate.description": "工作區路徑的模板。可用的變數：$BASE_PATH（倉庫根目錄）",
+    "config.worktreeSubdirectoryTemplate.description": "工作區子目錄名稱的模板。可用的變數：$BASE_NAME（倉庫資料夾名稱）、$INDEX（遞增數字）。不能包含字元: / \\ : * ? \" < > |"
 }

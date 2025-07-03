@@ -100,5 +100,6 @@
     "config.checkoutIgnoreOtherWorktree.description": "When enabled, the state of other worktrees is ignored when switching branches, allowing multiple worktrees to use the same branch.",
     "config.branchPick.showRenameBranch.description": "Show the \"Rename Branch\" button on the results of \"Pick Branch\"",
     "config.treeView.toSCM.description": "Display views in the Source Control container",
-    "config.worktreePathTemplate.description": "Template for the worktree path. Available variables: $BASE_PATH (repo root)."
+    "config.worktreePathTemplate.description": "Template for the worktree path. Available variables: $BASE_PATH (repo root).",
+    "config.worktreeSubdirectoryTemplate.description": "Template for worktree subdirectory names. Available variables: $BASE_NAME (repo folder name), $INDEX (incrementing number). Cannot contain characters: / \\ : * ? \" < > |"
 }

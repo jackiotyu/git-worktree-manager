@@ -34,6 +34,7 @@ export class Config {
     static get(key: 'treeView.showFetchInTreeItem', defaultValue: true): boolean;
     static get(key: 'treeView.toSCM', defaultValue: false): boolean;
     static get(key: 'worktreePathTemplate', defaultValue: '$BASE_PATH.worktree'): string;
+    static get(key: 'worktreeSubdirectoryTemplate', defaultValue: 'worktree$INDEX'): string;
     static get<T>(key: string, defaultValue: T): T {
         return vscode.workspace.getConfiguration(APP_NAME).get(key, defaultValue);
     }
