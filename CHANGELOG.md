@@ -1,3 +1,16 @@
+## v3.5.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.4.0...v3.5.0)
+
+### 🚀 Enhancements
+
+- **config:** Change default value of openInsideFolder to true ([0b8a88a](https://github.com/jackiotyu/git-worktree-manager/commit/0b8a88a))
+- **config:** Add worktree subdirectory template configuration ([#30](https://github.com/jackiotyu/git-worktree-manager/pull/30))
+
+### 📦 Build
+
+- **release:** Update Node.js and dependency versions ([65c3635](https://github.com/jackiotyu/git-worktree-manager/commit/65c3635))
+
 ## v3.4.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.3.0...v3.4.0)
