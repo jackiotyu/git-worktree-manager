@@ -949,7 +949,7 @@
             "type": "string",
             "default": "worktree$INDEX",
             "pattern": "^[^/\\\\:*?\"<>|]+$",
-            "patternErrorMessage": "Template cannot contain characters: / \\ : * ? \" < > |",
+            "patternErrorMessage": "%config.worktreeSubdirectoryTemplate.patternErrorMessage%",
             "description": "%config.worktreeSubdirectoryTemplate.description%"
           }
         }

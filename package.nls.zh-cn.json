@@ -101,5 +101,6 @@
     "config.branchPick.showRenameBranch.description": "在 \"挑选分支\" 列表中展示 \"重命名分支\" 按钮",
     "config.treeView.toSCM.description": "视图展示在源代码管理容器中",
     "config.worktreePathTemplate.description": "工作区路径的模板。可用的变量：$BASE_PATH（仓库根目录）",
-    "config.worktreeSubdirectoryTemplate.description": "工作区子目录名称的模板。可用的变量：$BASE_NAME（仓库文件夹名称）、$INDEX（递增数字）。不能包含字符: / \\ : * ? \" < > |"
+    "config.worktreeSubdirectoryTemplate.description": "工作区子目录名称的模板。可用的变量：$BASE_NAME（仓库文件夹名称）、$INDEX（递增数字）。不能包含字符: / \\ : * ? \" < > |",
+    "config.worktreeSubdirectoryTemplate.patternErrorMessage": "模板不能包含以下字符: / \\ : * ? \" < > |"
 }
