@@ -2,11 +2,12 @@ import * as vscode from 'vscode';
 import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
 import { Alert } from '@/core/ui/message';
 import { IWorktreeLess } from '@/types';
+import { comparePath } from '@/core/util/folder';
 import path from 'path';
 
 const pickFolderConfig = (item?: IWorktreeLess) => {
     if (!item) return;
-    return getFolderConfig().find((row) => row.path === item.fsPath);
+    return getFolderConfig().find((row) => comparePath(row.path, item.fsPath));
 };
 
 export const renameGitFolderCmd = async (item?: IWorktreeLess) => {
