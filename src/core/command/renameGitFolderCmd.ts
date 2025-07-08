@@ -33,7 +33,7 @@ export const renameGitFolderCmd = async (item?: IWorktreeLess) => {
     folder.name = name;
     let allFolders = getFolderConfig();
     const folderPath = folder.path;
-    let index = allFolders.findIndex((i) => i.path === folderPath);
+    let index = allFolders.findIndex((i) => comparePath(i.path, folderPath));
     if (~index) {
         allFolders[index].name = name;
         await updateFolderConfig(allFolders);
