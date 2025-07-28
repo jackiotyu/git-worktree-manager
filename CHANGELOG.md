@@ -1,3 +1,16 @@
+## v3.6.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.5.0...v3.6.0)
+
+### 🚀 Enhancements
+
+- **config:** Add postCreateCmd configuration option ([#31](https://github.com/jackiotyu/git-worktree-manager/pull/31))
+
+### 🩹 Fixes
+
+- **command:** Update folder config lookup logic to support path comparison ([fd28f2c](https://github.com/jackiotyu/git-worktree-manager/commit/fd28f2c))
+- **command:** Improve folder index lookup by using comparePath function ([7179ec5](https://github.com/jackiotyu/git-worktree-manager/commit/7179ec5))
+
 ## v3.5.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.4.0...v3.5.0)
