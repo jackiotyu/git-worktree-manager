@@ -147,5 +147,6 @@
     "Open": "開く",
     "Delete": "削除",
     "Prune": "整理",
-    "Remove": "削除"
+    "Remove": "削除",
+    "Running post-create command...": "post-create コマンドを実行中..."
 }

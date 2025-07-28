@@ -147,5 +147,6 @@
     "Open": "開啟",
     "Delete": "刪除",
     "Prune": "清理",
-    "Remove": "移除"
+    "Remove": "移除",
+    "Running post-create command...": "正在運行 post-create 命令..."
 }

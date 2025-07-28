@@ -951,6 +951,12 @@
             "pattern": "^[^/\\\\:*?\"<>|]+$",
             "patternErrorMessage": "%config.worktreeSubdirectoryTemplate.patternErrorMessage%",
             "description": "%config.worktreeSubdirectoryTemplate.description%"
+          },
+          "git-worktree-manager.postCreateCmd": {
+            "order": 13,
+            "type": "string",
+            "default": "",
+            "markdownDescription": "%config.postCreateCmd.description%"
           }
         }
       },

@@ -102,5 +102,6 @@
     "config.treeView.toSCM.description": "视图展示在源代码管理容器中",
     "config.worktreePathTemplate.description": "工作区路径的模板。可用的变量：$BASE_PATH（仓库根目录）",
     "config.worktreeSubdirectoryTemplate.description": "工作区子目录名称的模板。可用的变量：$BASE_NAME（仓库文件夹名称）、$INDEX（递增数字）。不能包含字符: / \\ : * ? \" < > |",
-    "config.worktreeSubdirectoryTemplate.patternErrorMessage": "模板不能包含以下字符: / \\ : * ? \" < > |"
+    "config.worktreeSubdirectoryTemplate.patternErrorMessage": "模板不能包含以下字符: / \\ : * ? \" < > |",
+    "config.postCreateCmd.description": "创建 worktree 后执行的命令，默认执行路径是新创建的 worktree 的目录内。你可以在命令中使用以下变量：\n\n- `$BASE_PATH`：仓库的完整路径。\n- `$WORKTREE_PATH`：worktree的完整路径。\n\n示例：\n`git submodule update --init --recursive`"
 }

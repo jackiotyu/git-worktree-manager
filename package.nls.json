@@ -102,5 +102,6 @@
     "config.treeView.toSCM.description": "Display views in the Source Control container",
     "config.worktreePathTemplate.description": "Template for the worktree path. Available variables: $BASE_PATH (repo root).",
     "config.worktreeSubdirectoryTemplate.description": "Template for worktree subdirectory names. Available variables: $BASE_NAME (repo folder name), $INDEX (incrementing number). Cannot contain characters: / \\ : * ? \" < > |",
-    "config.worktreeSubdirectoryTemplate.patternErrorMessage": "Template cannot contain characters: / \\ : * ? \" < > |"
+    "config.worktreeSubdirectoryTemplate.patternErrorMessage": "Template cannot contain characters: / \\ : * ? \" < > |",
+    "config.postCreateCmd.description": "Command to execute after creating a worktree. The default execution path is the directory of the newly created worktree. You can use the following variables in the command:\n\n- `$BASE_PATH`: The full path of the worktree.\n- `$WORKTREE_PATH`: The full path of the worktree.\n\nExample:\n`git submodule update --init --recursive`"
 }
