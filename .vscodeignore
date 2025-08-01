@@ -7,7 +7,6 @@ src/**
 .yarnrc
 webpack.config.js
 rspack.config.js
-tag-release.sh
 vsc-extension-quickstart.md
 pnpm-lock.yaml
 .pnpm*
