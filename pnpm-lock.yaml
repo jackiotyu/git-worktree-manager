@@ -34,10 +34,10 @@ importers:
         specifier: ^10.0.10
         version: 10.0.10
       '@types/node':
-        specifier: ~16.18.126
+        specifier: 16.x
         version: 16.18.126
       '@types/vscode':
-        specifier: ^1.102.0
+        specifier: ^1.60.0
         version: 1.102.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.62.0
