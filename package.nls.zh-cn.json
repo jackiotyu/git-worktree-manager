@@ -97,11 +97,11 @@
     "config.worktreeCopyPatterns.description": "创建新 worktree 时需要复制的文件匹配模式，参考[glob patterns介绍](https://juejin.cn/post/7474119575574855717)",
     "config.worktreeCopyIgnores.description": "创建新 worktree 时需要排除的文件匹配模式，参考[glob patterns介绍](https://juejin.cn/post/7474119575574855717)",
     "submenus.worktree-action": "worktree 操作",
-    "config.checkoutIgnoreOtherWorktree.description": "启用后，在切换分支时会忽略其他工作树的状态，允许多个工作树使用相同分支",
+    "config.checkoutIgnoreOtherWorktree.description": "启用后，在切换分支时会忽略其他 worktree 的状态，允许多个 worktree 使用相同分支",
     "config.branchPick.showRenameBranch.description": "在 \"挑选分支\" 列表中展示 \"重命名分支\" 按钮",
     "config.treeView.toSCM.description": "视图展示在源代码管理容器中",
-    "config.worktreePathTemplate.description": "工作区路径的模板。可用的变量：$BASE_PATH（仓库根目录）",
-    "config.worktreeSubdirectoryTemplate.description": "工作区子目录名称的模板。可用的变量：$BASE_NAME（仓库文件夹名称）、$INDEX（递增数字）。不能包含字符: / \\ : * ? \" < > |",
+    "config.worktreePathTemplate.description": "worktree 路径的模板。可用的变量：$BASE_PATH（仓库根目录）",
+    "config.worktreeSubdirectoryTemplate.description": "worktree 子目录名称的模板。可用的变量：$BASE_NAME（仓库文件夹名称）、$INDEX（递增数字）。不能包含字符: / \\ : * ? \" < > |",
     "config.worktreeSubdirectoryTemplate.patternErrorMessage": "模板不能包含以下字符: / \\ : * ? \" < > |",
     "config.postCreateCmd.description": "创建 worktree 后执行的命令，默认执行路径是新创建的 worktree 的目录内。你可以在命令中使用以下变量：\n\n- `$BASE_PATH`：仓库的完整路径。\n- `$WORKTREE_PATH`：worktree的完整路径。\n\n示例：\n`git submodule update --init --recursive`"
 }
