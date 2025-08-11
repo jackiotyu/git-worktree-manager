@@ -20,7 +20,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     private static readonly cacheTimeout = 30000; // 30s
     private static readonly refreshThrottle = 800; // 800ms
 
-    private data: IFolderItemConfig[] = [];
+    private data: IFolderItemConfig[] = GlobalState.get('gitFolders', []).sort((a, b) => a.name.localeCompare(b.name));
     private viewAsTree: boolean = true;
     private worktreeCache: Map<string, WorktreeCache> = new Map();
     private _onDidChangeTreeData = new vscode.EventEmitter<GitFolderItem | WorktreeItem | void>();
