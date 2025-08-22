@@ -72,10 +72,14 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
 
         const descriptionTemplate = Config.get('treeView.worktreeDescriptionTemplate', '$FULL_PATH');
         const worktreePath = this.viewItem.path;
+        const relativePath = this.viewItem.isMain
+            ? path.posix.basename(worktreePath)
+            : path.posix.relative(this.viewItem.mainFolder, worktreePath);
+
         const description = descriptionTemplate
             .replace('$FULL_PATH', worktreePath)
             .replace('$BASE_NAME', path.posix.basename(worktreePath))
-            .replace('$RELATIVE_PATH', path.posix.relative(this.viewItem.mainFolder, worktreePath));
+            .replace('$RELATIVE_PATH', relativePath);
 
         descriptionList.push(description);
         this.description = descriptionList.join('');
