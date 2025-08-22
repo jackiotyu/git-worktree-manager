@@ -1,3 +1,22 @@
+## v3.7.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.6.0...v3.7.0)
+
+### 🚀 Enhancements
+
+- Add customizable worktree description template ([#32](https://github.com/jackiotyu/git-worktree-manager/pull/32))
+- Add customizable worktree description template ([#32](https://github.com/jackiotyu/git-worktree-manager/pull/32))
+
+### 🔥 Performance
+
+- **gitFolder:** Initialize data for Git repositories ([aabcc9e](https://github.com/jackiotyu/git-worktree-manager/commit/aabcc9e))
+
+### 🏡 Chore
+
+- Update dependencies to latest versions ([caba381](https://github.com/jackiotyu/git-worktree-manager/commit/caba381))
+- Update .editorconfig and localization files ([5d13a83](https://github.com/jackiotyu/git-worktree-manager/commit/5d13a83))
+- Update dependencies ([09193da](https://github.com/jackiotyu/git-worktree-manager/commit/09193da))
+
 ## v3.6.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.5.0...v3.6.0)
