@@ -11,6 +11,7 @@ import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { parseUpstream } from '@/core/util/ref';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
+import path from 'path';
 
 export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     iconPath: vscode.ThemeIcon = new vscode.ThemeIcon('folder');
@@ -68,7 +69,15 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         if (this.viewItem.isMain) descriptionList.push('✨ ');
         if (this.ahead) descriptionList.push(`${this.ahead}↑ `);
         if (this.behind) descriptionList.push(`${this.behind}↓ `);
-        descriptionList.push(this.viewItem.path);
+
+        const descriptionTemplate = Config.get('treeView.worktreeDescriptionTemplate', '$FULL_PATH');
+        const worktreePath = this.viewItem.path;
+        const description = descriptionTemplate
+            .replace('$FULL_PATH', worktreePath)
+            .replace('$BASE_NAME', path.posix.basename(worktreePath))
+            .replace('$RELATIVE_PATH', path.posix.relative(this.viewItem.mainFolder, worktreePath));
+
+        descriptionList.push(description);
         this.description = descriptionList.join('');
     }
 

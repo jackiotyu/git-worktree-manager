@@ -36,6 +36,7 @@ export class Config {
     static get(key: 'worktreePathTemplate', defaultValue: '$BASE_PATH.worktree'): string;
     static get(key: 'worktreeSubdirectoryTemplate', defaultValue: 'worktree$INDEX'): string;
     static get(key: 'postCreateCmd', defaultValue: ''): string;
+    static get(key: 'treeView.worktreeDescriptionTemplate', defaultValue: '$FULL_PATH'): string;
     static get<T>(key: string, defaultValue: T): T {
         return vscode.workspace.getConfiguration(APP_NAME).get(key, defaultValue);
     }

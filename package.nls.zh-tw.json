@@ -103,5 +103,6 @@
     "config.worktreePathTemplate.description": "worktree 路徑的模板。可用的變數：$BASE_PATH（倉庫根目錄）",
     "config.worktreeSubdirectoryTemplate.description": "worktree 子目錄名稱的模板。可用的變數：$BASE_NAME（倉庫資料夾名稱）、$INDEX（遞增數字）。不能包含字元: / \\ : * ? \" < > |",
     "config.worktreeSubdirectoryTemplate.patternErrorMessage": "範本不能包含以下字元: / \\ : * ? \" < > |",
-    "config.postCreateCmd.description": "建立 worktree 後執行的命令。預設執行路徑是新建立的 worktree 的目錄內。你可以在命令中使用以下變數：\n\n- `$BASE_PATH`：worktree 的完整路徑。\n- `$WORKTREE_PATH`：worktree 的完整路徑。\n\n範例：\n`git submodule update --init --recursive`"
+    "config.postCreateCmd.description": "建立 worktree 後執行的命令。預設執行路徑是新建立的 worktree 的目錄內。你可以在命令中使用以下變數：\n\n- `$BASE_PATH`：worktree 的完整路徑。\n- `$WORKTREE_PATH`：worktree 的完整路徑。\n\n範例：\n`git submodule update --init --recursive`",
+    "config.worktreeDescriptionTemplate.description": "worktree 描述的模板。可用的變數：\n\n- `$FULL_PATH`：worktree 的完整路徑。\n- `$BASE_NAME`：worktree 的資料夾名稱。\n- `$RELATIVE_PATH`：相對路徑（相對於主倉庫目錄）。"
 }
