@@ -1,3 +1,6 @@
+export function getTerminalNameTemplateConfig() {
+    return Config.get('terminalNameTemplate', '${label} ⇄ ${fullPath}');
+}
 import * as vscode from "vscode";
 import { GlobalState } from '@/core/state';
 import { Config } from '@/core/config/setting';
