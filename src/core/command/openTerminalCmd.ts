@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { verifyDirExistence } from '@/core/util/file';
 import { judgeIncludeFolder } from '@/core/util/folder';
-import { getTerminalLocationConfig, getTerminalCmdListConfig } from '@/core/util/state';
+import { getTerminalLocationConfig, getTerminalCmdListConfig, getTerminalNameTemplateConfig } from '@/core/util/state';
 import { AllViewItem } from '@/core/treeView/items';
 
 interface CmdItem extends vscode.QuickPickItem {
@@ -12,15 +12,31 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
     if (!item) return;
     const fsPath = item.fsPath;
     if (!(await verifyDirExistence(fsPath))) return;
-    const terminal = vscode.window.createTerminal({
+    // Prepare variables for template
+    const label = item.name || '';
+    const fullPath = fsPath || '';
+    const baseName = fullPath ? require('path').basename(fullPath) : '';
+    let name: string | undefined = getTerminalNameTemplateConfig();
+    if (typeof name === 'string' && name.trim()) {
+        name = name
+            .replace(/\$\{label\}/g, label)
+            .replace(/\$\{fullPath\}/g, fullPath)
+            .replace(/\$\{baseName\}/g, baseName);
+    } else {
+        name = undefined;
+    }
+    const terminalOptions: vscode.TerminalOptions = {
         cwd: fsPath,
-        name: `${item.name} ⇄ ${fsPath}`,
         color: judgeIncludeFolder(fsPath) ? new vscode.ThemeColor('terminal.ansiBlue') : void 0,
         iconPath: new vscode.ThemeIcon('terminal-bash'),
         isTransient: false,
         hideFromUser: false,
         location: getTerminalLocationConfig(),
-    });
+    };
+    if (name !== undefined) {
+        terminalOptions.name = name;
+    }
+    const terminal = vscode.window.createTerminal(terminalOptions);
     terminal.show();
     const cmdList = getTerminalCmdListConfig();
     if (!cmdList.length) return;
