@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import path from 'path';
 import { verifyDirExistence } from '@/core/util/file';
 import { judgeIncludeFolder } from '@/core/util/folder';
 import { getTerminalLocationConfig, getTerminalCmdListConfig, getTerminalNameTemplateConfig } from '@/core/util/state';
@@ -13,15 +14,15 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
     const fsPath = item.fsPath;
     if (!(await verifyDirExistence(fsPath))) return;
     // Prepare variables for template
-    const label = item.name || '';
-    const fullPath = fsPath || '';
-    const baseName = fullPath ? require('path').basename(fullPath) : '';
+    const label = item.name;
+    const fullPath = fsPath;
+    const baseName = path.basename(fullPath);
     let name: string | undefined = getTerminalNameTemplateConfig();
     if (typeof name === 'string' && name.trim()) {
         name = name
-            .replace(/\$\{label\}/g, label)
-            .replace(/\$\{fullPath\}/g, fullPath)
-            .replace(/\$\{baseName\}/g, baseName);
+            .replace(/\$LABEL/g, label)
+            .replace(/\$FULL_PATH/g, fullPath)
+            .replace(/\$BASE_NAME/g, baseName);
     } else {
         name = undefined;
     }

@@ -1,6 +1,3 @@
-export function getTerminalNameTemplateConfig() {
-    return Config.get('terminalNameTemplate', '${label} ⇄ ${fullPath}');
-}
 import * as vscode from "vscode";
 import { GlobalState } from '@/core/state';
 import { Config } from '@/core/config/setting';
@@ -18,6 +15,10 @@ export function getTerminalLocationConfig() {
 
 export function getTerminalCmdListConfig() {
     return Config.get('terminalCmdList', []);
+}
+
+export function getTerminalNameTemplateConfig() {
+    return Config.get('terminalNameTemplate', '$LABEL ⇄ $FULL_PATH');
 }
 
 export function updateFolderConfig(value: IFolderItemConfig[]) {

@@ -3,7 +3,6 @@ import { APP_NAME, AlertLevel } from '@/constants';
 import { DefaultDisplayList, GitHistoryExtension } from '@/types';
 
 export class Config {
-    static get(key: 'terminalNameTemplate', defaultValue: string): string;
     private constructor() {}
 
     static disposables: vscode.Disposable[] = [];
@@ -25,7 +24,7 @@ export class Config {
     static get(key: 'branchPick.showDeleteBranch', defaultValue: true): boolean;
     static get(key: 'terminalCmdList', defaultValue: []): string[];
     static get(key: 'terminalLocationInEditor', defaultValue: false): boolean;
-    static get(key: 'terminalNameTemplate', defaultValue: string): string;
+    static get(key: 'terminalNameTemplate', defaultValue: '$LABEL ⇄ $FULL_PATH'): string;
     static get(key: 'openInsideFolder', defaultValue: false): boolean;
     static get(key: 'httpProxy', defaultValue: ''): string;
     static get(key: 'workspacePathFormat', defaultValue: '$BASE_NAME - $FULL_PATH'): string;
