@@ -1,3 +1,16 @@
+## v3.8.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.7.0...v3.8.0)
+
+### 🚀 Enhancements
+
+- Add customizable internal terminal name template ([#34](https://github.com/jackiotyu/git-worktree-manager/pull/34))
+- Add `git-worktree-manager.terminalNameTemplate`  configuration option ([8c833a3](https://github.com/jackiotyu/git-worktree-manager/commit/8c833a3))
+
+### 📦 Build
+
+- **release:** Update dependency versions ([37fc7fe](https://github.com/jackiotyu/git-worktree-manager/commit/37fc7fe))
+
 ## v3.7.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.6.0...v3.7.0)
