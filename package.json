@@ -957,6 +957,12 @@
             "type": "string",
             "default": "",
             "markdownDescription": "%config.postCreateCmd.description%"
+          },
+          "git-worktree-manager.terminalNameTemplate": {
+            "order": 14,
+            "type": "string",
+            "default": "$LABEL ⇄ $FULL_PATH",
+            "markdownDescription": "%config.terminalNameTemplate.description%"
           }
         }
       },

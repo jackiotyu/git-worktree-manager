@@ -104,5 +104,6 @@
     "config.worktreeSubdirectoryTemplate.description": "ワークツリーサブディレクトリ名のテンプレートです。使用可能な変数：$BASE_NAME（リポジトリフォルダ名）、$INDEX（増分番号）。使用できない文字: / \\ : * ? \" < > |",
     "config.worktreeSubdirectoryTemplate.patternErrorMessage": "テンプレートに次の文字は使用できません: / \\ : * ? \" < > |",
     "config.postCreateCmd.description": "ワークツリー作成後に実行するコマンド。デフォルトでは、新しいワークツリーのディレクトリ内で実行されます。コマンドで使用できる変数：\n\n- `$BASE_PATH`：ワークツリーの完全パス\n- `$WORKTREE_PATH`：ワークツリーの完全パス\n- `$BASE_NAME`：ワークツリーのフォルダ名\n\n例：\n`git submodule update --init --recursive`",
-    "config.worktreeDescriptionTemplate.description": "ワークツリーの説明テンプレートです。使用可能な変数：\n\n- `$FULL_PATH`：ワークツリーの完全パス\n- `$BASE_NAME`：ワークツリーのフォルダ名\n- `$RELATIVE_PATH`：相対パス（メインリポジトリのルートからの相対パス）"
+    "config.worktreeDescriptionTemplate.description": "ワークツリーの説明テンプレートです。使用可能な変数：\n\n- `$FULL_PATH`：ワークツリーの完全パス\n- `$BASE_NAME`：ワークツリーのフォルダ名\n- `$RELATIVE_PATH`：相対パス（メインリポジトリのルートからの相対パス）",
+    "config.terminalNameTemplate.description": "内蔵ターミナルの名称テンプレートです。使用可能な変数：\n\n- `$FULL_PATH`：フォルダの完全パス\n- `$BASE_NAME`：フォルダ名\n- `$LABEL`：展示の名称, フォルダ名またはワークツリー展示の名称"
 }

@@ -104,5 +104,6 @@
     "config.worktreeSubdirectoryTemplate.description": "worktree 子目录名称的模板。可用的变量：$BASE_NAME（仓库文件夹名称）、$INDEX（递增数字）。不能包含字符: / \\ : * ? \" < > |",
     "config.worktreeSubdirectoryTemplate.patternErrorMessage": "模板不能包含以下字符: / \\ : * ? \" < > |",
     "config.postCreateCmd.description": "创建 worktree 后执行的命令，默认执行路径是新创建的 worktree 的目录内。你可以在命令中使用以下变量：\n\n- `$BASE_PATH`：仓库的完整路径。\n- `$WORKTREE_PATH`：worktree的完整路径。\n\n示例：\n`git submodule update --init --recursive`",
-    "config.worktreeDescriptionTemplate.description": "worktree 描述的模板。可用的变量：\n\n- `$FULL_PATH`：worktree 的完整路径。\n- `$BASE_NAME`：worktree 的文件夹名称。\n- `$RELATIVE_PATH`：相对路径（相对于主仓库目录）。"
+    "config.worktreeDescriptionTemplate.description": "worktree 描述的模板。可用的变量：\n\n- `$FULL_PATH`：worktree 的完整路径。\n- `$BASE_NAME`：worktree 的文件夹名称。\n- `$RELATIVE_PATH`：相对路径（相对于主仓库目录）。",
+    "config.terminalNameTemplate.description": "打开内置终端时显示的名称模板。可用的变量：\n\n- `$FULL_PATH`：文件夹的完整路径。\n- `$BASE_NAME`：文件夹名称。\n- `$LABEL`：展示的名称, 文件夹名称或者 worktree 展示的名称"
 }
