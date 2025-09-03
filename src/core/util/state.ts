@@ -17,6 +17,10 @@ export function getTerminalCmdListConfig() {
     return Config.get('terminalCmdList', []);
 }
 
+export function getTerminalNameTemplateConfig() {
+    return Config.get('terminalNameTemplate', '$LABEL ⇄ $FULL_PATH');
+}
+
 export function updateFolderConfig(value: IFolderItemConfig[]) {
     return GlobalState.update('gitFolders', value);
 }

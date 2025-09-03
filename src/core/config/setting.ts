@@ -24,6 +24,7 @@ export class Config {
     static get(key: 'branchPick.showDeleteBranch', defaultValue: true): boolean;
     static get(key: 'terminalCmdList', defaultValue: []): string[];
     static get(key: 'terminalLocationInEditor', defaultValue: false): boolean;
+    static get(key: 'terminalNameTemplate', defaultValue: '$LABEL ⇄ $FULL_PATH'): string;
     static get(key: 'openInsideFolder', defaultValue: false): boolean;
     static get(key: 'httpProxy', defaultValue: ''): string;
     static get(key: 'workspacePathFormat', defaultValue: '$BASE_NAME - $FULL_PATH'): string;
