@@ -23,7 +23,7 @@
     "Switch Worktree": "ワークツリーの切り替え",
     "Please select the directory to switch to": "切り替えるディレクトリを選択してください",
     "Create worktree": "ワークツリーを作成",
-    "A worktree with {1} {2} will be created under {0}": "{0} の下に {1} の {2} でワークツリーを作成します",
+    "A worktree for {label} {name} will be created under {folder}": "{folder} の下に {label} {name} のワークツリーを作成します",
     "Open folder": "フォルダを開く",
     "Open the new worktree in a new window?": "新しいワークツリーを新しいウィンドウで開きますか？",
     "Select folder": "フォルダを選択",

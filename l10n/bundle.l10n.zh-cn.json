@@ -23,7 +23,7 @@
     "Switch Worktree": "切换 Worktree",
     "Please select the directory to switch to": "请选择切换的文件夹",
     "Create worktree": "创建 Worktree",
-    "A worktree with {1} {2} will be created under {0}": "将在 {0} 下创建 {1} 的 {2} Worktree",
+    "A worktree for {label} {name} will be created under {folder}": "将在 {folder} 下创建 {label} 为 {name} 的 Worktree",
     "Open folder": "打开文件夹",
     "Open the new worktree in a new window?": "是否在新窗口打开新建的 Worktree？",
     "Select folder": "选择文件夹",

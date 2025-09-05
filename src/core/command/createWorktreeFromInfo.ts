@@ -13,7 +13,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     let confirmCreate = await confirmModal(
         vscode.l10n.t('Create worktree'),
         vscode.l10n.t('Create'),
-        vscode.l10n.t('A worktree with {1} {2} will be created under {0}', folderPath, label, name)
+        vscode.l10n.t('A worktree for {label} {name} will be created under {folder}', {folder: folderPath, label, name})
     );
     if (!confirmCreate) {
         return;
