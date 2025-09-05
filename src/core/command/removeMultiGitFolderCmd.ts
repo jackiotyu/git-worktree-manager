@@ -36,5 +36,5 @@ export const removeMultiGitFolderCmd = async () => {
         updateList.push(item);
     });
     updateFolderConfig(updateList);
-    Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
+    Alert.showInformationMessage(vscode.l10n.t('Removed successfully'));
 };

@@ -147,14 +147,14 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         if (sourceIcon !== 'git-commit' && !item.isBare) {
             tooltip.appendMarkdown(`$(git-commit) ${vscode.l10n.t('commit')}  ${item.hash.slice(0, 8)}\n\n`);
         }
-        item.prunable && tooltip.appendMarkdown(vscode.l10n.t('$(error) Detached from the git version\n\n'));
+        item.prunable && tooltip.appendMarkdown(vscode.l10n.t('$(error) Detached from Git version\n\n'));
         item.locked &&
             tooltip.appendMarkdown(vscode.l10n.t('$(lock) The worktree is locked to prevent accidental purging\n\n'));
         item.isMain &&
-            tooltip.appendMarkdown(vscode.l10n.t('✨ Worktree main folder, cannot be cleared and locked\n\n'));
+            tooltip.appendMarkdown(vscode.l10n.t('✨ Main worktree folder, cannot be cleared or locked\n\n'));
         this.ahead && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${this.ahead}`));
         this.behind && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${this.behind}`));
-        !isCurrent && tooltip.appendMarkdown(vscode.l10n.t('*Click to open new window for this worktree*\n\n'));
+        !isCurrent && tooltip.appendMarkdown(vscode.l10n.t('*Click to open this worktree in a new window*\n\n'));
 
         this.tooltip = tooltip;
     }

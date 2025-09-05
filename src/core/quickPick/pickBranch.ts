@@ -410,7 +410,7 @@ export const pickBranch: IPickBranch = async ({
     try {
         let isValidGit = await checkGitValid(cwd);
         if (!isValidGit) {
-            Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
+            Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
             return;
         }
         const quickPick = vscode.window.createQuickPick();

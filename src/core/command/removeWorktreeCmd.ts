@@ -24,7 +24,7 @@ async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 
     }
 
     const selected = await vscode.window.showWarningMessage(
-        vscode.l10n.t('Remove worktree'),
+        vscode.l10n.t('Remove Worktree'),
         {
             modal: true,
             detail: detail,

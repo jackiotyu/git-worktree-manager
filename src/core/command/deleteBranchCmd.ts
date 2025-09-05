@@ -16,7 +16,7 @@ export const deleteBranchCmd = async (item: BranchForWorktree) => {
         if(!confirm) return;
         await deleteBranch(item.mainFolder, item.branch);
     } catch (error) {
-        Alert.showErrorMessage(vscode.l10n.t('Failed to delete branch ( {0} ), {1}', item.branch, String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Failed to delete branch ({0}): {1}', item.branch, String(error)));
         logger.error(error);
     }
 };

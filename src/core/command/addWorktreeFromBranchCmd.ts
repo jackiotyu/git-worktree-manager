@@ -11,7 +11,7 @@ export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri,
-        openLabel: vscode.l10n.t('Select the folder'),
+        openLabel: vscode.l10n.t('Select folder'),
         title: vscode.l10n.t('Select the folder where you want to create the worktree?'),
     });
     if (!uriList?.length) {

@@ -11,7 +11,7 @@ const addMultiGitFolder = async () => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
-        title: vscode.l10n.t('Please select the root directory of multiple git repositories'),
+        title: vscode.l10n.t('Please select the root directory containing multiple Git repositories'),
     });
     if (!uriList?.length) return;
     let folderUri = uriList[0];
@@ -31,7 +31,7 @@ const addSingleGitFolder = async () => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: folderRoot.uri ? vscode.Uri.file(path.dirname(folderRoot.uri.fsPath)) : void 0,
-        title: vscode.l10n.t('Please select the git repository folder path'),
+        title: vscode.l10n.t('Please select the Git repository folder path'),
     });
     if (!uriList?.length) return;
     let folderUri = uriList[0];
@@ -41,16 +41,16 @@ const addSingleGitFolder = async () => {
 
 export const addGitFolderCmd = async () => {
     const multiLabel = vscode.l10n.t('Multiple repositories');
-    const multiTips = vscode.l10n.t('Please select the root directory of multiple git repositories');
+    const multiTips = vscode.l10n.t('Please select the root directory containing multiple Git repositories');
     const singleLabel = vscode.l10n.t('Single repository');
-    const singleTips = vscode.l10n.t('Select git repository for create worktree');
+    const singleTips = vscode.l10n.t('Select Git repository to create worktree from');
     let options: vscode.QuickPickItem[] = [
         { label: multiLabel, iconPath: new vscode.ThemeIcon('checklist'), description: multiTips },
         { label: singleLabel, iconPath: new vscode.ThemeIcon('repo'), description: singleTips },
     ];
     let selected = await vscode.window.showQuickPick(options, {
         canPickMany: false,
-        title: vscode.l10n.t('Add git repository'),
+        title: vscode.l10n.t('Add Git repository'),
     });
     if (!selected) return;
     if (selected.label === multiLabel) addMultiGitFolder();

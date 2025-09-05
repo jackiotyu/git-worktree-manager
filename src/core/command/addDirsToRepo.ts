@@ -51,7 +51,7 @@ export const addDirsToRepo = async (dirs: string[]) => {
     const existFoldersMap = new Map(existFolders.map((i) => [toSimplePath(i.path), true]));
     const gitFolders = distinctFolders.filter((i) => i && !existFoldersMap.has(toSimplePath(i))) as string[];
     if (!gitFolders.length) {
-        Alert.showErrorMessage(vscode.l10n.t('All folders have been added, there are no more folders to add'));
+        Alert.showErrorMessage(vscode.l10n.t('All folders have been added, no more folders available'));
         return;
     }
     const selectGitFolders = await pickMultiFolder(gitFolders);

@@ -20,7 +20,7 @@ export class GitHistory {
         if (!extension) {
             const args = encodeURIComponent(JSON.stringify([[this.extensionName]]));
             const commandUri = Uri.parse(`command:workbench.extensions.action.showExtensionsWithIds?${args}`);
-            const tips = l10n.t('Please install extension, click to search {0}', `📦 [${this.extensionName}](${commandUri})`);
+            const tips = l10n.t('Please install the extension, click to search for {0}', `📦 [${this.extensionName}](${commandUri})`);
             const contents = new MarkdownString(tips, true);
             throw Error(contents.value);
         }

@@ -19,13 +19,13 @@ export const renameGitFolderCmd = async (item?: IWorktreeLess) => {
     const valueSelection: [number, number] =
         baseName === folderName ? [0, folderName.length] : [0, folderName.length - baseName.length];
     let name = await vscode.window.showInputBox({
-        title: vscode.l10n.t('Rename the git repository alias'),
-        placeHolder: vscode.l10n.t('Enter the name of the repository for the showcase'),
+        title: vscode.l10n.t('Rename the Git repository alias'),
+        placeHolder: vscode.l10n.t('Enter the repository name for display'),
         value: folderName,
         valueSelection: valueSelection,
         validateInput(value) {
             if (!value) {
-                return vscode.l10n.t('Enter the name of the repository for the showcase');
+                return vscode.l10n.t('Enter the repository name for display');
             }
         },
     });

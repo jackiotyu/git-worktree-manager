@@ -38,5 +38,5 @@ export const removeMultiFavoriteCmd = async () => {
         updateList.push(item);
     });
     updateFavoriteCache(updateList);
-    Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
+    Alert.showInformationMessage(vscode.l10n.t('Removed successfully'));
 };

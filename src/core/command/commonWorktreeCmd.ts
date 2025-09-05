@@ -13,20 +13,20 @@ export const commonWorktreeCmd = async (path: string, cmd: Commands, cwd?: strin
         switch (cmd) {
             case Commands.lockWorktree:
                 await lockWorktree(path, cwd);
-                cmdName = vscode.l10n.t('lock');
+                cmdName = vscode.l10n.t('Lock');
                 break;
             case Commands.unlockWorktree:
                 await unlockWorktree(path, cwd);
-                cmdName = vscode.l10n.t('unlock');
+                cmdName = vscode.l10n.t('Unlock');
                 break;
             case Commands.repairWorktree:
                 await repairWorktree(path, cwd);
-                cmdName = vscode.l10n.t('repair');
+                cmdName = vscode.l10n.t('Repair');
                 break;
         }
-        Alert.showInformationMessage(vscode.l10n.t('Worktree {0} successfully', cmdName));
+        Alert.showInformationMessage(vscode.l10n.t('Worktree {0} completed successfully', cmdName));
     } catch (error) {
-        Alert.showErrorMessage(vscode.l10n.t('Worktree {0} failed {1}', cmdName, util.inspect(error, false, 1, true)));
+        Alert.showErrorMessage(vscode.l10n.t('Worktree {0} failed: {1}', cmdName, util.inspect(error, false, 1, true)));
         logger.error(error);
     }
 };

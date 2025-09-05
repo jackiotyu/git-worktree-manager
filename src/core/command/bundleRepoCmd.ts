@@ -12,7 +12,7 @@ export async function bundleRepoCmd(item: IWorktreeLess) {
     const baseBundleDir = getBaseBundleDir(item.fsPath);
     const bundlePath = path.join(baseBundleDir, `${dayjs().format('YYYY-MM-DD-HH-mm-ss')}.bundle`);
     actionProgressWrapper(
-        vscode.l10n.t('Bundling repo..., {path}', { path: bundlePath }),
+        vscode.l10n.t('Bundling repository..., {path}', { path: bundlePath }),
         async () => {
             await fs.mkdir(baseBundleDir, { recursive: true });
             await bundleRepo(item.fsPath, bundlePath);

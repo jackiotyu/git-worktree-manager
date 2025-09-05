@@ -13,6 +13,6 @@ export const openExternalTerminalCmd = async (item?: AllViewItem, needRevealTree
         if (needRevealTreeItem) await revealTreeItem(item);
         await openExternalTerminal(`${fsPath}`);
     } catch (error) {
-        Alert.showErrorMessage(vscode.l10n.t('Opening External Terminal failed\n\n {0}', String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Failed to open external terminal\n\n{0}', String(error)));
     }
 };

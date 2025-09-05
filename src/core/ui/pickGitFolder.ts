@@ -29,7 +29,7 @@ export const pickGitFolder = async (title: string): Promise<string | undefined |
 type ResolveValue = readonly { name: string; path: string }[] | void | null;
 const showBaseNameQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('pass'),
-    tooltip: vscode.l10n.t('Use base name'),
+    tooltip: vscode.l10n.t('Use folder name'),
 };
 const showFullNameQuickInputButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('pass-filled'),

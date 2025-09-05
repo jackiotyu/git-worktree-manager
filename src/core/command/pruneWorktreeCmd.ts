@@ -6,7 +6,7 @@ import { pickGitFolder } from '@/core/ui/pickGitFolder';
 
 export const pruneWorktreeCmd = async () => {
     try {
-        const repoPath = await pickGitFolder(vscode.l10n.t('Select git repository for prune worktree')) || '';
+        const repoPath = await pickGitFolder(vscode.l10n.t('Select Git repository to prune worktree from')) || '';
         let output = await pruneWorktree(true, repoPath);
         if (!output?.length) {
             return;
@@ -24,7 +24,7 @@ export const pruneWorktreeCmd = async () => {
             return;
         }
         await pruneWorktree(false, repoPath);
-        Alert.showInformationMessage(vscode.l10n.t('Prune worktree succeeded'));
+        Alert.showInformationMessage(vscode.l10n.t('Worktree pruning completed successfully'));
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Failed to prune worktree'));
         logger.error(error);

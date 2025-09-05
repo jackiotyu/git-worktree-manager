@@ -10,7 +10,7 @@ import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
 const pickBranchItem = async (dir: string, mainFolder: string) => {
     let branchItem = await pickBranch({
         title: vscode.l10n.t('Create Worktree ({0})', dir.length > 35 ? `...${dir.slice(-34)}` : dir),
-        placeholder: vscode.l10n.t('Choose a branch to create new worktree for'),
+        placeholder: vscode.l10n.t('Choose a branch to create a new worktree from'),
         mainFolder,
         cwd: dir,
         step: 2,
@@ -21,8 +21,8 @@ const pickBranchItem = async (dir: string, mainFolder: string) => {
 };
 
 export const addWorktreeCmd = async (item?: IWorktreeLess) => {
-    let gitFolder = item?.fsPath || (await pickGitFolder(vscode.l10n.t('Select git repository for create worktree')));
-    if (gitFolder === null) Alert.showErrorMessage(vscode.l10n.t('Please open a git repository in workspace'));
+    let gitFolder = item?.fsPath || (await pickGitFolder(vscode.l10n.t('Select Git repository to create worktree from')));
+    if (gitFolder === null) Alert.showErrorMessage(vscode.l10n.t('Please open at least one Git repository in workspace'));
     if (!gitFolder) return false;
     const mainFolder = await getMainFolder(gitFolder);
     if (!mainFolder) return false;

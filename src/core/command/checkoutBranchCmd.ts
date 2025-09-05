@@ -18,7 +18,7 @@ interface WorktreeInfo {
 async function getCurrentWorkingDirectory(): Promise<WorktreeInfo | false> {
     const isValidGit = await checkGitValid();
     if (!isValidGit) {
-        Alert.showErrorMessage(vscode.l10n.t('The folder is not a git repository available'));
+        Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
         return false;
     }
 
@@ -67,7 +67,7 @@ export const checkoutBranchCmd = async (item?: IWorktreeLess): Promise<boolean |
     const title = buildTitle(worktreeInfo);
     const branchItem = await pickBranch({
         title: vscode.l10n.t('Checkout branch ( {0} )', title),
-        placeholder: vscode.l10n.t('Select branch for checkout'),
+        placeholder: vscode.l10n.t('Select branch to checkout'),
         mainFolder,
         cwd: worktreeInfo.fsPath,
         showCreate: true,

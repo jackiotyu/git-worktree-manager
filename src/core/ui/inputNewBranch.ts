@@ -11,8 +11,8 @@ export const inputNewBranch = async (cwd: string, defaultValue?: string) => {
     inputBox.ignoreFocusOut = true;
     inputBox.value = defaultValue || vscode.workspace.getConfiguration('git').get('branchPrefix', '');
     inputBox.valueSelection = [-1, -1];
-    inputBox.placeholder = vscode.l10n.t('Please input branch name');
-    inputBox.prompt = vscode.l10n.t('Please input branch name');
+    inputBox.placeholder = vscode.l10n.t('Please enter branch name');
+    inputBox.prompt = vscode.l10n.t('Please enter branch name');
     inputBox.buttons = [backButton];
     inputBox.onDidTriggerButton((event) => {
         if (event === backButton) {

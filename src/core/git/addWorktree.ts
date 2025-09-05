@@ -10,7 +10,7 @@ export async function addWorktree(path: string, branch: string, isBranch: boolea
         await checkoutBranch(path, branch, isBranch);
         return true;
     } catch (error: any) {
-        Alert.showErrorMessage(vscode.l10n.t('Failed to create Worktree\n{0}', String(error)));
+        Alert.showErrorMessage(vscode.l10n.t('Failed to create worktree\n{0}', String(error)));
         return false;
     }
 }

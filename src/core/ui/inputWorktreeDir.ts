@@ -11,7 +11,7 @@ export const pickWorktreeDir = async (dir: string, targetDirTip: string) => {
         canSelectFolders: true,
         canSelectMany: false,
         defaultUri: vscode.Uri.file(dir),
-        openLabel: vscode.l10n.t('Select the folder'),
+        openLabel: vscode.l10n.t('Select folder'),
         title: targetDirTip,
     });
     return uriList?.[0]?.fsPath;
@@ -65,7 +65,7 @@ export const inputWorktreeDir = async ({
         iconPath: new vscode.ThemeIcon('new-folder'),
         tooltip: targetDirTip,
     };
-    inputBox.title = vscode.l10n.t('Input worktree directory');
+    inputBox.title = vscode.l10n.t('Enter worktree directory');
     inputBox.value = finalWorktreeDir;
     inputBox.valueSelection = [workTreeDir.length + 1, finalWorktreeDir.length];
     inputBox.buttons = [selectDirBtn];
@@ -94,7 +94,7 @@ export const inputWorktreeDir = async ({
             if (!input) return;
             if (verifySameDir(input, workTreeDir)) return;
             if (!(await isDirEmpty(input))) {
-                return Alert.showErrorMessage(vscode.l10n.t('The folder is not empty'));
+                return Alert.showErrorMessage(vscode.l10n.t('The selected folder is not empty'));
             }
             resolve(input);
             inputBox.hide();

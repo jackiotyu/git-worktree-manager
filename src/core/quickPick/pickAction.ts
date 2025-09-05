@@ -82,14 +82,14 @@ class WorktreeActionPicker {
                 label: 'template content',
                 description: this.replaceTemplateVars(template, templateVars),
             }),
-            this.buildCopyAction({ label: 'ref name', description: viewItem.name }),
+            this.buildCopyAction({ label: 'reference name', description: viewItem.name }),
             this.buildCopyAction({ label: 'commit hash', description: templateVars.hash }),
             this.buildCopyAction({ label: 'commit message', description: templateVars.message }),
             this.buildCopyAction({ label: 'folder path', description: viewItem.fsPath }),
         ];
 
         const commandActions: QuickPickAction[] = [
-            this.buildCommandAction({ icon: 'history', label: 'View git history', action: Commands.viewHistory }),
+            this.buildCommandAction({ icon: 'history', label: 'View Git history', action: Commands.viewHistory }),
             this.buildCommandAction({
                 icon: 'terminal-bash',
                 label: 'Open in External Terminal',
@@ -102,19 +102,19 @@ class WorktreeActionPicker {
             }),
             this.buildCommandAction({
                 icon: 'multiple-windows',
-                label: 'Add folder to workspace',
+                label: 'Add Folder to Workspace',
                 action: Commands.addToWorkspace,
                 hide: isCurrent,
             }),
             this.buildCommandAction({
                 icon: 'close',
-                label: 'Remove folder from workspace',
+                label: 'Remove Folder from Workspace',
                 action: Commands.removeFromWorkspace,
                 hide: !isCurrent,
             }),
             this.buildCommandAction({
                 icon: 'folder-opened',
-                label: 'Reveal in the system explorer',
+                label: 'Reveal in System Explorer',
                 action: Commands.revealInSystemExplorerContext,
             }),
             this.buildCommandAction({
@@ -124,7 +124,7 @@ class WorktreeActionPicker {
             }),
             this.buildCommandAction({
                 icon: 'trash',
-                label: 'Remove worktree',
+                label: 'Remove Worktree',
                 action: Commands.removeWorktree,
             }),
         ];

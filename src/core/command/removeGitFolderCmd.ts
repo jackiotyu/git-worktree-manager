@@ -13,10 +13,10 @@ export const removeGitFolderCmd = async (item: IWorktreeLess) => {
         return;
     }
     let ok = await confirmModal(
-        vscode.l10n.t('Remove the git repository reference from the list'),
+        vscode.l10n.t('Remove the Git repository reference from the list'),
         vscode.l10n.t('Remove'),
         vscode.l10n.t(
-            'Are you sure to delete this repository reference with path {0} and alias {1}?',
+            'Are you sure you want to delete this repository reference with path {0} and alias {1}?',
             item.fsPath,
             item.name,
         ),
@@ -27,5 +27,5 @@ export const removeGitFolderCmd = async (item: IWorktreeLess) => {
     folders = folders.filter((f) => !comparePath(f.path, fsPath));
     await updateFolderConfig(folders);
     worktreeEventRegister.remove(vscode.Uri.file(fsPath));
-    Alert.showInformationMessage(vscode.l10n.t('Remove successfully'));
+    Alert.showInformationMessage(vscode.l10n.t('Removed successfully'));
 };

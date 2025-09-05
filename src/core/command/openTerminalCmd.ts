@@ -69,7 +69,7 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
             items,
             {
                 title: vscode.l10n.t('Select command'),
-                placeHolder: vscode.l10n.t('Select the command you need to execute in the terminal'),
+                placeHolder: vscode.l10n.t('Select the command you want to execute in the terminal'),
                 canPickMany: false,
             },
             cancelToken.token,
