@@ -1,3 +1,12 @@
+## v3.9.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.8.0...v3.9.0)
+
+### 💅 Refactors
+
+- **l10n:** Update localization files ([1f84b92](https://github.com/jackiotyu/git-worktree-manager/commit/1f84b92))
+- **l10n:** Update localization files ([0cbc033](https://github.com/jackiotyu/git-worktree-manager/commit/0cbc033))
+
 ## v3.8.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.7.0...v3.8.0)
