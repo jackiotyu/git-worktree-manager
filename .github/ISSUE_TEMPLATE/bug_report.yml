@@ -1,0 +1,60 @@
+name: Bug Report
+description: Create a report to help us improve | 提交错误报告帮助我们改进
+labels: ["bug"]
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Please fill out the sections below to help everyone identify and fix the bug | 请填写以下部分，以便帮助识别和修复错误。
+
+    - type: textarea
+      id: description
+      attributes:
+          label: Describe the bug | 描述错误
+          placeholder: A clear and concise description of what the bug is. | 简要描述错误是什么。
+      validations:
+          required: true
+
+    - type: textarea
+      id: steps
+      attributes:
+          label: Steps to reproduce the behavior | 重现错误的步骤
+          placeholder: |
+            1. Go to '...'
+            2. Click on '...'
+            3. Scroll down to '...'
+            4. See error | 依次列出步骤，描述错误出现的过程
+      validations:
+          required: true
+
+    - type: textarea
+      id: expected
+      attributes:
+          label: Expected behavior | 预期行为
+          placeholder: A clear and concise description of what you expected to happen. | 简要描述预期的行为。
+
+    - type: textarea
+      id: screenshots
+      attributes:
+          label: If applicable, add screenshots to help explain your problem. | 如果适用，添加截图以帮助说明问题。
+
+    - type: textarea
+      id: environment
+      attributes:
+          label: Environment | 环境信息
+          placeholder: |
+            OS: Windows 10
+            VSCode: 1.80.2
+            Extension: 1.0.0
+
+    - type: dropdown
+      id: assign
+      attributes:
+          label: Would you like to work on this issue? | 你是否愿意参与此错误的修复？
+          options:
+              - "Yes"
+
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for reporting this issue! We will get back to you as soon as possible. | 感谢报告此问题！我们会尽快回复你。
