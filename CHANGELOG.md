@@ -1,3 +1,19 @@
+## v3.10.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.9.0...v3.10.0)
+
+### 🚀 Enhancements
+
+- Change default display list configuration to `workspace` ([#35](https://github.com/jackiotyu/git-worktree-manager/pull/35))
+
+### 🔥 Performance
+
+- Optimize worktree change handling with selective reload ([a3e7fd7](https://github.com/jackiotyu/git-worktree-manager/commit/a3e7fd7))
+
+### 📖 Documentation
+
+- Add config module documentation ([198f7e9](https://github.com/jackiotyu/git-worktree-manager/commit/198f7e9))
+
 ## v3.9.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.8.0...v3.9.0)
