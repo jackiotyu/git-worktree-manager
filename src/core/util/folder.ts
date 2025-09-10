@@ -55,16 +55,21 @@ export const validateSubdirectoryTemplate = (template: string): boolean => {
 // get worktree subdirectory name with baseName and index
 export const getSubDir = (baseName: string, index: string | number) => {
     const template = Config.get('worktreeSubdirectoryTemplate', 'worktree$INDEX');
-    
+
     // Validate template
     if (!validateSubdirectoryTemplate(template)) {
         console.warn('Invalid worktree subdirectory template, using default');
         return `worktree${String(index)}`;
     }
-    
+
     return template
         .replace('$BASE_NAME', baseName)
         .replace('$INDEX', String(index));
 };
 
 export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;
+
+// find prefix path in list
+export const findPrefixPath = (fsPath: string, strList: string[]) => {
+    return strList.find((str) => fsPath.startsWith(str));
+};

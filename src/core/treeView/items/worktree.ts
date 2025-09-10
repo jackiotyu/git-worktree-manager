@@ -41,6 +41,11 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         this.init();
     }
 
+    reload() {
+        this.initUpstreamInfo();
+        this.init();
+    }
+
     init() {
         this.setDescription();
         this.setTooltip();
