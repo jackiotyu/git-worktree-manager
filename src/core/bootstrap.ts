@@ -49,7 +49,7 @@ const setupCacheEvents = (context: vscode.ExtensionContext) => {
 
 const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
     const worktreeChangeHandler = worktreeChangeEvent.event((uri) => {
-        // 精确到指定仓库
+        // Navigate to specific repository
         const repoPath = getGitFolderByUri(uri);
         updateWorktreeCacheEvent.fire(repoPath);
     });

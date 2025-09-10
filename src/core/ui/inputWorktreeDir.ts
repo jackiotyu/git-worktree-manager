@@ -41,13 +41,13 @@ export const inputWorktreeDir = async ({
 }: InputWorktreeDirOptions) => {
     let canClose = true;
     const { promise, resolve, reject } = withResolvers<string | undefined>();
-    // 最终路径
+    // Final path
     const workTreeDir = getBaseWorktreeDir(baseDir);
     const baseName = path.basename(baseDir);
     const dirReg = new RegExp(getSubDir(baseName, '(\\d+)'));
     let finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, 1));
     const inputBox = vscode.window.createInputBox();
-    // 传入的 baseWorktreeDir 有值，且和 workTreeDir 不同，说明是从已选择的 worktree 切换过来
+    // When the passed baseWorktreeDir has a value and is different from workTreeDir, it indicates switching from a previously selected worktree
     if (baseWorktreeDir && !comparePath(workTreeDir, baseWorktreeDir)) {
         finalWorktreeDir = baseWorktreeDir;
     } else if (await checkExist(workTreeDir)) {
