@@ -9,7 +9,7 @@ export class Config {
 
     static get(key: 'alertLevel', defaultValue: 'error'): AlertLevel;
     static get(key: 'gitHistoryExtension', defaultValue: GitHistoryExtension.gitGraph): GitHistoryExtension;
-    static get(key: 'worktreePick.defaultDisplayList', defaultValue: DefaultDisplayList.all): DefaultDisplayList;
+    static get(key: 'worktreePick.defaultDisplayList', defaultValue: DefaultDisplayList.workspace): DefaultDisplayList;
     static get(key: 'worktreePick.showViewHistory', defaultValue: true): boolean;
     static get(key: 'worktreePick.showCheckout', defaultValue: true): boolean;
     static get(key: 'worktreePick.showAddToWorkspace', defaultValue: false): boolean;

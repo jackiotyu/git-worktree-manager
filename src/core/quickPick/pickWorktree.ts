@@ -336,7 +336,10 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
         return;
     }
     if (event === backWorkspaceQuickInputButton) {
-        actionService.displayType = DefaultDisplayList.all;
+        const defaultType = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.workspace);
+        actionService.displayType = [DefaultDisplayList.workspace, DefaultDisplayList.all].includes(defaultType)
+            ? defaultType
+            : DefaultDisplayList.workspace;
         actionService.updateList();
         quickPick.buttons = actionService.updateButtons();
         return;
@@ -472,7 +475,7 @@ const handleTriggerItemButton = ({
 class ActionService implements IActionService {
     canClose: boolean = true;
     sortByBranch: boolean = false;
-    displayType: DefaultDisplayList = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.all);
+    displayType: DefaultDisplayList = Config.get('worktreePick.defaultDisplayList', DefaultDisplayList.workspace);
     worktreeButtons: vscode.QuickInputButton[] = [];
     recentUriCache: IRecentItemCache = getRecentItemCache();
     recentPickCache: WorktreePick[] = [];

@@ -1058,7 +1058,7 @@
               "%config.defaultDisplayList.enum.workspace%",
               "%config.defaultDisplayList.enum.all%"
             ],
-            "default": "all",
+            "default": "workspace",
             "description": "%config.defaultDisplayList.description%"
           },
           "git-worktree-manager.worktreePick.showTerminal": {
