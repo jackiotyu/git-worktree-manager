@@ -38,19 +38,6 @@ async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 
     return undefined;
 }
 
-async function getBranchInfo(worktreePath: string): Promise<{ branchName: string; mainFolder: string }> {
-    try {
-        const [branchName, mainFolder] = await Promise.all([
-            getCurrentBranch(worktreePath),
-            getMainFolder(worktreePath),
-        ]);
-        return { branchName, mainFolder };
-    } catch {
-        return { branchName: '', mainFolder: '' };
-    }
-}
-
-
 export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => {
     if (!item?.fsPath) return;
 
@@ -63,16 +50,13 @@ export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => 
         const isForceDelete = confirmation === 'force';
 
         const needDeleteBranch = Config.get('promptDeleteBranchAfterWorktreeDeletion', false);
-        const { branchName, mainFolder } = needDeleteBranch
-            ? await getBranchInfo(worktreePath)
-            : { branchName: '', mainFolder: '' };
+        const mainFolder = await getMainFolder(worktreePath);
 
         actionProgressWrapper(
             vscode.l10n.t('Removing worktree {path}', { path: worktreePath }),
             () => promise,
             () => {},
         );
-
         await removeWorktree(worktreePath, isForceDelete, mainFolder);
         resolve();
 
@@ -82,9 +66,12 @@ export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => 
 
         await vscode.commands.executeCommand(Commands.refreshWorktree);
 
-        if (needDeleteBranch && branchName) {
-            const branchInfo: IBranchForWorktree = { branch: branchName, mainFolder };
-            await vscode.commands.executeCommand(Commands.deleteBranch, branchInfo);
+        if (needDeleteBranch) {
+            const branchName = await getCurrentBranch(worktreePath);
+            if (branchName) {
+                const branchInfo: IBranchForWorktree = { branch: branchName, mainFolder };
+                await vscode.commands.executeCommand(Commands.deleteBranch, branchInfo);
+            }
         }
     } catch (error) {
         resolve();
