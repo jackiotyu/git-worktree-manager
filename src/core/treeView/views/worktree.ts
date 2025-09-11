@@ -14,6 +14,7 @@ export class WorktreeDataProvider
 {
     private static readonly refreshThrottle = 150; // 150ms
     private worktreeRootMap: Map<string, WorkspaceMainGitFolderItem> = new Map();
+    private mainFolderPath: string = '';
 
     private _onDidChangeTreeData = new vscode.EventEmitter<WorkspaceMainGitFolderItem | WorktreeItem | void>();
     public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -48,7 +49,9 @@ export class WorktreeDataProvider
 
     private handleWorktreeChange = (uri: vscode.Uri) => {
         if (this.checkOnlyOneMainFolder()) {
-            this.triggerChangeTreeData();
+            if (uri.fsPath.startsWith(this.mainFolderPath)) {
+                this.triggerChangeTreeData();
+            }
             return;
         }
         const prefixPath = findPrefixPath(uri.fsPath, [...this.worktreeRootMap.keys()]);
@@ -104,6 +107,7 @@ export class WorktreeDataProvider
             const worktreeItems = data.map((item) => {
                 return new WorktreeItem(item, vscode.TreeItemCollapsibleState.None);
             });
+            this.mainFolderPath = vscode.Uri.file(mainFolderPath).fsPath;
             return worktreeItems;
         }
 
