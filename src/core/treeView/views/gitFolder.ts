@@ -23,7 +23,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
 
     private data: IFolderItemConfig[] = GlobalState.get('gitFolders', []).sort((a, b) => a.name.localeCompare(b.name));
     private viewAsTree: boolean = true;
-    private worktreeItemsMap: Map<string, WorktreeItem[]> = new Map();
+    private worktreeRootMap: Map<string, GitFolderItem> = new Map();
     private _onDidChangeTreeData = new vscode.EventEmitter<GitFolderItem | WorktreeItem | void>();
     public readonly onDidChangeTreeData: vscode.Event<GitFolderItem | WorktreeItem | void> =
         this._onDidChangeTreeData.event;
@@ -61,13 +61,15 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     }
 
     private handleWorktreeChange = (uri: vscode.Uri) => {
-        const prefixPath = findPrefixPath(uri.fsPath, [...this.worktreeItemsMap.keys()]);
-        const items = prefixPath ? this.worktreeItemsMap.get(prefixPath) : undefined;
-        if (!items) return;
-        items.forEach((item) => {
-            item.reload();
-            this.update(item);
-        });
+        if (!this.viewAsTree) {
+            // TODO only update the worktree items that are changed
+            this.refresh();
+            return;
+        }
+        const prefixPath = findPrefixPath(uri.fsPath, [...this.worktreeRootMap.keys()]);
+        const gitFolderItem = prefixPath ? this.worktreeRootMap.get(prefixPath) : undefined;
+        if (!gitFolderItem) return;
+        this.update(gitFolderItem);
     };
 
     private handleViewAsTreeChange = (viewAsTree: boolean) => {
@@ -99,15 +101,6 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
         }
     };
 
-    private async getWorktreeListWithCache(path: string): Promise<IWorktreeDetail[]> {
-        try {
-            return await getWorktreeList(path);
-        } catch (error) {
-            logger.error(`Failed to get worktree list for ${path}: ${error}`);
-            return [];
-        }
-    }
-
     async getChildren(element?: CommonWorktreeItem): Promise<CommonWorktreeItem[] | undefined> {
         if (!element) {
             return this.viewAsTree ? this.getTreeViewItems() : this.getFlatViewItems();
@@ -121,38 +114,40 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     private async getFlatViewItems(): Promise<WorktreeItem[]> {
         const worktreeItems = await Promise.all(
             this.data.map(async (item) => {
-                const worktreeList = await this.getWorktreeListWithCache(item.path);
+                const worktreeList = await getWorktreeList(item.path);
                 const worktreeItems = worktreeList.map((row) => {
                     return new WorktreeItem(
                         { ...row, folderName: item.name },
                         vscode.TreeItemCollapsibleState.None,
                     );
                 });
-                this.worktreeItemsMap.set(vscode.Uri.file(item.path).fsPath, worktreeItems);
                 return worktreeItems;
             }),
         );
+        // TODO only update the worktree items that are changed
         return worktreeItems.flat();
     }
 
     private getTreeViewItems(): GitFolderItem[] {
         return this.data.map(
-            (item) =>
-                new GitFolderItem(
+            (item) => {
+                const gitFolderItem = new GitFolderItem(
                     item,
                     item.defaultOpen
                         ? vscode.TreeItemCollapsibleState.Expanded
                         : vscode.TreeItemCollapsibleState.Collapsed,
-                ),
+                );
+                this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
+                return gitFolderItem;
+            }
         );
     }
 
     private async getWorktreeItems(element: GitFolderItem): Promise<WorktreeItem[]> {
-        const worktreeList = await this.getWorktreeListWithCache(element.fsPath);
+        const worktreeList = await getWorktreeList(element.fsPath);
         const worktreeItems = worktreeList.map((item) => {
             return new WorktreeItem(item, vscode.TreeItemCollapsibleState.None, element);
         });
-        this.worktreeItemsMap.set(vscode.Uri.file(element.fsPath).fsPath, worktreeItems);
         return worktreeItems;
     }
 

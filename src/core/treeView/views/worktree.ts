@@ -6,14 +6,14 @@ import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { WorkspaceState } from '@/core/state';
 import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
-import { IWorktreeDetail } from '@/types';
+import { IWorktreeDetail, IFolderItemConfig } from '@/types';
 import { findPrefixPath } from '@/core/util/folder';
 
 export class WorktreeDataProvider
     implements vscode.TreeDataProvider<WorkspaceMainGitFolderItem | WorktreeItem>, vscode.Disposable
 {
     private static readonly refreshThrottle = 150; // 150ms
-    private worktreeItemsMap: Map<string, WorktreeItem[]> = new Map();
+    private worktreeRootMap: Map<string, WorkspaceMainGitFolderItem> = new Map();
 
     private _onDidChangeTreeData = new vscode.EventEmitter<WorkspaceMainGitFolderItem | WorktreeItem | void>();
     public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -47,13 +47,14 @@ export class WorktreeDataProvider
     }
 
     private handleWorktreeChange = (uri: vscode.Uri) => {
-        const prefixPath = findPrefixPath(uri.fsPath, [...this.worktreeItemsMap.keys()]);
-        const items = prefixPath ? this.worktreeItemsMap.get(prefixPath) : undefined;
-        if (!items) return;
-        items.forEach((item) => {
-            item.reload();
-            this.update(item);
-        });
+        if (this.checkOnlyOneMainFolder()) {
+            this.triggerChangeTreeData();
+            return;
+        }
+        const prefixPath = findPrefixPath(uri.fsPath, [...this.worktreeRootMap.keys()]);
+        const gitFolderItem = prefixPath ? this.worktreeRootMap.get(prefixPath) : undefined;
+        if (!gitFolderItem) return;
+        this.update(gitFolderItem);
     };
 
     update(item: WorkspaceMainGitFolderItem | WorktreeItem | void) {
@@ -89,24 +90,29 @@ export class WorktreeDataProvider
         }
     }
 
-    private async getRootItems(): Promise<WorkspaceMainGitFolderItem[] | WorktreeItem[]> {
+    private checkOnlyOneMainFolder() {
         const workspaceFolderNum = folderRoot.folderPathSet.size;
         const mainFolders = WorkspaceState.get('mainFolders', []);
+        return workspaceFolderNum === 1 || mainFolders.length === 1;
+    }
 
-        if (workspaceFolderNum === 1 || mainFolders.length === 1) {
+    private async getRootItems(): Promise<WorkspaceMainGitFolderItem[] | WorktreeItem[]> {
+        const mainFolders = WorkspaceState.get('mainFolders', []);
+        if (this.checkOnlyOneMainFolder()) {
             const mainFolderPath = mainFolders[0]?.path;
             const data = await this.getWorktreeListWithCache(mainFolderPath);
             const worktreeItems = data.map((item) => {
                 return new WorktreeItem(item, vscode.TreeItemCollapsibleState.None);
             });
-            if (mainFolderPath) {
-                this.worktreeItemsMap.set(vscode.Uri.file(mainFolderPath).fsPath, worktreeItems);
-            }
             return worktreeItems;
         }
 
         return mainFolders.map(
-            (item) => new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded),
+            (item) => {
+                const gitFolderItem = new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded);
+                this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
+                return gitFolderItem;
+            },
         );
     }
 
@@ -115,7 +121,6 @@ export class WorktreeDataProvider
         const worktreeItems = data.map((item) => {
             return new WorktreeItem(item, vscode.TreeItemCollapsibleState.None, element);
         });
-        this.worktreeItemsMap.set(vscode.Uri.file(element.fsPath).fsPath, worktreeItems);
         return worktreeItems;
     }
 
