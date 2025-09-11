@@ -1,3 +1,19 @@
+## v3.11.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.10.0...v3.11.0)
+
+### 🔥 Performance
+
+- Optimize worktree mapping and change handling in tree views ([26b3d34](https://github.com/jackiotyu/git-worktree-manager/commit/26b3d34))
+
+### 🩹 Fixes
+
+- Use correct mainFolder in worktree removal ([14e98ac](https://github.com/jackiotyu/git-worktree-manager/commit/14e98ac))
+
+### 💅 Refactors
+
+- Update issue template ([b9f7085](https://github.com/jackiotyu/git-worktree-manager/commit/b9f7085))
+
 ## v3.10.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.9.0...v3.10.0)
