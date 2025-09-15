@@ -1,3 +1,16 @@
+## v3.12.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.11.0...v3.12.0)
+
+### 🔥 Performance
+
+- Optimize worktree tree view change detection ([6644bd2](https://github.com/jackiotyu/git-worktree-manager/commit/6644bd2))
+
+### 📖 Documentation
+
+- Add donation section to README ([98d5fae](https://github.com/jackiotyu/git-worktree-manager/commit/98d5fae))
+- Update README ([ed36c8c](https://github.com/jackiotyu/git-worktree-manager/commit/ed36c8c))
+
 ## v3.11.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.10.0...v3.11.0)
