@@ -14,28 +14,43 @@
 
 <img src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/overview.png" width="800" />
 
+## Support 💖
+
 如果这个插件帮到了你，请点个 [star ⭐](https://github.com/jackiotyu/git-worktree-manager) 吧！
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="./images/donate/paypal.png" width="200" alt="PayPal Donate"/><br/>
+      <b>PayPal</b>
+    </td>
+    <td align="center">
+      <img src="./images/donate/wechat.png" width="200" alt="WeChat Donate"/><br/>
+      <b>微信</b>
+    </td>
+  </tr>
+</table>
 
 ## 为什么选择 Git Worktree Manager？🌟
 
 厌倦了频繁切换分支、暂存更改或解决合并冲突？**Git Worktree Manager** 通过 Git Worktree 功能，让您在不同目录中同时处理多个分支，无需离开 VSCode。无论是修复紧急问题、开发新功能还是管理复杂项目，这款扩展都能节省时间、减少麻烦，让您的工作区井然有序。凭借无缝集成和直观的操作，它是追求高效 Git 工作流的开发者的理想选择！
 
-<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video> 
+<video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
 > [在 VSCode 中轻松管理多个仓库。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/manage-multiple-repositories.mp4)
 
 ### 核心功能 🎯
-- **快速切换 Worktree**：使用 `Ctrl+Shift+R` 或源代码管理视图快速切换 Worktree。 
-  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4" controls="controls" width="800" height="450"></video> 
-  > [一键无缝切换分支。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4) 
-- **轻松创建 Worktree**：无需命令行，直接在 VSCode 中创建 Worktree。 
-  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4" controls="controls" width="800" height="450"></video> 
-  > [几秒钟内创建新 Worktree。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4) 
-- **工作区集成**：将 Worktree 添加到 VSCode 工作区，轻松访问。 
-  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video> 
-  > [一键将 Worktree 添加到工作区。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4) 
-- **收藏夹管理**：保存常用 Worktree，方便快速访问。 
-  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video> 
-  > [将 Worktree 拖入收藏夹，随时访问。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4) 
+- **快速切换 Worktree**：使用 `Ctrl+Shift+R` 或源代码管理视图快速切换 Worktree。
+  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4" controls="controls" width="800" height="450"></video>
+  > [一键无缝切换分支。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/switch-branch.mp4)
+- **轻松创建 Worktree**：无需命令行，直接在 VSCode 中创建 Worktree。
+  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4" controls="controls" width="800" height="450"></video>
+  > [几秒钟内创建新 Worktree。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/create-worktree.mp4)
+- **工作区集成**：将 Worktree 添加到 VSCode 工作区，轻松访问。
+  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4" controls="controls" width="800" height="450"></video>
+  > [一键将 Worktree 添加到工作区。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/add-worktrees-to-workspace.mp4)
+- **收藏夹管理**：保存常用 Worktree，方便快速访问。
+  <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video>
+  > [将 Worktree 拖入收藏夹，随时访问。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@3.1.0/images/drop-to-favorites.mp4)
 - **复制未跟踪文件**：创建 Worktree 时自动复制主仓库的未跟踪文件。
 - **多语言支持**：支持英语、简体中文、繁体中文和日语。
 - **自定义终端**：支持 macOS 的 iTerm 或 Windows 的 Git Bash 等终端。
