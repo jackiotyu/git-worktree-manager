@@ -1,3 +1,11 @@
+## v3.13.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.12.0...v3.13.0)
+
+### 🚀 Enhancements
+
+- **core/git:** Add support for git.path when running Git commands ([#36](https://github.com/jackiotyu/git-worktree-manager/pull/36))
+
 ## v3.12.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.11.0...v3.12.0)
