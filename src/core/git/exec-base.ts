@@ -17,7 +17,7 @@ export const execBase = (
     token?: vscode.CancellationToken
 ): Promise<ExecResult> => {
     return new Promise((resolve, reject) => {
-        const gitPath = vscode.workspace.getConfiguration('git').get<string>('path', 'git');
+        const gitPath = vscode.workspace.getConfiguration('git').get<string>('path', 'git') || 'git';
         logger.log(`'Running in' ${cwd}`);
         logger.log(`> ${[gitPath].concat(args || []).join(' ')}`);
         const httpProxy = Config.get('httpProxy', '');
