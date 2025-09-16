@@ -1,3 +1,11 @@
+## v3.14.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.13.0...v3.14.0)
+
+### 🩹 Fixes
+
+- Git path ([ea09a14](https://github.com/jackiotyu/git-worktree-manager/commit/ea09a14))
+
 ## v3.13.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.12.0...v3.13.0)
