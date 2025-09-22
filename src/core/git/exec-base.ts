@@ -20,19 +20,20 @@ export const execBase = (
         const gitPath = vscode.workspace.getConfiguration('git').get<string>('path', 'git') || 'git';
         logger.log(`'Running in' ${cwd}`);
         logger.log(`> ${[gitPath].concat(args || []).join(' ')}`);
+
+        const env = Object.assign({}, process.env);
+
         const httpProxy = Config.get('httpProxy', '');
-        let env = process.env;
         if (httpProxy) {
-            Object.assign(env, {
-                http_proxy: httpProxy,
-                https_proxy: httpProxy,
-            });
+            env['http_proxy'] = httpProxy;
+            env['https_proxy'] = httpProxy;
         }
 
         const proc = cp.spawn(gitPath, args, {
             cwd,
             env: {
                 ...env,
+                PATH: env['Path'] || env['PATH'],
                 GCM_INTERACTIVE: 'NEVER',
                 GCM_PRESERVE_CREDS: 'TRUE',
                 LC_ALL: 'C',
