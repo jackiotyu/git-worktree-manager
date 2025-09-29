@@ -8,6 +8,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+        contents: write
 
     steps:
       - name: Checkout repository
@@ -30,18 +32,17 @@ jobs:
 
       - run: npx changelogithub
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
-
 
       - name: Package VSIX
         run: npx vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
 
       - name: Upload Release Artifact
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ github.ref_name }} ./git-worktree-manager-${{ github.ref_name }}.vsix
 
       - name: Publish Extension to VSCode Marketplace
