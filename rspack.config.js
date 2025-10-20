@@ -58,10 +58,8 @@ const extensionConfig = {
     },
     cache: true,
     experiments: {
-        cache: {
-            type: 'persistent',
-        },
         parallelCodeSplitting: true,
+        nativeWatcher: true,
     }
 };
 
