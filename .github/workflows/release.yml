@@ -38,7 +38,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Package VSIX
-        run: npx vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
+        run: pnpm exec vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
 
       - name: Upload Release Artifact
         env:
@@ -46,7 +46,7 @@ jobs:
         run: gh release upload ${{ github.ref_name }} ./git-worktree-manager-${{ github.ref_name }}.vsix
 
       - name: Publish Extension to VSCode Marketplace
-        run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }} --no-dependencies
+        run: pnpm exec vsce publish -p ${{ secrets.VSCE_TOKEN }} --no-dependencies
 
       - name: Publish Extension to OVSX
-        run: npx ovsx publish -p ${{ secrets.OVSX_TOKEN }} --no-dependencies
+        run: pnpm exec ovsx publish -p ${{ secrets.OVSX_TOKEN }} --no-dependencies

@@ -1181,6 +1181,7 @@
     "@vscode/vsce": "^3.6.2",
     "eslint": "^8.57.1",
     "mocha": "^10.8.2",
+    "ovsx": "^0.10.6",
     "typescript": "~5.0.4"
   },
   "dependencies": {
