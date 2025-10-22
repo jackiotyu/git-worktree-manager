@@ -1,3 +1,25 @@
+## v3.15.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.14.0...v3.15.0)
+
+### 🚀 Enhancements
+
+- **git:** Add --no-track flag when creating branches ([#37](https://github.com/jackiotyu/git-worktree-manager/pull/37))
+
+### 🩹 Fixes
+
+- Improve git path resolution in execBase function ([29c2d2f](https://github.com/jackiotyu/git-worktree-manager/commit/29c2d2f))
+
+### 📦 Build
+
+- **deps:** Update dependencies ([62d48b4](https://github.com/jackiotyu/git-worktree-manager/commit/62d48b4))
+- **workflow:** Replace npx with pnpm exec in release workflow ([bd2620e](https://github.com/jackiotyu/git-worktree-manager/commit/bd2620e))
+
+### 🤖 CI
+
+- Remove vsce installation step ([542fcde](https://github.com/jackiotyu/git-worktree-manager/commit/542fcde))
+- Update GitHub Actions workflow ([2cf48fe](https://github.com/jackiotyu/git-worktree-manager/commit/2cf48fe))
+
 ## v3.14.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.13.0...v3.14.0)
