@@ -4,6 +4,7 @@
   "displayName": "Git Worktree Manager",
   "description": "Effortless multi-workspace management and fast Git project cloning across directories.轻松管理多工作区，快速克隆 Git 项目并跨目录运行。",
   "version": "3.15.0",
+  "packageManager": "pnpm@10.0.0",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -1164,6 +1165,7 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
+    "prettier": "prettier . --write",
     "test": "node ./out/test/runTest.js",
     "check-types": "tsc --noEmit"
   },
@@ -1182,6 +1184,7 @@
     "eslint": "^8.57.1",
     "mocha": "^10.8.2",
     "ovsx": "^0.10.6",
+    "prettier": "^3.6.2",
     "typescript": "~5.0.4"
   },
   "dependencies": {

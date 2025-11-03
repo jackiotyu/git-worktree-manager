@@ -23,7 +23,7 @@ const withProgress = () => {
             await loading.promise.catch(() => {});
             progress.report({ increment: 100 });
             cancelTokenSource.dispose();
-        }
+        },
     );
     return { endLoading: loading.resolve, cancelToken: cancelTokenSource.token };
 };
@@ -38,7 +38,7 @@ export const addDirsToRepo = async (dirs: string[]) => {
             } catch {
                 return null;
             }
-        })
+        }),
     );
     endLoading();
 

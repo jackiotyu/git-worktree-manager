@@ -31,7 +31,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     constructor(
         private viewItem: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
-        public parent?: GitFolderItem | WorkspaceMainGitFolderItem
+        public parent?: GitFolderItem | WorkspaceMainGitFolderItem,
     ) {
         super(WorktreeItem.generateLabel(viewItem), collapsible);
         this.isCurrent = judgeIncludeFolder(viewItem.path);
@@ -170,7 +170,6 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         if (!needFetch) return;
 
         try {
-
             const item = this.viewItem;
 
             if (item.isBare) return;
@@ -209,7 +208,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     private setResourceUri() {
         if (this.viewItem.isBranch) {
             this.resourceUri = vscode.Uri.parse(
-                `${WORK_TREE_SCHEME}://status/worktree/${getWorktreeStatus({ ahead: this.ahead, behind: this.behind })}`
+                `${WORK_TREE_SCHEME}://status/worktree/${getWorktreeStatus({ ahead: this.ahead, behind: this.behind })}`,
             );
         }
     }

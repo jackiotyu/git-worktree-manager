@@ -111,13 +111,11 @@ export class WorktreeDataProvider
             return worktreeItems;
         }
 
-        return mainFolders.map(
-            (item) => {
-                const gitFolderItem = new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded);
-                this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
-                return gitFolderItem;
-            },
-        );
+        return mainFolders.map((item) => {
+            const gitFolderItem = new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded);
+            this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
+            return gitFolderItem;
+        });
     }
 
     private async getWorktreeItems(element: WorkspaceMainGitFolderItem): Promise<WorktreeItem[]> {

@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { WorktreeItem } from '@/core/treeView/items';
 import { createWorktreeFromInfo } from '@/core/command/createWorktreeFromInfo';
 import { getMainFolder } from '@/core/git/getMainFolder';
-import folderRoot from "@/core/folderRoot";
+import folderRoot from '@/core/folderRoot';
 
 export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
     if (!item) return;

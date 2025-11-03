@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { GlobalState } from '@/core/state';
 import { Config } from '@/core/config/setting';
 import { IFolderItemConfig } from '@/types';

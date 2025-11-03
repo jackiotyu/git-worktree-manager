@@ -6,7 +6,7 @@ import { BranchForWorktree } from '@/types';
 
 export const renameBranchCmd = async (item: BranchForWorktree) => {
     try {
-        if(!item.mainFolder || !item.branch) return;
+        if (!item.mainFolder || !item.branch) return;
         const newBranchName = await inputNewBranch(item.mainFolder, item.branch);
         if (!newBranchName) return;
         await renameBranch(item.mainFolder, item.branch, newBranchName);

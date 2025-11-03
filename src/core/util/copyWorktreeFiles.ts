@@ -10,11 +10,7 @@ import { withResolvers } from '@/core/util/promise';
 async function copyFile(source: string, target: string, signal: AbortSignal) {
     const targetDir = path.dirname(target);
     await fs.mkdir(targetDir, { recursive: true });
-    await pipeline(
-        createReadStream(source),
-        createWriteStream(target),
-        { signal }
-    );
+    await pipeline(createReadStream(source), createWriteStream(target), { signal });
 }
 
 async function findMatchingFiles(sourceRepo: string, token: vscode.CancellationToken) {
@@ -29,7 +25,7 @@ async function findMatchingFiles(sourceRepo: string, token: vscode.CancellationT
         new vscode.RelativePattern(sourceRepo, `{${patterns.join(',')}}`),
         ignorePatterns.length > 0 ? `{${ignorePatterns.join(',')}}` : null,
         void 0,
-        token
+        token,
     );
 }
 
@@ -47,22 +43,22 @@ export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: stri
 
         // Find and copy files
         const files = await findMatchingFiles(sourceRepo, tokenSource.token);
-        if(files.length === 0) return;
+        if (files.length === 0) return;
 
         // Start progress indication
         actionProgressWrapper(
             vscode.l10n.t('Copying files to worktree {path}', { path: targetWorktree }),
             () => waitingCopy.promise,
             () => {},
-            tokenSource
+            tokenSource,
         );
-        
+
         for (const file of files) {
             if (tokenSource.token.isCancellationRequested) break;
 
             const relativePath = path.relative(sourceRepo, file.fsPath);
             const targetPath = path.join(targetWorktree, relativePath);
-            
+
             await copyFile(file.fsPath, targetPath, abortController.signal);
         }
     } catch (error: any) {
@@ -71,7 +67,7 @@ export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: stri
             return;
         }
         vscode.window.showErrorMessage(
-            vscode.l10n.t('Failed to copy files: {error}', { error: error.message || error })
+            vscode.l10n.t('Failed to copy files: {error}', { error: error.message || error }),
         );
     } finally {
         disposeAbortSignal?.dispose();

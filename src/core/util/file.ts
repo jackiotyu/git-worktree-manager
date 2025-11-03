@@ -33,7 +33,10 @@ export const verifyDirExistence = async (fsPath: string): Promise<boolean> => {
 };
 
 export const checkIsFolder = (path: string): Promise<boolean> => {
-    return fs.stat(path).then(stat => stat.isDirectory()).catch(() => false);
+    return fs
+        .stat(path)
+        .then((stat) => stat.isDirectory())
+        .catch(() => false);
 };
 
 export function isDirEmpty(path: string): Promise<boolean> {

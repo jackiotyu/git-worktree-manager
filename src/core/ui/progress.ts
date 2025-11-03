@@ -1,7 +1,12 @@
 import * as vscode from 'vscode';
 import { Alert } from '@/core/ui/message';
 
-export const actionProgressWrapper = (title: string, action: () => Promise<any>, callback: () => any, cancelToken?: vscode.CancellationTokenSource) => {
+export const actionProgressWrapper = (
+    title: string,
+    action: () => Promise<any>,
+    callback: () => any,
+    cancelToken?: vscode.CancellationTokenSource,
+) => {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Notification,

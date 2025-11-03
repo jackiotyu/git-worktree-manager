@@ -11,11 +11,7 @@ export interface ExecResult {
     code: number | null;
 }
 
-export const execBase = (
-    cwd: string,
-    args?: string[],
-    token?: vscode.CancellationToken
-): Promise<ExecResult> => {
+export const execBase = (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<ExecResult> => {
     return new Promise((resolve, reject) => {
         const gitPath = vscode.workspace.getConfiguration('git').get<string>('path', 'git') || 'git';
         logger.log(`'Running in' ${cwd}`);

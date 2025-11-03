@@ -41,7 +41,7 @@ export function getGitFolderByUri(uri: vscode.Uri) {
 
 // get worktree base dir
 export const getBaseWorktreeDir = (baseDir: string) => {
-    const worktreePathTemplate = Config.get('worktreePathTemplate', "$BASE_PATH.worktree");
+    const worktreePathTemplate = Config.get('worktreePathTemplate', '$BASE_PATH.worktree');
     return worktreePathTemplate.replace('$BASE_PATH', baseDir);
 };
 
@@ -62,9 +62,7 @@ export const getSubDir = (baseName: string, index: string | number) => {
         return `worktree${String(index)}`;
     }
 
-    return template
-        .replace('$BASE_NAME', baseName)
-        .replace('$INDEX', String(index));
+    return template.replace('$BASE_NAME', baseName).replace('$INDEX', String(index));
 };
 
 export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;

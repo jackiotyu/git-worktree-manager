@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { WorkspaceState, GlobalState } from '@/core/state';
 import { worktreeEventRegister } from '@/core/event/git';
 

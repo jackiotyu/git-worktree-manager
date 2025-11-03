@@ -7,7 +7,12 @@ export class FileItem extends vscode.TreeItem implements IWorktreeLess {
     uriPath: string = '';
     readonly type = TreeItemKind.file;
 
-    constructor(public name: string, collapsible: vscode.TreeItemCollapsibleState, public item: IRecentItem, public readonly from: ViewId) {
+    constructor(
+        public name: string,
+        collapsible: vscode.TreeItemCollapsibleState,
+        public item: IRecentItem,
+        public readonly from: ViewId,
+    ) {
         super(name, collapsible);
         this.setProperties(item);
         this.setTooltip(item);

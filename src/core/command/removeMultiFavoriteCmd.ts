@@ -6,7 +6,7 @@ import { toSimplePath, getRecentItemIcon } from '@/core/util/folder';
 import { IRecentItem } from '@/types';
 
 export const removeMultiFavoriteCmd = async () => {
-    const items: (vscode.QuickPickItem & { description: string, path: string })[] = getFavoriteCache().map((item) => {
+    const items: (vscode.QuickPickItem & { description: string; path: string })[] = getFavoriteCache().map((item) => {
         const uri = vscode.Uri.parse(item.path);
         return {
             iconPath: getRecentItemIcon(item.type),

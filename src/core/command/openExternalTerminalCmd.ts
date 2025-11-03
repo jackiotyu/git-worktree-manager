@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { verifyDirExistence } from '@/core/util/file';
 import { revealTreeItem } from '@/core/util/tree';
 import { openExternalTerminal } from '@/core/util/external';

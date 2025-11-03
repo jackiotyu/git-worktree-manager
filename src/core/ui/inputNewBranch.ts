@@ -32,10 +32,12 @@ export const inputNewBranch = async (cwd: string, defaultValue?: string) => {
     inputBox.onDidHide(() => {
         resolve(false);
     });
-    inputBox.onDidChangeValue(debounce(async (value) => {
-        const errMsg = await validateBranchInput(cwd, value);
-        inputBox.validationMessage = errMsg;
-    }, 300));
+    inputBox.onDidChangeValue(
+        debounce(async (value) => {
+            const errMsg = await validateBranchInput(cwd, value);
+            inputBox.validationMessage = errMsg;
+        }, 300),
+    );
     inputBox.show();
     return promise;
 };

@@ -481,7 +481,10 @@ class ActionService implements IActionService {
     recentPickCache: WorktreePick[] = [];
 
     disposables: vscode.Disposable[] = [];
-    constructor(private quickPick: vscode.QuickPick<WorktreePick>, displayType?: DefaultDisplayList) {
+    constructor(
+        private quickPick: vscode.QuickPick<WorktreePick>,
+        displayType?: DefaultDisplayList,
+    ) {
         this.updateButtons(displayType);
         this.disposables.push(
             globalStateEvent.event((e) => {

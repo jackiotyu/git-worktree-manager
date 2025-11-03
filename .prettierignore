@@ -1,0 +1,5 @@
+.github
+.vscode
+*.md
+pnpm-lock.yaml
+package.json

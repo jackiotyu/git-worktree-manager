@@ -227,7 +227,7 @@ class WorktreeActionPicker {
                         resolve();
                         quickPick.hide();
                     }
-                })
+                }),
             );
 
             quickPick.show();

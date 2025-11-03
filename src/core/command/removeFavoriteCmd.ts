@@ -11,11 +11,7 @@ export const removeFavoriteCmd = async (item: IWorktreeLess) => {
     if (!folders.some((f) => comparePath(f.path, uriPath))) {
         return;
     }
-    let ok = await confirmModal(
-        vscode.l10n.t('Remove items from the list'),
-        vscode.l10n.t('Remove'),
-        item.fsPath,
-    );
+    let ok = await confirmModal(vscode.l10n.t('Remove items from the list'), vscode.l10n.t('Remove'), item.fsPath);
     if (!ok) {
         return;
     }

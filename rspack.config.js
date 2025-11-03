@@ -60,7 +60,7 @@ const extensionConfig = {
     experiments: {
         parallelCodeSplitting: true,
         nativeWatcher: true,
-    }
+    },
 };
 
 module.exports = extensionConfig;

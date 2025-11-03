@@ -33,7 +33,7 @@ const handleRemoteBranch = async (
     branchName: string,
     ignoreOtherWorktree: boolean,
     isBranch: boolean,
-    cwd: string
+    cwd: string,
 ) => {
     const trackingBranch = findTrackingBranch(refList, branchName);
 
@@ -46,7 +46,7 @@ const handleRemoteBranch = async (
         });
     }
 
-    return execAuto(cwd, ['checkout', '-q', '--track', branchName]).then(r => r.stdout);
+    return execAuto(cwd, ['checkout', '-q', '--track', branchName]).then((r) => r.stdout);
 };
 
 const handleLocalBranch = (branchName: string, ignoreOtherWorktree: boolean, isBranch: boolean, cwd: string) => {

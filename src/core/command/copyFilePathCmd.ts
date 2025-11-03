@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { Alert } from '@/core/ui/message';
 import { IWorktreeLess } from '@/types';
 

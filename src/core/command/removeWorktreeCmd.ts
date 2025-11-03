@@ -20,7 +20,9 @@ async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 
     const changes = await getChanges(worktreePath);
     if (changes.length) {
         detail += '\n\n';
-        detail += vscode.l10n.t('Contains uncommitted changes:\n\n{changes}', { changes: changes.map(change => change.raw).join('\n') });
+        detail += vscode.l10n.t('Contains uncommitted changes:\n\n{changes}', {
+            changes: changes.map((change) => change.raw).join('\n'),
+        });
     }
 
     const selected = await vscode.window.showWarningMessage(

@@ -21,8 +21,10 @@ const pickBranchItem = async (dir: string, mainFolder: string) => {
 };
 
 export const addWorktreeCmd = async (item?: IWorktreeLess) => {
-    let gitFolder = item?.fsPath || (await pickGitFolder(vscode.l10n.t('Select Git repository to create worktree from')));
-    if (gitFolder === null) Alert.showErrorMessage(vscode.l10n.t('Please open at least one Git repository in workspace'));
+    let gitFolder =
+        item?.fsPath || (await pickGitFolder(vscode.l10n.t('Select Git repository to create worktree from')));
+    if (gitFolder === null)
+        Alert.showErrorMessage(vscode.l10n.t('Please open at least one Git repository in workspace'));
     if (!gitFolder) return false;
     const mainFolder = await getMainFolder(gitFolder);
     if (!mainFolder) return false;

@@ -8,6 +8,6 @@ export const deleteBranch = async (cwd: string, branchName: string) => {
         vscode.l10n.t('Deleting branch {branch}', { branch: branchName }),
         () => execAuto(cwd, ['branch', '-d', branchName], token.token),
         () => {},
-        token
+        token,
     );
 };

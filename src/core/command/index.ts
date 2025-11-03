@@ -67,9 +67,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.unlockWorktree, unlockWorktreeCmd),
         registerCommand(Commands.switchToSelectWorkspace, switchToSelectWorkspaceCmd),
         registerCommand(Commands.addWorktreeFromBranch, addWorktreeFromBranchCmd),
-        registerCommand(Commands.revealInSystemExplorer, (item: AllViewItem) =>
-            revealInSystemExplorerCmd(item),
-        ),
+        registerCommand(Commands.revealInSystemExplorer, (item: AllViewItem) => revealInSystemExplorerCmd(item)),
         registerCommand(Commands.revealInSystemExplorerContext, (item: AllViewItem) =>
             revealInSystemExplorerCmd(item, false),
         ),
@@ -82,9 +80,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.renameGitFolder, renameGitFolderCmd),
         registerCommand(Commands.openWalkthroughs, openWalkthroughsCmd),
         registerCommand(Commands.openTerminal, openTerminalCmd),
-        registerCommand(Commands.openExternalTerminal, (item: AllViewItem) =>
-            openExternalTerminalCmd(item),
-        ),
+        registerCommand(Commands.openExternalTerminal, (item: AllViewItem) => openExternalTerminalCmd(item)),
         registerCommand(Commands.openExternalTerminalContext, (item: AllViewItem) =>
             openExternalTerminalCmd(item, false),
         ),

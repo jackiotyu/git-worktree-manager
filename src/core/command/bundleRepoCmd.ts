@@ -18,6 +18,6 @@ export async function bundleRepoCmd(item: IWorktreeLess) {
             await bundleRepo(item.fsPath, bundlePath);
             Alert.showInformationMessage(vscode.l10n.t('Repository backup successful: {path}', { path: bundlePath }));
         },
-        () => {}
+        () => {},
     );
 }

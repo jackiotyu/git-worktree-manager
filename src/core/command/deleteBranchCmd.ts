@@ -6,14 +6,14 @@ import logger from '@/core/log/logger';
 import { BranchForWorktree } from '@/types';
 
 export const deleteBranchCmd = async (item: BranchForWorktree) => {
-    if(!item.mainFolder || !item.branch) return;
+    if (!item.mainFolder || !item.branch) return;
     try {
         const confirm = await confirmModal(
             vscode.l10n.t('Delete branch'),
             vscode.l10n.t('Delete'),
             vscode.l10n.t('The branch {0} based on {1} will be deleted', item.branch, item.mainFolder),
         );
-        if(!confirm) return;
+        if (!confirm) return;
         await deleteBranch(item.mainFolder, item.branch);
     } catch (error) {
         Alert.showErrorMessage(vscode.l10n.t('Failed to delete branch ({0}): {1}', item.branch, String(error)));

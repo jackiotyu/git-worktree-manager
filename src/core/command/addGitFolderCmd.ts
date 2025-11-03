@@ -22,7 +22,6 @@ const addMultiGitFolder = async () => {
         .catch(() => []);
     if (!dirs.length) return;
     return await addDirsToRepo(dirs);
-
 };
 
 const addSingleGitFolder = async () => {

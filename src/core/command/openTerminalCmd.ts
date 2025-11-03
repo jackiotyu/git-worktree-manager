@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import path from 'path';
 import { verifyDirExistence } from '@/core/util/file';
 import { judgeIncludeFolder } from '@/core/util/folder';
@@ -41,13 +41,13 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
     terminal.show();
     const cmdList = getTerminalCmdListConfig();
     if (!cmdList.length) return;
-    const watchOpenTerminal = vscode.window.onDidOpenTerminal(async t => {
+    const watchOpenTerminal = vscode.window.onDidOpenTerminal(async (t) => {
         let [pid, currentPid] = await Promise.all([t.processId, terminal.processId]);
-        if(pid !== currentPid) return;
+        if (pid !== currentPid) return;
         let cmdText = cmdList[0];
         watchOpenTerminal.dispose();
         // 单个
-        if(cmdList.length <= 1) {
+        if (cmdList.length <= 1) {
             cmdText && terminal.sendText(cmdText, true);
             return;
         }
@@ -58,7 +58,7 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
         // 多选
         let cancelToken = new vscode.CancellationTokenSource();
         let disposable = vscode.window.onDidCloseTerminal(async (t) => {
-            if((await t.processId) !== currentPid) return;
+            if ((await t.processId) !== currentPid) return;
             close();
         });
         const items: CmdItem[] = cmdList.map((text) => ({

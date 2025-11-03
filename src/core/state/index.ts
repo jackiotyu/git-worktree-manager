@@ -10,7 +10,14 @@ type KeyMainFolders = 'mainFolders';
 type KeyGlobalRecentItemCache = 'global.recentItemCache';
 type KeyGlobalFavorite = 'global.favorite';
 
-export type StateKey = KeyGitRepoRefList | KeyGitFolderViewAsTree | KeyGitFolders | KeyWorkTreeCache | KeyMainFolders | KeyGlobalRecentItemCache | KeyGlobalFavorite;
+export type StateKey =
+    | KeyGitRepoRefList
+    | KeyGitFolderViewAsTree
+    | KeyGitFolders
+    | KeyWorkTreeCache
+    | KeyMainFolders
+    | KeyGlobalRecentItemCache
+    | KeyGlobalFavorite;
 
 export class GlobalState {
     static context: vscode.ExtensionContext;

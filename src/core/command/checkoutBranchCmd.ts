@@ -46,7 +46,7 @@ async function performCheckout(info: WorktreeInfo, refName: string, isBranch: bo
     actionProgressWrapper(
         progressMessage,
         () => checkoutBranch(info.fsPath, refName, isBranch),
-        () => {} // 成功回调为空
+        () => {}, // 成功回调为空
     );
 }
 

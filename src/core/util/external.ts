@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { open }  from '@/core/util/open';
+import { open } from '@/core/util/open';
 
 export const openExternalTerminal = (path: string) => {
     return vscode.commands.executeCommand('openInTerminal', vscode.Uri.file(path));

@@ -116,10 +116,7 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
             this.data.map(async (item) => {
                 const worktreeList = await getWorktreeList(item.path);
                 const worktreeItems = worktreeList.map((row) => {
-                    return new WorktreeItem(
-                        { ...row, folderName: item.name },
-                        vscode.TreeItemCollapsibleState.None,
-                    );
+                    return new WorktreeItem({ ...row, folderName: item.name }, vscode.TreeItemCollapsibleState.None);
                 });
                 return worktreeItems;
             }),
@@ -129,18 +126,14 @@ export class GitFoldersDataProvider implements vscode.TreeDataProvider<CommonWor
     }
 
     private getTreeViewItems(): GitFolderItem[] {
-        return this.data.map(
-            (item) => {
-                const gitFolderItem = new GitFolderItem(
-                    item,
-                    item.defaultOpen
-                        ? vscode.TreeItemCollapsibleState.Expanded
-                        : vscode.TreeItemCollapsibleState.Collapsed,
-                );
-                this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
-                return gitFolderItem;
-            }
-        );
+        return this.data.map((item) => {
+            const gitFolderItem = new GitFolderItem(
+                item,
+                item.defaultOpen ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed,
+            );
+            this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
+            return gitFolderItem;
+        });
     }
 
     private async getWorktreeItems(element: GitFolderItem): Promise<WorktreeItem[]> {

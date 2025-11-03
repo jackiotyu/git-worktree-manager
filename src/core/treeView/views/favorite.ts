@@ -104,7 +104,7 @@ export class FavoriteAndDropController implements vscode.TreeDragAndDropControll
         const stat = await vscode.workspace.fs.stat(uri);
         if (stat.type & vscode.FileType.Directory) {
             vscode.commands.executeCommand(Commands.addToFavorite, this.createItem(uri, RecentItemType.folder));
-        } else if(stat.type & vscode.FileType.File) {
+        } else if (stat.type & vscode.FileType.File) {
             vscode.commands.executeCommand(Commands.addToFavorite, this.createItem(uri, RecentItemType.file));
         }
     }

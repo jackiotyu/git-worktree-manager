@@ -1,7 +1,7 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import { Alert } from '@/core/ui/message';
 import { getFolderConfig, updateFolderConfig } from '@/core/util/state';
-import { IFolderItemConfig }  from '@/types';
+import { IFolderItemConfig } from '@/types';
 import { GitFolderItem } from '@/core/treeView/items';
 import { comparePath } from '@/core/util/folder';
 
