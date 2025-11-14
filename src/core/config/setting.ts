@@ -67,7 +67,7 @@ export class Config {
 
     // Path template configuration
     static get(key: 'worktreePathTemplate', defaultValue: '$BASE_PATH.worktree'): string;
-    static get(key: 'worktreeSubdirectoryTemplate', defaultValue: 'worktree$INDEX'): string;
+    static get(key: 'worktreeSubdirectoryTemplate', defaultValue: '$BASE_NAME$INDEX'): string;
 
     // Post-creation command configuration
     static get(key: 'postCreateCmd', defaultValue: ''): string;

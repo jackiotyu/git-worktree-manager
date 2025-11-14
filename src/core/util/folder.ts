@@ -54,7 +54,7 @@ export const validateSubdirectoryTemplate = (template: string): boolean => {
 
 // get worktree subdirectory name with baseName and index
 export const getSubDir = (baseName: string, index: string | number) => {
-    const template = Config.get('worktreeSubdirectoryTemplate', 'worktree$INDEX');
+    const template = Config.get('worktreeSubdirectoryTemplate', '$BASE_NAME$INDEX');
 
     // Validate template
     if (!validateSubdirectoryTemplate(template)) {

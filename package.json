@@ -948,7 +948,7 @@
           "git-worktree-manager.worktreeSubdirectoryTemplate": {
             "order": 12,
             "type": "string",
-            "default": "worktree$INDEX",
+            "default": "$BASE_NAME$INDEX",
             "pattern": "^[^/\\\\:*?\"<>|]+$",
             "patternErrorMessage": "%config.worktreeSubdirectoryTemplate.patternErrorMessage%",
             "description": "%config.worktreeSubdirectoryTemplate.description%"
