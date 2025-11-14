@@ -1,3 +1,15 @@
+## v3.16.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.15.0...v3.16.0)
+
+### 🚀 Enhancements
+
+- **config:** Update default worktree subdirectory template ([#38](https://github.com/jackiotyu/git-worktree-manager/pull/38))
+
+### 🏡 Chore
+
+- **project:** Add project documentation and configuration files ([2744186](https://github.com/jackiotyu/git-worktree-manager/commit/2744186))
+
 ## v3.15.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.14.0...v3.15.0)
