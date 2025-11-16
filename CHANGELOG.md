@@ -1,3 +1,15 @@
+## v3.17.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.16.0...v3.17.0)
+
+### 🚀 Enhancements
+
+- **worktree:** Improve worktree subdirectory template and UI flow ([#38](https://github.com/jackiotyu/git-worktree-manager/pull/38))
+
+### 🩹 Fixes
+
+- **config:** Add missing id and order properties to configuration sections ([4ff9f93](https://github.com/jackiotyu/git-worktree-manager/commit/4ff9f93))
+
 ## v3.16.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.15.0...v3.16.0)
