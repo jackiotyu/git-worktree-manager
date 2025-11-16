@@ -3,9 +3,9 @@
 'use strict';
 
 const path = require('path');
+const { defineConfig } = require('@rspack/cli');
 
-/** @type {import('@rspack/cli').Configuration} */
-const extensionConfig = {
+module.exports = defineConfig({
     target: 'node14', // VS Code extensions run in a Node.js-context
     mode: 'none', // this leaves the source code as close as possible to the original
 
@@ -56,11 +56,9 @@ const extensionConfig = {
         usedExports: true,
         innerGraph: true,
     },
-    cache: true,
+    cache: false,
+    parallelCodeSplitting: true,
     experiments: {
-        parallelCodeSplitting: true,
         nativeWatcher: true,
     },
-};
-
-module.exports = extensionConfig;
+});
