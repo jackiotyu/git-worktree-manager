@@ -823,6 +823,7 @@
     ],
     "configuration": [
       {
+        "id": "git-worktree-manager.general",
         "title": "%config.general.title%",
         "order": 0,
         "properties": {
@@ -968,7 +969,9 @@
         }
       },
       {
+        "id": "git-worktree-manager.treeView",
         "title": "%config.treeView.title%",
+        "order": 1,
         "properties": {
           "git-worktree-manager.treeView.toSCM": {
             "order": 0,
@@ -1035,7 +1038,9 @@
         }
       },
       {
+        "id": "git-worktree-manager.findWorktree",
         "title": "%config.findWorktree.title%",
+        "order": 2,
         "properties": {
           "git-worktree-manager.worktreePick.pinCurrentRepo": {
             "order": 1,
@@ -1135,7 +1140,9 @@
         }
       },
       {
+        "id": "git-worktree-manager.pickBranch",
         "title": "%config.pickBranch.title%",
+        "order": 3,
         "properties": {
           "git-worktree-manager.branchPick.showDeleteBranch": {
             "order": 0,
