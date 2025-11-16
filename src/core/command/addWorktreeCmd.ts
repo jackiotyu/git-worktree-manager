@@ -13,7 +13,7 @@ const pickBranchItem = async (dir: string, mainFolder: string) => {
         placeholder: vscode.l10n.t('Choose a branch to create a new worktree from'),
         mainFolder,
         cwd: dir,
-        step: 2,
+        step: 1,
         totalSteps: 2,
         showCreate: true,
     });
@@ -29,23 +29,32 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     const mainFolder = await getMainFolder(gitFolder);
     if (!mainFolder) return false;
 
-    // 选择文件夹
-    let folderPath = await inputWorktreeDir({ baseDir: mainFolder, step: 1, totalSteps: 2 });
-    if (!folderPath) return;
-
-    // 选择ref
+    // Select ref
     let branchItem = await pickBranchItem(gitFolder, mainFolder);
-    // FIXME 改造quickPick
-    // 没有选择ref时，返回选择文件夹
-    while (branchItem === void 0) {
+    if (!branchItem) return false;
+    let refName = branchItem.branch || branchItem.hash;
+
+    // Select folder
+    let folderPath = await inputWorktreeDir({
+        baseDir: mainFolder,
+        step: 2,
+        totalSteps: 2,
+        hasBackButton: true,
+        refName,
+    });
+    while (folderPath === void 0) {
+        // If no folder is selected, return to selecting ref
+        branchItem = await pickBranchItem(gitFolder, mainFolder);
+        if (!branchItem) return false;
+        refName = branchItem.branch || branchItem.hash;
         folderPath = await inputWorktreeDir({
             baseDir: mainFolder,
             baseWorktreeDir: folderPath,
-            step: 1,
+            step: 2,
             totalSteps: 2,
+            hasBackButton: true,
+            refName,
         });
-        if (!folderPath) return;
-        branchItem = await pickBranchItem(gitFolder, mainFolder);
     }
 
     if (!branchItem) return false;

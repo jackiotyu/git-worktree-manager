@@ -952,7 +952,7 @@
             "default": "$BASE_NAME$INDEX",
             "pattern": "^[^/\\\\:*?\"<>|]+$",
             "patternErrorMessage": "%config.worktreeSubdirectoryTemplate.patternErrorMessage%",
-            "description": "%config.worktreeSubdirectoryTemplate.description%"
+            "markdownDescription": "%config.worktreeSubdirectoryTemplate.description%"
           },
           "git-worktree-manager.postCreateCmd": {
             "order": 13,

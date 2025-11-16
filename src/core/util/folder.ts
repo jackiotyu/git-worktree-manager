@@ -53,7 +53,7 @@ export const validateSubdirectoryTemplate = (template: string): boolean => {
 };
 
 // get worktree subdirectory name with baseName and index
-export const getSubDir = (baseName: string, index: string | number) => {
+export const getSubDir = (baseName: string, refName: string, index: string | number) => {
     const template = Config.get('worktreeSubdirectoryTemplate', '$BASE_NAME$INDEX');
 
     // Validate template
@@ -62,7 +62,7 @@ export const getSubDir = (baseName: string, index: string | number) => {
         return `worktree${String(index)}`;
     }
 
-    return template.replace('$BASE_NAME', baseName).replace('$INDEX', String(index));
+    return template.replace('$BASE_NAME', baseName).replace('$REF_NAME', refName).replace('$INDEX', String(index));
 };
 
 export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;

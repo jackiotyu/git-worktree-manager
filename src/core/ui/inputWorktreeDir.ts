@@ -31,21 +31,25 @@ interface InputWorktreeDirOptions {
     step?: number;
     totalSteps?: number;
     targetDirTip?: string;
+    hasBackButton?: boolean;
+    refName?: string;
 }
 export const inputWorktreeDir = async ({
     baseDir,
     baseWorktreeDir,
     step,
     totalSteps,
+    hasBackButton,
     targetDirTip = vscode.l10n.t('Select the folder where you want to create the worktree'),
+    refName = '',
 }: InputWorktreeDirOptions) => {
     let canClose = true;
     const { promise, resolve, reject } = withResolvers<string | undefined>();
     // Final path
     const workTreeDir = getBaseWorktreeDir(baseDir);
     const baseName = path.basename(baseDir);
-    const dirReg = new RegExp(getSubDir(baseName, '(\\d+)'));
-    let finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, 1));
+    const dirReg = new RegExp(getSubDir(baseName, refName, '(\\d+)'));
+    let finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, refName, 1));
     const inputBox = vscode.window.createInputBox();
     // When the passed baseWorktreeDir has a value and is different from workTreeDir, it indicates switching from a previously selected worktree
     if (baseWorktreeDir && !comparePath(workTreeDir, baseWorktreeDir)) {
@@ -58,7 +62,7 @@ export const inputWorktreeDir = async ({
         if (worktreeDirList.length) {
             worktreeDirList.sort((a, b) => Number(b.replace(dirReg, '$1')) - Number(a.replace(dirReg, '$1')));
             const index = worktreeDirList[0].match(dirReg)![1];
-            finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, Number(index) + 1));
+            finalWorktreeDir = path.join(workTreeDir, getSubDir(baseName, refName, Number(index) + 1));
         }
     }
     const selectDirBtn: vscode.QuickInputButton = {
@@ -68,10 +72,14 @@ export const inputWorktreeDir = async ({
     inputBox.title = vscode.l10n.t('Enter worktree directory');
     inputBox.value = finalWorktreeDir;
     inputBox.valueSelection = [workTreeDir.length + 1, finalWorktreeDir.length];
-    inputBox.buttons = [selectDirBtn];
+    inputBox.buttons = hasBackButton ? [selectDirBtn, vscode.QuickInputButtons.Back] : [selectDirBtn];
     inputBox.step = step;
     inputBox.totalSteps = totalSteps;
     const handleTriggerButton = async (event: vscode.QuickInputButton) => {
+        if (event === vscode.QuickInputButtons.Back) {
+            resolve(undefined);
+            inputBox.dispose();
+        }
         if (event !== selectDirBtn) return;
         canClose = false;
         inputBox.hide();
