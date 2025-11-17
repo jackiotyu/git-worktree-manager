@@ -68,6 +68,7 @@ class WorktreeActionPicker {
         const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.fsPath, ['s', 'H'])]);
         const template = Config.get('worktreePick.copyTemplate', '$LABEL');
         const isCurrent = judgeIncludeFolder(viewItem.fsPath);
+        const separator: QuickPickAction = { kind: vscode.QuickPickItemKind.Separator, label: ' ', action: 'separator', hide: false };
 
         const templateVars: TemplateVars = {
             hash: commitDetail.H || '',
@@ -89,7 +90,7 @@ class WorktreeActionPicker {
         ];
 
         const commandActions: QuickPickAction[] = [
-            this.buildCommandAction({ icon: 'history', label: 'View Git history', action: Commands.viewHistory }),
+            separator,
             this.buildCommandAction({
                 icon: 'terminal-bash',
                 label: 'Open in External Terminal',
@@ -100,6 +101,14 @@ class WorktreeActionPicker {
                 label: 'Open in Built-in Terminal',
                 action: Commands.openTerminal,
             }),
+            separator,
+            this.buildCommandAction({ icon: 'history', label: 'View Git history', action: Commands.viewHistory }),
+            this.buildCommandAction({
+                icon: 'repo',
+                label: 'Open the repository in Source Control view',
+                action: Commands.openRepository,
+            }),
+            separator,
             this.buildCommandAction({
                 icon: 'multiple-windows',
                 label: 'Add Folder to Workspace',
@@ -117,10 +126,11 @@ class WorktreeActionPicker {
                 label: 'Reveal in System Explorer',
                 action: Commands.revealInSystemExplorerContext,
             }),
+            separator,
             this.buildCommandAction({
-                icon: 'repo',
-                label: 'Open the repository in Source Control view',
-                action: Commands.openRepository,
+                icon: 'move',
+                label: 'Move Worktree',
+                action: Commands.moveWorktree,
             }),
             this.buildCommandAction({
                 icon: 'trash',
@@ -169,20 +179,23 @@ class WorktreeActionPicker {
                 case 'copy':
                     await this.handleCopyAction(item.description || '');
                     break;
+                case Commands.moveWorktree:
                 case Commands.openExternalTerminalContext:
                 case Commands.openTerminal:
                 case Commands.revealInSystemExplorerContext:
                 case Commands.viewHistory:
                 case Commands.openRepository:
-                case Commands.removeWorktree:
-                    await this.handleCommandAction(item.action, viewItem);
-                    break;
+                    case Commands.removeWorktree:
+                        await this.handleCommandAction(item.action, viewItem);
+                        break;
                 case Commands.removeFromWorkspace:
                 case Commands.addToWorkspace:
                     reject();
                     quickPick.hide();
                     this.handleWorkspaceAction(item.action, viewItem);
                     return;
+                case 'separator':
+                    break;
                 default:
                     const value: never = item.action;
                     void value;

@@ -138,6 +138,7 @@ export enum GitHistoryExtension {
 
 export interface QuickPickAction extends vscode.QuickPickItem {
     action:
+        | 'separator'
         | 'copy'
         | Commands.openTerminal
         | Commands.openExternalTerminalContext
@@ -146,6 +147,7 @@ export interface QuickPickAction extends vscode.QuickPickItem {
         | Commands.removeFromWorkspace
         | Commands.viewHistory
         | Commands.openRepository
+        | Commands.moveWorktree
         | Commands.removeWorktree;
     hide?: boolean;
 }
