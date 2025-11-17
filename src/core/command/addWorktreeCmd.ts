@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { pickGitFolder } from '@/core/ui/pickGitFolder';
-import type { IWorktreeLess } from '@/types';
+import type { IWorktreeLess, IBranchForWorktree } from '@/types';
 import { Alert } from '@/core/ui/message';
 import { pickBranch } from '@/core/quickPick/pickBranch';
 import { createWorktreeFromInfo } from '@/core/command/createWorktreeFromInfo';
@@ -20,11 +20,14 @@ const pickBranchItem = async (dir: string, mainFolder: string) => {
     return branchItem;
 };
 
+const normalizeRefName = (branchItem: IBranchForWorktree) => (branchItem.branch || branchItem.hash || '').replace(/[\\/]/g, '-');
+
 export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     let gitFolder =
         item?.fsPath || (await pickGitFolder(vscode.l10n.t('Select Git repository to create worktree from')));
-    if (gitFolder === null)
+    if (gitFolder === null) {
         Alert.showErrorMessage(vscode.l10n.t('Please open at least one Git repository in workspace'));
+    }
     if (!gitFolder) return false;
     const mainFolder = await getMainFolder(gitFolder);
     if (!mainFolder) return false;
@@ -32,7 +35,7 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     // Select ref
     let branchItem = await pickBranchItem(gitFolder, mainFolder);
     if (!branchItem) return false;
-    let refName = branchItem.branch || branchItem.hash;
+    let refName = normalizeRefName(branchItem);
 
     // Select folder
     let folderPath = await inputWorktreeDir({
@@ -46,7 +49,7 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
         // If no folder is selected, return to selecting ref
         branchItem = await pickBranchItem(gitFolder, mainFolder);
         if (!branchItem) return false;
-        refName = branchItem.branch || branchItem.hash;
+        refName = normalizeRefName(branchItem);
         folderPath = await inputWorktreeDir({
             baseDir: mainFolder,
             baseWorktreeDir: folderPath,
