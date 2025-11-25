@@ -20,6 +20,8 @@ images/**
 !images/icon.png
 demo/**
 TODO.md
+AGENTS.md
 README.zh-CN.md
 .github/**
 .nvmrc
+.prettierignore
