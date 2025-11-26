@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { ViewId, Commands, RecentItemType } from '@/constants';
-import { globalStateEvent } from '@/core/event/events';
+import { globalStateEvent, updateFavoriteEvent } from '@/core/event/events';
 import throttle from 'lodash-es/throttle';
 import { IRecentItem, IWorktreeLess } from '@/types';
 import { FolderItem, FileItem } from '@/core/treeView/items';
@@ -35,6 +35,7 @@ export class FavoriteDataProvider implements vscode.TreeDataProvider<FavoriteIte
             globalStateEvent.event((e) => {
                 if (e === 'global.favorite') this.refresh();
             }),
+            updateFavoriteEvent.event(this.refresh),
             this,
         );
     }
