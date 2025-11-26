@@ -1,3 +1,19 @@
+## v3.17.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.17.1...v3.17.2)
+
+### 🚀 Enhancements
+
+- **quickpick:** Add move worktree action  in the worktree quick pick menu ([1bfdff7](https://github.com/jackiotyu/git-worktree-manager/commit/1bfdff7))
+
+### 🩹 Fixes
+
+- **treeView:** Refresh favorite data ([4c63bb9](https://github.com/jackiotyu/git-worktree-manager/commit/4c63bb9))
+
+### 🏡 Chore
+
+- **ignore:** Update eslint and vscode ignore files ([3174340](https://github.com/jackiotyu/git-worktree-manager/commit/3174340))
+
 ## v3.17.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.17.0...v3.17.1)
