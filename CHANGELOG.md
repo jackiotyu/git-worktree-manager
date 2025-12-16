@@ -1,3 +1,11 @@
+## v3.18.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.17.2...v3.18.0)
+
+### 🚀 Enhancements
+
+- **worktree:** Enhance file copying with symbolic link support and integrate fast-glob for pattern matching ([#41](https://github.com/jackiotyu/git-worktree-manager/pull/41))
+
 ## v3.17.2
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.17.1...v3.17.2)
