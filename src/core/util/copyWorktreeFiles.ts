@@ -1,32 +1,92 @@
 import * as vscode from 'vscode';
 import path from 'path';
 import fs from 'fs/promises';
+import type { Stats } from 'fs';
+import { stream as fgStream } from 'fast-glob';
 import { pipeline } from 'stream/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { Config } from '@/core/config/setting';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
 
-async function copyFile(source: string, target: string, signal: AbortSignal) {
-    const targetDir = path.dirname(target);
-    await fs.mkdir(targetDir, { recursive: true });
-    await pipeline(createReadStream(source), createWriteStream(target), { signal });
+async function copyFile(source: string, target: string, stat: Stats, signal: AbortSignal) {
+    if (stat.isDirectory()) {
+        await fs.mkdir(target, { recursive: true });
+    } else {
+        const targetDir = path.dirname(target);
+        await fs.mkdir(targetDir, { recursive: true });
+        await pipeline(createReadStream(source), createWriteStream(target), { signal });
+    }
 }
 
-async function findMatchingFiles(sourceRepo: string, token: vscode.CancellationToken) {
+/**
+ * Copy symbolic link to target location
+ * @param source Source symbolic link path
+ * @param target Target symbolic link path
+ */
+async function copySymbolicLink(source: string, target: string) {
+    const targetDir = path.dirname(target);
+    const sourceDir = path.dirname(source);
+
+    // Ensure target directory exists
+    await fs.mkdir(targetDir, { recursive: true });
+
+    // Get the actual path that the symbolic link points to
+    const realTargetPath = await fs.realpath(source);
+    const linkStat = await fs.stat(realTargetPath);
+
+    // Calculate the new link path relative to the target directory
+    const relativePath = path.relative(sourceDir, realTargetPath);
+    const linkTarget = path.resolve(targetDir, relativePath);
+
+    // Determine link type based on target type
+    const linkType: 'file' | 'dir' | 'junction' = linkStat.isDirectory() ? 'dir' : 'file';
+
+    await fs.symlink(linkTarget, target, linkType);
+}
+
+/**
+ * Find files matching configured patterns
+ * @param sourceRepo Source repository path
+ * @param token Cancellation token
+ * @returns Array of matched file URIs
+ */
+async function findMatchingFiles(sourceRepo: string, token: vscode.CancellationToken): Promise<vscode.Uri[]> {
     const patterns = Config.get('worktreeCopyPatterns', []).filter(Boolean);
     const ignorePatterns = Config.get('worktreeCopyIgnores', []).filter(Boolean);
 
+    // Return empty array if no patterns configured
     if (patterns.length === 0) {
         return [];
     }
 
-    return vscode.workspace.findFiles(
-        new vscode.RelativePattern(sourceRepo, `{${patterns.join(',')}}`),
-        ignorePatterns.length > 0 ? `{${ignorePatterns.join(',')}}` : null,
-        void 0,
-        token,
-    );
+    const matchedFiles: string[] = [];
+    const stream = fgStream(patterns, {
+        ignore: ignorePatterns,
+        absolute: true,
+        cwd: sourceRepo,
+        dot: true,
+        followSymbolicLinks: false,
+        onlyFiles: false,
+    });
+
+    try {
+        for await (const file of stream) {
+            matchedFiles.push(file.toString());
+
+            // Check if cancellation is requested
+            if (token.isCancellationRequested) {
+                break;
+            }
+        }
+    } catch (err) {
+        // Ignore abort errors, rethrow other errors
+        if (err instanceof Error && err.name !== 'AbortError') {
+            throw err;
+        }
+    }
+
+    return matchedFiles.map(filepath => vscode.Uri.file(filepath));
 }
 
 export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: string) {
@@ -58,8 +118,12 @@ export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: stri
 
             const relativePath = path.relative(sourceRepo, file.fsPath);
             const targetPath = path.join(targetWorktree, relativePath);
-
-            await copyFile(file.fsPath, targetPath, abortController.signal);
+            const stat = await fs.lstat(file.fsPath);
+            if (stat.isSymbolicLink()) {
+                await copySymbolicLink(file.fsPath, targetPath);
+            } else {
+                await copyFile(file.fsPath, targetPath, stat, abortController.signal);
+            }
         }
     } catch (error: any) {
         if (error.name === 'AbortError') {
