@@ -1,3 +1,15 @@
+## v3.19.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.18.0...v3.19.0)
+
+### 🚀 Enhancements
+
+- Add $BASE_ROOT variable support and update worktree path template ([e4d5dd8](https://github.com/jackiotyu/git-worktree-manager/commit/e4d5dd8))
+
+### 🤖 CI
+
+- Pnpm cache ([c1f305e](https://github.com/jackiotyu/git-worktree-manager/commit/c1f305e))
+
 ## v3.18.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.17.2...v3.18.0)
