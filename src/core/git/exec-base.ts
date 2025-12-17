@@ -45,6 +45,11 @@ const getGitPath = async (): Promise<string> => {
     }
 };
 
+const getGitEnv = (): Record<string, string> => {
+    if (!scmGitApi) return {};
+    return (scmGitApi.git as any).env || {};
+};
+
 export const execBase = async (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<ExecResult> => {
     const gitPath = await getGitPath();
 
@@ -65,9 +70,12 @@ export const execBase = async (cwd: string, args?: string[], token?: vscode.Canc
         cwd,
         env: {
             ...env,
+            ...getGitEnv(),
             GCM_INTERACTIVE: 'NEVER',
             GCM_PRESERVE_CREDS: 'TRUE',
-            LC_ALL: 'C',
+            LC_ALL: 'en_US.UTF-8',
+			LANG: 'en_US.UTF-8',
+			GIT_PAGER: 'cat'
         },
     });
 
