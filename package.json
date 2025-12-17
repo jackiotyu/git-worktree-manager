@@ -943,8 +943,8 @@
           "git-worktree-manager.worktreePathTemplate": {
             "order": 11,
             "type": "string",
-            "default": "$BASE_PATH.worktree",
-            "description": "%config.worktreePathTemplate.description%"
+            "default": "$BASE_PATH.worktrees",
+            "markdownDescription": "%config.worktreePathTemplate.description%"
           },
           "git-worktree-manager.worktreeSubdirectoryTemplate": {
             "order": 12,

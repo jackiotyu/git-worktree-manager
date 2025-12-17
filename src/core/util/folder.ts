@@ -41,8 +41,10 @@ export function getGitFolderByUri(uri: vscode.Uri) {
 
 // get worktree base dir
 export const getBaseWorktreeDir = (baseDir: string) => {
-    const worktreePathTemplate = Config.get('worktreePathTemplate', '$BASE_PATH.worktree');
-    return worktreePathTemplate.replace('$BASE_PATH', baseDir);
+    const worktreePathTemplate = Config.get('worktreePathTemplate', '$BASE_PATH.worktrees');
+    return worktreePathTemplate
+        .replace('$BASE_PATH', baseDir)
+        .replace('$BASE_ROOT', path.dirname(baseDir));
 };
 
 // Validate template for invalid path characters

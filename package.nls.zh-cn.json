@@ -100,7 +100,7 @@
     "config.checkoutIgnoreOtherWorktree.description": "启用后，在切换分支时会忽略其他 Worktree 的状态，允许多个 Worktree 使用相同分支",
     "config.branchPick.showRenameBranch.description": "在 \"挑选分支\" 列表中显示 \"重命名分支\" 按钮",
     "config.treeView.toSCM.description": "在源代码管理容器中显示视图",
-    "config.worktreePathTemplate.description": "Worktree 路径的模板。可用的变量：$BASE_PATH（仓库根目录）",
+    "config.worktreePathTemplate.description": "Worktree 路径的模板。可用的变量：\n\n- `$BASE_PATH`（仓库根目录）\n- `$BASE_ROOT`（仓库根目录的父目录）",
     "config.worktreeSubdirectoryTemplate.description": "Worktree 子目录名称的模板。可用的变量：\n\n- `$BASE_NAME`（仓库文件夹名称）\n- `$INDEX`（递增数字）。\n- `$REF_NAME` （引用名称，如分支名、标签名）\n\n不能包含字符：/ \\ : * ? \" < > |",
     "config.worktreeSubdirectoryTemplate.patternErrorMessage": "模板不能包含以下字符：/ \\ : * ? \" < > |",
     "config.postCreateCmd.description": "创建 Worktree 后执行的命令，默认执行路径是新创建的 Worktree 的目录内。你可以在命令中使用以下变量：\n\n- `$BASE_PATH`：仓库的完整路径。\n- `$WORKTREE_PATH`：Worktree 的完整路径。\n\n示例：\n`git submodule update --init --recursive`",
