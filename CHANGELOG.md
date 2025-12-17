@@ -1,3 +1,12 @@
+## v3.20.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.19.0...v3.20.0)
+
+### 🚀 Enhancements
+
+- **git:** Use VSCode Git extension's Git path ([c47a78a](https://github.com/jackiotyu/git-worktree-manager/commit/c47a78a))
+- **git:** Enhance execBase with Git environment variables ([89f3b72](https://github.com/jackiotyu/git-worktree-manager/commit/89f3b72))
+
 ## v3.19.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.18.0...v3.19.0)
