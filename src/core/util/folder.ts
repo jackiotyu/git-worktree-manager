@@ -73,3 +73,12 @@ export const getBaseBundleDir = (baseDir: string) => `${baseDir}.repoBackup`;
 export const findPrefixPath = (fsPath: string, strList: string[]) => {
     return strList.find((str) => fsPath.startsWith(str));
 };
+
+// check if child is a subpath of parent
+export const isSubPath = (parent: string, child: string) => {
+    const parentReal = path.resolve(parent);
+    const childReal = path.resolve(child);
+    if (parentReal === childReal) return false;
+    const relative = path.relative(parentReal, childReal);
+    return !relative.startsWith(`..${path.sep}`) && relative !== '..';
+};

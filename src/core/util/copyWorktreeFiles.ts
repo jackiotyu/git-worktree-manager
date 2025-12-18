@@ -8,6 +8,7 @@ import { createReadStream, createWriteStream } from 'fs';
 import { Config } from '@/core/config/setting';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
+import { isSubPath } from '@/core/util/folder';
 
 async function copyFile(source: string, target: string, stat: Stats, signal: AbortSignal) {
     if (stat.isDirectory()) {
@@ -35,14 +36,17 @@ async function copySymbolicLink(source: string, target: string) {
     const realTargetPath = await fs.realpath(source);
     const linkStat = await fs.stat(realTargetPath);
 
-    // Calculate the new link path relative to the target directory
-    const relativePath = path.relative(sourceDir, realTargetPath);
-    const linkTarget = path.resolve(targetDir, relativePath);
-
     // Determine link type based on target type
     const linkType: 'file' | 'dir' | 'junction' = linkStat.isDirectory() ? 'dir' : 'file';
 
-    await fs.symlink(linkTarget, target, linkType);
+    // Calculate the new link path relative to the target directory
+    if (isSubPath(sourceDir, realTargetPath)) {
+        const relativePath = path.relative(sourceDir, realTargetPath);
+        const linkTarget = path.resolve(targetDir, relativePath);
+        await fs.symlink(linkTarget, target, linkType);
+    } else {
+        await fs.symlink(realTargetPath, target, linkType);
+    }
 }
 
 /**
