@@ -1,3 +1,11 @@
+## v3.21.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.20.0...v3.21.0)
+
+### 🩹 Fixes
+
+- **worktree:** Improve symlink copy handling ([9d26c2b](https://github.com/jackiotyu/git-worktree-manager/commit/9d26c2b))
+
 ## v3.20.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.19.0...v3.20.0)
