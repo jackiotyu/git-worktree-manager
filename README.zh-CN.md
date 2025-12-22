@@ -57,16 +57,19 @@
 
 ## 快速上手 🚀
 
+1. **使用要求**
+   - git version >= 2.40
+
 1. **安装扩展**：
    - 从 [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager) 下载。
    - 或在 VSCode 扩展视图中搜索 "Git Worktree Manager" 并安装。
 
-2. **快速开始**：
+1. **快速开始**：
    - 在 Git 仓库中打开 VSCode。
    - 按 `Ctrl+Shift+R` 启动 Worktree 管理器。
    - 使用直观界面创建、切换或删除 Worktree。
 
-3. **示例工作流**：
+1. **示例工作流**：
    - 创建新 Worktree：选择“创建 Worktree”并指定分支。
    - 通过源代码管理视图或命令面板即时切换。
    - 将 Worktree 添加到 VSCode 工作区，同时处理多个分支。

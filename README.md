@@ -57,16 +57,19 @@ Tired of juggling branches, stashing changes, or resolving merge conflicts? **Gi
 
 ## Getting Started 🚀
 
+1. **Requirements**
+   - git version >= 2.40
+
 1. **Install the Extension**:
    - Download from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
    - Or search for "Git Worktree Manager" in VSCode’s Extensions view and install.
 
-2. **Quick Start**:
+1. **Quick Start**:
    - Open VSCode in a Git repository.
    - Press `Ctrl+Shift+R` to launch the worktree manager.
    - Create, switch, or delete worktrees using the intuitive interface.
 
-3. **Example Workflow**:
+1. **Example Workflow**:
    - Create a new worktree: Select “Create Worktree” and specify a branch.
    - Switch to it instantly via the Source Control view or command palette.
    - Add it to your VSCode workspace to work on multiple branches side by side.
