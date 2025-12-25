@@ -1,3 +1,15 @@
+## v3.21.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.21.0...v3.21.1)
+
+### 🩹 Fixes
+
+- **worktree:** Handle undefined main folder path in getRootItems ([5bf36f1](https://github.com/jackiotyu/git-worktree-manager/commit/5bf36f1))
+
+### 📖 Documentation
+
+- Git version requirement ([93a84b1](https://github.com/jackiotyu/git-worktree-manager/commit/93a84b1))
+
 ## v3.21.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.20.0...v3.21.0)
