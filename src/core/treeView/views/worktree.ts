@@ -102,7 +102,8 @@ export class WorktreeDataProvider
     private async getRootItems(): Promise<WorkspaceMainGitFolderItem[] | WorktreeItem[]> {
         const mainFolders = WorkspaceState.get('mainFolders', []);
         if (this.checkOnlyOneMainFolder()) {
-            const mainFolderPath = mainFolders[0]?.path;
+            const mainFolderPath = mainFolders[0]?.path || void 0;
+            if (!mainFolderPath) return [];
             const data = await this.getWorktreeListWithCache(mainFolderPath);
             const worktreeItems = data.map((item) => {
                 return new WorktreeItem(item, vscode.TreeItemCollapsibleState.None);
