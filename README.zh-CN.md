@@ -11,7 +11,8 @@
 
 简体中文 | [English](./README.md)
 
-在 Visual Studio Code 中轻松管理 Git Worktree！🚀 简化工作流程，同时处理多个分支，提升生产力。这个扩展让 Git 管理变得更简单、更高效！
+**在 Visual Studio Code 中安全、高效地管理 Git worktree。**  
+轻松创建、切换和清理 worktree，同时保持分支关系清晰可控。
 
 <img src="./images/overview.png" width="800" />
 
@@ -34,7 +35,11 @@
 
 ## 为什么选择 Git Worktree Manager？🌟
 
-厌倦了频繁切换分支、暂存更改或解决合并冲突？**Git Worktree Manager** 通过 Git Worktree 功能，让您在不同目录中同时处理多个分支，无需离开 VSCode。无论是修复紧急问题、开发新功能还是管理复杂项目，这款扩展都能节省时间、减少麻烦，让您的工作区井然有序。凭借无缝集成和直观的操作，它是追求高效 Git 工作流的开发者的理想选择！
+Git worktree 可以将不同分支隔离在独立目录中，让并行开发更加清晰，  
+但在命令行中手动管理这些 worktree 往往繁琐且容易出错。
+
+Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，  
+帮助你安全地创建、切换和清理 worktree，同时保持仓库结构清晰可控。
 
 <video src="./images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
 > [在 VSCode 中轻松管理多个仓库。](./images/manage-multiple-repositories.mp4)
@@ -62,7 +67,7 @@
    - git version >= 2.40
 
 1. **安装扩展**：
-   - 从 [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager) 下载。
+   - 从 [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager) 或者 [Open VSX Registry](https://open-vsx.org/extension/jackiotyu/git-worktree-manager) 下载。
    - 或在 VSCode 扩展视图中搜索 "Git Worktree Manager" 并安装。
 
 1. **快速开始**：
@@ -78,10 +83,32 @@
 
 ## 配置 ⚙️
 
-自定义您的体验：
-- **`git-worktree-manager.treeView.toSCM`**：在源代码管理视图中显示 Worktree。
-- **`terminal.external.windowsExec`**：设置首选终端（例如，Windows 的 Git Bash：`"C:\\Program Files\\Git\\bin\\bash.exe"`）。
-- **`terminal.external.osxExec`**：在 macOS 上使用 iTerm 等终端（例如，`"iTerm.app"`）。
+根据你的工作流程自定义 Git Worktree Manager：
+
+- **`git-worktree-manager.treeView.toSCM`**  
+  在源码管理（Source Control）视图中显示 worktree。
+
+- **`git-worktree-manager.worktreeCopyPatterns`**  
+  指定在创建新 worktree 时需要复制的文件或目录  
+  （例如本地配置文件或环境相关资源）。  
+  **示例:** `[".env.local", "config/*.json"]`
+
+- **`git-worktree-manager.worktreeCopyIgnores`**  
+  在创建 worktree 时排除某些文件或路径，即使它们匹配 `worktreeCopyPatterns`。  
+  **示例:** `["node_modules", "dist"]`
+
+- **`git-worktree-manager.postCreateCmd`**  
+  在创建 worktree 后自动执行的命令  
+  （例如安装依赖或运行初始化脚本）。  
+  **示例:** `"pnpm install"` 或 `"echo 'Worktree 已就绪'"`
+
+- **`terminal.external.windowsExec`**  
+  设置 Windows 系统下的外部终端  
+  （例如 Git Bash: `"C:\\Program Files\\Git\\bin\\bash.exe"`）。
+
+- **`terminal.external.osxExec`**  
+  设置 macOS 系统下的外部终端  
+  （例如 iTerm: `"iTerm.app"`）。
 
 ## 贡献 🤝
 

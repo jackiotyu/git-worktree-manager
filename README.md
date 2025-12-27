@@ -1,5 +1,5 @@
 
-# Git Worktree Manager for VSCode
+# Git Worktree Manager
 
 [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/jackiotyu.git-worktree-manager)](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager)
 [![Open VSX Downloads](https://shields.io/open-vsx/dt/jackiotyu/git-worktree-manager)](https://open-vsx.org/extension/jackiotyu/git-worktree-manager)
@@ -10,7 +10,8 @@
 
 English | [简体中文](./README.zh-CN.md)
 
-Effortlessly manage Git worktrees in Visual Studio Code! 🚀 Simplify your workflow, work on multiple branches simultaneously, and boost productivity with this powerful extension.
+**Manage Git worktrees safely and efficiently inside Visual Studio Code.**  
+Create, switch, and clean up worktrees without losing track of your branches.
 
 <img src="./images/overview.png" width="800" />
 
@@ -33,7 +34,11 @@ If you enjoy this extension, consider giving it a [star ⭐](https://github.com/
 
 ## Why Git Worktree Manager? 🌟
 
-Tired of juggling branches, stashing changes, or resolving merge conflicts? **Git Worktree Manager** makes parallel development a breeze by leveraging Git worktrees, letting you work on multiple branches in separate directories without leaving VSCode. Whether you’re tackling hotfixes, experimenting with features, or managing complex projects, this extension saves time, reduces friction, and keeps your workspace organized. With seamless integration and intuitive controls, it’s the ultimate tool for developers who want a smoother Git experience.
+Git worktrees make parallel development cleaner by isolating branches into separate directories,  
+but managing them manually can be tedious and error-prone.
+
+Git Worktree Manager brings worktree management into VS Code,  
+helping you create, switch, and clean up worktrees safely while keeping your repository organized.
 
 <video src="./images/manage-multiple-repositories.mp4" controls="controls" width="800" height="450"></video>
 > [Manage multiple repositories effortlessly within VSCode.](./images/manage-multiple-repositories.mp4)
@@ -62,7 +67,7 @@ Tired of juggling branches, stashing changes, or resolving merge conflicts? **Gi
    - git version >= 2.40
 
 1. **Install the Extension**:
-   - Download from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager).
+   - Download from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jackiotyu.git-worktree-manager) or [Open VSX Registry](https://open-vsx.org/extension/jackiotyu/git-worktree-manager).
    - Or search for "Git Worktree Manager" in VSCode’s Extensions view and install.
 
 1. **Quick Start**:
@@ -78,10 +83,33 @@ Tired of juggling branches, stashing changes, or resolving merge conflicts? **Gi
 
 ## Configuration ⚙️
 
-Customize your experience:
-- **`git-worktree-manager.treeView.toSCM`**: Display worktrees in the Source Control view.
-- **`terminal.external.windowsExec`**: Set your preferred terminal (e.g., `"C:\\Program Files\\Git\\bin\\bash.exe"` for Git Bash).
-- **`terminal.external.osxExec`**: Use iTerm or another terminal on macOS (e.g., `"iTerm.app"`).
+Customize Git Worktree Manager to fit your workflow:
+
+- **`git-worktree-manager.treeView.toSCM`**  
+  Display worktrees in the Source Control view.
+
+- **`git-worktree-manager.worktreeCopyPatterns`**  
+  Specify files or directories to be copied into a newly created worktree  
+  (for example, local config files or environment-specific assets).  
+  **Example:** `[".env.local", "config/*.json"]`
+
+- **`git-worktree-manager.worktreeCopyIgnores`**  
+  Exclude specific files or paths from being copied when creating a worktree,  
+  even if they match `worktreeCopyPatterns`.  
+  **Example:** `["node_modules/**", "dist/**"]`
+
+- **`git-worktree-manager.postCreateCmd`**  
+  Run a command automatically after a worktree is created  
+  (for example, installing dependencies or running setup scripts).  
+  **Example:** `"pnpm install"` or `"echo 'Worktree ready'"`
+
+- **`terminal.external.windowsExec`**  
+  Set the external terminal on Windows  
+  (e.g. `"C:\\Program Files\\Git\\bin\\bash.exe"` for Git Bash).
+
+- **`terminal.external.osxExec`**  
+  Set the external terminal on macOS  
+  (e.g. `"iTerm.app"`).
 
 ## Contributing 🤝
 
