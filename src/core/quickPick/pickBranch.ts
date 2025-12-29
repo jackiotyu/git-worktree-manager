@@ -173,6 +173,10 @@ const getRefList = async (cwd?: string) => {
     return mapRefList(allRefList);
 };
 
+const getCheckoutType = () => {
+    return vscode.workspace.getConfiguration('git').get<string[]>('checkoutType');
+};
+
 const buildBranchDesc = (hash: string, authordate: string) =>
     `$(git-commit) ${hash} $(circle-small-filled) ${formatTime(authordate)}`;
 const buildWorktreeBranchDesc = (hash: string, authordate: string) =>
@@ -325,12 +329,14 @@ const mapRefItems = ({
     tagList,
     showCreate,
     mainFolder,
+    checkoutType,
 }: {
     branchList: RefList;
     remoteBranchList: RefList;
     tagList: RefList;
     showCreate: boolean;
     mainFolder: string;
+    checkoutType?: string[];
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
     let branchItems: RefList = [];
@@ -340,13 +346,23 @@ const mapRefItems = ({
         if (item.worktreepath) worktreeItems.push(item);
         else branchItems.push(item);
     });
-    return [
+
+    const items: vscode.QuickPickItem[] = [
         ...getPreItems(showCreate),
         ...mapWorktreeBranchItems(worktreeItems, mainFolder, defaultBranch),
-        ...mapBranchItems(branchItems, mainFolder),
-        ...mapRemoteBranchItems(remoteBranchList),
-        ...mapTagItems(tagList),
     ];
+
+    if (checkoutType?.includes('local')) {
+        items.push(...mapBranchItems(branchItems, mainFolder));
+    }
+    if (checkoutType?.includes('remote')) {
+        items.push(...mapRemoteBranchItems(remoteBranchList));
+    }
+    if (checkoutType?.includes('tags')) {
+        items.push(...mapTagItems(tagList));
+    }
+
+    return items;
 };
 
 const getRefListCache = async (mainFolder: string, cwd: string) => {
@@ -394,7 +410,8 @@ const updateQuickItems = async ({
 }) => {
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder });
+    const checkoutType = getCheckoutType();
+    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutType });
 };
 
 export const pickBranch: IPickBranch = async ({
