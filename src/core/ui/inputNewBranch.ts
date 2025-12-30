@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { withResolvers } from '@/core/util/promise';
-import { validateBranchInput } from '@/core/util/branch';
-import { debounce } from 'lodash-es';
+import { validateBranchName } from '@/core/util/branch';
 
 const backButton = vscode.QuickInputButtons.Back;
 
@@ -20,24 +19,22 @@ export const inputNewBranch = async (cwd: string, defaultValue?: string) => {
             inputBox.dispose();
         }
     });
-    inputBox.onDidAccept(async () => {
-        const errMsg = await validateBranchInput(cwd, inputBox.value);
-        if (errMsg) {
-            inputBox.validationMessage = errMsg;
+    inputBox.onDidAccept(() => {
+        const { sanitizedName, validationMessage } = validateBranchName(inputBox.value);
+        if (validationMessage && validationMessage.severity > vscode.InputBoxValidationSeverity.Info) {
+            inputBox.validationMessage = validationMessage;
             return;
         }
-        resolve(inputBox.value);
+        resolve(sanitizedName);
         inputBox.hide();
     });
     inputBox.onDidHide(() => {
         resolve(false);
     });
-    inputBox.onDidChangeValue(
-        debounce(async (value) => {
-            const errMsg = await validateBranchInput(cwd, value);
-            inputBox.validationMessage = errMsg;
-        }, 300),
-    );
+    inputBox.onDidChangeValue((value) => {
+        const { validationMessage } = validateBranchName(value);
+        inputBox.validationMessage = validationMessage;
+    });
     inputBox.show();
     return promise;
 };

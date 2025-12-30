@@ -15,6 +15,8 @@
     "Create Worktree": "建立 Worktree",
     "Create Worktree ({0})": "建立 Worktree ({0})",
     "Choose a branch to create a new worktree from": "選擇用於建立 Worktree 的分支",
+    "The new branch will be \"{0}\"": "新分支會是 \"{0}\"",
+    "Branch name needs to match regex: {0}": "分支名稱需要匹配 正規表達式: {0}",
     "Checkout branch ( {0} )": "切換分支 ({0})",
     "Checkout branch ( {0} ) on {1}": "在 {1} 切換分支 ({0})",
     "Checkout": "切換分支",
