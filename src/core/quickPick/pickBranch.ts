@@ -18,6 +18,8 @@ type ResolveValue = IPickBranchResolveValue;
 type ResolveType = (value: ResolveValue) => void;
 type RejectType = (value?: any) => void;
 
+type CheckoutType = 'local' | 'remote' | 'tags';
+
 interface HandlerArgs {
     resolve: ResolveType;
     reject: RejectType;
@@ -174,7 +176,16 @@ const getRefList = async (cwd?: string) => {
 };
 
 const getCheckoutType = () => {
-    return vscode.workspace.getConfiguration('git').get<string[]>('checkoutType');
+    const defaultCheckoutType: CheckoutType[] = ['local', 'remote', 'tags'];
+    const checkoutType = vscode.workspace.getConfiguration('git').get('checkoutType', defaultCheckoutType);
+    if (!checkoutType || !Array.isArray(checkoutType)) {
+        return defaultCheckoutType;
+    }
+    const filteredCheckoutType = checkoutType.filter((type) => defaultCheckoutType.includes(type));
+    if (!filteredCheckoutType.length) {
+        return defaultCheckoutType;
+    }
+    return filteredCheckoutType;
 };
 
 const buildBranchDesc = (hash: string, authordate: string) =>
@@ -336,7 +347,7 @@ const mapRefItems = ({
     tagList: RefList;
     showCreate: boolean;
     mainFolder: string;
-    checkoutType?: string[];
+    checkoutType: CheckoutType[];
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
     let branchItems: RefList = [];
@@ -347,20 +358,19 @@ const mapRefItems = ({
         else branchItems.push(item);
     });
 
-    const items: vscode.QuickPickItem[] = [
-        ...getPreItems(showCreate),
-        ...mapWorktreeBranchItems(worktreeItems, mainFolder, defaultBranch),
-    ];
-
-    if (checkoutType?.includes('local')) {
-        items.push(...mapBranchItems(branchItems, mainFolder));
-    }
-    if (checkoutType?.includes('remote')) {
-        items.push(...mapRemoteBranchItems(remoteBranchList));
-    }
-    if (checkoutType?.includes('tags')) {
-        items.push(...mapTagItems(tagList));
-    }
+    const items = [...getPreItems(showCreate), ...mapWorktreeBranchItems(worktreeItems, mainFolder, defaultBranch)];
+    const checkoutTypeItemsGetters = {
+        local: () => mapBranchItems(branchItems, mainFolder),
+        remote: () => mapRemoteBranchItems(remoteBranchList),
+        tags: () => mapTagItems(tagList),
+    };
+    // 根据配置的 checkoutType 顺序添加对应的 items
+    checkoutType.forEach((type) => {
+        const getter = checkoutTypeItemsGetters[type];
+        if (getter) {
+            items.push(...getter());
+        }
+    });
 
     return items;
 };
