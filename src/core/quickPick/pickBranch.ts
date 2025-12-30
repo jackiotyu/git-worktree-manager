@@ -175,17 +175,31 @@ const getRefList = async (cwd?: string) => {
     return mapRefList(allRefList);
 };
 
-const getCheckoutType = () => {
-    const defaultCheckoutType: CheckoutType[] = ['local', 'remote', 'tags'];
-    const checkoutType = vscode.workspace.getConfiguration('git').get('checkoutType', defaultCheckoutType);
-    if (!checkoutType || !Array.isArray(checkoutType)) {
-        return defaultCheckoutType;
+/**
+ * Get normalized "git.checkoutType" setting.
+ * @see https://github.com/microsoft/vscode/blob/1.107.1/extensions/git/src/commands.ts#L392
+ */
+const getCheckoutTypes = () => {
+    const defaultCheckoutTypes: CheckoutType[] = ['local', 'remote', 'tags'];
+    const config = vscode.workspace.getConfiguration('git');
+    const checkoutTypeConfig = config.get<string | string[]>('checkoutType');
+
+    let checkoutTypes: string[];
+
+    if (checkoutTypeConfig === 'all' || !checkoutTypeConfig || !checkoutTypeConfig.length) {
+        checkoutTypes = defaultCheckoutTypes;
+    } else if (typeof checkoutTypeConfig === 'string') {
+        checkoutTypes = [checkoutTypeConfig];
+    } else {
+        checkoutTypes = checkoutTypeConfig;
     }
-    const filteredCheckoutType = checkoutType.filter((type) => defaultCheckoutType.includes(type));
-    if (!filteredCheckoutType.length) {
-        return defaultCheckoutType;
+
+    checkoutTypes = checkoutTypes.filter((type) => defaultCheckoutTypes.includes(type as CheckoutType));
+    if (!checkoutTypes.length) {
+        return defaultCheckoutTypes;
     }
-    return filteredCheckoutType;
+
+    return checkoutTypes as CheckoutType[];
 };
 
 const buildBranchDesc = (hash: string, authordate: string) =>
@@ -340,14 +354,14 @@ const mapRefItems = ({
     tagList,
     showCreate,
     mainFolder,
-    checkoutType,
+    checkoutTypes,
 }: {
     branchList: RefList;
     remoteBranchList: RefList;
     tagList: RefList;
     showCreate: boolean;
     mainFolder: string;
-    checkoutType: CheckoutType[];
+    checkoutTypes: CheckoutType[];
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
     let branchItems: RefList = [];
@@ -365,7 +379,7 @@ const mapRefItems = ({
         tags: () => mapTagItems(tagList),
     };
     // 根据配置的 checkoutType 顺序添加对应的 items
-    checkoutType.forEach((type) => {
+    checkoutTypes.forEach((type) => {
         const getter = checkoutTypeItemsGetters[type];
         if (getter) {
             items.push(...getter());
@@ -420,8 +434,8 @@ const updateQuickItems = async ({
 }) => {
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
-    const checkoutType = getCheckoutType();
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutType });
+    const checkoutTypes = getCheckoutTypes();
+    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutTypes });
 };
 
 export const pickBranch: IPickBranch = async ({
