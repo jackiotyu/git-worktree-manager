@@ -1,3 +1,17 @@
+## v3.22.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.21.1...v3.22.0)
+
+### 🚀 Enhancements
+
+- Respect vscode git.checkoutType setting ([#43](https://github.com/jackiotyu/git-worktree-manager/pull/43))
+- **branch:** Sanitize branch name ([#44](https://github.com/jackiotyu/git-worktree-manager/pull/44))
+
+### 📖 Documentation
+
+- Add Open VSX Downloads badge to README files ([620dd9f](https://github.com/jackiotyu/git-worktree-manager/commit/620dd9f))
+- **README:** Update documentation with improved descriptions and configuration details ([2d6ead4](https://github.com/jackiotyu/git-worktree-manager/commit/2d6ead4))
+
 ## v3.21.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.21.0...v3.21.1)
