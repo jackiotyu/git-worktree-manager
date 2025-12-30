@@ -15,6 +15,8 @@
     "Create Worktree": "ワークツリーを作成",
     "Create Worktree ({0})": "ワークツリーを作成 ({0})",
     "Choose a branch to create a new worktree from": "新しいワークツリーを作成するためのブランチを選択",
+    "The new branch will be \"{0}\"": "新しいブランチは \"{0}\" になります",
+    "Branch name needs to match regex: {0}": "ブランチ名は正規表現 {0} に一致する必要があります",
     "Checkout branch ( {0} )": "ブランチをチェックアウト ({0})",
     "Checkout branch ( {0} ) on {1}": "{1} でブランチ ({0}) をチェックアウト",
     "Checkout": "チェックアウト",
