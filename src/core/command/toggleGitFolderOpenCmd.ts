@@ -6,8 +6,8 @@ import { GitFolderItem } from '@/core/treeView/items';
 import { comparePath } from '@/core/util/folder';
 
 async function updateFolderItem(config: IFolderItemConfig) {
-    let allFolders = getFolderConfig();
-    let index = allFolders.findIndex((i) => comparePath(i.path, config.path));
+    const allFolders = getFolderConfig();
+    const index = allFolders.findIndex((i) => comparePath(i.path, config.path));
     if (~index) {
         allFolders[index] = config;
         await updateFolderConfig(allFolders);

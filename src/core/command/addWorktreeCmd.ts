@@ -8,7 +8,7 @@ import { getMainFolder } from '@/core/git/getMainFolder';
 import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
 
 const pickBranchItem = async (dir: string, mainFolder: string) => {
-    let branchItem = await pickBranch({
+    const branchItem = await pickBranch({
         title: vscode.l10n.t('Create Worktree ({0})', dir.length > 35 ? `...${dir.slice(-34)}` : dir),
         placeholder: vscode.l10n.t('Choose a branch to create a new worktree from'),
         mainFolder,
@@ -20,10 +20,11 @@ const pickBranchItem = async (dir: string, mainFolder: string) => {
     return branchItem;
 };
 
-const normalizeRefName = (branchItem: IBranchForWorktree) => (branchItem.branch || branchItem.hash || '').replace(/[\\/]/g, '-');
+const normalizeRefName = (branchItem: IBranchForWorktree) =>
+    (branchItem.branch || branchItem.hash || '').replace(/[\\/]/g, '-');
 
 export const addWorktreeCmd = async (item?: IWorktreeLess) => {
-    let gitFolder =
+    const gitFolder =
         item?.fsPath || (await pickGitFolder(vscode.l10n.t('Select Git repository to create worktree from')));
     if (gitFolder === null) {
         Alert.showErrorMessage(vscode.l10n.t('Please open at least one Git repository in workspace'));
@@ -61,8 +62,8 @@ export const addWorktreeCmd = async (item?: IWorktreeLess) => {
     }
 
     if (!branchItem) return false;
-    let { branch, hash } = branchItem;
-    let label = branch ? vscode.l10n.t('branch') : vscode.l10n.t('commit hash');
+    const { branch, hash } = branchItem;
+    const label = branch ? vscode.l10n.t('branch') : vscode.l10n.t('commit hash');
     await createWorktreeFromInfo({
         name: branch || hash || '',
         label,

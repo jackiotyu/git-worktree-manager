@@ -7,12 +7,12 @@ import { IWorktreeLess } from '@/types';
 import { comparePath } from '@/core/util/folder';
 
 export const removeGitFolderCmd = async (item: IWorktreeLess) => {
-    let fsPath = item.fsPath;
+    const fsPath = item.fsPath;
     let folders = getFolderConfig();
     if (!folders.some((f) => comparePath(f.path, fsPath))) {
         return;
     }
-    let ok = await confirmModal(
+    const ok = await confirmModal(
         vscode.l10n.t('Remove the Git repository reference from the list'),
         vscode.l10n.t('Remove'),
         vscode.l10n.t(

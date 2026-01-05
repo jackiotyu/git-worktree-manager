@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     printWidth: 120, // 每行最大字符数，超出会换行
     tabWidth: 4, // 缩进的空格数
     useTabs: false, // 是否使用 Tab 进行缩进

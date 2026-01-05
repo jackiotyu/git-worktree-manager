@@ -42,7 +42,7 @@ export const pickMultiFolder = async (gitFolders: string[]): Promise<ResolveValu
         label: path.basename(folderPath),
         description: folderPath,
     }));
-    const { resolve, reject, promise } = withResolvers<ResolveValue>();
+    const { resolve, promise } = withResolvers<ResolveValue>();
     try {
         const picker = vscode.window.createQuickPick();
         picker.title = vscode.l10n.t('Select folder(s)');
@@ -68,7 +68,7 @@ export const pickMultiFolder = async (gitFolders: string[]): Promise<ResolveValu
         });
         picker.show();
         return promise;
-    } catch (error) {
+    } catch {
         return void 0;
     }
 };

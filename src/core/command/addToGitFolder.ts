@@ -10,7 +10,7 @@ import path from 'path';
 
 export const addToGitFolder = async (folderPath: string) => {
     if (!(await verifyDirExistence(folderPath))) return;
-    let existFolders = getFolderConfig();
+    const existFolders = getFolderConfig();
     if (!(await checkGitValid(folderPath))) {
         return Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
     }
@@ -18,7 +18,7 @@ export const addToGitFolder = async (folderPath: string) => {
     if (existFolders.some((i) => comparePath(i.path, folderPath))) {
         return Alert.showErrorMessage(vscode.l10n.t('The Git repository folder already exists in settings'));
     }
-    let folderName = await vscode.window.showInputBox({
+    const folderName = await vscode.window.showInputBox({
         title: vscode.l10n.t('Enter the repository name for display'),
         placeHolder: vscode.l10n.t('Please enter a name for display'),
         value: folderPath,

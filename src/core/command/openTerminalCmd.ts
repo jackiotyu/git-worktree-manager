@@ -42,7 +42,7 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
     const cmdList = getTerminalCmdListConfig();
     if (!cmdList.length) return;
     const watchOpenTerminal = vscode.window.onDidOpenTerminal(async (t) => {
-        let [pid, currentPid] = await Promise.all([t.processId, terminal.processId]);
+        const [pid, currentPid] = await Promise.all([t.processId, terminal.processId]);
         if (pid !== currentPid) return;
         let cmdText = cmdList[0];
         watchOpenTerminal.dispose();
@@ -56,8 +56,8 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
             disposable.dispose();
         };
         // 多选
-        let cancelToken = new vscode.CancellationTokenSource();
-        let disposable = vscode.window.onDidCloseTerminal(async (t) => {
+        const cancelToken = new vscode.CancellationTokenSource();
+        const disposable = vscode.window.onDidCloseTerminal(async (t) => {
             if ((await t.processId) !== currentPid) return;
             close();
         });
@@ -65,7 +65,7 @@ export const openTerminalCmd = async (item?: AllViewItem) => {
             label: text,
             iconPath: new vscode.ThemeIcon('terminal-bash'),
         }));
-        let item = await vscode.window.showQuickPick(
+        const item = await vscode.window.showQuickPick(
             items,
             {
                 title: vscode.l10n.t('Select command'),

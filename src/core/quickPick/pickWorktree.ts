@@ -102,7 +102,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
     const copyTemplate = Config.get('worktreePick.copyTemplate', '$LABEL');
     const copyTooltip = `${vscode.l10n.t('Copy')}: ${copyTemplate}`;
 
-    let items: WorktreePick[] = list.map((row) => {
+    const items: WorktreePick[] = list.map((row) => {
         const isCurrent = judgeIncludeFolder(row.path);
         const notBare = !row.isBare;
         const list: { button: vscode.QuickInputButton; show: boolean }[] = [
@@ -170,7 +170,7 @@ const mapWorktreePickItems = (list: IWorktreeCacheItem[]): WorktreePick[] => {
             buttons: buttons,
         };
     });
-    let groupMap = groupBy(items, 'key');
+    const groupMap = groupBy(items, 'key');
     let pathSize = folderRoot.folderPathSet.size;
     return Object.keys(groupMap).reduce<WorktreePick[]>((list, key) => {
         if (pinCurRepo && pathSize && groupMap[key].some((item) => judgeIncludeFolder(item.fsPath))) {
@@ -250,8 +250,8 @@ const mapWorkspacePickItems = (list: IRecentItem[], disPlayType: DefaultDisplayL
     });
 };
 
-const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
-    let selectedItem = quickPick.selectedItems[0];
+const handleAccept = ({ resolve, quickPick }: HandlerArgs) => {
+    const selectedItem = quickPick.selectedItems[0];
     if (selectedItem.uriPath) {
         vscode.commands
             .executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.uriPath), { forceNewWindow: true })
@@ -263,7 +263,7 @@ const handleAccept = ({ resolve, reject, quickPick }: HandlerArgs) => {
     quickPick.hide();
 };
 
-const handleHide = ({ resolve, reject, quickPick, actionService, disposables }: HideHanderArgs) => {
+const handleHide = ({ resolve, quickPick, actionService, disposables }: HideHanderArgs) => {
     if (!actionService.canClose) return;
     resolve();
     disposables.forEach((i) => i.dispose());
@@ -271,7 +271,7 @@ const handleHide = ({ resolve, reject, quickPick, actionService, disposables }: 
     quickPick.dispose();
 };
 
-const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService }: TriggerButtonHandlerArgs) => {
+const handleTriggerButton = ({ quickPick, event, actionService }: TriggerButtonHandlerArgs) => {
     if (event === sortByBranchQuickInputButton) {
         actionService.sortByBranch = true;
         quickPick.buttons = actionService.updateButtons();
@@ -362,13 +362,7 @@ const handleTriggerButton = ({ resolve, reject, quickPick, event, actionService 
     }
 };
 
-const handleTriggerItemButton = ({
-    resolve,
-    reject,
-    quickPick,
-    event,
-    actionService,
-}: TriggerItemButtonHandlerArgs) => {
+const handleTriggerItemButton = ({ resolve, quickPick, event, actionService }: TriggerItemButtonHandlerArgs) => {
     const selectedItem = event.item;
     const button = event.button;
     if (!selectedItem.fsPath || !selectedItem.uriPath) {
@@ -420,7 +414,7 @@ const handleTriggerItemButton = ({
         case removeWorktreeQuickInputButton:
             vscode.commands.executeCommand(Commands.removeWorktree, viewItem);
             break;
-        case copyItemQuickInputButton:
+        case copyItemQuickInputButton: {
             const template = Config.get('worktreePick.copyTemplate', '$LABEL');
             (/\$HASH|\$MESSAGE/.test(template)
                 ? getLashCommitDetail(viewItem.fsPath, ['s', 'H'])
@@ -441,6 +435,7 @@ const handleTriggerItemButton = ({
                     Alert.showErrorMessage(err);
                 });
             break;
+        }
         case checkoutBranchQuickInputButton:
             actionService.canClose = false;
             vscode.commands.executeCommand(Commands.checkoutBranch, viewItem).then((res) => {
@@ -547,10 +542,11 @@ class ActionService implements IActionService {
                     backWorkspaceQuickInputButton,
                 ];
                 break;
-            default:
-                let e: never = displayList;
+            default: {
+                const e: never = displayList;
                 void e;
                 break;
+            }
         }
         return this.worktreeButtons;
     };

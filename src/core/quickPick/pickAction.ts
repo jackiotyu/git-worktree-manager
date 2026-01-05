@@ -32,8 +32,8 @@ interface TemplateVars {
 
 interface AcceptHandlerParams {
     quickPick: vscode.QuickPick<QuickPickAction>;
-    resolve: Function;
-    reject: Function;
+    resolve: (value: QuickPickAction | void | false) => void;
+    reject: (reason?: any) => void;
     viewItem: IWorktreeLess;
 }
 
@@ -68,7 +68,12 @@ class WorktreeActionPicker {
         const [commitDetail] = await Promise.all([getLashCommitDetail(viewItem.fsPath, ['s', 'H'])]);
         const template = Config.get('worktreePick.copyTemplate', '$LABEL');
         const isCurrent = judgeIncludeFolder(viewItem.fsPath);
-        const separator: QuickPickAction = { kind: vscode.QuickPickItemKind.Separator, label: ' ', action: 'separator', hide: false };
+        const separator: QuickPickAction = {
+            kind: vscode.QuickPickItemKind.Separator,
+            label: ' ',
+            action: 'separator',
+            hide: false,
+        };
 
         const templateVars: TemplateVars = {
             hash: commitDetail.H || '',
@@ -185,9 +190,9 @@ class WorktreeActionPicker {
                 case Commands.revealInSystemExplorerContext:
                 case Commands.viewHistory:
                 case Commands.openRepository:
-                    case Commands.removeWorktree:
-                        await this.handleCommandAction(item.action, viewItem);
-                        break;
+                case Commands.removeWorktree:
+                    await this.handleCommandAction(item.action, viewItem);
+                    break;
                 case Commands.removeFromWorkspace:
                 case Commands.addToWorkspace:
                     reject();
@@ -196,10 +201,11 @@ class WorktreeActionPicker {
                     return;
                 case 'separator':
                     break;
-                default:
+                default: {
                     const value: never = item.action;
                     void value;
                     break;
+                }
             }
             resolve(item);
             quickPick.hide();

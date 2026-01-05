@@ -13,7 +13,7 @@ export const getWorktreeStatus = (item: AheadBehindInfo) => {
  * Fork from https://github.com/gitkraken/vscode-gitlens/blob/main/src/views/viewDecorationProvider.ts#L149
  */
 export class WorktreeDecorator implements vscode.FileDecorationProvider {
-    provideFileDecoration(uri: vscode.Uri, token: vscode.CancellationToken) {
+    provideFileDecoration(uri: vscode.Uri) {
         if (uri.scheme !== WORK_TREE_SCHEME) return undefined;
         const [, , status] = uri.path.split('/');
 

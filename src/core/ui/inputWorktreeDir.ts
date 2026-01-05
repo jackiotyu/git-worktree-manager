@@ -6,7 +6,7 @@ import { Alert } from '@/core/ui/message';
 import { withResolvers } from '@/core/util/promise';
 
 export const pickWorktreeDir = async (dir: string, targetDirTip: string) => {
-    let uriList = await vscode.window.showOpenDialog({
+    const uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
@@ -55,7 +55,7 @@ export const inputWorktreeDir = async ({
     if (baseWorktreeDir && !comparePath(workTreeDir, baseWorktreeDir)) {
         finalWorktreeDir = baseWorktreeDir;
     } else if (await checkExist(workTreeDir)) {
-        let worktreeDirList = (await vscode.workspace.fs.readDirectory(vscode.Uri.file(workTreeDir)))
+        const worktreeDirList = (await vscode.workspace.fs.readDirectory(vscode.Uri.file(workTreeDir)))
             .filter((item) => item[1] === vscode.FileType.Directory)
             .filter((item) => dirReg.test(item[0]))
             .map((item) => item[0]);

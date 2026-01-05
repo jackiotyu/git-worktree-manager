@@ -70,7 +70,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     }
 
     private setDescription() {
-        let descriptionList = [];
+        const descriptionList = [];
         if (this.viewItem.isMain) descriptionList.push('✨ ');
         if (this.ahead) descriptionList.push(`${this.ahead}↑ `);
         if (this.behind) descriptionList.push(`${this.behind}↓ `);

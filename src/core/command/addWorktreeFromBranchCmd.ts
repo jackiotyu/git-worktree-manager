@@ -6,7 +6,7 @@ import folderRoot from '@/core/folderRoot';
 
 export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
     if (!item) return;
-    let uriList = await vscode.window.showOpenDialog({
+    const uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
@@ -17,8 +17,8 @@ export const addWorktreeFromBranchCmd = async (item?: WorktreeItem) => {
     if (!uriList?.length) {
         return;
     }
-    let folderUri = uriList[0];
-    let folderPath = folderUri.fsPath;
+    const folderUri = uriList[0];
+    const folderPath = folderUri.fsPath;
     const mainFolder = await getMainFolder(item.fsPath);
     return createWorktreeFromInfo({
         name: item.name,

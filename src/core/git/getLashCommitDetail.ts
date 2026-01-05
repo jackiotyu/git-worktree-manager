@@ -6,7 +6,7 @@ export const getLashCommitDetail = async <T extends string>(
     keys: T[],
 ): Promise<Record<T, string | void>> => {
     try {
-        let { stdout: output } = await execAuto(cwd, ['log', '-1', `--pretty=format:${formatSimpleQuery(keys)}`]);
+        const { stdout: output } = await execAuto(cwd, ['log', '-1', `--pretty=format:${formatSimpleQuery(keys)}`]);
         return parseOutput(output, keys)[0];
     } catch {
         return {} as Record<T, void>;

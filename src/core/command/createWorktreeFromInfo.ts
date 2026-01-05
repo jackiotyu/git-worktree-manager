@@ -10,7 +10,7 @@ import type { ICreateWorktreeInfo } from '@/types';
 
 export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     const { folderPath, name, label, isBranch, cwd } = info;
-    let confirmCreate = await confirmModal(
+    const confirmCreate = await confirmModal(
         vscode.l10n.t('Create worktree'),
         vscode.l10n.t('Create'),
         vscode.l10n.t('A worktree for {label} {name} will be created under {folder}', {
@@ -29,7 +29,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
         () => waitingCreate.promise,
         () => {},
     );
-    let created = await addWorktree(folderPath, name, isBranch, cwd);
+    const created = await addWorktree(folderPath, name, isBranch, cwd);
     waitingCreate.resolve();
     if (!created) {
         return;
@@ -46,7 +46,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
         basePath: mainFolder,
     });
 
-    let confirmOpen = await confirmModal(
+    const confirmOpen = await confirmModal(
         vscode.l10n.t('Open folder'),
         vscode.l10n.t('Open'),
         vscode.l10n.t('Open the new worktree in a new window?'),
@@ -54,7 +54,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
     if (!confirmOpen) {
         return;
     }
-    let folderUri = vscode.Uri.file(folderPath);
+    const folderUri = vscode.Uri.file(folderPath);
     vscode.commands.executeCommand('vscode.openFolder', folderUri, {
         forceNewWindow: true,
     });

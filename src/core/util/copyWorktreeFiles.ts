@@ -90,7 +90,7 @@ async function findMatchingFiles(sourceRepo: string, token: vscode.CancellationT
         }
     }
 
-    return matchedFiles.map(filepath => vscode.Uri.file(filepath));
+    return matchedFiles.map((filepath) => vscode.Uri.file(filepath));
 }
 
 export async function copyWorktreeFiles(sourceRepo: string, targetWorktree: string) {

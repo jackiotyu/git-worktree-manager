@@ -5,7 +5,7 @@ import type { GitExtension, API as ScmGitApi } from '@/@types/vscode.git';
 import { Config } from '@/core/config/setting';
 import { withResolvers } from '@/core/util/promise';
 import logger from '@/core/log/logger';
-import treeKill = require('tree-kill');
+import treeKill from 'tree-kill';
 
 export interface ExecResult {
     stdout: string;
@@ -74,8 +74,8 @@ export const execBase = async (cwd: string, args?: string[], token?: vscode.Canc
             GCM_INTERACTIVE: 'NEVER',
             GCM_PRESERVE_CREDS: 'TRUE',
             LC_ALL: 'en_US.UTF-8',
-			LANG: 'en_US.UTF-8',
-			GIT_PAGER: 'cat'
+            LANG: 'en_US.UTF-8',
+            GIT_PAGER: 'cat',
         },
     });
 

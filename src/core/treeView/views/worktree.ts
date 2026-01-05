@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import { WorktreeItem, WorkspaceMainGitFolderItem } from '@/core/treeView/items';
-import { TreeItemKind, ViewId } from '@/constants';
+import { TreeItemKind } from '@/constants';
 import { treeDataEvent, updateTreeDataEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { WorkspaceState } from '@/core/state';
 import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
-import { IWorktreeDetail, IFolderItemConfig } from '@/types';
+import { IWorktreeDetail } from '@/types';
 import { findPrefixPath } from '@/core/util/folder';
 
 export class WorktreeDataProvider

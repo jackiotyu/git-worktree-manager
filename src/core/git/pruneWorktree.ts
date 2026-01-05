@@ -64,7 +64,7 @@ export async function pruneWorktree(dryRun: boolean, cwd: string) {
         const gitDirRaw = await execAuto(cwd, ['rev-parse', '--git-dir']);
         const worktreeList = await analyzePruneDryRun(repoPath, res.stdout + res.stderr, gitDirRaw.stdout);
         return worktreeList.map((worktree) => worktree.realPath);
-    } catch (error: any) {
+    } catch {
         return [];
     }
 }

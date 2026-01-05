@@ -20,12 +20,12 @@ export function formatSimpleQuery<T extends string>(keyList: T[]) {
 // 转义正则表达式特殊字符
 const escapedReg = /[.*+?^${}()|[\]\\]/g;
 export function parseOutput<T extends string>(output: string, keyList: T[]): Record<T, string>[] {
-    let tokenList = [...new Set(keyList)];
-    let regex = tokenList.map((key) => `${key.replace(escapedReg, '\\$&')}="(.*)"`).join(' ');
-    let workTrees = [];
-    let matches = output.matchAll(new RegExp(regex, 'g'));
+    const tokenList = [...new Set(keyList)];
+    const regex = tokenList.map((key) => `${key.replace(escapedReg, '\\$&')}="(.*)"`).join(' ');
+    const workTrees = [];
+    const matches = output.matchAll(new RegExp(regex, 'g'));
     for (const match of matches) {
-        let item = tokenList.reduce<Record<string, string>>((obj, key, index) => {
+        const item = tokenList.reduce<Record<string, string>>((obj, key, index) => {
             obj[key] = match[index + 1];
             return obj;
         }, {});

@@ -4,7 +4,7 @@ import { Commands } from '@/constants';
 import { removeWorktree } from '@/core/git/removeWorktree';
 import { getCurrentBranch } from '@/core/git/getCurrentBranch';
 import { getMainFolder } from '@/core/git/getMainFolder';
-import { getChanges, type IChanges } from '@/core/git/getChanges';
+import { getChanges } from '@/core/git/getChanges';
 import { Alert } from '@/core/ui/message';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';

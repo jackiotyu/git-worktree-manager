@@ -49,7 +49,7 @@ export class FavoriteDataProvider implements vscode.TreeDataProvider<FavoriteIte
         }
     };
 
-    async getChildren(element?: FavoriteItem): Promise<FavoriteItem[]> {
+    async getChildren(): Promise<FavoriteItem[]> {
         try {
             return this.data
                 .sort((a, b) => {
@@ -81,11 +81,7 @@ export class FavoriteAndDropController implements vscode.TreeDragAndDropControll
     readonly dropMimeTypes = ['text/uri-list'];
     readonly dragMimeTypes = [];
 
-    async handleDrop(
-        target: IWorktreeLess | undefined,
-        dataTransfer: vscode.DataTransfer,
-        token: vscode.CancellationToken,
-    ): Promise<void> {
+    async handleDrop(target: IWorktreeLess | undefined, dataTransfer: vscode.DataTransfer): Promise<void> {
         const item = dataTransfer.get('text/uri-list');
         if (!item) return;
 

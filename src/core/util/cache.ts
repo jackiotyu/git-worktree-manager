@@ -57,7 +57,7 @@ export const updateWorktreeCache = async (repoPath: string | void) => {
 
     const mainFolderSet = new Set(WorkspaceState.get('mainFolders', []).map((i) => toSimplePath(i.path)));
     // TODO 优先更新工作区内的仓库
-    const sortedFolders = [...gitFolders].sort((a, b) => {
+    const sortedFolders = [...gitFolders].sort((a) => {
         if (mainFolderSet.has(toSimplePath(a.path))) return -1;
         return 0;
     });

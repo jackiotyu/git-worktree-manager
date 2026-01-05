@@ -6,7 +6,7 @@ import { addToGitFolder } from '@/core/command/addToGitFolder';
 import { addDirsToRepo } from '@/core/command/addDirsToRepo';
 
 const addMultiGitFolder = async () => {
-    let uriList = await vscode.window.showOpenDialog({
+    const uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
@@ -14,8 +14,8 @@ const addMultiGitFolder = async () => {
         title: vscode.l10n.t('Please select the root directory containing multiple Git repositories'),
     });
     if (!uriList?.length) return;
-    let folderUri = uriList[0];
-    let folderPath = folderUri.fsPath;
+    const folderUri = uriList[0];
+    const folderPath = folderUri.fsPath;
     const dirs = await fs
         .readdir(folderPath, { encoding: 'utf-8' })
         .then((files) => files.map((fileName) => path.join(folderPath, fileName)))
@@ -25,7 +25,7 @@ const addMultiGitFolder = async () => {
 };
 
 const addSingleGitFolder = async () => {
-    let uriList = await vscode.window.showOpenDialog({
+    const uriList = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
@@ -33,8 +33,8 @@ const addSingleGitFolder = async () => {
         title: vscode.l10n.t('Please select the Git repository folder path'),
     });
     if (!uriList?.length) return;
-    let folderUri = uriList[0];
-    let folderPath = folderUri.fsPath;
+    const folderUri = uriList[0];
+    const folderPath = folderUri.fsPath;
     await addToGitFolder(folderPath);
 };
 
@@ -43,11 +43,11 @@ export const addGitFolderCmd = async () => {
     const multiTips = vscode.l10n.t('Please select the root directory containing multiple Git repositories');
     const singleLabel = vscode.l10n.t('Single repository');
     const singleTips = vscode.l10n.t('Select Git repository to create worktree from');
-    let options: vscode.QuickPickItem[] = [
+    const options: vscode.QuickPickItem[] = [
         { label: multiLabel, iconPath: new vscode.ThemeIcon('checklist'), description: multiTips },
         { label: singleLabel, iconPath: new vscode.ThemeIcon('repo'), description: singleTips },
     ];
-    let selected = await vscode.window.showQuickPick(options, {
+    const selected = await vscode.window.showQuickPick(options, {
         canPickMany: false,
         title: vscode.l10n.t('Add Git repository'),
     });

@@ -10,7 +10,7 @@ export const checkExist = (path: string) => {
 };
 
 export const verifyFileExistence = async (fsPath: string): Promise<boolean> => {
-    let exist = await checkExist(fsPath);
+    const exist = await checkExist(fsPath);
     if (!exist) {
         Alert.showErrorMessage(vscode.l10n.t('The file does not exist'), { modal: true });
         return false;
@@ -19,12 +19,12 @@ export const verifyFileExistence = async (fsPath: string): Promise<boolean> => {
 };
 
 export const verifyDirExistence = async (fsPath: string): Promise<boolean> => {
-    let exist = await checkExist(fsPath);
+    const exist = await checkExist(fsPath);
     if (!exist) {
         Alert.showErrorMessage(vscode.l10n.t('The folder does not exist'), { modal: true });
         return false;
     }
-    let isFolder = await checkIsFolder(fsPath);
+    const isFolder = await checkIsFolder(fsPath);
     if (!isFolder) {
         Alert.showErrorMessage(vscode.l10n.t('The path is not a folder'), { modal: true });
         return false;

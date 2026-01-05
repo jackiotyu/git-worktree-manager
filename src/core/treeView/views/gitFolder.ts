@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { IFolderItemConfig, IWorktreeDetail } from '@/types';
+import { IFolderItemConfig } from '@/types';
 import { GlobalState } from '@/core/state';
-import { TreeItemKind, ViewId, ContextKey } from '@/constants';
+import { TreeItemKind, ContextKey } from '@/constants';
 import { GitFolderItem, WorktreeItem } from '@/core/treeView/items';
 import throttle from 'lodash-es/throttle';
 import debounce from 'lodash-es/debounce';

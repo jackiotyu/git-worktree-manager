@@ -39,7 +39,9 @@ class WorktreeEventRegister implements vscode.Disposable {
             if (!fs.existsSync(folderPath)) return;
             const worktreeEvent = new WorktreeEvent(finalUri);
             this.eventMap.set(folderPath, worktreeEvent);
-        } catch {}
+        } catch (error) {
+            logger.error(`'add worktree event' ${error}`);
+        }
     }
     remove(uri: vscode.Uri) {
         const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');

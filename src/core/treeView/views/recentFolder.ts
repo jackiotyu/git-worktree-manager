@@ -64,7 +64,7 @@ export class RecentFoldersDataProvider implements vscode.TreeDataProvider<Recent
         this.refresh();
     };
 
-    async getChildren(element?: RecentFolderItem): Promise<RecentFolderItem[]> {
+    async getChildren(): Promise<RecentFolderItem[]> {
         try {
             const start = 0;
             const end = this.pageNo * this.pageSize;

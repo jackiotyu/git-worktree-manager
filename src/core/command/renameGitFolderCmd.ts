@@ -12,13 +12,13 @@ const pickFolderConfig = (item?: IWorktreeLess) => {
 
 export const renameGitFolderCmd = async (item?: IWorktreeLess) => {
     if (!item) return;
-    let folder = pickFolderConfig(item);
+    const folder = pickFolderConfig(item);
     if (!folder) return;
     const folderName = folder.name;
     const baseName = path.basename(folderName);
     const valueSelection: [number, number] =
         baseName === folderName ? [0, folderName.length] : [0, folderName.length - baseName.length];
-    let name = await vscode.window.showInputBox({
+    const name = await vscode.window.showInputBox({
         title: vscode.l10n.t('Rename the Git repository alias'),
         placeHolder: vscode.l10n.t('Enter the repository name for display'),
         value: folderName,
@@ -31,9 +31,9 @@ export const renameGitFolderCmd = async (item?: IWorktreeLess) => {
     });
     if (!name) return;
     folder.name = name;
-    let allFolders = getFolderConfig();
+    const allFolders = getFolderConfig();
     const folderPath = folder.path;
-    let index = allFolders.findIndex((i) => comparePath(i.path, folderPath));
+    const index = allFolders.findIndex((i) => comparePath(i.path, folderPath));
     if (~index) {
         allFolders[index].name = name;
         await updateFolderConfig(allFolders);

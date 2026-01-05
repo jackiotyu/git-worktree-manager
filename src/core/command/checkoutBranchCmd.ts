@@ -53,7 +53,7 @@ async function performCheckout(info: WorktreeInfo, refName: string, isBranch: bo
 /** 切换分支命令 */
 export const checkoutBranchCmd = async (item?: IWorktreeLess): Promise<boolean | void> => {
     // 获取工作目录信息
-    let worktreeInfo: WorktreeInfo | false = item
+    const worktreeInfo: WorktreeInfo | false = item
         ? { name: item.name, fsPath: item.fsPath }
         : await getCurrentWorkingDirectory();
 

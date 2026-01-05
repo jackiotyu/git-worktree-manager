@@ -6,12 +6,12 @@ import { IWorktreeLess } from '@/types';
 import { comparePath } from '@/core/util/folder';
 
 export const removeFavoriteCmd = async (item: IWorktreeLess) => {
-    let uriPath = item.uriPath;
+    const uriPath = item.uriPath;
     let folders = getFavoriteCache();
     if (!folders.some((f) => comparePath(f.path, uriPath))) {
         return;
     }
-    let ok = await confirmModal(vscode.l10n.t('Remove items from the list'), vscode.l10n.t('Remove'), item.fsPath);
+    const ok = await confirmModal(vscode.l10n.t('Remove items from the list'), vscode.l10n.t('Remove'), item.fsPath);
     if (!ok) {
         return;
     }

@@ -5,7 +5,7 @@ import { validateBranchName } from '@/core/util/branch';
 const backButton = vscode.QuickInputButtons.Back;
 
 export const inputNewBranch = async (cwd: string, defaultValue?: string) => {
-    const { promise, resolve, reject } = withResolvers<string | undefined | false>();
+    const { promise, resolve } = withResolvers<string | undefined | false>();
     const inputBox = vscode.window.createInputBox();
     inputBox.ignoreFocusOut = true;
     inputBox.value = defaultValue || vscode.workspace.getConfiguration('git').get('branchPrefix', '');

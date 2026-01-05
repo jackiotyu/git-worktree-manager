@@ -26,8 +26,6 @@ interface HandlerArgs {
     quickPick: vscode.QuickPick<BranchForWorktree>;
 }
 
-interface HideHanderArgs extends HandlerArgs {}
-
 interface TriggerButtonHandlerArgs extends HandlerArgs {
     event: vscode.QuickInputButton;
 }
@@ -73,7 +71,7 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    let branchName = await inputNewBranch(cwd);
+    const branchName = await inputNewBranch(cwd);
     if (branchName === false) {
         quickPick.dispose();
         resolve(false);
@@ -125,7 +123,7 @@ async function handleAccept({
     }
 }
 
-function handleHide({ resolve, reject, quickPick }: HideHanderArgs) {
+function handleHide({ resolve, quickPick }: HandlerArgs) {
     const selected = quickPick.selectedItems[0];
     if (isSelectCreateBranch(selected)) {
         return;
@@ -134,7 +132,7 @@ function handleHide({ resolve, reject, quickPick }: HideHanderArgs) {
     quickPick.dispose();
 }
 
-function handleTriggerButton({ resolve, reject, quickPick, event }: TriggerButtonHandlerArgs) {
+function handleTriggerButton({ resolve, quickPick, event }: TriggerButtonHandlerArgs) {
     if (event === backButton) {
         resolve();
         quickPick.hide();
@@ -150,9 +148,9 @@ function handleTriggerItemButton({ event }: HandleTriggerItemButtonArgs) {
 }
 
 const mapRefList = (allRefList: RefList) => {
-    let branchList: RefList = [];
-    let remoteBranchList: RefList = [];
-    let tagList: RefList = [];
+    const branchList: RefList = [];
+    const remoteBranchList: RefList = [];
+    const tagList: RefList = [];
     allRefList.forEach((item) => {
         if (item.refname.startsWith('refs/heads/')) {
             branchList.push(item);
@@ -364,8 +362,8 @@ const mapRefItems = ({
     checkoutTypes: CheckoutType[];
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
-    let branchItems: RefList = [];
-    let worktreeItems: RefList = [];
+    const branchItems: RefList = [];
+    const worktreeItems: RefList = [];
     branchList.forEach((item) => {
         if (item.HEAD === HEAD.current) defaultBranch = item;
         if (item.worktreepath) worktreeItems.push(item);
@@ -449,7 +447,7 @@ export const pickBranch: IPickBranch = async ({
 }) => {
     const { resolve, reject, promise } = withResolvers<ResolveValue>();
     try {
-        let isValidGit = await checkGitValid(cwd);
+        const isValidGit = await checkGitValid(cwd);
         if (!isValidGit) {
             Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
             return;

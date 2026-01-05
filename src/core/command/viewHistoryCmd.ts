@@ -4,6 +4,6 @@ import folderRoot from '@/core/folderRoot';
 import { GitHistory } from '@/core/gitHistory';
 
 export const viewHistoryCmd = (item?: IWorktreeLess) => {
-    let uri = item ? vscode.Uri.file(item.fsPath) : folderRoot.uri;
+    const uri = item ? vscode.Uri.file(item.fsPath) : folderRoot.uri;
     uri && GitHistory.openHistory(uri);
 };

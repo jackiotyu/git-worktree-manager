@@ -30,7 +30,7 @@ export const addToWorkspace = (folder: string) => {
 
 export const removeFromWorkspace = (path: string) => {
     if (!vscode.workspace.workspaceFolders) return;
-    let index = vscode.workspace.workspaceFolders.findIndex((item) => comparePath(item.uri.fsPath, path));
+    const index = vscode.workspace.workspaceFolders.findIndex((item) => comparePath(item.uri.fsPath, path));
     if (index >= 0) vscode.workspace.updateWorkspaceFolders(index, 1);
 };
 
@@ -45,12 +45,12 @@ export const isRecentWorkspace = (item: IRecentFolder | IRecentWorkspace): item 
 };
 
 export const getRecentItems = async (): Promise<Array<IRecentFolder | IRecentWorkspace>> => {
-    let data = (await vscode.commands.executeCommand('_workbench.getRecentlyOpened')) as IRecentlyOpened;
+    const data = (await vscode.commands.executeCommand('_workbench.getRecentlyOpened')) as IRecentlyOpened;
     return data.workspaces;
 };
 
 export const getWorkspaceMainFolders = async (): Promise<IFolderItemConfig[]> => {
-    let list: string[] = [];
+    const list: string[] = [];
     for (const folder of folderRoot.folderPathSet) {
         const mainFolder = await getMainFolder(folder);
         list.push(mainFolder);
