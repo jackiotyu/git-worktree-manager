@@ -1186,6 +1186,7 @@
     "@types/vscode": "^1.60.0",
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.7.1",
+    "changelogithub": "^14.0.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^9.1.2",
     "eslint-plugin-prettier": "^5.5.4",

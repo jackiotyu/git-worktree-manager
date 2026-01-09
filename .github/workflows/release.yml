@@ -30,12 +30,12 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
 
-      - run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
+
+      - run: pnpm exec changelogithub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package VSIX
         run: pnpm exec vsce package --no-dependencies --out ./git-worktree-manager-${{ github.ref_name }}.vsix
