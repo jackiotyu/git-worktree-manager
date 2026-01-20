@@ -1,3 +1,20 @@
+## v3.22.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.0...v3.22.1)
+
+### 🚀 Enhancements
+
+- **quickPick:** Display file icon by adding resourceUri to workspace pick items ([632940b](https://github.com/jackiotyu/git-worktree-manager/commit/632940b))
+
+### 🩹 Fixes
+
+- **i18n:** Update glob pattern descriptions ([3f010ec](https://github.com/jackiotyu/git-worktree-manager/commit/3f010ec))
+
+### 🏡 Chore
+
+- **release:** Update pnpm action to v4.2.0 in release workflow ([7d8386f](https://github.com/jackiotyu/git-worktree-manager/commit/7d8386f))
+- **eslint:** Migrate to eslint 9 ([9f5c12a](https://github.com/jackiotyu/git-worktree-manager/commit/9f5c12a))
+
 ## v3.22.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.21.1...v3.22.0)
