@@ -241,6 +241,7 @@ const mapWorkspacePickItems = (list: IRecentItem[], disPlayType: DefaultDisplayL
             kind: vscode.QuickPickItemKind.Default,
             label: item.label,
             description: uri.fsPath,
+            resourceUri: vscode.Uri.file(item.path),
             iconPath: getRecentItemIcon(item.type),
             uriPath: uri.toString(),
             fsPath: uri.fsPath,
