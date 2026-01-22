@@ -6,9 +6,10 @@ import { toSimplePath } from '@/core/util/folder';
 import { IFolderItemConfig } from '@/types';
 
 export const removeMultiGitFolderCmd = async () => {
+    const iconPath = new vscode.ThemeIcon('repo');
     const items: (vscode.QuickPickItem & { description: string })[] = getFolderConfig().map((item) => {
         return {
-            iconPath: vscode.ThemeIcon.Folder,
+            iconPath,
             label: item.name,
             description: item.path,
         };

@@ -21,19 +21,19 @@ export class WorktreeDecorator implements vscode.FileDecorationProvider {
             case 'ahead':
                 return {
                     badge: '▲',
-                    color: new vscode.ThemeColor('charts.green'),
+                    color: new vscode.ThemeColor('terminal.ansiGreen'),
                     tooltip: 'Ahead',
                 };
             case 'behind':
                 return {
                     badge: '▼',
-                    color: new vscode.ThemeColor('charts.orange'),
+                    color: new vscode.ThemeColor('terminal.ansiYellow'),
                     tooltip: 'Behind',
                 };
             case 'diverged':
                 return {
                     badge: '▼▲',
-                    color: new vscode.ThemeColor('charts.yellow'),
+                    color: new vscode.ThemeColor('terminal.ansiBrightYellow'),
                     tooltip: 'Diverged',
                 };
             default:

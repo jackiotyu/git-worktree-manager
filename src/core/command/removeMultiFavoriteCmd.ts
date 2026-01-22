@@ -7,11 +7,11 @@ import { IRecentItem } from '@/types';
 
 export const removeMultiFavoriteCmd = async () => {
     const items: (vscode.QuickPickItem & { description: string; path: string })[] = getFavoriteCache().map((item) => {
-        const uri = vscode.Uri.parse(item.path);
         return {
             iconPath: getRecentItemIcon(item.type),
+            resourceUri: vscode.Uri.file(item.path),
             label: item.label,
-            description: uri.fsPath,
+            description: vscode.Uri.parse(item.path).fsPath,
             path: item.path,
         };
     });
