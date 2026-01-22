@@ -1,3 +1,11 @@
+## v3.22.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.1...v3.22.2)
+
+### 🎨 Styles
+
+- **command:** Update icon paths and improve file decoration colors ([ec7dfb2](https://github.com/jackiotyu/git-worktree-manager/commit/ec7dfb2))
+
 ## v3.22.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.0...v3.22.1)
