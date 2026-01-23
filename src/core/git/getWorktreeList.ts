@@ -95,7 +95,7 @@ export async function getWorktreeList(root?: string): Promise<IWorktreeDetail[]>
 
         const worktreeList = parseWorktreeOutput(output);
 
-        return await Promise.all(worktreeList.map((item) => buildWorktreeDetail(item, mainFolder)));
+        return await Promise.all(worktreeList.map((item) => buildWorktreeDetail(item, mainFolder, cwd)));
     } catch (error) {
         logger.error(error);
         return [];
