@@ -42,8 +42,13 @@ function checkIsTag(nameRev: string) {
 async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string, cwd: string): Promise<IWorktreeDetail> {
     const branchName = item.branch?.replace('refs/heads/', '') || '';
 
+    // Resolve relative paths (e.g., ../repo.worktrees/branch) to absolute
+    const worktreePath = path.isAbsolute(item.worktree)
+        ? item.worktree
+        : path.resolve(cwd, item.worktree);
+
     let nameRev = '';
-    if (!branchName) nameRev = (await getNameRev(item.worktree)).trim();
+    if (!branchName) nameRev = (await getNameRev(worktreePath)).trim();
 
     const isTag = checkIsTag(nameRev);
     const isBare = Reflect.has(item, 'bare');
