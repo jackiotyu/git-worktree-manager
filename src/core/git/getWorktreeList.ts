@@ -39,7 +39,7 @@ function checkIsTag(nameRev: string) {
     );
 }
 
-async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string): Promise<IWorktreeDetail> {
+async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string, cwd: string): Promise<IWorktreeDetail> {
     const branchName = item.branch?.replace('refs/heads/', '') || '';
 
     let nameRev = '';
