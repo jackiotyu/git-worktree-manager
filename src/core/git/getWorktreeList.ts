@@ -4,6 +4,7 @@ import { getNameRev } from '@/core/git/getNameRev';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import type { IWorktreeDetail, IWorktreeOutputItem } from '@/types';
 import logger from '@/core/log/logger';
+import path from 'path';
 
 function parseWorktreeOutput(output: string): IWorktreeOutputItem[] {
     return output
