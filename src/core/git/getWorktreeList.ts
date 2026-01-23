@@ -53,7 +53,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
     const isTag = checkIsTag(nameRev);
     const isBare = Reflect.has(item, 'bare');
     const locked = Reflect.has(item, 'locked');
-    const isMain = item.worktree.trim() === mainFolder;
+    const isMain = worktreePath.trim() === mainFolder;
     const isBranch = Boolean(branchName);
     const detached = Reflect.has(item, 'detached');
     const prunable = Reflect.has(item, 'prunable');
@@ -71,7 +71,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
 
     return {
         name,
-        path: item.worktree,
+        path: worktreePath,
         isBare,
         isBranch,
         isTag,
