@@ -1,3 +1,11 @@
+## v3.22.3
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.2...v3.22.3)
+
+### 🩹 Fixes
+
+- **command:** Pass DefaultDisplayList to pickWorktree in searchAllWorktreeCmd ([2c382d7](https://github.com/jackiotyu/git-worktree-manager/commit/2c382d7))
+
 ## v3.22.2
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.1...v3.22.2)
