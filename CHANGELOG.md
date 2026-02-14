@@ -1,3 +1,15 @@
+## v3.23.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.3...v3.23.0)
+
+### 🩹 Fixes
+
+- **linux:** Fix the issue where the plugin does not work properly under Linux ([#47](https://github.com/jackiotyu/git-worktree-manager/pull/47))
+
+### 🏡 Chore
+
+- **release:** Update pnpm action version in release workflow ([28e6235](https://github.com/jackiotyu/git-worktree-manager/commit/28e6235))
+
 ## v3.22.3
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.2...v3.22.3)
