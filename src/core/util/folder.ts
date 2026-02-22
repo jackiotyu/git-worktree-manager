@@ -9,7 +9,7 @@ export function judgeIsCurrentFolder(path: string) {
 }
 
 export function toSimplePath(path: string) {
-    return path.toLocaleLowerCase().replace(/\\/g, '/');
+    return path.toLowerCase().replace(/\\/g, '/');
 }
 
 export function judgeIncludeFolder(path: string) {
