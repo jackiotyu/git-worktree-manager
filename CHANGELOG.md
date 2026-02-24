@@ -1,3 +1,12 @@
+## v3.23.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.0...v3.23.1)
+
+### 🩹 Fixes
+
+- **util:** Correct method name for case conversion in toSimplePath function ([1e774bf](https://github.com/jackiotyu/git-worktree-manager/commit/1e774bf))
+- **folderRoot:** Ensure folder URIs are consistently lowercased for cross-platform compatibility ([70772da](https://github.com/jackiotyu/git-worktree-manager/commit/70772da))
+
 ## v3.23.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.22.3...v3.23.0)
