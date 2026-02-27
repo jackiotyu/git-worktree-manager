@@ -1,7 +1,8 @@
 import path from 'path';
 
 function toSimplePath(path: string) {
-    return path.toLowerCase().replace(/\\/g, '/');
+    const normalized = path.replace(/\\/g, '/');
+    return process.platform === 'win32' ? normalized.toLowerCase() : normalized;
 }
 
 function comparePath(path1: string = '', path2: string = '') {
