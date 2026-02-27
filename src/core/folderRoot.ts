@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { toSimplePath } from '@/core/util/path';
 
 class WorkspaceFolderRoot implements vscode.Disposable {
     private _uri?: vscode.Uri;
@@ -12,9 +13,7 @@ class WorkspaceFolderRoot implements vscode.Disposable {
     }
     private checkUri() {
         const folders = vscode.workspace.workspaceFolders || [];
-        this._folderSet = new Set(
-            folders.map((i) => (i.uri.fsPath || '').toLowerCase().replace(/\\/g, '/')).filter((i) => i),
-        );
+        this._folderSet = new Set(folders.map((i) => toSimplePath(i.uri.fsPath || '')).filter((i) => i));
         // TODO Special handling for multiple workspaces
         if (folders.length) {
             this._uri = folders[0].uri;
