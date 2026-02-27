@@ -1177,23 +1177,23 @@
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@rspack/cli": "^1.7.4",
-    "@rspack/core": "^1.7.4",
-    "@swc/helpers": "^0.5.18",
+    "@eslint/js": "^9.39.3",
+    "@rspack/cli": "^1.7.6",
+    "@rspack/core": "^1.7.6",
+    "@swc/helpers": "^0.5.19",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "16.x",
     "@types/vscode": "^1.60.0",
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.7.1",
     "changelogithub": "^14.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.3",
     "eslint-config-prettier": "^9.1.2",
     "eslint-plugin-prettier": "^5.5.5",
-    "ovsx": "^0.10.8",
+    "ovsx": "^0.10.9",
     "prettier": "^3.8.1",
     "typescript": "~5.0.4",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.56.1"
   },
   "dependencies": {
     "dayjs": "^1.11.19",
