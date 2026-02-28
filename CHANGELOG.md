@@ -1,3 +1,15 @@
+## v3.23.4
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.3...v3.23.4)
+
+### 🚀 Enhancements
+
+- **version:** Add version utility functions and enhance worktree item mapping ([33392ca](https://github.com/jackiotyu/git-worktree-manager/commit/33392ca))
+
+### 🩹 Fixes
+
+- **git:** Enhance main folder path resolution ([06ae549](https://github.com/jackiotyu/git-worktree-manager/commit/06ae549))
+
 ## v3.23.3
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.2...v3.23.3)
