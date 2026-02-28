@@ -1,3 +1,11 @@
+## v3.23.3
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.2...v3.23.3)
+
+### 🩹 Fixes
+
+- **git:** Simplify main folder retrieval logic ([b8a0627](https://github.com/jackiotyu/git-worktree-manager/commit/b8a0627))
+
 ## v3.23.2
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.1...v3.23.2)
