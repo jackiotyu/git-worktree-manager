@@ -44,6 +44,7 @@ import {
 } from './quickPick.button';
 import { pickAction } from '@/core/quickPick/pickAction';
 import { withResolvers } from '@/core/util/promise';
+import { satisfies } from '@/core/util/version';
 
 interface IWorktreePick extends vscode.QuickPickItem {
     kind: vscode.QuickPickItemKind.Default;
@@ -237,17 +238,23 @@ const mapWorkspacePickItems = (list: IRecentItem[], disPlayType: DefaultDisplayL
     const buttonMap = getWorkspacePickButtonMap(disPlayType);
     return list.map((item) => {
         const uri = vscode.Uri.parse(item.path);
-        return {
+
+        const pickItem: WorktreePick = {
             kind: vscode.QuickPickItemKind.Default,
             label: item.label,
             description: uri.fsPath,
-            resourceUri: vscode.Uri.file(item.path),
             iconPath: getRecentItemIcon(item.type),
             uriPath: uri.toString(),
             fsPath: uri.fsPath,
             buttons: getWorkspacePickButtons(item.type, buttonMap),
             item: item,
         };
+
+        if (satisfies(vscode.version, '>= 1.108.0')) {
+            pickItem.resourceUri = vscode.Uri.file(item.path);
+        }
+
+        return pickItem;
     });
 };
 
