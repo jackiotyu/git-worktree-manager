@@ -1,10 +1,13 @@
+import path from 'path';
 import { execBase } from '@/core/git/exec-base';
 
 export const getMainFolder = async (cwd: string) => {
     try {
         const { stdout: mainFolderFull } = await execBase(cwd, ['rev-parse', '--git-common-dir']);
-        if (mainFolderFull.trim() === '.git') return cwd;
-        return mainFolderFull.trim().replace(/\/.git$/, '');
+        const trimmed = mainFolderFull.trim();
+        if (!trimmed) return '';
+        const absPath = path.isAbsolute(trimmed) ? trimmed : path.resolve(cwd, trimmed);
+        return path.basename(absPath) === '.git' ? path.dirname(absPath) : absPath;
     } catch {
         return '';
     }
