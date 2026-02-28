@@ -1,3 +1,15 @@
+## v3.23.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.1...v3.23.2)
+
+### 🩹 Fixes
+
+- **path:** Preserve path casing on case-sensitive filesystems ([#48](https://github.com/jackiotyu/git-worktree-manager/pull/48))
+
+### 💅 Refactors
+
+- **folder:** Extract path utility functions and simplify folder URI handling ([e21007a](https://github.com/jackiotyu/git-worktree-manager/commit/e21007a))
+
 ## v3.23.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.0...v3.23.1)
