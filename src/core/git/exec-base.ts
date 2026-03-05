@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
-import type { GitExtension, API as ScmGitApi } from '@/@types/vscode.git';
 import { Config } from '@/core/config/setting';
 import { withResolvers } from '@/core/util/promise';
 import logger from '@/core/log/logger';
 import treeKill from 'tree-kill';
+import { gitApi } from '@/core/git/scmGit';
 
 export interface ExecResult {
     stdout: string;
@@ -13,45 +13,10 @@ export interface ExecResult {
     code: number | null;
 }
 
-let scmGitApi: ScmGitApi | undefined;
-
-const getScmGitApiCore = async (): Promise<ScmGitApi | undefined> => {
-    try {
-        const extension = vscode.extensions.getExtension<GitExtension>('vscode.git');
-        if (!extension) return undefined;
-        const gitExtension = extension.isActive ? extension.exports : await extension.activate();
-        return gitExtension?.getAPI(1);
-    } catch {
-        return undefined;
-    }
-};
-
-/**
- * Get the Git executable path used by VSCode Git extension
- * VSCode Git extension uses git.path configuration, or automatically finds system Git if not set
- */
-const getGitPath = async (): Promise<string> => {
-    try {
-        // Ensure Git extension is activated (if needed)
-        if (!scmGitApi) {
-            scmGitApi = await getScmGitApiCore();
-        }
-        if (!scmGitApi) return 'git';
-        return scmGitApi.git.path;
-    } catch (error) {
-        logger.error(`Failed to get Git path: ${error}`);
-        // Fallback to default value on error
-        return 'git';
-    }
-};
-
-const getGitEnv = (): Record<string, string> => {
-    if (!scmGitApi) return {};
-    return (scmGitApi.git as any).env || {};
-};
-
 export const execBase = async (cwd: string, args?: string[], token?: vscode.CancellationToken): Promise<ExecResult> => {
-    const gitPath = await getGitPath();
+    await gitApi.getAPI();
+    const gitPath = gitApi.gitPath;
+    const gitEnv = gitApi.gitEnv;
 
     const { resolve, reject, promise } = withResolvers<ExecResult>();
 
@@ -70,7 +35,7 @@ export const execBase = async (cwd: string, args?: string[], token?: vscode.Canc
         cwd,
         env: {
             ...env,
-            ...getGitEnv(),
+            ...gitEnv,
             GCM_INTERACTIVE: 'NEVER',
             GCM_PRESERVE_CREDS: 'TRUE',
             LC_ALL: 'en_US.UTF-8',

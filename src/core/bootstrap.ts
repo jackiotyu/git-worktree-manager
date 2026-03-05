@@ -24,6 +24,7 @@ import { worktreeEventRegister } from '@/core/event/git';
 import { Config } from '@/core/config/setting';
 import { Commands, RefreshCacheType } from '@/constants';
 import { updateWorkspaceListCache, updateWorktreeCache, updateRecentItems } from '@/core/util/cache';
+import { gitApi } from '@/core/git/scmGit';
 
 const setupCacheEvents = (context: vscode.ExtensionContext) => {
     const updateWorktreeCacheHandler = updateWorktreeCacheEvent.event((repoPath) => {
@@ -96,6 +97,7 @@ const setupState = (context: vscode.ExtensionContext) => {
 
 const registerAllSubscriptions = (context: vscode.ExtensionContext) => {
     context.subscriptions.push(
+        gitApi,
         vscode.window.registerFileDecorationProvider(new WorktreeDecorator()),
         folderRoot,
         logger,

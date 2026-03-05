@@ -1,8 +1,18 @@
 import path from 'path';
 
 function toSimplePath(path: string) {
-    const normalized = path.replace(/\\/g, '/');
-    return process.platform === 'win32' ? normalized.toLowerCase() : normalized;
+    // Just handle the disk drive letter on Windows, keep other platforms unchanged
+    if (process.platform === 'win32') {
+        const normalized = path.replace(/\\/g, '/');
+        const diskPattern = /^[a-zA-Z]:/;
+        const match = normalized.match(diskPattern);
+        if (match) {
+            return match[0].toLowerCase() + normalized.slice(match[0].length);
+        } else {
+            return normalized;
+        }
+    }
+    return path;
 }
 
 function comparePath(path1: string = '', path2: string = '') {
