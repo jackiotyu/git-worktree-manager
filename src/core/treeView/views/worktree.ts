@@ -4,7 +4,6 @@ import { TreeItemKind } from '@/constants';
 import { treeDataEvent, updateTreeDataEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { WorkspaceState } from '@/core/state';
-import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
 import { IWorktreeDetail } from '@/types';
 import { findPrefixPath } from '@/core/util/folder';
@@ -94,9 +93,8 @@ export class WorktreeDataProvider
     }
 
     private checkOnlyOneMainFolder() {
-        const workspaceFolderNum = folderRoot.folderPathSet.size;
         const mainFolders = WorkspaceState.get('mainFolders', []);
-        return workspaceFolderNum === 1 || mainFolders.length === 1;
+        return mainFolders.length === 1;
     }
 
     private async getRootItems(): Promise<WorkspaceMainGitFolderItem[] | WorktreeItem[]> {

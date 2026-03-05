@@ -12,7 +12,7 @@ import {
 import folderRoot from '@/core/folderRoot';
 import { updateWorkspaceMainFolders, checkRecentFolderCache } from '@/core/util/cache';
 import { getGitFolderByUri } from '@/core/util/folder';
-import { checkRoots, updateAddDirsContext } from '@/core/util/workspace';
+import { checkRoots, updateAddDirsContext, setupWatchGitRepoEvent } from '@/core/util/workspace';
 import { registerCommands } from '@/core/command';
 import { GlobalState, WorkspaceState } from '@/core/state';
 import { Alert } from '@/core/ui/message';
@@ -20,10 +20,10 @@ import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { throttle, debounce } from 'lodash-es';
 import logger from '@/core/log/logger';
 import { WorktreeDecorator } from '@/core/util/worktree';
-import { worktreeEventRegister } from '@/core/event/git';
 import { Config } from '@/core/config/setting';
 import { Commands, RefreshCacheType } from '@/constants';
 import { updateWorkspaceListCache, updateWorktreeCache, updateRecentItems } from '@/core/util/cache';
+import { worktreeEventRegister } from '@/core/event/git';
 import { gitApi } from '@/core/git/scmGit';
 
 const setupCacheEvents = (context: vscode.ExtensionContext) => {
@@ -74,7 +74,10 @@ const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
     const windowStateHandler = vscode.window.onDidChangeWindowState((e) => {
         vscode.commands.executeCommand(e.focused ? Commands.watchWorktreeEvent : Commands.unwatchWorktreeEvent);
     });
+    const watchGitRepoHandler = setupWatchGitRepoEvent();
+
     context.subscriptions.push(
+        watchGitRepoHandler,
         worktreeChangeHandler,
         updateHandler,
         workspaceFoldersHandler,
