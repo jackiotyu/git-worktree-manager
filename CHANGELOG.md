@@ -1,3 +1,11 @@
+## v3.23.6
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.5...v3.23.6)
+
+### 🩹 Fixes
+
+- **path:** Path handling ([542a37c](https://github.com/jackiotyu/git-worktree-manager/commit/542a37c))
+
 ## v3.23.5
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.4...v3.23.5)
