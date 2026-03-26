@@ -45,6 +45,7 @@ import {
 import { pickAction } from '@/core/quickPick/pickAction';
 import { withResolvers } from '@/core/util/promise';
 import { satisfies } from '@/core/util/version';
+import { toSimplePath } from '@/core/util/path';
 
 interface IWorktreePick extends vscode.QuickPickItem {
     kind: vscode.QuickPickItemKind.Default;
@@ -432,7 +433,7 @@ const handleTriggerItemButton = ({ resolve, quickPick, event, actionService }: T
                     const text = template
                         .replace(/\$HASH/g, commitDetail.H || '')
                         .replace(/\$MESSAGE/g, commitDetail.s || '')
-                        .replace(/\$FULL_PATH/g, viewItem.fsPath)
+                        .replace(/\$FULL_PATH/g, toSimplePath(viewItem.fsPath))
                         .replace(/\$BASE_NAME/g, path.basename(viewItem.fsPath))
                         .replace(/\$LABEL/g, viewItem.name);
                     vscode.env.clipboard.writeText(text).then(() => {

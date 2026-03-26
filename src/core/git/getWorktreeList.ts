@@ -2,6 +2,7 @@ import folderRoot from '@/core/folderRoot';
 import { execBase } from '@/core/git/exec-base';
 import { getNameRev } from '@/core/git/getNameRev';
 import { getMainFolder } from '@/core/git/getMainFolder';
+import { toSimplePath } from '@/core/util/path';
 import type { IWorktreeDetail, IWorktreeOutputItem } from '@/types';
 import logger from '@/core/log/logger';
 
@@ -65,7 +66,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
 
     return {
         name,
-        path: item.worktree,
+        path: toSimplePath(item.worktree),
         isBare,
         isBranch,
         isTag,
