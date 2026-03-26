@@ -1,3 +1,15 @@
+## v3.23.5
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.4...v3.23.5)
+
+### 🚀 Enhancements
+
+- **git:** Refactored path normalization logic ([770a0b5](https://github.com/jackiotyu/git-worktree-manager/commit/770a0b5))
+
+### 📖 Documentation
+
+- Update License ([695cb1b](https://github.com/jackiotyu/git-worktree-manager/commit/695cb1b))
+
 ## v3.23.4
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.3...v3.23.4)
