@@ -20,18 +20,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
         with:
-          run_install: false
           cache: true
+          run_install: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24.x'
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
 
       - run: pnpm exec changelogithub
         env:
