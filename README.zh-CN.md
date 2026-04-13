@@ -102,6 +102,12 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
   （例如安装依赖或运行初始化脚本）。  
   **示例:** `"pnpm install"` 或 `"echo 'Worktree 已就绪'"`
 
+- **`git-worktree-manager.preRemoveCmd`**  
+  在删除 worktree 前自动执行的命令  
+  （例如清理 worktree 产生的副作用，如每个 worktree 专属的数据库 schema，或停止服务）。  
+  命令在 worktree 目录内执行。若命令失败或被取消，则中止删除。  
+  **示例:** `"pnpm run worktree:teardown-db"`
+
 - **`terminal.external.windowsExec`**  
   设置 Windows 系统下的外部终端  
   （例如 Git Bash: `"C:\\Program Files\\Git\\bin\\bash.exe"`）。

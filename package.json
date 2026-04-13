@@ -960,8 +960,14 @@
             "default": "",
             "markdownDescription": "%config.postCreateCmd.description%"
           },
-          "git-worktree-manager.terminalNameTemplate": {
+          "git-worktree-manager.preRemoveCmd": {
             "order": 14,
+            "type": "string",
+            "default": "",
+            "markdownDescription": "%config.preRemoveCmd.description%"
+          },
+          "git-worktree-manager.terminalNameTemplate": {
+            "order": 15,
             "type": "string",
             "default": "$LABEL ⇄ $FULL_PATH",
             "markdownDescription": "%config.terminalNameTemplate.description%"

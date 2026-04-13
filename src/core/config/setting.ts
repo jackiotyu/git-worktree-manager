@@ -71,6 +71,9 @@ export class Config {
 
     // Post-creation command configuration
     static get(key: 'postCreateCmd', defaultValue: ''): string;
+
+    // Pre-removal command configuration
+    static get(key: 'preRemoveCmd', defaultValue: ''): string;
     /**
      * Get configuration value
      * @param key Configuration key name

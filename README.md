@@ -103,6 +103,14 @@ Customize Git Worktree Manager to fit your workflow:
   (for example, installing dependencies or running setup scripts).  
   **Example:** `"pnpm install"` or `"echo 'Worktree ready'"`
 
+- **`git-worktree-manager.preRemoveCmd`**  
+  Run a command automatically before a worktree is removed  
+  (for example, tearing down side effects such as a per-worktree database  
+  schema or stopping services).  
+  Runs inside the worktree directory. If the command fails or is cancelled,  
+  the removal is aborted.  
+  **Example:** `"pnpm run worktree:teardown-db"`
+
 - **`terminal.external.windowsExec`**  
   Set the external terminal on Windows  
   (e.g. `"C:\\Program Files\\Git\\bin\\bash.exe"` for Git Bash).
