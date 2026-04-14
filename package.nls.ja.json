@@ -104,6 +104,7 @@
     "config.worktreeSubdirectoryTemplate.description": "ワークツリーサブディレクトリ名のテンプレートです。使用可能な変数：\n\n- `$BASE_NAME`（リポジトリフォルダ名）\n- `$INDEX`（増分番号）。\n- `$REF_NAME` （参照名、ブランチ名やタグ名など）\n\n使用できない文字：/ \\ : * ? \" < > |",
     "config.worktreeSubdirectoryTemplate.patternErrorMessage": "テンプレートに次の文字は使用できません：/ \\ : * ? \" < > |",
     "config.postCreateCmd.description": "ワークツリー作成後に実行するコマンド。デフォルトでは、新しいワークツリーのディレクトリ内で実行されます。コマンドで使用できる変数：\n\n- `$BASE_PATH`：ワークツリーの完全パス\n- `$WORKTREE_PATH`：ワークツリーの完全パス\n- `$BASE_NAME`：ワークツリーのフォルダ名\n\n例：\n`git submodule update --init --recursive`",
+    "config.preRemoveCmd.description": "ワークツリー削除前に実行するコマンド。ワークツリーのディレクトリ内で実行されます。コマンドが失敗またはキャンセルされた場合、削除は中止されます。コマンドで使用できる変数：\n\n- `$BASE_PATH`：メインリポジトリの完全パス\n- `$WORKTREE_PATH`：削除対象ワークツリーの完全パス\n\n例：\n`pnpm run worktree:teardown-db`",
     "config.worktreeDescriptionTemplate.description": "ワークツリーの説明テンプレートです。使用可能な変数：\n\n- `$FULL_PATH`：ワークツリーの完全パス\n- `$BASE_NAME`：ワークツリーのフォルダ名\n- `$RELATIVE_PATH`：相対パス（メインリポジトリのルートからの相対パス）",
     "config.terminalNameTemplate.description": "内蔵ターミナルの名称テンプレートです。使用可能な変数：\n\n- `$FULL_PATH`：フォルダの完全パス\n- `$BASE_NAME`：フォルダ名\n- `$LABEL`：表示名、フォルダ名またはワークツリーの表示名"
 }

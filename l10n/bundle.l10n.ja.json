@@ -150,5 +150,8 @@
     "Delete": "削除",
     "Prune": "整理",
     "Remove": "削除",
-    "Running post-create command...": "post-create コマンドを実行中..."
+    "Running post-create command...": "post-create コマンドを実行中...",
+    "Running pre-remove command...": "pre-remove コマンドを実行中...",
+    "Pre-remove command was cancelled": "pre-remove コマンドがキャンセルされました",
+    "Pre-remove command failed: {0}": "pre-remove コマンドが失敗しました：{0}"
 }

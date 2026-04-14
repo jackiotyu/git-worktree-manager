@@ -10,6 +10,7 @@ import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
+import { preRemoveWorktree } from '@/core/util/preRemoveWorktree';
 import { IBranchForWorktree, IWorktreeLess } from '@/types';
 
 async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 'force' | undefined> {
@@ -53,6 +54,9 @@ export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => 
 
         const needDeleteBranch = Config.get('promptDeleteBranchAfterWorktreeDeletion', false);
         const mainFolder = await getMainFolder(worktreePath);
+
+        // Run user-configured pre-remove command. If it fails, abort removal.
+        await preRemoveWorktree({ worktreePath, basePath: mainFolder });
 
         actionProgressWrapper(
             vscode.l10n.t('Removing worktree {path}', { path: worktreePath }),

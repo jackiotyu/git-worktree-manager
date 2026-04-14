@@ -150,5 +150,8 @@
     "Delete": "删除",
     "Prune": "清理",
     "Remove": "移除",
-    "Running post-create command...": "正在运行 post-create 命令..."
+    "Running post-create command...": "正在运行 post-create 命令...",
+    "Running pre-remove command...": "正在运行 pre-remove 命令...",
+    "Pre-remove command was cancelled": "pre-remove 命令已取消",
+    "Pre-remove command failed: {0}": "pre-remove 命令失败：{0}"
 }
