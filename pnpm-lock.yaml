@@ -37,10 +37,10 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
       '@types/node':
-        specifier: ~16.18.126
+        specifier: 16.x
         version: 16.18.126
       '@types/vscode':
-        specifier: ^1.110.0
+        specifier: ^1.60.0
         version: 1.110.0
       '@vscode/test-electron':
         specifier: ^2.5.2

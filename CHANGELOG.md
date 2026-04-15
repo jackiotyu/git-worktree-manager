@@ -1,3 +1,19 @@
+## v3.24.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.6...v3.24.0)
+
+### 🚀 Enhancements
+
+- **hooks:** Add preRemoveCmd lifecycle hook ([#50](https://github.com/jackiotyu/git-worktree-manager/pull/50))
+
+### 💅 Refactors
+
+- Move worktree hooks to core/hooks and add post-create hook ([6c7bd61](https://github.com/jackiotyu/git-worktree-manager/commit/6c7bd61))
+
+### 🤖 CI
+
+- Update GitHub Actions workflow to install dependencies ([f758080](https://github.com/jackiotyu/git-worktree-manager/commit/f758080))
+
 ## v3.23.6
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.5...v3.23.6)
