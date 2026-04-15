@@ -3,7 +3,7 @@ import { addWorktree } from '@/core/git/addWorktree';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { confirmModal } from '@/core/ui/modal';
 import { copyWorktreeFiles } from '@/core/util/copyWorktreeFiles';
-import { postCreateWorktree } from '@/core/util/postCreateWorktree';
+import { postCreateWorktree } from '@/core/hooks/postCreateWorktree';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
 import type { ICreateWorktreeInfo } from '@/types';

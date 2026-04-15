@@ -10,7 +10,7 @@ import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
-import { preRemoveWorktree } from '@/core/util/preRemoveWorktree';
+import { preRemoveWorktree } from '@/core/hooks/preRemoveWorktree';
 import { IBranchForWorktree, IWorktreeLess } from '@/types';
 
 async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 'force' | undefined> {

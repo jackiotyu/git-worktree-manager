@@ -1,35 +1,38 @@
 import * as vscode from 'vscode';
-import { Config } from '@/core/config/setting';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { withResolvers } from '@/core/util/promise';
 import { actionProgressWrapper } from '@/core/ui/progress';
 import logger from '@/core/log/logger';
 
-interface IPostCreateWorktreeInfo {
+export interface RunWorktreeHookCommandParams {
+    /** Final shell command after the caller substituted placeholders. */
+    cmdStr: string;
     worktreePath: string;
-    basePath: string;
+    progressTitle: string;
+    logTag: string;
+    /** Invoked when `exec` fails or the child errors; caller may swallow or throw. */
+    onExecError: (error: unknown) => void;
 }
-export async function postCreateWorktree(info: IPostCreateWorktreeInfo) {
-    const { worktreePath, basePath } = info;
-    const postCreateCmd = Config.get('postCreateCmd', '');
 
-    if (!postCreateCmd) return;
+/**
+ * Runs a user-configured worktree hook command (shared by post-create and pre-remove).
+ * Cancellation and `finally` ordering match legacy behavior; runtime errors go through `onExecError`.
+ */
+export async function runWorktreeHookCommand(params: RunWorktreeHookCommandParams): Promise<void> {
+    const { cmdStr, worktreePath, progressTitle, logTag, onExecError } = params;
 
     const waiting = withResolvers<void>();
     const abortController = new AbortController();
     const tokenSource = new vscode.CancellationTokenSource();
-    // Setup cancellation handling
+
     const disposeAbortSignal = tokenSource.token.onCancellationRequested(() => {
-        waiting.resolve();
         abortController.abort();
     });
 
     try {
-        const cmdStr = postCreateCmd.replace('$BASE_PATH', basePath).replace('$WORKTREE_PATH', worktreePath);
-
         actionProgressWrapper(
-            vscode.l10n.t('Running post-create command...'),
+            progressTitle,
             () => waiting.promise,
             () => {},
             tokenSource,
@@ -38,27 +41,22 @@ export async function postCreateWorktree(info: IPostCreateWorktreeInfo) {
         const execPromise = promisify(exec);
 
         const execChild = execPromise(cmdStr, {
-            cwd: worktreePath, // 默认工作目录是 worktree 目录
+            cwd: worktreePath,
             env: process.env,
             signal: abortController.signal,
             encoding: 'buffer',
         });
         execChild.child.stdout?.on('data', (data) => {
-            logger.log(`[postCreateWorktree] ${data.toString()}`);
+            logger.log(`[${logTag}] ${data.toString()}`);
         });
         execChild.child.stderr?.on('data', (data) => {
-            logger.error(`[postCreateWorktree] ${data.toString()}`);
+            logger.error(`[${logTag}] ${data.toString()}`);
         });
 
         await execChild;
-        waiting.resolve();
-        logger.log(`[postCreateWorktree] done`);
-    } catch (error: any) {
-        if (error.name === 'AbortError') {
-            // Ignore abort errors
-            return;
-        }
-        logger.error(`[postCreateWorktree] ${error}`);
+        logger.log(`[${logTag}] done`);
+    } catch (error: unknown) {
+        onExecError(error);
     } finally {
         disposeAbortSignal.dispose();
         tokenSource.dispose();
