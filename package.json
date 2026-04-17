@@ -1180,6 +1180,8 @@
     "lint": "eslint src --fix",
     "prettier": "prettier . --write",
     "test": "node ./out/test/runTest.js",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
@@ -1199,7 +1201,8 @@
     "ovsx": "^0.10.10",
     "prettier": "^3.8.1",
     "typescript": "~5.0.4",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.58.0",
+    "vitest": "^4.1.4"
   },
   "dependencies": {
     "dayjs": "^1.11.20",
