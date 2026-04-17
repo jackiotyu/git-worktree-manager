@@ -1,3 +1,15 @@
+## v3.24.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.24.0...v3.24.1)
+
+### 🩹 Fixes
+
+- **getWorktreeList:** Improve path normalization for worktree and main folder comparisons ([6026e9c](https://github.com/jackiotyu/git-worktree-manager/commit/6026e9c))
+
+### 🏡 Chore
+
+- **tests:** Add unit tests for path utilities using Vitest ([6fba2cd](https://github.com/jackiotyu/git-worktree-manager/commit/6fba2cd))
+
 ## v3.24.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.23.6...v3.24.0)
