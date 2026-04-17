@@ -2,7 +2,7 @@ import folderRoot from '@/core/folderRoot';
 import { execBase } from '@/core/git/exec-base';
 import { getNameRev } from '@/core/git/getNameRev';
 import { getMainFolder } from '@/core/git/getMainFolder';
-import { toSimplePath } from '@/core/util/path';
+import { comparePath, toSimplePath } from '@/core/util/path';
 import type { IWorktreeDetail, IWorktreeOutputItem } from '@/types';
 import logger from '@/core/log/logger';
 
@@ -45,10 +45,12 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
     let nameRev = '';
     if (!branchName) nameRev = (await getNameRev(item.worktree)).trim();
 
+    const worktreePath = toSimplePath(item.worktree);
+    const mainFolderPath = toSimplePath(mainFolder);
     const isTag = checkIsTag(nameRev);
     const isBare = Reflect.has(item, 'bare');
     const locked = Reflect.has(item, 'locked');
-    const isMain = item.worktree.trim() === mainFolder;
+    const isMain = comparePath(worktreePath, mainFolderPath);
     const isBranch = Boolean(branchName);
     const detached = Reflect.has(item, 'detached');
     const prunable = Reflect.has(item, 'prunable');
@@ -66,7 +68,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
 
     return {
         name,
-        path: toSimplePath(item.worktree),
+        path: worktreePath,
         isBare,
         isBranch,
         isTag,
@@ -75,7 +77,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
         locked,
         isMain,
         hash,
-        mainFolder,
+        mainFolder: mainFolderPath,
     };
 }
 

@@ -1,18 +1,31 @@
 import path from 'path';
 
-function toSimplePath(path: string) {
-    // Just handle the disk drive letter on Windows, keep other platforms unchanged
+function toSimplePath(input: string = '') {
+    const trimmed = input.trim();
+    if (!trimmed) return '';
+
+    let normalized = path.normalize(trimmed);
+
     if (process.platform === 'win32') {
-        const normalized = path.replace(/\\/g, '/');
+        // Normalize Windows paths into a stable comparison format.
+        normalized = normalized.replace(/\\/g, '/');
         const diskPattern = /^[a-zA-Z]:/;
         const match = normalized.match(diskPattern);
         if (match) {
-            return match[0].toLowerCase() + normalized.slice(match[0].length);
-        } else {
-            return normalized;
+            normalized = match[0].toLowerCase() + normalized.slice(match[0].length);
         }
     }
-    return path;
+
+    if (normalized.length > 1) {
+        // Remove trailing separators so equivalent paths compare consistently,
+        // but keep the separator for Windows drive roots like "c:/".
+        normalized = normalized.replace(/[\\/]+$/, '');
+        if (/^[a-z]:$/i.test(normalized)) {
+            normalized += '/';
+        }
+    }
+
+    return normalized;
 }
 
 function comparePath(path1: string = '', path2: string = '') {
