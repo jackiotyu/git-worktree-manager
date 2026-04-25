@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "skipLibCheck": true,
         "isolatedModules": true,
         "module": "commonjs",
         "target": "ES2020",
