@@ -4,9 +4,10 @@ function toSimplePath(input: string = '') {
     const trimmed = input.trim();
     if (!trimmed) return '';
 
-    let normalized = path.normalize(trimmed);
+    const isWindows = process.platform === 'win32';
+    let normalized = isWindows ? path.win32.normalize(trimmed) : path.posix.normalize(trimmed);
 
-    if (process.platform === 'win32') {
+    if (isWindows) {
         // Normalize Windows paths into a stable comparison format.
         normalized = normalized.replace(/\\/g, '/');
         const diskPattern = /^[a-zA-Z]:/;
@@ -24,7 +25,6 @@ function toSimplePath(input: string = '') {
             normalized += '/';
         }
     }
-
     return normalized;
 }
 
