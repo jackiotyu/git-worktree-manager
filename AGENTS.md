@@ -29,14 +29,31 @@ Git Worktree Manager is a VSCode extension designed to simplify Git worktree man
 
 ```
 ├── src/
-│   ├── core/           # Core functionality modules
-│   ├── constants.ts    # Constants definition
-│   ├── extension.ts    # Extension entry point
-│   └── types.ts        # Type definitions
-├── l10n/              # Internationalization files
-├── images/            # Icons and demo videos
-├── package.json       # Extension configuration and command definitions
-└── dist/              # Build output
+│   ├── core/                    # Core functionality modules
+│   │   ├── bootstrap.ts         # Extension initialization and registration
+│   │   ├── folderRoot.ts        # Manage root repository folders
+│   │   ├── gitHistory.ts        # Handle git history visualization
+│   │   ├── command/             # Command implementations (each command is a separate file)
+│   │   ├── config/              # Configuration management module (use Config class instead of direct vscode.workspace.getConfiguration)
+│   │   ├── event/               # Event emitters and handlers
+│   │   ├── git/                 # Git operations (worktrees, branches, commits, etc.)
+│   │   ├── hooks/               # Git hooks management
+│   │   ├── log/                 # Logging utility
+│   │   ├── quickPick/           # QuickPick UI helpers
+│   │   ├── state/               # Global and Workspace state management
+│   │   ├── treeView/            # Tree view provider implementations
+│   │   ├── ui/                  # UI components and utilities
+│   │   └── util/                # General utilities (file paths, system explorer, etc.)
+│   ├── constants.ts             # Constants and enum definitions
+│   ├── extension.ts             # Extension entry point (activate/deactivate)
+│   ├── types.ts                 # TypeScript type definitions
+│   └── @types/                  # Custom type definitions for vscode.git API
+├── l10n/                        # Internationalization files
+├── images/                      # Icons and demo videos
+├── package.json                 # Extension manifest and command definitions
+├── pnpm-workspace.yaml          # Workspace configuration
+├── rspack.config.js             # Build configuration
+└── dist/                        # Build output
 ```
 
 ### Development Guidelines
@@ -47,13 +64,22 @@ Git Worktree Manager is a VSCode extension designed to simplify Git worktree man
 - Use meaningful variable and function names
 - Add appropriate comments, especially for complex Git operations
 
-#### 2. VSCode Extension Best Practices
+#### 2. Configuration & State Management (IMPORTANT)
+- **Configuration Access**: MUST use `Config` class from `@/core/config/setting.ts`, NEVER directly call `vscode.workspace.getConfiguration()`
+  - ❌ WRONG: `vscode.workspace.getConfiguration('git-worktree-manager').get('key')`
+  - ✅ CORRECT: `Config.get('key', defaultValue)`
+  - Benefits: Type-safe, consistent defaults, easier to maintain, single point of change
+- **Global State**: Use `GlobalState` from `@/core/state/index.ts` for extension-wide persistent storage
+- **Workspace State**: Use `WorkspaceState` from `@/core/state/index.ts` for workspace-specific storage
+- All configuration defaults must match the corresponding values defined in `package.json`
+
+#### 4. VSCode Extension Best Practices
 - Use `vscode.commands.registerCommand` to register commands
 - Define UI elements through the `contributes` section in `package.json`
 - Use TreeDataProvider to implement tree views
 - Handle async operations and errors properly
 
-#### 3. Git Operations
+#### 5. Git Operations
 - Use `child_process` to execute Git commands
 - Always check Git command exit codes
 - Provide meaningful error messages
