@@ -1,0 +1,27 @@
+AGENTS.md
+  s_41dab1228ee827::t_5705d176c64c4c 32-57,59
+  s_41dab1228ee827::t_198a62608976e7 76,82
+  s_41dab1228ee827::t_c033ecbaefe8c9 67-75
+  h_efb56b9ff7aea6 2,4,6,8,10,12,19,21,27,29,58,60,66,81,87,92,97,99,105,110,115,117,122,124,129-131,137-139,145-147,152-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "b5c009796fd23ddf6b43a7d426d3bcc0f2d23493",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_41dab1228ee827": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "635c5883-e042-4a2f-9243-1cdfd7ca68c2",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
