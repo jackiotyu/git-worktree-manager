@@ -9,7 +9,7 @@ import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { parseUpstream } from '@/core/util/ref';
-import { formatTime } from '@/core/util/parse';
+import { formatTime, formatTimeDetail } from '@/core/util/parse';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
 import path from 'path';
@@ -168,7 +168,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
                 vscode.l10n.t(
                     '$(history) Last commit {0} _({1})_\n\n',
                     formatTime(item.lastCommitDate),
-                    item.lastCommitDate,
+                    formatTimeDetail(item.lastCommitDate),
                 ),
             );
         }

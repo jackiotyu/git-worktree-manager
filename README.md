@@ -88,6 +88,11 @@ Customize Git Worktree Manager to fit your workflow:
 - **`git-worktree-manager.treeView.toSCM`**  
   Display worktrees in the Source Control view.
 
+- **`git-worktree-manager.treeView.worktreeDescriptionTemplate`**  
+  Customize the description next to each worktree in the tree view. Handy for spotting stale worktrees at a glance.  
+  Available variables: `$FULL_PATH`, `$BASE_NAME`, `$RELATIVE_PATH`, `$LAST_COMMIT` (relative time of the last commit, e.g. "3 weeks ago"). Hover a worktree to see the absolute timestamp.  
+  **Example:** `"$RELATIVE_PATH · $LAST_COMMIT"`
+
 - **`git-worktree-manager.worktreeCopyPatterns`**  
   Specify files or directories to be copied into a newly created worktree  
   (for example, local config files or environment-specific assets).  
