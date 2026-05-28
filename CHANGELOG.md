@@ -1,3 +1,23 @@
+## v3.24.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.24.1...v3.24.2)
+
+### 🚀 Enhancements
+
+- **treeView:** Show last commit time on worktree items ([#51](https://github.com/jackiotyu/git-worktree-manager/pull/51))
+
+### 🩹 Fixes
+
+- **path:** Enhance path normalization for cross-platform compatibility ([952d2a0](https://github.com/jackiotyu/git-worktree-manager/commit/952d2a0))
+
+### 📖 Documentation
+
+- Update AGENTS.md with enhanced development guidelines and project structure ([b5c0097](https://github.com/jackiotyu/git-worktree-manager/commit/b5c0097))
+
+### 🏡 Chore
+
+- Add pnpm workspace configuration to allow builds for specific packages ([0989519](https://github.com/jackiotyu/git-worktree-manager/commit/0989519))
+
 ## v3.24.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.24.0...v3.24.1)
