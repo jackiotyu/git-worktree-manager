@@ -16,6 +16,7 @@ export interface IWorktreeDetail {
     isMain: boolean;
     folderName?: string;
     mainFolder: string;
+    lastCommitDate?: string;
 }
 
 export interface AheadBehindInfo {

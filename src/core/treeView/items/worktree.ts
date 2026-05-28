@@ -9,6 +9,7 @@ import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { parseUpstream } from '@/core/util/ref';
+import { formatTime, formatTimeDetail } from '@/core/util/parse';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
 import path from 'path';
@@ -81,10 +82,13 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
             ? path.posix.basename(worktreePath)
             : path.posix.relative(this.viewItem.mainFolder, worktreePath);
 
+        const lastCommit = this.viewItem.lastCommitDate ? formatTime(this.viewItem.lastCommitDate) : '';
+
         const description = descriptionTemplate
             .replace('$FULL_PATH', worktreePath)
             .replace('$BASE_NAME', path.posix.basename(worktreePath))
-            .replace('$RELATIVE_PATH', relativePath);
+            .replace('$RELATIVE_PATH', relativePath)
+            .replace('$LAST_COMMIT', lastCommit);
 
         descriptionList.push(description);
         this.description = descriptionList.join('');
@@ -159,6 +163,15 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
             tooltip.appendMarkdown(vscode.l10n.t('✨ Main worktree folder, cannot be cleared or locked\n\n'));
         this.ahead && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-up) Ahead commits {0}\n\n', `${this.ahead}`));
         this.behind && tooltip.appendMarkdown(vscode.l10n.t('$(arrow-down) Behind commits {0}\n\n', `${this.behind}`));
+        if (item.lastCommitDate) {
+            tooltip.appendMarkdown(
+                vscode.l10n.t(
+                    '$(history) Last commit {0} _({1})_\n\n',
+                    formatTime(item.lastCommitDate),
+                    formatTimeDetail(item.lastCommitDate),
+                ),
+            );
+        }
         !isCurrent && tooltip.appendMarkdown(vscode.l10n.t('*Click to open this worktree in a new window*\n\n'));
 
         this.tooltip = tooltip;

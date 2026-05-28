@@ -88,6 +88,11 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 - **`git-worktree-manager.treeView.toSCM`**  
   在源码管理（Source Control）视图中显示 worktree。
 
+- **`git-worktree-manager.treeView.worktreeDescriptionTemplate`**  
+  自定义 worktree 在树视图中显示的描述文本，便于快速识别陈旧的 worktree。  
+  可用变量：`$FULL_PATH`、`$BASE_NAME`、`$RELATIVE_PATH`、`$LAST_COMMIT`（最后一次提交的相对时间，例如 “3 周前”）。鼠标悬停可查看绝对时间戳。  
+  **示例:** `"$RELATIVE_PATH · $LAST_COMMIT"`
+
 - **`git-worktree-manager.worktreeCopyPatterns`**  
   指定在创建新 worktree 时需要复制的文件或目录  
   （例如本地配置文件或环境相关资源）。  

@@ -68,6 +68,7 @@
     "Push commit ( {0} → {1} ) on {2}": "{2} で コミット ( {0} → {1} ) をプッシュ",
     "$(arrow-up) Ahead commits {0}\n\n": "$(arrow-up) プッシュ可能なコミット {0}\n\n",
     "$(arrow-down) Behind commits {0}\n\n": "$(arrow-down) プル可能なコミット {0}\n\n",
+    "$(history) Last commit {0} _({1})_\n\n": "$(history) 最終コミット {0} _({1})_\n\n",
     "*Click to open this worktree in a new window*\n\n": "*クリックしてこのワークツリーを新しいウィンドウで開く*\n\n",
     "$(folder) folder {0}\n\n": "$(folder) フォルダ {0}\n\n",
     "$(file) file {0}\n\n": "$(file) ファイル {0}\n\n",

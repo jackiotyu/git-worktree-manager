@@ -2,6 +2,7 @@ import folderRoot from '@/core/folderRoot';
 import { execBase } from '@/core/git/exec-base';
 import { getNameRev } from '@/core/git/getNameRev';
 import { getMainFolder } from '@/core/git/getMainFolder';
+import { getLashCommitDetail } from '@/core/git/getLashCommitDetail';
 import { comparePath, toSimplePath } from '@/core/util/path';
 import type { IWorktreeDetail, IWorktreeOutputItem } from '@/types';
 import logger from '@/core/log/logger';
@@ -66,6 +67,12 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
 
     const hash = item.HEAD || '';
 
+    let lastCommitDate: string | undefined;
+    if (!isBare && !prunable) {
+        const detail = await getLashCommitDetail(worktreePath, ['cI']);
+        lastCommitDate = detail.cI || undefined;
+    }
+
     return {
         name,
         path: worktreePath,
@@ -78,6 +85,7 @@ async function buildWorktreeDetail(item: IWorktreeOutputItem, mainFolder: string
         isMain,
         hash,
         mainFolder: mainFolderPath,
+        lastCommitDate,
     };
 }
 

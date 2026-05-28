@@ -38,6 +38,10 @@ export function formatTime(time: string) {
     return dayjs(time).fromNow();
 }
 
+export function formatTimeDetail(time: string) {
+    return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
+}
+
 export function parseObjStr(str: string) {
     try {
         return JSON.parse(str);
