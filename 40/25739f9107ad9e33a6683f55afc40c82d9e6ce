@@ -1,0 +1,19 @@
+package.json
+  s_6dd4bbc961d874::t_b43e76b4b146b0 1188-1189
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "4025739f9107ad9e33a6683f55afc40c82d9e6ce",
+  "prompts": {},
+  "sessions": {
+    "s_6dd4bbc961d874": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "4226478f-eec2-4fc5-a9b3-0730ee036afb",
+        "model": "default"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
