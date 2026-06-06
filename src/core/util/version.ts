@@ -51,7 +51,12 @@ export function compare(v1: string | Version, v2: string | Version): VersionComp
     return 0;
 }
 
-export function from(major: string | number, minor: string | number, patch?: string | number, pre?: string): Version {
+export function from(
+    major: string | number,
+    minor: string | number,
+    patch?: string | number | null,
+    pre?: string,
+): Version {
     return {
         major: typeof major === 'string' ? parseInt(major, 10) : major,
         minor: typeof minor === 'string' ? parseInt(minor, 10) : minor,

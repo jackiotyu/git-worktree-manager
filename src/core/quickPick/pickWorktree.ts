@@ -52,6 +52,7 @@ interface IWorktreePick extends vscode.QuickPickItem {
     fsPath: string;
     uriPath: string;
     item?: IRecentItem;
+    resourceUri?: vscode.Uri;
 }
 
 interface IWorktreeSeparator extends vscode.QuickPickItem {
@@ -59,6 +60,7 @@ interface IWorktreeSeparator extends vscode.QuickPickItem {
     uriPath: '';
     fsPath: '';
     item?: IRecentItem;
+    resourceUri?: vscode.Uri;
 }
 
 type WorktreePick = IWorktreePick | IWorktreeSeparator;
