@@ -58,6 +58,7 @@ export default [
             '*.md',
             'src/@types/vscode.git.enums.ts',
             'rspack.config.js',
+            'rstest.config.js',
         ],
     },
 ];

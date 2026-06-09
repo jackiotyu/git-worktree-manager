@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, rs } from '@rstest/core';
 import { sanitizeBranchName } from '../../core/util/branch';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-vi.mock('vscode', () => ({
+rs.mock('vscode', () => ({
     workspace: {
         getConfiguration: () => ({
             get: (key: string) => {

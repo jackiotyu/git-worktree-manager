@@ -1,11 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, rs } from '@rstest/core';
 import path from 'path';
 import { comparePath, toSimplePath, findPrefixPath, isSubPath } from '../../core/util/path';
 
 function withPlatform(platform: NodeJS.Platform, run: () => void) {
     describe(platform, () => {
         beforeEach(() => {
-            vi.spyOn(process, 'platform', 'get').mockReturnValue(platform);
+            rs.spyOn(process, 'platform', 'get').mockReturnValue(platform);
         });
 
         run();
@@ -13,7 +13,7 @@ function withPlatform(platform: NodeJS.Platform, run: () => void) {
 }
 
 afterEach(() => {
-    vi.restoreAllMocks();
+    rs.restoreAllMocks();
 });
 
 describe('toSimplePath', () => {

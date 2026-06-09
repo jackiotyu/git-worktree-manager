@@ -1179,14 +1179,15 @@
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "lint": "eslint src --fix",
     "prettier": "prettier . --write",
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest",
+    "test:unit": "rstest",
+    "test:unit:watch": "rstest --watch",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@rspack/cli": "^2.0.6",
     "@rspack/core": "^2.0.6",
+    "@rstest/core": "^0.10.3",
     "@swc/helpers": "^0.5.23",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "~20.19.41",
@@ -1200,8 +1201,7 @@
     "ovsx": "^0.10.12",
     "prettier": "^3.8.3",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.60.1",
-    "vitest": "^4.1.8"
+    "typescript-eslint": "^8.60.1"
   },
   "dependencies": {
     "dayjs": "^1.11.21",

@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, rs } from '@rstest/core';
 import { formatQuery, formatSimpleQuery, parseOutput, parseObjStr } from '../../core/util/parse';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-vi.mock('vscode', () => ({
+rs.mock('vscode', () => ({
     env: { language: 'en' },
 }));
 
