@@ -1,0 +1,30 @@
+package.json
+  s_f44ea60f98a9e3::t_a1f60692d9e25f 1182-1183
+  s_f44ea60f98a9e3::t_89ae2051ef6411 1190,1204
+src/test/unit/parse.test.ts
+  s_f44ea60f98a9e3::t_f1d48db9464cba 5
+src/test/unit/branch.test.ts
+  s_f44ea60f98a9e3::t_e1a7e8fc06d8b4 1,5
+rstest.config.js
+  s_f44ea60f98a9e3::t_f35506814334c5 1-14
+src/test/unit/path.test.ts
+  s_f44ea60f98a9e3::t_042772e04db2f0 16
+  s_f44ea60f98a9e3::t_d719f48e7ac426 8
+  s_f44ea60f98a9e3::t_507a76d8a71b75 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "92654f96a32e06bff52effb34a2e2fc9467420e7",
+  "prompts": {},
+  "sessions": {
+    "s_f44ea60f98a9e3": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8b3abc45-3d7c-4166-bcfc-0f4c608c21a5",
+        "model": "default"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
