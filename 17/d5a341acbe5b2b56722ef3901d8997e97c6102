@@ -1,0 +1,21 @@
+package.json
+  s_a6a072aabc3884::t_efcbfcb749c0f7 1198-1199
+  s_a6a072aabc3884::t_447e1a592075ed 1187
+  s_a6a072aabc3884::t_1761e7bd4ff5cf 1204
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "17d5a341acbe5b2b56722ef3901d8997e97c6102",
+  "prompts": {},
+  "sessions": {
+    "s_a6a072aabc3884": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d228d5f5-0473-425c-9591-2d69a71225ba",
+        "model": "default"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
