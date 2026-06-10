@@ -562,7 +562,6 @@ class ActionService implements IActionService {
         return this.worktreeButtons;
     };
     updateList = (forceUpdate?: boolean) => {
-        let items: WorktreePick[] = [];
         if (this.displayType === DefaultDisplayList.recentlyOpened) {
             if (forceUpdate) {
                 this.recentUriCache = getRecentItemCache();
@@ -579,7 +578,7 @@ class ActionService implements IActionService {
         } else if (this.displayType === DefaultDisplayList.favorites) {
             this.quickPick.items = mapWorkspacePickItems(getFavoriteCache(), DefaultDisplayList.favorites);
         } else {
-            items = this.displayAll
+            let items: WorktreePick[] = this.displayAll
                 ? mapWorktreePickItems(GlobalState.get('workTreeCache', []))
                 : mapWorktreePickItems(WorkspaceState.get('workTreeCache', []));
             if (this.sortByBranch) {
