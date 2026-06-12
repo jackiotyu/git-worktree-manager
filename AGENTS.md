@@ -1,159 +1,20 @@
 # AGENTS.md
 
-## AI Agent Development Guide
+## Must Do
 
-This document provides guidance for AI agents (such as Kiro, Claude, ChatGPT, etc.) when developing the Git Worktree Manager extension.
+- Extension config: `Config` (`@/core/config/setting.ts`); new keys sync `package.json` + `Config.get()` overload/`defaultValue` + `l10n/`
+- State: `GlobalState` / `WorkspaceState` — not `context.globalState` directly
+- User messages: `Alert.show*Message`
+- Git: `src/core/git/` via `exec` / `execAuto`
+- Log: `logger` (`@/core/log/logger`)
+- i18n: `vscode.l10n.t()` in code, `%key%` in `package.json`, translations in `l10n/bundle.l10n.{zh-cn,zh-tw,ja}.json`
+- Tree UI: fire events in `@/core/event/events.ts` after data changes; single item via `TreeViewManager.updateWorktreeView` / `updateGitFolderView`
+- Worktree create: `createWorktreeFromInfo`; lock/unlock/repair: `commonWorktreeCmd`
 
-### Project Overview
+## Must Not Do
 
-Git Worktree Manager is a VSCode extension designed to simplify Git worktree management. It allows developers to work on different branches of the same repository in parallel without frequently switching branches or dealing with stash operations.
-
-### Core Features
-
-- **Worktree Management**: Create, delete, and switch Git worktrees
-- **Workspace Integration**: Add worktrees to VSCode workspace
-- **Favorites System**: Save frequently used worktrees for quick access
-- **Multi-language Support**: Supports English, Simplified Chinese, Traditional Chinese, and Japanese
-- **Terminal Integration**: Open terminals in specified directories
-- **Branch Management**: Create worktrees from branches, switch branches, etc.
-
-### Tech Stack
-
-- **Language**: TypeScript
-- **Framework**: VSCode Extension API
-- **Build Tool**: Rspack
-- **Package Manager**: pnpm
-- **Internationalization**: VSCode l10n
-
-### Project Structure
-
-```
-├── src/
-│   ├── core/                    # Core functionality modules
-│   │   ├── bootstrap.ts         # Extension initialization and registration
-│   │   ├── folderRoot.ts        # Manage root repository folders
-│   │   ├── gitHistory.ts        # Handle git history visualization
-│   │   ├── command/             # Command implementations (each command is a separate file)
-│   │   ├── config/              # Configuration management module (use Config class instead of direct vscode.workspace.getConfiguration)
-│   │   ├── event/               # Event emitters and handlers
-│   │   ├── git/                 # Git operations (worktrees, branches, commits, etc.)
-│   │   ├── hooks/               # Git hooks management
-│   │   ├── log/                 # Logging utility
-│   │   ├── quickPick/           # QuickPick UI helpers
-│   │   ├── state/               # Global and Workspace state management
-│   │   ├── treeView/            # Tree view provider implementations
-│   │   ├── ui/                  # UI components and utilities
-│   │   └── util/                # General utilities (file paths, system explorer, etc.)
-│   ├── constants.ts             # Constants and enum definitions
-│   ├── extension.ts             # Extension entry point (activate/deactivate)
-│   ├── types.ts                 # TypeScript type definitions
-│   └── @types/                  # Custom type definitions for vscode.git API
-├── l10n/                        # Internationalization files
-├── images/                      # Icons and demo videos
-├── package.json                 # Extension manifest and command definitions
-├── pnpm-workspace.yaml          # Workspace configuration
-├── rspack.config.js             # Build configuration
-└── dist/                        # Build output
-```
-
-### Development Guidelines
-
-#### 1. Code Style
-- Use TypeScript strict mode
-- Follow ESLint and Prettier configurations
-- Use meaningful variable and function names
-- Add appropriate comments, especially for complex Git operations
-
-#### 2. Configuration & State Management (IMPORTANT)
-- **Configuration Access**: MUST use `Config` class from `@/core/config/setting.ts`, NEVER directly call `vscode.workspace.getConfiguration()`
-  - ❌ WRONG: `vscode.workspace.getConfiguration('git-worktree-manager').get('key')`
-  - ✅ CORRECT: `Config.get('key', defaultValue)`
-  - Benefits: Type-safe, consistent defaults, easier to maintain, single point of change
-- **Global State**: Use `GlobalState` from `@/core/state/index.ts` for extension-wide persistent storage
-- **Workspace State**: Use `WorkspaceState` from `@/core/state/index.ts` for workspace-specific storage
-- All configuration defaults must match the corresponding values defined in `package.json`
-
-#### 4. VSCode Extension Best Practices
-- Use `vscode.commands.registerCommand` to register commands
-- Define UI elements through the `contributes` section in `package.json`
-- Use TreeDataProvider to implement tree views
-- Handle async operations and errors properly
-
-#### 5. Git Operations
-- Use `child_process` to execute Git commands
-- Always check Git command exit codes
-- Provide meaningful error messages
-- Support path handling for different operating systems
-
-#### 4. Internationalization
-- All user-visible strings should be internationalized
-- Use `vscode.l10n.t()` for translations
-- Maintain translation files in the `l10n/` directory
-
-#### 5. Configuration Management
-- Read configuration through `vscode.workspace.getConfiguration()`
-- Define configuration items in `package.json`
-- Provide reasonable default values
-
-### Common Development Tasks
-
-#### Adding New Commands
-1. Define the command in `package.json` under `contributes.commands`
-2. Implement command logic in the appropriate module
-3. Register the command in `extension.ts` or related modules
-4. Add necessary internationalization strings
-
-#### Modifying UI Elements
-1. Update the `contributes` configuration in `package.json`
-2. Modify the corresponding TreeDataProvider or WebView
-3. Update related icons and styles
-
-#### Adding Configuration Items
-1. Define in `package.json` under `contributes.configuration`
-2. Read using `vscode.workspace.getConfiguration()` in code
-3. Add internationalization strings for configuration descriptions
-
-### Testing Guidelines
-
-- Test on different operating systems (Windows, macOS, Linux)
-- Test various Git repository states (clean, with uncommitted changes, etc.)
-- Verify correct display of internationalized strings
-- Test error handling and edge cases
-
-### Debugging Tips
-
-- Use VSCode's Extension Development Host for debugging
-- Check extension logs in the "Output" panel
-- Use `console.log` or `logger.log` for debug output
-- Examine Git command output and error messages
-
-### Release Process
-
-1. Update version number (`package.json`)
-2. Update `CHANGELOG.md`
-3. Run tests to ensure functionality
-4. Build extension package: `vsce package`
-5. Publish to VSCode Marketplace
-
-### Contribution Guidelines
-
-- Follow existing code style and architecture
-- Add appropriate tests for new features
-- Update relevant documentation
-- Ensure backward compatibility
-- Provide clear PR descriptions
-
-### Useful Resources
-
-- [VSCode Extension API](https://code.visualstudio.com/api)
-- [Git Worktree Documentation](https://git-scm.com/docs/git-worktree)
-- [VSCode Internationalization Guide](https://code.visualstudio.com/api/pluginapis/localization)
-- [Project GitHub Repository](https://github.com/jackiotyu/git-worktree-manager)
-
-### Important Notes
-
-- Always consider cross-platform compatibility
-- Handle cases where Git repository doesn't exist or is corrupted
-- Provide user-friendly error messages
-- Maintain extension performance and responsiveness
-- Follow VSCode UX guidelines
+- `getConfiguration('git-worktree-manager')` — `Config` only (`getConfiguration('git')` for built-in git extension is OK)
+- `window.show*Message`, `console.log`, raw `spawn git`
+- Logic in `extension.ts` beyond `bootstrap()`
+- Refresh tree/cache by touching `TreeDataProvider` or calling cache updaters directly — use events (handlers are debounced 1s)
+- Hardcoded user-visible strings — use i18n
