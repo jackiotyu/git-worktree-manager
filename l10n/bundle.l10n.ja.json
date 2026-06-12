@@ -44,6 +44,7 @@
     "Select command": "コマンドを選択",
     "Select the command you want to execute in the terminal": "ターミナルで実行するコマンドを選択してください",
     "Sort by branch name": "ブランチ名でソート",
+    "Sort by time": "時間でソート",
     "Sort by repository": "リポジトリでソート",
     "Successfully removed the worktree for the {0} folder": "{0} フォルダのワークツリーを削除しました",
     "Worktree removal failed\n\n {0}": "ワークツリーの削除に失敗しました\n\n{0}",

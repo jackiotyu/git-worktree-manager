@@ -1,9 +1,15 @@
 import * as vscode from 'vscode';
-import { formatTime } from '@/core/util/parse';
+import { formatTime, parseTimestamp } from '@/core/util/parse';
 import { checkGitValid } from '@/core/git/checkGitValid';
 import { getAllRefList } from '@/core/git/getAllRefList';
 import { Alert } from '@/core/ui/message';
-import { backButton, deleteBranchQuickInputButton, renameBranchQuickInputButton } from './quickPick.button';
+import {
+    backButton,
+    deleteBranchQuickInputButton,
+    renameBranchQuickInputButton,
+    sortByBranchQuickInputButton,
+    sortByTimeQuickInputButton,
+} from './quickPick.button';
 import { GlobalState } from '@/core/state';
 import { refArgList, HEAD, Commands } from '@/constants';
 import type { RefItem, RefList, RepoRefList, IPickBranch, IPickBranchResolveValue, BranchForWorktree } from '@/types';
@@ -19,6 +25,7 @@ type ResolveType = (value: ResolveValue) => void;
 type RejectType = (value?: any) => void;
 
 type CheckoutType = 'local' | 'remote' | 'tags';
+type BranchSortBy = 'time' | 'name';
 
 interface HandlerArgs {
     resolve: ResolveType;
@@ -28,6 +35,7 @@ interface HandlerArgs {
 
 interface TriggerButtonHandlerArgs extends HandlerArgs {
     event: vscode.QuickInputButton;
+    onSortChange: (sortBy: BranchSortBy) => void;
 }
 
 interface HandleTriggerItemButtonArgs {
@@ -41,14 +49,14 @@ async function createBranchStrategy({
     showSelectRef,
     quickPick,
     resolve,
-    showCreate,
+    refreshItems,
 }: {
     cwd: string;
     mainFolder: string;
     showSelectRef: boolean;
     quickPick: vscode.QuickPick<BranchForWorktree>;
     resolve: (value: ResolveValue) => void;
-    showCreate: boolean;
+    refreshItems: () => void;
 }) {
     let branchItem: IPickBranchResolveValue = {};
     if (showSelectRef) {
@@ -67,7 +75,7 @@ async function createBranchStrategy({
         return;
     }
     if (!branchItem) {
-        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
+        refreshItems();
         quickPick.show();
         return;
     }
@@ -78,7 +86,7 @@ async function createBranchStrategy({
         return;
     }
     if (!branchName) {
-        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
+        refreshItems();
         quickPick.show();
         return;
     }
@@ -99,8 +107,8 @@ async function handleAccept({
     quickPick,
     cwd,
     mainFolder,
-    showCreate,
-}: HandlerArgs & { cwd: string; mainFolder: string; showCreate: boolean }) {
+    refreshItems,
+}: HandlerArgs & { cwd: string; mainFolder: string; refreshItems: () => void }) {
     try {
         const selected = quickPick.selectedItems[0];
         if (isSelectCreateBranch(selected)) {
@@ -110,7 +118,7 @@ async function handleAccept({
                 showSelectRef: selected === createNewBranchFromItem,
                 quickPick,
                 resolve,
-                showCreate,
+                refreshItems,
             });
             return;
         }
@@ -132,10 +140,18 @@ function handleHide({ resolve, quickPick }: HandlerArgs) {
     quickPick.dispose();
 }
 
-function handleTriggerButton({ resolve, quickPick, event }: TriggerButtonHandlerArgs) {
+function handleTriggerButton({ resolve, quickPick, event, onSortChange }: TriggerButtonHandlerArgs) {
     if (event === backButton) {
         resolve();
         quickPick.hide();
+        return;
+    }
+    if (event === sortByBranchQuickInputButton) {
+        onSortChange('name');
+        return;
+    }
+    if (event === sortByTimeQuickInputButton) {
+        onSortChange('time');
     }
 }
 
@@ -172,6 +188,22 @@ const getRefList = async (cwd?: string) => {
     const allRefList = await getAllRefList([...refArgList], cwd);
     return mapRefList(allRefList);
 };
+
+const getRefSortName = (item: RefItem) => item['refname:short'];
+const getRefSortDate = (item: RefItem) => item['*authordate'] || item.authordate || '';
+
+const sortRefList = (list: RefList, sortBy: BranchSortBy): RefList => {
+    const sorted = [...list];
+    if (sortBy === 'name') {
+        sorted.sort((a, b) => getRefSortName(a).localeCompare(getRefSortName(b)));
+    } else {
+        sorted.sort((a, b) => parseTimestamp(getRefSortDate(b)) - parseTimestamp(getRefSortDate(a)));
+    }
+    return sorted;
+};
+
+const getSortButton = (sortBy: BranchSortBy) =>
+    sortBy === 'name' ? sortByTimeQuickInputButton : sortByBranchQuickInputButton;
 
 /**
  * Get normalized "git.checkoutType" setting.
@@ -353,6 +385,7 @@ const mapRefItems = ({
     showCreate,
     mainFolder,
     checkoutTypes,
+    sortBy,
 }: {
     branchList: RefList;
     remoteBranchList: RefList;
@@ -360,6 +393,7 @@ const mapRefItems = ({
     showCreate: boolean;
     mainFolder: string;
     checkoutTypes: CheckoutType[];
+    sortBy: BranchSortBy;
 }) => {
     let defaultBranch: RefItem | undefined = void 0;
     const branchItems: RefList = [];
@@ -370,11 +404,14 @@ const mapRefItems = ({
         else branchItems.push(item);
     });
 
-    const items = [...getPreItems(showCreate), ...mapWorktreeBranchItems(worktreeItems, mainFolder, defaultBranch)];
+    const items = [
+        ...getPreItems(showCreate),
+        ...mapWorktreeBranchItems(sortRefList(worktreeItems, sortBy), mainFolder, defaultBranch),
+    ];
     const checkoutTypeItemsGetters = {
-        local: () => mapBranchItems(branchItems, mainFolder),
-        remote: () => mapRemoteBranchItems(remoteBranchList),
-        tags: () => mapTagItems(tagList),
+        local: () => mapBranchItems(sortRefList(branchItems, sortBy), mainFolder),
+        remote: () => mapRemoteBranchItems(sortRefList(remoteBranchList, sortBy)),
+        tags: () => mapTagItems(sortRefList(tagList, sortBy)),
     };
     // 根据配置的 checkoutType 顺序添加对应的 items
     checkoutTypes.forEach((type) => {
@@ -424,16 +461,18 @@ const updateQuickItems = async ({
     cwd,
     showCreate,
     quickPick,
+    sortBy,
 }: {
     mainFolder: string;
     cwd: string;
     showCreate: boolean;
     quickPick: vscode.QuickPick<BranchForWorktree>;
+    sortBy: BranchSortBy;
 }) => {
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
     const checkoutTypes = getCheckoutTypes();
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutTypes });
+    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutTypes, sortBy });
 };
 
 export const pickBranch: IPickBranch = async ({
@@ -453,20 +492,37 @@ export const pickBranch: IPickBranch = async ({
             return;
         }
         const quickPick = vscode.window.createQuickPick();
+        const sortState = { sortBy: 'name' as BranchSortBy };
+        const refreshItems = () =>
+            updateQuickItems({ mainFolder, cwd, showCreate, quickPick, sortBy: sortState.sortBy });
+        const updateButtons = () => {
+            quickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
+        };
         quickPick.title = title;
         quickPick.placeholder = placeholder;
         quickPick.canSelectMany = false;
-        quickPick.buttons = [backButton];
+        updateButtons();
         quickPick.step = step;
         quickPick.totalSteps = totalSteps;
-        quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, showCreate }));
+        quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, refreshItems }));
         quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
-        quickPick.onDidTriggerButton((event) => handleTriggerButton({ resolve, reject, event, quickPick }));
+        quickPick.onDidTriggerButton((event) =>
+            handleTriggerButton({
+                resolve,
+                reject,
+                event,
+                quickPick,
+                onSortChange: (sortBy) => {
+                    sortState.sortBy = sortBy;
+                    updateButtons();
+                    refreshItems();
+                },
+            }),
+        );
         quickPick.onDidTriggerItemButton((event) => handleTriggerItemButton({ event }));
-        // TODO 按名称排序
         quickPick.show();
         quickPick.busy = true;
-        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
+        refreshItems();
         const { branchList, remoteBranchList, tagList } = await getRefList(cwd);
         if (!branchList) {
             quickPick.hide();
@@ -477,7 +533,7 @@ export const pickBranch: IPickBranch = async ({
             remoteBranchList,
             tagList,
         });
-        updateQuickItems({ mainFolder, cwd, showCreate, quickPick });
+        refreshItems();
         quickPick.busy = false;
         return await promise;
     } catch (error) {

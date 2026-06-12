@@ -38,6 +38,11 @@ export function formatTime(time: string) {
     return dayjs(time).fromNow();
 }
 
+export function parseTimestamp(time: string) {
+    const parsed = dayjs(time);
+    return parsed.isValid() ? parsed.valueOf() : 0;
+}
+
 export function formatTimeDetail(time: string) {
     return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
 }

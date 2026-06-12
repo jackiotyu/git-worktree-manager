@@ -44,6 +44,7 @@
     "Select command": "選擇命令",
     "Select the command you want to execute in the terminal": "選擇在終端機中需要執行的命令",
     "Sort by branch name": "根據分支名稱排序",
+    "Sort by time": "根據時間排序",
     "Sort by repository": "根據儲存庫排序",
     "Successfully removed the worktree for the {0} folder": "成功移除 {0} 資料夾的 Worktree",
     "Worktree removal failed\n\n {0}": "Worktree 移除失敗\n\n{0}",

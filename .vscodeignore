@@ -26,3 +26,4 @@ README.zh-CN.md
 .github/**
 .nvmrc
 .prettierignore
+.codegraph/

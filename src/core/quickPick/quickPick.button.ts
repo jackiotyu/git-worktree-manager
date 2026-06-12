@@ -83,6 +83,10 @@ export const sortByRepoQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('list-flat'),
     tooltip: vscode.l10n.t('Sort by repository'),
 });
+export const sortByTimeQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('history'),
+    tooltip: vscode.l10n.t('Sort by time'),
+});
 export const settingQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('gear'),
     tooltip: vscode.l10n.t('Open Settings'),
