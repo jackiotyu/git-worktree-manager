@@ -1190,7 +1190,7 @@
     "@rstest/core": "^0.10.3",
     "@swc/helpers": "^0.5.23",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "~20.19.43",
+    "@types/node": "~25.9.3",
     "@types/vscode": "~1.85.0",
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.9.2",
