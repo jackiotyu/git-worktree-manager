@@ -1,3 +1,5 @@
 allowBuilds:
-    '@vscode/vsce-sign': true
-    keytar: true
+  '@vscode/vsce-sign': true
+  keytar: true
+minimumReleaseAgeExclude:
+  - eslint@10.5.0
