@@ -1,0 +1,83 @@
+# Dependabot version updates configuration
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # Enable version updates for npm dependencies (pnpm is supported under npm ecosystem)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 10
+
+    # Auto-assign labels to Dependabot PRs
+    labels:
+      - "dependencies"
+      - "javascript"
+
+    # Match conventional commit message style
+    commit-message:
+      prefix: "chore(deps)"
+
+    # Restrict updates for critical VS Code development dependencies
+    ignore:
+      # VS Code extension targeting:
+      # Keep @types/vscode matching the engines.vscode capability (^1.85.0)
+      # Only allow patch updates (~1.85.x) to prevent api mismatch
+      - dependency-name: "@types/vscode"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+
+      # TypeScript major/minor updates can introduce breaking compiler changes,
+      # it's safer to upgrade manually.
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+
+    # Group dependencies to reduce Pull Request noise
+    groups:
+      # Group ESLint, Prettier, and related tools
+      lint-and-format:
+        patterns:
+          - "eslint*"
+          - "prettier*"
+          - "typescript-eslint*"
+          - "@eslint/*"
+
+      # Group Rspack build tools
+      rspack:
+        patterns:
+          - "@rspack/*"
+
+      # Group TypeScript definitions (except vscode definitions which are ignored for minor/major)
+      types:
+        patterns:
+          - "@types/*"
+
+      # Group testing frameworks and utilities
+      testing:
+        patterns:
+          - "@rstest/*"
+          - "@vscode/test-electron"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+    commit-message:
+      prefix: "chore(deps)"
