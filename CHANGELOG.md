@@ -1,3 +1,11 @@
+## v3.25.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.24.2...v3.25.0)
+
+### 🚀 Enhancements
+
+- **quickPick:** Add sorting options by time in branch picker ([2392065](https://github.com/jackiotyu/git-worktree-manager/commit/2392065))
+
 ## v3.24.2
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.24.1...v3.24.2)
