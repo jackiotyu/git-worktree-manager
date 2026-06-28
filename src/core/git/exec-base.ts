@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import { Config } from '@/core/config/setting';
 import { withResolvers } from '@/core/util/promise';
+import { buildSafeArgs } from '@/core/util/gitArgs';
 import logger from '@/core/log/logger';
 import treeKill from 'tree-kill';
 import { gitApi } from '@/core/git/scmGit';
@@ -31,7 +32,9 @@ export const execBase = async (cwd: string, args?: string[], token?: vscode.Canc
         env['http_proxy'] = httpProxy;
         env['https_proxy'] = httpProxy;
     }
-    const proc = cp.spawn(gitPath, args, {
+    const safeArgs = buildSafeArgs(Config.get('safeBareRepository', 'all'), args);
+
+    const proc = cp.spawn(gitPath, safeArgs, {
         cwd,
         env: {
             ...env,

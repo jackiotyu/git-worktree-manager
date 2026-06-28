@@ -888,6 +888,23 @@
             "default": "",
             "markdownDescription": "%config.httpProxy.description%"
           },
+          "git-worktree-manager.safeBareRepository": {
+            "order": 10,
+            "scope": "application",
+            "type": "string",
+            "enum": [
+              "all",
+              "explicit",
+              "none"
+            ],
+            "enumDescriptions": [
+              "%config.safeBareRepository.enum.all%",
+              "%config.safeBareRepository.enum.explicit%",
+              "%config.safeBareRepository.enum.none%"
+            ],
+            "default": "all",
+            "markdownDescription": "%config.safeBareRepository.description%"
+          },
           "git-worktree-manager.workspacePathFormat": {
             "order": 6,
             "scope": "application",
