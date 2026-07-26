@@ -27,7 +27,8 @@ import { addToGitFolderCmd } from '@/core/command/addToGitFolderCmd';
 import { copyFilePathCmd } from '@/core/command/copyFilePathCmd';
 import { checkoutBranchCmd } from '@/core/command/checkoutBranchCmd';
 import { toggleGitFolderOpenCmd } from '@/core/command/toggleGitFolderOpenCmd';
-import { searchAllWorktreeCmd } from '@/core/command/searchAllWorktreeCmd';
+import { openAllWorktreeCmd } from '@/core/command/openAllWorktreeCmd';
+import { findWorktreeCmd } from '@/core/command/findWorktreeCmd';
 import { toggleGitFolderViewAs } from '@/core/command/toggleGitFolderViewAs';
 import { pushWorktreeCmd } from '@/core/command/pushWorktreeCmd';
 import { pullWorktreeCmd } from '@/core/command/pullWorktreeCmd';
@@ -92,7 +93,8 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
         registerCommand(Commands.gitFolderSetOpen, toggleGitFolderOpenCmd),
         registerCommand(Commands.gitFolderSetClose, toggleGitFolderOpenCmd),
-        registerCommand(Commands.searchAllWorktree, searchAllWorktreeCmd),
+        registerCommand(Commands.openAllWorktree, openAllWorktreeCmd),
+        registerCommand(Commands.findWorktree, findWorktreeCmd),
         registerCommand(Commands.gitFolderViewAsTree, () => {
             toggleGitFolderViewAs(false);
         }),

@@ -207,7 +207,7 @@
       },
       {
         "command": "git-worktree-manager.openWorkspaceWorktree",
-        "title": "%cmd.searchAllWorktree%",
+        "title": "%cmd.findWorktree%",
         "icon": "$(search)"
       },
       {
@@ -253,10 +253,15 @@
         "icon": "$(root-folder-opened)"
       },
       {
-        "command": "git-worktree-manager.searchAllWorktree",
-        "title": "%cmd.searchAllWorktree%",
+        "command": "git-worktree-manager.findWorktree",
+        "title": "%cmd.findWorktree%",
         "icon": "$(search)",
         "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.openAllWorktree",
+        "title": "%cmd.findWorktree%",
+        "icon": "$(search)"
       },
       {
         "command": "git-worktree-manager.loadAllTreeData",
@@ -305,8 +310,7 @@
     ],
     "keybindings": [
       {
-        "command": "git-worktree-manager.searchAllWorktree",
-        "args": "auto",
+        "command": "git-worktree-manager.findWorktree",
         "key": "ctrl+shift+r"
       }
     ],
@@ -432,7 +436,7 @@
           "group": "navigation@2"
         },
         {
-          "command": "git-worktree-manager.searchAllWorktree",
+          "command": "git-worktree-manager.openAllWorktree",
           "when": "view =~ /git-worktree-manager-folders/",
           "group": "navigation@3"
         },
@@ -811,6 +815,10 @@
         },
         {
           "command": "git-worktree-manager.bundleRepo",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.openAllWorktree",
           "when": "false"
         }
       ]

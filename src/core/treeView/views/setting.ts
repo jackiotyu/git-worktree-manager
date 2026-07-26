@@ -16,7 +16,7 @@ const menuItems: MenuItemConfig[] = [
     {
         label: vscode.l10n.t('Find Worktree'),
         icon: 'search',
-        command: Commands.searchAllWorktree,
+        command: Commands.findWorktree,
     },
     {
         label: vscode.l10n.t('Open Settings'),
