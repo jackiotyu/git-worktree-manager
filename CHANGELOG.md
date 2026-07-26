@@ -1,3 +1,11 @@
+## v3.26.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.26.0...v3.26.1)
+
+### 💅 Refactors
+
+- Rename "searchAllWorktree" to "findWorktree" and update related commands ([8998345](https://github.com/jackiotyu/git-worktree-manager/commit/8998345))
+
 ## v3.26.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.25.0...v3.26.0)
