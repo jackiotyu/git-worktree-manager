@@ -1,3 +1,11 @@
+## v3.26.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.25.0...v3.26.0)
+
+### 🩹 Fixes
+
+- Make "Find Worktree" respect default display list ([#51](https://github.com/jackiotyu/git-worktree-manager/pull/51))
+
 ## v3.25.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.24.2...v3.25.0)
