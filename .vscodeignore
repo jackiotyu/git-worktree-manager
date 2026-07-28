@@ -13,6 +13,7 @@ pnpm-lock.yaml
 .pnpm*
 **/tsconfig.json
 **/.eslintrc.json
+**/eslint.config.mjs
 **/.eslintignore
 **/*.map
 **/*.ts
@@ -27,3 +28,5 @@ README.zh-CN.md
 .nvmrc
 .prettierignore
 .codegraph/
+pnpm-workspace.yaml
+.claude
