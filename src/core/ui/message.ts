@@ -3,9 +3,9 @@ import { APP_NAME, AlertLevel } from '@/constants';
 import { Config } from '@/core/config/setting';
 
 enum LevelNum {
-    'info' = 1,
-    'warn' = 2,
-    'error' = 3,
+    info = 1,
+    warn = 2,
+    error = 3,
 }
 
 export class Alert {

@@ -25,7 +25,8 @@ export const switchWorktreeCmd = async () => {
         const path = workTrees[workTrees.findIndex((object) => object.name === workTree.label)].path;
         const uri = vscode.Uri.file(path);
         vscode.commands.executeCommand('vscode.openFolder', uri, {
-            forceNewWindow: true,
+            forceNewWindow: false,
+            forceReuseWindow: true,
         });
     });
 };
