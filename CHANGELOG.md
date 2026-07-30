@@ -1,3 +1,11 @@
+## v3.26.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.26.1...v3.26.2)
+
+### 💅 Refactors
+
+- Update switchWorktreeCmd to reuse window and prevent new window opening ([#61](https://github.com/jackiotyu/git-worktree-manager/pull/61))
+
 ## v3.26.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.26.0...v3.26.1)
