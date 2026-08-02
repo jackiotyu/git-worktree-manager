@@ -4,3 +4,4 @@ allowBuilds:
     keytar: true
 minimumReleaseAgeExclude:
     - eslint@10.5.0
+    - ovsx@1.1.0
