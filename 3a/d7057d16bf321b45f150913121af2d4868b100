@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-08-06-submodule-support-design.md
+  s_6613ee805e6b32::t_6a76947457b8ff 1-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3ad7057d16bf321b45f150913121af2d4868b100",
+  "prompts": {},
+  "sessions": {
+    "s_6613ee805e6b32": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0e4389ee-c1cd-47f0-a8e3-6de40ed826f8",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
