@@ -1,0 +1,29 @@
+l10n/bundle.l10n.ja.json
+  s_fefd92de0c749d::t_58e3e353cd0863 76-78
+l10n/bundle.l10n.zh-cn.json
+  s_fefd92de0c749d::t_1fdf897412b147 76-78
+l10n/bundle.l10n.zh-tw.json
+  s_fefd92de0c749d::t_2ce236898e291e 76-78
+src/constants.ts
+  s_fefd92de0c749d::t_8eb40d5c42a1d0 82
+src/core/treeView/items/index.ts
+  s_fefd92de0c749d::t_a7d8424cb3605e 5
+src/core/treeView/items/submodule.ts
+  s_fefd92de0c749d::t_a4ae9b4108eb56 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f443ee99e079878d04cd78799ea145c3f6cd68bd",
+  "prompts": {},
+  "sessions": {
+    "s_fefd92de0c749d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b288b194-bb61-4383-859c-74e442e506e1",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
