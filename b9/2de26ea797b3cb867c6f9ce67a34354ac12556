@@ -1,0 +1,21 @@
+src/core/treeView/views/gitFolder.ts
+  s_05826d23a31882::t_275082dbdd0dca 2,5-6,16,21,29-30,60-62,94,108-115,124-129,136-138,158,165-166
+src/core/treeView/views/worktree.ts
+  s_05826d23a31882::t_562f41166b6299 2,4,6,14-16,21,48-50,68,85-96,100,108-113,128,142,145-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b92de26ea797b3cb867c6f9ce67a34354ac12556",
+  "prompts": {},
+  "sessions": {
+    "s_05826d23a31882": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2cdda831-9124-4337-93c6-0b1cb30e4b78",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
