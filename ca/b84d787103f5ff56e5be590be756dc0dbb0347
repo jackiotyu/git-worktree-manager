@@ -1,0 +1,75 @@
+package.nls.ja.json
+  s_c56be9c25381b6::t_1096b50f7fdf36 109-110
+package.nls.json
+  s_c56be9c25381b6::t_61a94bff64f8c2 109-110
+package.nls.zh-cn.json
+  s_c56be9c25381b6::t_c052ca3e5b495d 109-110
+package.nls.zh-tw.json
+  s_c56be9c25381b6::t_d6fbb8cb58e9dc 109-110
+src/core/config/setting.ts
+  s_c56be9c25381b6::t_a77868bfbaa32c 28
+package.json
+  s_5b2185e4e77e50::t_b6ab2d6ac9817e 983-989
+src/core/git/getSubmoduleList.ts
+  s_5b2185e4e77e50::t_8fc627892810a8 1-24
+src/test/unit/submodule.test.ts
+  s_5b2185e4e77e50::t_c46ba4bbe77d88 1-75
+src/types.ts
+  s_5b2185e4e77e50::t_a4fa4c0d6a0e77 37-43
+l10n/bundle.l10n.ja.json
+  s_fefd92de0c749d::t_58e3e353cd0863 76-78
+l10n/bundle.l10n.zh-cn.json
+  s_fefd92de0c749d::t_1fdf897412b147 76-78
+l10n/bundle.l10n.zh-tw.json
+  s_fefd92de0c749d::t_2ce236898e291e 76-78
+src/constants.ts
+  s_fefd92de0c749d::t_8eb40d5c42a1d0 82
+src/core/treeView/items/index.ts
+  s_fefd92de0c749d::t_a7d8424cb3605e 5
+src/core/treeView/items/submodule.ts
+  s_fefd92de0c749d::t_a4ae9b4108eb56 1-21
+src/core/treeView/views/gitFolder.ts
+  s_05826d23a31882::t_275082dbdd0dca 2,5-6,16,21,29-30,60-62,94,108-115,124-129,136-138,158,165-166
+src/core/treeView/views/worktree.ts
+  s_05826d23a31882::t_562f41166b6299 2,4,6,14-16,21,48-50,68,85-96,100,108-113,128,142,145-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "cab84d787103f5ff56e5be590be756dc0dbb0347",
+  "prompts": {},
+  "sessions": {
+    "s_05826d23a31882": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2cdda831-9124-4337-93c6-0b1cb30e4b78",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_5b2185e4e77e50": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cd4e409e-b147-4732-a985-781385b87635",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_c56be9c25381b6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2e970816-087b-43bb-b51a-ef963898eb7a",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_fefd92de0c749d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b288b194-bb61-4383-859c-74e442e506e1",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
