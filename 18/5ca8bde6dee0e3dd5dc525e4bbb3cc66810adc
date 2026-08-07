@@ -1,0 +1,23 @@
+src/core/git/getSubmoduleList.ts
+  s_5b2185e4e77e50::t_8fc627892810a8 1-24
+src/test/unit/submodule.test.ts
+  s_5b2185e4e77e50::t_c46ba4bbe77d88 1-75
+src/types.ts
+  s_5b2185e4e77e50::t_a4fa4c0d6a0e77 37-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "185ca8bde6dee0e3dd5dc525e4bbb3cc66810adc",
+  "prompts": {},
+  "sessions": {
+    "s_5b2185e4e77e50": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cd4e409e-b147-4732-a985-781385b87635",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
