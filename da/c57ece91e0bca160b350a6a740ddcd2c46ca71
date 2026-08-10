@@ -1,0 +1,14 @@
+docs/superpowers/specs/2026-08-10-remove-merged-worktrees-picker-design.md
+  h_efb56b9ff7aea6 1-128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "dac57ece91e0bca160b350a6a740ddcd2c46ca71",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
