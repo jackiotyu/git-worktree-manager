@@ -1,0 +1,24 @@
+.superpowers/sdd/2026-08-11-repository-discovery/final-fix-report.md
+  s_863066e6b9b5c6::t_2cb608a3c681a7 42,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b23b2daf4693c567234e314ac90b818dcb6e791f",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_863066e6b9b5c6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0533690a-2942-46b1-bfca-37dbfc5e7646",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
