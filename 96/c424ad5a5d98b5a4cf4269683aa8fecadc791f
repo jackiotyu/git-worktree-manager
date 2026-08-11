@@ -1,0 +1,32 @@
+src/test/unit/discoverRepositories.test.ts
+  s_863066e6b9b5c6::t_bbd7bf87a32b75 49-53,56-65
+src/types.ts
+  s_863066e6b9b5c6::t_96d1fb29dcd8a4 41
+.superpowers/sdd/2026-08-11-repository-discovery/final-fix-report.md
+  s_863066e6b9b5c6::t_846e97da32e7b4 1-48
+src/core/git/discoverRepositories.ts
+  s_863066e6b9b5c6::t_3e3aa8b62dcffc 22,27,45-48,54,57-74,76-94,160-166,205-209
+src/test/integration/discoverRepositories.test.ts
+  s_863066e6b9b5c6::t_d1f5d824bf64ed 96-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "96c424ad5a5d98b5a4cf4269683aa8fecadc791f",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_863066e6b9b5c6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0533690a-2942-46b1-bfca-37dbfc5e7646",
+        "model": "ogn-5-6-terra"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
