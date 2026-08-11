@@ -1,0 +1,24 @@
+docs/superpowers/specs/2026-08-11-repository-discovery-design.md
+  s_65044a592c83d8::t_74c94f9766f8ad 1-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "72bd6d2d1bf37b9fab73ae7ccddbf072445b1b29",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_65044a592c83d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8bb57fc7-228b-4fe0-92cd-4caf9f440b6b",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
