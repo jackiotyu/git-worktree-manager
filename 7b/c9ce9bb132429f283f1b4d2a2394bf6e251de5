@@ -1,0 +1,30 @@
+src/core/git/discoverRepositories.ts
+  s_4623b68f0e1e8a::t_0edce3a8fa48e7 43-46,94-99,125,128-131,138-152,156-165,210-212
+src/core/git/getWorktreeList.ts
+  s_4623b68f0e1e8a::t_cf5d32d01e1ae5 2,80-83
+src/test/integration/discoverRepositories.test.ts
+  s_4623b68f0e1e8a::t_dc0452b8123e7a 161-173
+src/test/unit/discoverRepositories.test.ts
+  s_4623b68f0e1e8a::t_7643493eb9afbf 23,25-26,28-39,80-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7bc9ce9bb132429f283f1b4d2a2394bf6e251de5",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_4623b68f0e1e8a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6394121b-5ebd-492f-89d2-159297acde23",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
