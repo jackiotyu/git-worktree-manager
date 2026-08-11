@@ -1,0 +1,24 @@
+src/core/quickPick/pickMergedWorktree.ts
+  s_3d1132ab10f88a::t_5df1971c689748 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3a39346d65b2cae274778a113f13ade465de3c89",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_3d1132ab10f88a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "c2b0fb82-e2aa-46e3-a8c8-5ba0b13e6b51",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
