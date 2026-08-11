@@ -1,0 +1,40 @@
+package.nls.ja.json
+  s_3d1132ab10f88a::t_87b60843bc3170 14-15
+package.nls.json
+  s_3d1132ab10f88a::t_f402d6fca94d37 14-15
+package.nls.zh-cn.json
+  s_3d1132ab10f88a::t_c14a60a5646488 14-15
+package.nls.zh-tw.json
+  s_3d1132ab10f88a::t_61d09b45ec9552 14-15
+src/constants.ts
+  s_3d1132ab10f88a::t_71df6987751cc8 17-18
+src/core/command/removeMergedWorktreesCmd.ts
+  s_3d1132ab10f88a::t_438147f395efb5 1-32
+src/core/git/getMergedWorktreeCandidates.ts
+  s_3d1132ab10f88a::t_d4f6ac8f749aae 1-44
+src/core/git/removeWorktrees.ts
+  s_3d1132ab10f88a::t_11268653f842b3 1-38
+src/core/quickPick/pickMergedWorktree.ts
+  s_3d1132ab10f88a::t_5e6b1e79333f12 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "828255eff05e0557e77a9d2dacb98ab8f0ca17b5",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_3d1132ab10f88a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "c2b0fb82-e2aa-46e3-a8c8-5ba0b13e6b51",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
