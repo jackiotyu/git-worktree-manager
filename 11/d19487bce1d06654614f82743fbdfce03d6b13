@@ -1,0 +1,28 @@
+src/test/integration/discoverRepositories.test.ts
+  s_89dfad82f3fdcc::t_e41a1cc669d5d9 1-90
+src/core/git/discoverRepositories.ts
+  s_89dfad82f3fdcc::t_ea9825a9537ae6 1-5,41-119
+src/test/unit/discoverRepositories.test.ts
+  s_89dfad82f3fdcc::t_875dd3e4b6bb8b 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "11d19487bce1d06654614f82743fbdfce03d6b13",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_89dfad82f3fdcc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "36ec1f05-25a0-4b33-a076-a5c7371f752d",
+        "model": "ogn-5-6-terra"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
