@@ -1,0 +1,32 @@
+src/types.ts
+  s_55b96146826f26::t_2847885bdc6808 46
+src/core/git/discoverRepositories.ts
+  s_55b96146826f26::t_24eaeb8c002891 119,135
+src/core/git/getWorktreeList.ts
+  s_55b96146826f26::t_3d197a9dda0b25 2,7,20,76-77,79-83
+src/test/integration/discoverRepositories.test.ts
+  s_55b96146826f26::t_81facd65cc0061 8,13-17,160-179
+src/test/unit/discoverRepositories.test.ts
+  s_55b96146826f26::t_e18b83c6db25f3 5-9,15-17,23-43,76-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ef54bb184c8b6818845dddc68c54906dc426b58b",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_55b96146826f26": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5af5925f-f02c-429c-b26d-021a04ac1e89",
+        "model": "ogn-5-6-terra"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
