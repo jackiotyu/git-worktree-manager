@@ -1,0 +1,28 @@
+src/core/git/discoverRepositories.ts
+  s_65044a592c83d8::t_5a382b30e84a98 1-30
+src/test/unit/discoverRepositories.test.ts
+  s_65044a592c83d8::t_0d68c04b7e90dc 1-33
+src/types.ts
+  s_65044a592c83d8::t_0ff7bd4beb2781 37-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c7d9980c9cbc0c23b18973b246bddfd163ed45e8",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_65044a592c83d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8bb57fc7-228b-4fe0-92cd-4caf9f440b6b",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
