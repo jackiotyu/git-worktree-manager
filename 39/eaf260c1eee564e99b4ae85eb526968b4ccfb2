@@ -1,0 +1,94 @@
+docs/superpowers/specs/2026-08-11-repository-discovery-design.md
+  s_65044a592c83d8::t_74c94f9766f8ad 1-108
+src/core/git/discoverRepositories.ts
+  s_65044a592c83d8::t_5a382b30e84a98 7-21,23-26,28-29
+  s_89dfad82f3fdcc::t_ea9825a9537ae6 2-5,30,35-39,97-111,113-114,119-124,139-141,152-159,196-201,211-212
+  s_89dfad82f3fdcc::t_879a1746abdd5f 167-170,172-195
+  s_55b96146826f26::t_e292639f2f2ee6 1,6,40-44,49-53,55-56,59,95-96,204,210
+  s_4623b68f0e1e8a::t_0edce3a8fa48e7 31-34,112,115-118,125-130,131-138,142-151,202-204
+  s_863066e6b9b5c6::t_3e3aa8b62dcffc 22,27,45-48,54,57-74,76-94,160-166,205-209
+src/test/unit/discoverRepositories.test.ts
+  s_65044a592c83d8::t_0d68c04b7e90dc 18-22,40-48,66-80,99
+  s_b4aa08ebea50e8::t_53ac951eb6243c 66-67
+  s_89dfad82f3fdcc::t_875dd3e4b6bb8b 1-4,10-14
+  s_55b96146826f26::t_e18b83c6db25f3 5-9,15-17,24,27,81-88,92-98
+  s_4623b68f0e1e8a::t_7643493eb9afbf 23,25-26,28-39,89-91
+  s_863066e6b9b5c6::t_bbd7bf87a32b75 49-53,56-65
+src/types.ts
+  s_65044a592c83d8::t_0ff7bd4beb2781 37-40,42-51
+  s_863066e6b9b5c6::t_96d1fb29dcd8a4 41
+src/test/integration/discoverRepositories.test.ts
+  s_89dfad82f3fdcc::t_e41a1cc669d5d9 1-2,4-7,9-12,18-71,73-93,193,214
+  s_89dfad82f3fdcc::t_38e6045ca23b0d 72,116,118-120,122-142,163,164
+  s_55b96146826f26::t_e1f12e20373c7c 3,94,117,121,143-175,177,179-180
+  s_55b96146826f26::t_81facd65cc0061 8,13-17,181,195-213
+  s_4623b68f0e1e8a::t_dc0452b8123e7a 182-194
+  s_863066e6b9b5c6::t_d1f5d824bf64ed 96-116
+src/core/git/getWorktreeList.ts
+  s_55b96146826f26::t_3d197a9dda0b25 7,20,76-77,79,84
+  s_4623b68f0e1e8a::t_cf5d32d01e1ae5 2,80-83
+.superpowers/sdd/2026-08-11-repository-discovery/final-fix-report.md
+  s_863066e6b9b5c6::t_846e97da32e7b4 1-41,43,46-49
+  s_863066e6b9b5c6::t_2cb608a3c681a7 42,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "39eaf260c1eee564e99b4ae85eb526968b4ccfb2",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_4623b68f0e1e8a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6394121b-5ebd-492f-89d2-159297acde23",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_55b96146826f26": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "5af5925f-f02c-429c-b26d-021a04ac1e89",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_65044a592c83d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8bb57fc7-228b-4fe0-92cd-4caf9f440b6b",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_863066e6b9b5c6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0533690a-2942-46b1-bfca-37dbfc5e7646",
+        "model": "ogn-5-6-terra"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_89dfad82f3fdcc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "36ec1f05-25a0-4b33-a076-a5c7371f752d",
+        "model": "ogn-5-6-terra"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_b4aa08ebea50e8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "077521f4-9e86-4960-84f3-a7bd19492b36",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
