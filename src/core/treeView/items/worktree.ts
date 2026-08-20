@@ -12,6 +12,7 @@ import { parseUpstream } from '@/core/util/ref';
 import { formatTime, formatTimeDetail } from '@/core/util/parse';
 import logger from '@/core/log/logger';
 import { Config } from '@/core/config/setting';
+import { formatTemplate, TemplateVars } from '@/core/util/template';
 import path from 'path';
 
 export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
@@ -57,7 +58,25 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     }
 
     private static generateLabel(item: IWorktreeDetail): string {
+        const labelTemplate = Config.get('treeView.worktreeLabelTemplate', '');
+        if (labelTemplate) return formatTemplate(labelTemplate, WorktreeItem.getTemplateVars(item));
         return item.folderName ? `${item.name} ⇄ ${item.folderName}` : item.name;
+    }
+
+    private static getTemplateVars(item: IWorktreeDetail): TemplateVars {
+        const worktreePath = item.path;
+        const relativePath = item.isMain
+            ? path.posix.basename(worktreePath)
+            : path.posix.relative(item.mainFolder, worktreePath);
+        /* eslint-disable @typescript-eslint/naming-convention */
+        return {
+            FULL_PATH: worktreePath,
+            BASE_NAME: path.posix.basename(worktreePath),
+            RELATIVE_PATH: relativePath,
+            LAST_COMMIT: item.lastCommitDate ? formatTime(item.lastCommitDate) : '',
+            REF_NAME: item.name,
+        };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     private setProperties() {
@@ -77,20 +96,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         if (this.behind) descriptionList.push(`${this.behind}↓ `);
 
         const descriptionTemplate = Config.get('treeView.worktreeDescriptionTemplate', '$FULL_PATH');
-        const worktreePath = this.viewItem.path;
-        const relativePath = this.viewItem.isMain
-            ? path.posix.basename(worktreePath)
-            : path.posix.relative(this.viewItem.mainFolder, worktreePath);
-
-        const lastCommit = this.viewItem.lastCommitDate ? formatTime(this.viewItem.lastCommitDate) : '';
-
-        const description = descriptionTemplate
-            .replace('$FULL_PATH', worktreePath)
-            .replace('$BASE_NAME', path.posix.basename(worktreePath))
-            .replace('$RELATIVE_PATH', relativePath)
-            .replace('$LAST_COMMIT', lastCommit);
-
-        descriptionList.push(description);
+        descriptionList.push(formatTemplate(descriptionTemplate, WorktreeItem.getTemplateVars(this.viewItem)));
         this.description = descriptionList.join('');
     }
 

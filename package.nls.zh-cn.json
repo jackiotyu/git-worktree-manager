@@ -108,5 +108,6 @@
     "config.postCreateCmd.description": "创建 Worktree 后执行的命令，默认执行路径是新创建的 Worktree 的目录内。你可以在命令中使用以下变量：\n\n- `$BASE_PATH`：仓库的完整路径。\n- `$WORKTREE_PATH`：Worktree 的完整路径。\n\n示例：\n`git submodule update --init --recursive`",
     "config.preRemoveCmd.description": "删除 Worktree 前执行的命令，在 Worktree 目录内执行。如果命令执行失败或被取消，则中止删除操作。你可以在命令中使用以下变量：\n\n- `$BASE_PATH`：主仓库的完整路径。\n- `$WORKTREE_PATH`：即将被删除的 Worktree 的完整路径。\n\n示例：\n`pnpm run worktree:teardown-db`",
     "config.worktreeDescriptionTemplate.description": "Worktree 描述的模板。可用的变量：\n\n- `$FULL_PATH`：Worktree 的完整路径。\n- `$BASE_NAME`：Worktree 的文件夹名称。\n- `$RELATIVE_PATH`：相对路径（相对于主仓库目录）。\n- `$LAST_COMMIT`：该 worktree 最后一次提交的相对时间（例如 “3 周前”），便于识别陈旧的 worktree。",
+    "config.worktreeLabelTemplate.description": "Worktree 标签（树视图中每一项的加粗文本）的模板。留空则使用默认标签（分支名或标签名）。可用的变量：\n\n- `$REF_NAME`：Worktree 中检出的引用名称，例如分支名或标签名。\n- `$BASE_NAME`：Worktree 的文件夹名称。\n- `$FULL_PATH`：Worktree 的完整路径。\n- `$RELATIVE_PATH`：相对路径（相对于主仓库目录）。\n- `$LAST_COMMIT`：该 worktree 最后一次提交的相对时间（例如 “3 周前”）。\n\n示例：`$BASE_NAME ⇄ $REF_NAME` 先显示文件夹名称，再显示分支名。",
     "config.terminalNameTemplate.description": "打开内置终端时显示的名称模板。可用的变量：\n\n- `$FULL_PATH`：文件夹的完整路径。\n- `$BASE_NAME`：文件夹名称。\n- `$LABEL`：展示的名称、文件夹名称或者 Worktree 展示的名称"
 }

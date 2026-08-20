@@ -1075,6 +1075,12 @@
             "type": "string",
             "default": "$FULL_PATH",
             "markdownDescription": "%config.worktreeDescriptionTemplate.description%"
+          },
+          "git-worktree-manager.treeView.worktreeLabelTemplate": {
+            "order": 9,
+            "type": "string",
+            "default": "",
+            "markdownDescription": "%config.worktreeLabelTemplate.description%"
           }
         }
       },

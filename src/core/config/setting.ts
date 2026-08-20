@@ -64,6 +64,7 @@ export class Config {
     static get(key: 'treeView.showFetchInTreeItem', defaultValue: true): boolean;
     static get(key: 'treeView.toSCM', defaultValue: false): boolean;
     static get(key: 'treeView.worktreeDescriptionTemplate', defaultValue: '$FULL_PATH'): string;
+    static get(key: 'treeView.worktreeLabelTemplate', defaultValue: ''): string;
 
     // Path template configuration
     static get(key: 'worktreePathTemplate', defaultValue: '$BASE_PATH.worktrees'): string;

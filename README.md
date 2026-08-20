@@ -93,6 +93,11 @@ Customize Git Worktree Manager to fit your workflow:
   Available variables: `$FULL_PATH`, `$BASE_NAME`, `$RELATIVE_PATH`, `$LAST_COMMIT` (relative time of the last commit, e.g. "3 weeks ago"). Hover a worktree to see the absolute timestamp.  
   **Example:** `"$RELATIVE_PATH · $LAST_COMMIT"`
 
+- **`git-worktree-manager.treeView.worktreeLabelTemplate`**  
+  Customize the label (the bold text) of each worktree in the tree view. Leave empty to keep the default label (the branch or tag name).  
+  Available variables: `$REF_NAME` (branch or tag name), `$BASE_NAME`, `$FULL_PATH`, `$RELATIVE_PATH`, `$LAST_COMMIT`.  
+  **Example:** `"$BASE_NAME ⇄ $REF_NAME"` shows the worktree folder name first, then the branch.
+
 - **`git-worktree-manager.worktreeCopyPatterns`**  
   Specify files or directories to be copied into a newly created worktree  
   (for example, local config files or environment-specific assets).  
