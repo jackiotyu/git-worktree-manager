@@ -1,0 +1,21 @@
+package.nls.ja.json
+  s_bd1fb1f2c2e0fd::t_0552c6f58918fc 60-61
+package.nls.zh-tw.json
+  s_bd1fb1f2c2e0fd::t_02e139e944711a 60-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "45265914c42b40598d016dc5bdfbaa2a49a62df5",
+  "prompts": {},
+  "sessions": {
+    "s_bd1fb1f2c2e0fd": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7766285c-08cd-48f5-a1e2-d61d13c2a8ae",
+        "model": "default"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
