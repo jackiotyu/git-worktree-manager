@@ -57,6 +57,8 @@
     "viewsWelcome.addWorktree": "ワークツリーを追加",
     "config.general.title": "一般設定",
     "config.treeView.title": "ツリービュー",
+    "config.explorer.title": "エクスプローラー",
+    "config.explorer.showOpenRepositoryInContextMenu.description": "エクスプローラーのコンテキストメニューに「ソース管理ビューでリポジトリを開く」を表示",
     "config.findWorktree.title": "ワークツリーを検索",
     "config.pickBranch.title": "ブランチを選択",
     "config.terminalLocationInEditor.description": "内蔵ターミナルをエディタで開くかどうか；デフォルトではパネルで開きます",

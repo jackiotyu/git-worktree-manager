@@ -60,6 +60,9 @@ export class Config {
     static get(key: 'worktreeCopyIgnores', defaultValue: []): string[];
     static get(key: 'checkoutIgnoreOtherWorktree', defaultValue: false): boolean;
 
+    // Explorer configuration
+    static get(key: 'explorer.showOpenRepositoryInContextMenu', defaultValue: false): boolean;
+
     // Tree view configuration
     static get(key: 'treeView.showFetchInTreeItem', defaultValue: true): boolean;
     static get(key: 'treeView.toSCM', defaultValue: false): boolean;

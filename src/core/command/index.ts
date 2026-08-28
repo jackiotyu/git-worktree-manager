@@ -42,7 +42,7 @@ import { unwatchWorktreeEventCmd } from '@/core/command/unwatchWorktreeEventCmd'
 import { fetchWorktreeCmd } from '@/core/command/fetchWorktreeCmd';
 import { fetchRepoCmd } from '@/core/command/fetchRepoCmd';
 import { toggleLogCmd } from '@/core/command/toggleLogCmd';
-import { openRepositoryCmd } from '@/core/command/openRepositoryCmd';
+import { openRepositoryCmd, openRepositoryContextCmd } from '@/core/command/openRepositoryCmd';
 import { addRootsToRepoCmd } from '@/core/command/addRootsToRepoCmd';
 import { refreshWorktreeCacheCmd } from '@/core/command/refreshWorktreeCacheCmd';
 import { deleteBranchCmd } from '@/core/command/deleteBranchCmd';
@@ -116,6 +116,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.fetchRepo, fetchRepoCmd),
         registerCommand(Commands.toggleLog, toggleLogCmd),
         registerCommand(Commands.openRepository, openRepositoryCmd),
+        registerCommand(Commands.openRepositoryContext, openRepositoryContextCmd),
         registerCommand(Commands.addRootsToRepo, addRootsToRepoCmd),
         registerCommand(Commands.refreshWorktreeCache, refreshWorktreeCacheCmd),
         registerCommand(Commands.deleteBranch, deleteBranchCmd),

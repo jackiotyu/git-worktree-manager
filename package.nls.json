@@ -57,6 +57,8 @@
     "viewsWelcome.addWorktree": "Add Worktree",
     "config.general.title": "General Settings",
     "config.treeView.title": "Tree View",
+    "config.explorer.title": "Explorer",
+    "config.explorer.showOpenRepositoryInContextMenu.description": "Show \"Open Repository in Source Control View\" in the Explorer context menu",
     "config.findWorktree.title": "Find Worktree",
     "config.pickBranch.title": "Pick Branch",
     "config.terminalLocationInEditor.description": "Whether to open the built-in terminal in the editor; opens in the panel by default",

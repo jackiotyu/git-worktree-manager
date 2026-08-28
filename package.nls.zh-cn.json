@@ -57,6 +57,8 @@
     "viewsWelcome.addWorktree": "添加 Worktree",
     "config.general.title": "通用设置",
     "config.treeView.title": "树视图设置",
+    "config.explorer.title": "资源管理器",
+    "config.explorer.showOpenRepositoryInContextMenu.description": "在资源管理器右键菜单中显示 \"在源代码管理中打开该仓库\"",
     "config.findWorktree.title": "查找 Worktree",
     "config.pickBranch.title": "挑选分支",
     "config.terminalLocationInEditor.description": "是否在编辑器中打开内置终端，默认在面板中打开",

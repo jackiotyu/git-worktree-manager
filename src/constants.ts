@@ -56,6 +56,7 @@ export enum Commands {
     fetchRepo = 'git-worktree-manager.fetchRepo',
     toggleLog = 'git-worktree-manager.toggleLog',
     openRepository = 'git-worktree-manager.openRepository',
+    openRepositoryContext = 'git-worktree-manager.openRepository.context',
     openChanges = 'git-worktree-manager.openChanges',
     bundleRepo = 'git-worktree-manager.bundleRepo',
 

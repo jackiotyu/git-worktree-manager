@@ -304,6 +304,10 @@
         "icon": "$(repo)"
       },
       {
+        "command": "git-worktree-manager.openRepository.context",
+        "title": "%cmd.openRepository%"
+      },
+      {
         "command": "git-worktree-manager.deleteBranch",
         "title": "%cmd.deleteBranch%"
       },
@@ -700,6 +704,13 @@
           "group": "worktree-lock"
         }
       ],
+      "explorer/context": [
+        {
+          "command": "git-worktree-manager.openRepository.context",
+          "when": "resourceScheme == file && config.git-worktree-manager.explorer.showOpenRepositoryInContextMenu",
+          "group": "2_git@10"
+        }
+      ],
       "commandPalette": [
         {
           "command": "git-worktree-manager.switchToSelectWorkspace",
@@ -833,6 +844,10 @@
         },
         {
           "command": "git-worktree-manager.openRepository",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.openRepository.context",
           "when": "false"
         },
         {
@@ -1081,6 +1096,20 @@
             "type": "string",
             "default": "",
             "markdownDescription": "%config.worktreeLabelTemplate.description%"
+          }
+        }
+      },
+      {
+        "id": "git-worktree-manager.explorer",
+        "title": "%config.explorer.title%",
+        "order": 1.5,
+        "properties": {
+          "git-worktree-manager.explorer.showOpenRepositoryInContextMenu": {
+            "order": 0,
+            "scope": "application",
+            "type": "boolean",
+            "default": false,
+            "description": "%config.explorer.showOpenRepositoryInContextMenu.description%"
           }
         }
       },

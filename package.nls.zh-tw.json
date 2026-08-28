@@ -57,6 +57,8 @@
     "viewsWelcome.addWorktree": "新增 Worktree",
     "config.general.title": "一般設定",
     "config.treeView.title": "樹狀檢視設定",
+    "config.explorer.title": "資源管理器",
+    "config.explorer.showOpenRepositoryInContextMenu.description": "在資源管理器右鍵選單中顯示「在原始碼控制中開啟該儲存庫」",
     "config.findWorktree.title": "尋找 Worktree",
     "config.pickBranch.title": "挑選分支",
     "config.terminalLocationInEditor.description": "是否在編輯器中開啟內建終端機；預設在面板中開啟",
