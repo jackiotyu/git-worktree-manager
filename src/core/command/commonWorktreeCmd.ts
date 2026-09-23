@@ -3,6 +3,7 @@ import { Commands } from '@/constants';
 import { lockWorktree } from '@/core/git/lockWorktree';
 import { unlockWorktree } from '@/core/git/unlockWorktree';
 import { repairWorktree } from '@/core/git/repairWorktree';
+import { clearMainFolderCache } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
 import * as util from 'util';
 import logger from '@/core/log/logger';
@@ -21,6 +22,7 @@ export const commonWorktreeCmd = async (path: string, cmd: Commands, cwd?: strin
                 break;
             case Commands.repairWorktree:
                 await repairWorktree(path, cwd);
+                clearMainFolderCache(path);
                 cmdName = vscode.l10n.t('Repair');
                 break;
         }

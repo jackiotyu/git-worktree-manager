@@ -19,6 +19,7 @@ class WorktreeEvent implements vscode.Disposable {
         logger.log(`'watching repository' ${this.uri.fsPath}`);
     }
     onChange(event: vscode.Uri) {
+        if (event.fsPath.endsWith('.lock')) return;
         logger.log(`'repository change' ${event.fsPath}`);
         worktreeChangeEvent.fire(event);
     }
@@ -31,12 +32,17 @@ class WorktreeEvent implements vscode.Disposable {
 
 class WorktreeEventRegister implements vscode.Disposable {
     private eventMap: Map<string, WorktreeEvent> = new Map();
-    add(uri: vscode.Uri) {
+    async add(uri: vscode.Uri) {
         try {
             const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
             const folderPath = finalUri.fsPath;
             if (this.eventMap.has(folderPath)) return;
-            if (!fs.existsSync(folderPath)) return;
+            try {
+                await fs.promises.stat(folderPath);
+            } catch {
+                return;
+            }
+            if (this.eventMap.has(folderPath)) return;
             const worktreeEvent = new WorktreeEvent(finalUri);
             this.eventMap.set(folderPath, worktreeEvent);
         } catch (error) {

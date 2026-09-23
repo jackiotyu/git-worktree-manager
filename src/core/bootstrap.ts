@@ -25,15 +25,18 @@ import { Config } from '@/core/config/setting';
 import { Commands, RefreshCacheType } from '@/constants';
 import { updateWorkspaceListCache, updateWorktreeCache, updateRecentItems } from '@/core/util/cache';
 import { gitApi } from '@/core/git/scmGit';
+import { clearMainFolderCache } from '@/core/git/getMainFolder';
 
 const setupCacheEvents = (context: vscode.ExtensionContext) => {
     const updateWorktreeCacheHandler = updateWorktreeCacheEvent.event((repoPath) => {
+        clearMainFolderCache(repoPath);
         updateWorktreeCache(repoPath);
         updateWorkspaceListCache(repoPath);
     });
     const updateCacheHandler = refreshWorktreeCacheEvent.event(
         debounce(
             (e) => {
+                clearMainFolderCache();
                 if (e === RefreshCacheType.all) {
                     updateWorktreeCache();
                 } else if (e === RefreshCacheType.workspace) {
@@ -52,11 +55,13 @@ const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
     const worktreeChangeHandler = worktreeChangeEvent.event((uri) => {
         // Navigate to specific repository
         const repoPath = getGitFolderByUri(uri);
+        clearMainFolderCache(repoPath);
         updateWorktreeCacheEvent.fire(repoPath);
     });
     const updateHandler = updateTreeDataEvent.event(
         throttle(
             async () => {
+                clearMainFolderCache();
                 await updateWorkspaceMainFolders();
                 treeDataEvent.fire();
             },
@@ -64,9 +69,13 @@ const setupWorkspaceEvent = (context: vscode.ExtensionContext) => {
             { trailing: true, leading: true },
         ),
     );
-    const workspaceFoldersHandler = vscode.workspace.onDidChangeWorkspaceFolders(checkRoots);
+    const workspaceFoldersHandler = vscode.workspace.onDidChangeWorkspaceFolders(() => {
+        clearMainFolderCache();
+        checkRoots();
+    });
     const stateChangeHandler = globalStateEvent.event((key) => {
         if (key === 'gitFolders') {
+            clearMainFolderCache();
             updateAddDirsContext();
             checkRoots();
         }
@@ -107,11 +116,12 @@ const registerAllSubscriptions = (context: vscode.ExtensionContext) => {
 };
 
 const initializeWorkspace = () => {
-    queueMicrotask(() => {
+    // Defer non-critical startup operations so activation completes immediately
+    setTimeout(() => {
         checkRoots();
         checkRecentFolderCache();
         vscode.commands.executeCommand(Commands.watchWorktreeEvent);
-    });
+    }, 1000);
 };
 
 export function bootstrap(context: vscode.ExtensionContext) {

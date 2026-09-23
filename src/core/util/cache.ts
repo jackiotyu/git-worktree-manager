@@ -61,10 +61,11 @@ export const updateWorktreeCache = async (repoPath: string | void) => {
         if (mainFolderSet.has(toSimplePath(a.path))) return -1;
         return 0;
     });
+    let currentCache = GlobalState.get('workTreeCache', []);
     for (const item of sortedFolders) {
-        const nextCache = await getUpdatedWorktreeCache(item.path, gitFolders, GlobalState.get('workTreeCache', []));
-        GlobalState.update('workTreeCache', nextCache);
+        currentCache = await getUpdatedWorktreeCache(item.path, gitFolders, currentCache);
     }
+    GlobalState.update('workTreeCache', currentCache);
 };
 
 export const updateWorkspaceListCache = async (repoPath: string | void) => {
@@ -78,14 +79,11 @@ export const updateWorkspaceListCache = async (repoPath: string | void) => {
         return;
     }
 
+    let currentCache = WorkspaceState.get('workTreeCache', []);
     for (const item of mainFolders) {
-        const nextCache = await getUpdatedWorktreeCache(
-            item.path,
-            mainFolders,
-            WorkspaceState.get('workTreeCache', []),
-        );
-        WorkspaceState.update('workTreeCache', nextCache);
+        currentCache = await getUpdatedWorktreeCache(item.path, mainFolders, currentCache);
     }
+    WorkspaceState.update('workTreeCache', currentCache);
 };
 
 export const updateRecentItems = async () => {

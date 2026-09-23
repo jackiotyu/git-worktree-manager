@@ -39,13 +39,20 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         this.isCurrent = judgeIncludeFolder(viewItem.path);
 
         this.setProperties();
-        this.initUpstreamInfo();
+        if (viewItem.upstream !== undefined || viewItem.ahead !== undefined || viewItem.behind !== undefined) {
+            this.upstream = viewItem.upstream || '';
+            this.remote = viewItem.remote;
+            this.remoteRef = viewItem.remoteRef;
+            this.ahead = viewItem.ahead;
+            this.behind = viewItem.behind;
+        } else {
+            this.initUpstreamInfo();
+        }
         this.init();
     }
 
     reload() {
         this.initUpstreamInfo();
-        this.init();
     }
 
     init() {
@@ -197,9 +204,6 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
             if (this.updatingAheadBehind) return;
             this.updatingAheadBehind = true;
 
-            this.updateView();
-
-            await new Promise((r) => setTimeout(r, 200));
             this.upstream = await getUpstream(item.path);
 
             const { branch, remote } = parseUpstream(this.upstream);

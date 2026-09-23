@@ -17,6 +17,11 @@ export interface IWorktreeDetail {
     folderName?: string;
     mainFolder: string;
     lastCommitDate?: string;
+    upstream?: string;
+    remote?: string;
+    remoteRef?: string;
+    ahead?: number;
+    behind?: number;
 }
 
 export interface AheadBehindInfo {
