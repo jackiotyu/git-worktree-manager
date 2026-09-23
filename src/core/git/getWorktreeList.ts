@@ -56,15 +56,15 @@ async function getBranchTrackInfoMap(cwd: string, branchRefs: string[]): Promise
     try {
         const { stdout } = await execBase(cwd, [
             'for-each-ref',
-            '--format=%(refname:short)|%(upstream:short)|%(upstream:track,nobracket)',
+            '--format=%(refname)%00%(upstream)%00%(upstream:track,nobracket)',
             ...validRefs,
         ]);
         const lines = stdout.split('\n');
         for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed) continue;
-            const [branch, upstream, track] = trimmed.split('|');
+            if (!line) continue;
+            const [branch, upstreamRef, track] = line.split('\0');
             if (!branch) continue;
+            const upstream = upstreamRef?.replace(/^refs\/(?:remotes|heads)\//, '') || '';
             let ahead: number | undefined;
             let behind: number | undefined;
             if (track) {
@@ -75,7 +75,7 @@ async function getBranchTrackInfoMap(cwd: string, branchRefs: string[]): Promise
             }
             const { branch: remoteRef, remote } = upstream ? parseUpstream(upstream) : { branch: '', remote: '' };
             map.set(branch, {
-                upstream: upstream || '',
+                upstream,
                 remote: remote || undefined,
                 remoteRef: remoteRef || undefined,
                 ahead,
@@ -161,7 +161,7 @@ async function buildWorktreeDetail(
 
     const hash = item.HEAD || '';
     const lastCommitDate = !isBare && !prunable && hash ? commitDates.get(hash) : undefined;
-    const branchInfo = branchName ? branchTrackMap.get(branchName) : undefined;
+    const branchInfo = item.branch ? branchTrackMap.get(item.branch) : undefined;
 
     return {
         name,
@@ -201,9 +201,7 @@ export async function getWorktreeList(
         ]);
 
         const worktreeList = parseWorktreeOutput(output);
-        const branchRefs = [...new Set(worktreeList.map((item) => item.branch).filter(Boolean) as string[])].map(
-            (ref) => (ref.startsWith('refs/') ? ref : `refs/heads/${ref}`),
-        );
+        const branchRefs = [...new Set(worktreeList.map((item) => item.branch).filter((ref): ref is string => !!ref))];
 
         const [commitDates, branchTrackMap] = await Promise.all([
             needCommitDate

@@ -116,12 +116,11 @@ const registerAllSubscriptions = (context: vscode.ExtensionContext) => {
 };
 
 const initializeWorkspace = () => {
-    // Defer non-critical startup operations so activation completes immediately
-    setTimeout(() => {
+    queueMicrotask(() => {
         checkRoots();
         checkRecentFolderCache();
         vscode.commands.executeCommand(Commands.watchWorktreeEvent);
-    }, 1000);
+    });
 };
 
 export function bootstrap(context: vscode.ExtensionContext) {

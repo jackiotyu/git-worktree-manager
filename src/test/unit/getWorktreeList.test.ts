@@ -82,7 +82,10 @@ describe('getWorktreeList', () => {
                 expect(args).toContain('refs/heads/main');
                 expect(args).toContain('refs/heads/feature');
                 return {
-                    stdout: ['main|origin/main|', 'feature|origin/feature|ahead 1, behind 2'].join('\n'),
+                    stdout: [
+                        'refs/heads/main\0refs/remotes/origin/main\0',
+                        'refs/heads/feature\0refs/remotes/origin/feature\0ahead 1, behind 2',
+                    ].join('\n'),
                     stderr: '',
                     code: 0,
                 };
@@ -128,7 +131,7 @@ describe('getWorktreeList', () => {
                 return { stdout: '/test/repo/.git\n', stderr: '', code: 0 };
             }
             if (command === 'for-each-ref') {
-                return { stdout: 'main|origin/main|\n', stderr: '', code: 0 };
+                return { stdout: 'refs/heads/main\0refs/remotes/origin/main\0\n', stderr: '', code: 0 };
             }
             return { stdout: '', stderr: '', code: 0 };
         });
@@ -139,6 +142,63 @@ describe('getWorktreeList', () => {
 
         const calledCommands = mockExec.mock.calls.map((call) => call[1]?.[0]);
         expect(calledCommands).not.toContain('log');
+    });
+
+    it('keeps tracking information for branch names containing separators or ambiguous short refs', async () => {
+        const mockExec = rs.mocked(execBaseModule.execBase);
+        mockExec.mockImplementation(async (_cwd: string, args?: string[]) => {
+            if (args?.[0] === 'worktree') {
+                return {
+                    stdout: [
+                        'worktree /test/repo',
+                        'HEAD 1111111111111111111111111111111111111111',
+                        'branch refs/heads/feature|one',
+                        '',
+                        'worktree /test/repo/other',
+                        'HEAD 2222222222222222222222222222222222222222',
+                        'branch refs/heads/origin/main',
+                        '',
+                    ].join('\n'),
+                    stderr: '',
+                    code: 0,
+                };
+            }
+            if (args?.[0] === 'rev-parse') {
+                return { stdout: '/test/repo/.git\n', stderr: '', code: 0 };
+            }
+            if (args?.[0] === 'for-each-ref') {
+                const usesNulFields = args.some((arg) => arg.includes('%00'));
+                return {
+                    stdout: usesNulFields
+                        ? [
+                              'refs/heads/feature|one\0refs/remotes/origin/feature|one\0ahead 2',
+                              'refs/heads/origin/main\0refs/remotes/origin/main\0behind 3',
+                          ].join('\n')
+                        : ['feature|one|origin/feature|one|ahead 2', 'heads/origin/main|origin/main|behind 3'].join(
+                              '\n',
+                          ),
+                    stderr: '',
+                    code: 0,
+                };
+            }
+            return { stdout: '', stderr: '', code: 0 };
+        });
+
+        const list = await getWorktreeList('/test/repo', false);
+        expect(list[0]).toMatchObject({
+            name: 'feature|one',
+            upstream: 'origin/feature|one',
+            remote: 'origin',
+            remoteRef: 'feature|one',
+            ahead: 2,
+        });
+        expect(list[1]).toMatchObject({
+            name: 'origin/main',
+            upstream: 'origin/main',
+            remote: 'origin',
+            remoteRef: 'main',
+            behind: 3,
+        });
     });
 
     it('keeps dates for valid worktrees when one commit object is missing', async () => {
@@ -177,7 +237,11 @@ describe('getWorktreeList', () => {
                 return { stdout: '/test/repo/.git\n', stderr: '', code: 0 };
             }
             if (command === 'for-each-ref') {
-                return { stdout: 'main|origin/main|\nmissing|origin/missing|\n', stderr: '', code: 0 };
+                return {
+                    stdout: 'refs/heads/main\0refs/remotes/origin/main\0\nrefs/heads/missing\0refs/remotes/origin/missing\0\n',
+                    stderr: '',
+                    code: 0,
+                };
             }
             if (command === 'log') {
                 const hashes = args?.slice(3) ?? [];

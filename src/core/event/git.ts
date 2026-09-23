@@ -32,19 +32,26 @@ class WorktreeEvent implements vscode.Disposable {
 
 class WorktreeEventRegister implements vscode.Disposable {
     private eventMap: Map<string, WorktreeEvent> = new Map();
+    private pendingAdds: Map<string, symbol> = new Map();
     async add(uri: vscode.Uri) {
         try {
             const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
             const folderPath = finalUri.fsPath;
             if (this.eventMap.has(folderPath)) return;
+            const request = Symbol();
+            this.pendingAdds.set(folderPath, request);
             try {
-                await fs.promises.stat(folderPath);
-            } catch {
-                return;
+                try {
+                    await fs.promises.stat(folderPath);
+                } catch {
+                    return;
+                }
+                if (this.pendingAdds.get(folderPath) !== request || this.eventMap.has(folderPath)) return;
+                const worktreeEvent = new WorktreeEvent(finalUri);
+                this.eventMap.set(folderPath, worktreeEvent);
+            } finally {
+                if (this.pendingAdds.get(folderPath) === request) this.pendingAdds.delete(folderPath);
             }
-            if (this.eventMap.has(folderPath)) return;
-            const worktreeEvent = new WorktreeEvent(finalUri);
-            this.eventMap.set(folderPath, worktreeEvent);
         } catch (error) {
             logger.error(`'add worktree event' ${error}`);
         }
@@ -52,10 +59,12 @@ class WorktreeEventRegister implements vscode.Disposable {
     remove(uri: vscode.Uri) {
         const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
         const folderPath = finalUri.fsPath;
+        this.pendingAdds.delete(folderPath);
         this.eventMap.get(folderPath)?.dispose();
         this.eventMap.delete(folderPath);
     }
     dispose() {
+        this.pendingAdds.clear();
         this.eventMap.forEach((event) => event.dispose());
         this.eventMap.clear();
     }

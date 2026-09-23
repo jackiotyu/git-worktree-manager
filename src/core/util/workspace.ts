@@ -92,5 +92,5 @@ export const checkRoots = debounce(
         ]);
     },
     300,
-    { leading: false },
+    { leading: true },
 );
