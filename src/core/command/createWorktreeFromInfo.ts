@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { addWorktree } from '@/core/git/addWorktree';
-import { getMainFolder } from '@/core/git/getMainFolder';
+import { getMainFolder, clearMainFolderCache } from '@/core/git/getMainFolder';
 import { confirmModal } from '@/core/ui/modal';
 import { copyWorktreeFiles } from '@/core/util/copyWorktreeFiles';
 import { postCreateWorktree } from '@/core/hooks/postCreateWorktree';
@@ -35,6 +35,7 @@ export async function createWorktreeFromInfo(info: ICreateWorktreeInfo) {
         return;
     }
 
+    clearMainFolderCache(folderPath);
     const mainFolder = await getMainFolder(folderPath);
     // Copy files after worktree creation is successful
     if (mainFolder) {

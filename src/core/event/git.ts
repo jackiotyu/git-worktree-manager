@@ -19,6 +19,7 @@ class WorktreeEvent implements vscode.Disposable {
         logger.log(`'watching repository' ${this.uri.fsPath}`);
     }
     onChange(event: vscode.Uri) {
+        if (event.fsPath.endsWith('.lock')) return;
         logger.log(`'repository change' ${event.fsPath}`);
         worktreeChangeEvent.fire(event);
     }
@@ -31,14 +32,26 @@ class WorktreeEvent implements vscode.Disposable {
 
 class WorktreeEventRegister implements vscode.Disposable {
     private eventMap: Map<string, WorktreeEvent> = new Map();
-    add(uri: vscode.Uri) {
+    private pendingAdds: Map<string, symbol> = new Map();
+    async add(uri: vscode.Uri) {
         try {
             const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
             const folderPath = finalUri.fsPath;
             if (this.eventMap.has(folderPath)) return;
-            if (!fs.existsSync(folderPath)) return;
-            const worktreeEvent = new WorktreeEvent(finalUri);
-            this.eventMap.set(folderPath, worktreeEvent);
+            const request = Symbol();
+            this.pendingAdds.set(folderPath, request);
+            try {
+                try {
+                    await fs.promises.stat(folderPath);
+                } catch {
+                    return;
+                }
+                if (this.pendingAdds.get(folderPath) !== request || this.eventMap.has(folderPath)) return;
+                const worktreeEvent = new WorktreeEvent(finalUri);
+                this.eventMap.set(folderPath, worktreeEvent);
+            } finally {
+                if (this.pendingAdds.get(folderPath) === request) this.pendingAdds.delete(folderPath);
+            }
         } catch (error) {
             logger.error(`'add worktree event' ${error}`);
         }
@@ -46,10 +59,12 @@ class WorktreeEventRegister implements vscode.Disposable {
     remove(uri: vscode.Uri) {
         const finalUri = uri.fsPath.endsWith('.git') ? uri : vscode.Uri.joinPath(uri, '.git');
         const folderPath = finalUri.fsPath;
+        this.pendingAdds.delete(folderPath);
         this.eventMap.get(folderPath)?.dispose();
         this.eventMap.delete(folderPath);
     }
     dispose() {
+        this.pendingAdds.clear();
         this.eventMap.forEach((event) => event.dispose());
         this.eventMap.clear();
     }

@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { Commands } from '@/constants';
 import { removeWorktree } from '@/core/git/removeWorktree';
 import { getCurrentBranch } from '@/core/git/getCurrentBranch';
-import { getMainFolder } from '@/core/git/getMainFolder';
+import { getMainFolder, clearMainFolderCache } from '@/core/git/getMainFolder';
 import { getChanges } from '@/core/git/getChanges';
 import { Alert } from '@/core/ui/message';
 import logger from '@/core/log/logger';
@@ -64,6 +64,7 @@ export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => 
             () => {},
         );
         await removeWorktree(worktreePath, isForceDelete, mainFolder);
+        clearMainFolderCache(worktreePath);
         resolve();
 
         Alert.showInformationMessage(

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import type { GitExtension, API as ScmGitApi } from '@/@types/vscode.git';
 import logger from '@/core/log/logger';
 
-class GitApi implements vscode.Disposable {
+export class GitApi implements vscode.Disposable {
     private _api: ScmGitApi | undefined;
     private _gitPath: string = 'git';
     private _gitEnv: Record<string, string> = {};
@@ -19,25 +19,47 @@ class GitApi implements vscode.Disposable {
         return this._gitEnv;
     }
 
-    async getAPI(): Promise<ScmGitApi | undefined> {
-        try {
-            if (this._disposed) return undefined;
-            // Check if the API is already cached
-            if (this._api) return this._api;
+    private _activatingPromise?: Promise<void>;
 
+    async getAPI(): Promise<ScmGitApi | undefined> {
+        if (this._disposed) return undefined;
+        if (this._api) return this._api;
+
+        try {
             const extension = vscode.extensions.getExtension<GitExtension>('vscode.git');
             if (!extension) return undefined;
-            const gitExtension = extension.isActive ? extension.exports : await extension.activate();
 
-            // Cache the API and Git path/env
-            this.cacheAPI(gitExtension?.getAPI(1));
+            if (!extension.isActive) {
+                await this.activateGitExtension(extension);
+            }
+            if (this._disposed) return undefined;
+            if (this._api) return this._api;
 
+            if (extension.isActive) {
+                this.cacheAPI(extension.exports?.getAPI(1));
+            }
             return this._api;
         } catch (error) {
             logger.error(`Failed to get SCM Git API: ${error}`);
-            this.cacheAPI(undefined);
             return undefined;
         }
+    }
+
+    private activateGitExtension(extension: vscode.Extension<GitExtension>): Promise<void> {
+        if (!this._activatingPromise) {
+            const pending = Promise.resolve(extension.activate())
+                .then((gitExtension) => {
+                    if (this._disposed) return;
+                    this.cacheAPI(gitExtension?.getAPI(1));
+                })
+                .finally(() => {
+                    if (this._activatingPromise === pending) {
+                        this._activatingPromise = undefined;
+                    }
+                });
+            this._activatingPromise = pending;
+        }
+        return this._activatingPromise;
     }
 
     private cacheAPI(api?: ScmGitApi): void {

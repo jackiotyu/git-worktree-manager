@@ -28,7 +28,7 @@ export async function getMergedWorktreeCandidates(repoPath: string): Promise<IMe
         // If git branch --merged fails, keep mergedNames empty and allow user review.
     }
 
-    const worktreeList = await getWorktreeList(repoPath, false);
+    const worktreeList = await getWorktreeList(repoPath, false, false);
     return worktreeList.map((item) => {
         const branchName = item.isBranch ? item.name : '';
         const isMerged = Boolean(branchName && mergedNames.has(branchName));

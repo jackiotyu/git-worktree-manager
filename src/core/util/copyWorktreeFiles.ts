@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import path from 'path';
 import fs from 'fs/promises';
 import type { Stats } from 'fs';
-import { stream as fgStream } from 'fast-glob';
 import { pipeline } from 'stream/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { Config } from '@/core/config/setting';
@@ -65,6 +64,7 @@ async function findMatchingFiles(sourceRepo: string, token: vscode.CancellationT
     }
 
     const matchedFiles: string[] = [];
+    const { stream: fgStream } = await import('fast-glob');
     const stream = fgStream(patterns, {
         ignore: ignorePatterns,
         absolute: true,
