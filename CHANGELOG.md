@@ -1,3 +1,19 @@
+## v3.29.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.28.0...v3.29.0)
+
+### 🚀 Enhancements
+
+- Add context menu option to open repository in Explorer and related configurations ([4526591](https://github.com/jackiotyu/git-worktree-manager/commit/4526591))
+
+### 🔥 Performance
+
+- Optimize startup performance, batch git operations and enhance caching ([#68](https://github.com/jackiotyu/git-worktree-manager/pull/68))
+
+### 🏡 Chore
+
+- Update dependencies ([ba78db4](https://github.com/jackiotyu/git-worktree-manager/commit/ba78db4))
+
 ## v3.28.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.27.0...v3.28.0)
