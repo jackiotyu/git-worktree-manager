@@ -55,6 +55,12 @@ import { removeMultiFavoriteCmd } from '@/core/command/removeMultiFavoriteCmd';
 import { addToFavoriteCmd } from '@/core/command/addToFavoriteCmd';
 import { Commands } from '@/constants';
 import { AllViewItem } from '@/core/treeView/items';
+import {
+    assignWorktreeGroupCmd,
+    createWorktreeGroupCmd,
+    deleteWorktreeGroupCmd,
+    renameWorktreeGroupCmd,
+} from '@/core/command/worktreeGroupCmd';
 
 export function registerCommands(context: vscode.ExtensionContext) {
     const registerCommand = vscode.commands.registerCommand.bind(vscode.commands);
@@ -127,5 +133,9 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.removeFavorite, removeFavoriteCmd),
         registerCommand(Commands.removeMultiFavorite, removeMultiFavoriteCmd),
         registerCommand(Commands.addToFavorite, addToFavoriteCmd),
+        registerCommand(Commands.createWorktreeGroup, createWorktreeGroupCmd),
+        registerCommand(Commands.assignWorktreeGroup, assignWorktreeGroupCmd),
+        registerCommand(Commands.renameWorktreeGroup, renameWorktreeGroupCmd),
+        registerCommand(Commands.deleteWorktreeGroup, deleteWorktreeGroupCmd),
     );
 }

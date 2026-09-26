@@ -164,5 +164,21 @@
     "Select all merged worktrees": "选择所有已合并的 Worktree",
     "Select worktrees to remove": "选择要移除的 Worktree",
     "Removing selected worktrees from {0}": "正在从 {0} 移除所选 Worktree",
-    "Failed to remove worktree(s)": "移除 Worktree 失败"
+    "Failed to remove worktree(s)": "移除 Worktree 失败",
+    "Worktree group {0}": "Worktree 分组 {0}",
+    "Create Worktree Group": "创建 Worktree 分组",
+    "Rename Worktree Group": "重命名 Worktree 分组",
+    "Delete Worktree Group": "删除 Worktree 分组",
+    "Enter a name for the worktree group": "输入 Worktree 分组名称",
+    "Group name cannot be empty": "分组名称不能为空",
+    "A group with this name already exists in the repository": "该仓库中已存在同名分组",
+    "Select Git repository for the worktree group": "选择 Worktree 分组所属的 Git 仓库",
+    "Worktree group created": "Worktree 分组已创建",
+    "Worktree group renamed": "Worktree 分组已重命名",
+    "Delete the group \"{0}\"? Its worktrees will remain available as ungrouped items.": "删除分组“{0}”？其中的 Worktree 将保留为未分组项目。",
+    "Worktree group deleted": "Worktree 分组已删除",
+    "Create a worktree group before assigning worktrees": "请先创建 Worktree 分组，再分配 Worktree",
+    "Ungrouped": "未分组",
+    "Assign {0} to a worktree group": "将 {0} 分配到 Worktree 分组",
+    "Select a group or choose Ungrouped": "选择分组或选择未分组"
 }

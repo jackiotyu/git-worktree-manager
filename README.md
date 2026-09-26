@@ -57,6 +57,7 @@ helping you create, switch, and clean up worktrees safely while keeping your rep
 - **Favorites Management**: Save frequently used worktrees for quick access. 
   <video src="./images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video> 
   > [Drop worktrees to favorites for instant access.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/drop-to-favorites.mp4) 
+- **Worktree Groups**: Organize worktrees into local, collapsible groups without changing Git metadata or repository files.
 - **Copy Untracked Files**: Automatically include untracked files when creating a new worktree.
 - **Multi-Language Support**: Available in English, Simplified Chinese, Traditional Chinese and Japanese.
 - **Customizable Terminal**: Use your preferred terminal (e.g., iTerm on macOS, Git Bash on Windows).

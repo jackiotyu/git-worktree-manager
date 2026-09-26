@@ -59,6 +59,10 @@ export enum Commands {
     openRepositoryContext = 'git-worktree-manager.openRepository.context',
     openChanges = 'git-worktree-manager.openChanges',
     bundleRepo = 'git-worktree-manager.bundleRepo',
+    createWorktreeGroup = 'git-worktree-manager.createWorktreeGroup',
+    assignWorktreeGroup = 'git-worktree-manager.assignWorktreeGroup',
+    renameWorktreeGroup = 'git-worktree-manager.renameWorktreeGroup',
+    deleteWorktreeGroup = 'git-worktree-manager.deleteWorktreeGroup',
 
     renameBranch = 'git-worktree-manager.internal.renameBranch',
     refreshWorktreeCache = 'git-worktree-manager.internal.refreshWorktreeCache',
@@ -82,6 +86,7 @@ export enum TreeItemKind {
     folder = 'folder',
     setting = 'setting',
     file = 'file',
+    worktreeGroup = 'worktreeGroup',
 }
 
 export enum QuickPickKind {

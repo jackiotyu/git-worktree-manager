@@ -48,6 +48,13 @@ export interface IWorktreeCacheItem {
     mainFolder: string;
 }
 
+export interface IWorktreeGroup {
+    id: string;
+    name: string;
+    repositoryPath: string;
+    worktreePaths: string[];
+}
+
 export interface IRecentFolder {
     readonly folderUri: URI;
     label?: string;

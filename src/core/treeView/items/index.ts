@@ -2,6 +2,7 @@ export * from './folder';
 export * from './gitFolder';
 export * from './worktree';
 export * from './file';
+export * from './worktreeGroup';
 
 import { FolderItem } from './folder';
 import { GitFolderItem } from './gitFolder';
