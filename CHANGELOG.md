@@ -1,3 +1,11 @@
+## v3.30.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.29.0...v3.30.0)
+
+### 🚀 Enhancements
+
+- Add persistent worktree groups ([#69](https://github.com/jackiotyu/git-worktree-manager/pull/69))
+
 ## v3.29.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.28.0...v3.29.0)
