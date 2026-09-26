@@ -320,6 +320,26 @@
         "command": "git-worktree-manager.bundleRepo",
         "title": "%cmd.backupRepo%",
         "icon": "$(archive)"
+      },
+      {
+        "command": "git-worktree-manager.createWorktreeGroup",
+        "title": "%cmd.createWorktreeGroup%",
+        "icon": "$(folder-library)",
+        "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.assignWorktreeGroup",
+        "title": "%cmd.assignWorktreeGroup%"
+      },
+      {
+        "command": "git-worktree-manager.renameWorktreeGroup",
+        "title": "%cmd.renameWorktreeGroup%",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "git-worktree-manager.deleteWorktreeGroup",
+        "title": "%cmd.deleteWorktreeGroup%",
+        "icon": "$(trash)"
       }
     ],
     "keybindings": [
@@ -384,6 +404,11 @@
     },
     "menus": {
       "view/title": [
+        {
+          "command": "git-worktree-manager.createWorktreeGroup",
+          "when": "view =~ /git-worktree-manager-list/",
+          "group": "navigation@4"
+        },
         {
           "command": "git-worktree-manager.refreshWorktree",
           "when": "view =~ /git-worktree-manager-list/",
@@ -481,6 +506,26 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "git-worktree-manager.createWorktreeGroup",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem =~ /git-worktree-manager.workspaceGitMainFolder/",
+          "group": "grouping@1"
+        },
+        {
+          "command": "git-worktree-manager.assignWorktreeGroup",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem =~ /git-worktree-manager.worktreeItem/",
+          "group": "grouping@1"
+        },
+        {
+          "command": "git-worktree-manager.renameWorktreeGroup",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem == git-worktree-manager.worktreeGroupItem",
+          "group": "grouping@1"
+        },
+        {
+          "command": "git-worktree-manager.deleteWorktreeGroup",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem == git-worktree-manager.worktreeGroupItem",
+          "group": "grouping@2"
+        },
         {
           "command": "git-worktree-manager.openTerminal",
           "when": "viewItem =~ /git-worktree-manager\\.(worktreeItem|gitFolderItem|folderItem)/",
@@ -712,6 +757,18 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "git-worktree-manager.assignWorktreeGroup",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.renameWorktreeGroup",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.deleteWorktreeGroup",
+          "when": "false"
+        },
         {
           "command": "git-worktree-manager.switchToSelectWorkspace",
           "when": "false"

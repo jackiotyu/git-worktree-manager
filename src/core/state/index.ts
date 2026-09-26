@@ -1,5 +1,12 @@
 import * as vscode from 'vscode';
-import { IFolderItemConfig, IWorktreeCacheItem, RepoRefList, IRecentItemCache, IRecentItem } from '@/types';
+import {
+    IFolderItemConfig,
+    IWorktreeCacheItem,
+    RepoRefList,
+    IRecentItemCache,
+    IRecentItem,
+    IWorktreeGroup,
+} from '@/types';
 import { globalStateEvent } from '@/core/event/events';
 
 type KeyGitRepoRefList = `global.gitRepo.refList.${string}`;
@@ -9,6 +16,7 @@ type KeyWorkTreeCache = 'workTreeCache';
 type KeyMainFolders = 'mainFolders';
 type KeyGlobalRecentItemCache = 'global.recentItemCache';
 type KeyGlobalFavorite = 'global.favorite';
+type KeyWorktreeGroups = 'worktreeGroups';
 
 export type StateKey =
     | KeyGitRepoRefList
@@ -17,7 +25,8 @@ export type StateKey =
     | KeyWorkTreeCache
     | KeyMainFolders
     | KeyGlobalRecentItemCache
-    | KeyGlobalFavorite;
+    | KeyGlobalFavorite
+    | KeyWorktreeGroups;
 
 export class GlobalState {
     static context: vscode.ExtensionContext;
@@ -38,6 +47,7 @@ export class GlobalState {
     static get(key: KeyGitFolders, defaultValue: IFolderItemConfig[]): IFolderItemConfig[];
     static get(key: KeyWorkTreeCache, defaultValue: IWorktreeCacheItem[]): IWorktreeCacheItem[];
     static get(key: KeyGlobalFavorite, defaultValue: IRecentItem[]): IRecentItem[];
+    static get(key: KeyWorktreeGroups, defaultValue: IWorktreeGroup[]): IWorktreeGroup[];
     static get<T>(key: string, defaultValue: T): T {
         return this.state.get<T>(key, defaultValue);
     }
@@ -48,6 +58,7 @@ export class GlobalState {
     static update(key: KeyGitFolders, value: IFolderItemConfig[]): Thenable<void>;
     static update(key: KeyWorkTreeCache, value: IWorktreeCacheItem[]): Thenable<void>;
     static update(key: KeyGlobalFavorite, value: IRecentItem[]): Thenable<void>;
+    static update(key: KeyWorktreeGroups, value: IWorktreeGroup[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {
             globalStateEvent.fire(key as KeyGitRepoRefList);

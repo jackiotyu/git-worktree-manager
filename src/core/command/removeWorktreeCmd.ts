@@ -12,6 +12,7 @@ import { actionProgressWrapper } from '@/core/ui/progress';
 import { withResolvers } from '@/core/util/promise';
 import { preRemoveWorktree } from '@/core/hooks/preRemoveWorktree';
 import { IBranchForWorktree, IWorktreeLess } from '@/types';
+import { removeWorktreeGroupAssignment } from '@/core/util/worktreeGroup';
 
 async function showDeleteConfirmation(worktreePath: string): Promise<'remove' | 'force' | undefined> {
     const remove = vscode.l10n.t('Remove');
@@ -64,6 +65,11 @@ export const removeWorktreeCmd = async (item?: IWorktreeLess): Promise<void> => 
             () => {},
         );
         await removeWorktree(worktreePath, isForceDelete, mainFolder);
+        try {
+            await removeWorktreeGroupAssignment(worktreePath);
+        } catch (error) {
+            logger.error(`Failed to update the worktree group after removal: ${String(error)}`);
+        }
         clearMainFolderCache(worktreePath);
         resolve();
 

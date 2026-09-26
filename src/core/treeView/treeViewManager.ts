@@ -35,7 +35,7 @@ export class TreeViewManager {
                 viewsToSCM ? ViewId.worktreeListSCM : ViewId.worktreeList,
                 {
                     treeDataProvider: this.worktreeData!,
-                    showCollapseAll: false,
+                    showCollapseAll: true,
                 },
             );
             this.gitFolderView = vscode.window.createTreeView(

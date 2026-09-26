@@ -164,5 +164,21 @@
     "Select all merged worktrees": "マージ済みワークツリーをすべて選択",
     "Select worktrees to remove": "削除するワークツリーを選択",
     "Removing selected worktrees from {0}": "選択したワークツリーを {0} から削除しています",
-    "Failed to remove worktree(s)": "ワークツリーの削除に失敗しました"
+    "Failed to remove worktree(s)": "ワークツリーの削除に失敗しました",
+    "Worktree group {0}": "ワークツリーグループ {0}",
+    "Create Worktree Group": "ワークツリーグループを作成",
+    "Rename Worktree Group": "ワークツリーグループの名前を変更",
+    "Delete Worktree Group": "ワークツリーグループを削除",
+    "Enter a name for the worktree group": "ワークツリーグループ名を入力してください",
+    "Group name cannot be empty": "グループ名を空にすることはできません",
+    "A group with this name already exists in the repository": "このリポジトリには同名のグループが既に存在します",
+    "Select Git repository for the worktree group": "ワークツリーグループの Git リポジトリを選択してください",
+    "Worktree group created": "ワークツリーグループを作成しました",
+    "Worktree group renamed": "ワークツリーグループの名前を変更しました",
+    "Delete the group \"{0}\"? Its worktrees will remain available as ungrouped items.": "グループ「{0}」を削除しますか？ワークツリーは未グループの項目として残ります。",
+    "Worktree group deleted": "ワークツリーグループを削除しました",
+    "Create a worktree group before assigning worktrees": "ワークツリーを割り当てる前にグループを作成してください",
+    "Ungrouped": "未グループ",
+    "Assign {0} to a worktree group": "{0} をワークツリーグループに割り当て",
+    "Select a group or choose Ungrouped": "グループまたは未グループを選択してください"
 }

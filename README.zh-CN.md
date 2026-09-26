@@ -57,6 +57,7 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 - **收藏夹管理**：保存常用 Worktree，方便快速访问。 
   <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video> 
   > [将 Worktree 拖入收藏夹，随时访问。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/drop-to-favorites.mp4) 
+- **Worktree 分组**：将 Worktree 整理到本地可折叠分组中，不会修改 Git 元数据或仓库文件。
 - **复制未跟踪文件**：创建 Worktree 时自动复制主仓库的未跟踪文件。
 - **多语言支持**：支持英语、简体中文、繁体中文和日语。
 - **自定义终端**：支持 macOS 的 iTerm 或 Windows 的 Git Bash 等终端。

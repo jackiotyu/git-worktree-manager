@@ -7,6 +7,7 @@ import { getUpstream } from '@/core/git/getUpstream';
 import { IWorktreeDetail, IWorktreeLess } from '@/types';
 import type { WorkspaceMainGitFolderItem } from './folder';
 import type { GitFolderItem } from './gitFolder';
+import type { WorktreeGroupItem } from './worktreeGroup';
 import { TreeViewManager } from '@/core/treeView/treeViewManager';
 import { parseUpstream } from '@/core/util/ref';
 import { formatTime, formatTimeDetail } from '@/core/util/parse';
@@ -25,6 +26,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     remote?: string;
     remoteRef?: string;
     isBranch?: boolean;
+    mainFolder: string = '';
     private ahead?: number;
     private behind?: number;
     private isCurrent: boolean = false;
@@ -33,7 +35,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
     constructor(
         private viewItem: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
-        public parent?: GitFolderItem | WorkspaceMainGitFolderItem,
+        public parent?: GitFolderItem | WorkspaceMainGitFolderItem | WorktreeGroupItem,
     ) {
         super(WorktreeItem.generateLabel(viewItem), collapsible);
         this.isCurrent = judgeIncludeFolder(viewItem.path);
@@ -94,6 +96,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         this.fsPath = uri.fsPath;
         this.name = item.name;
         this.isBranch = item.isBranch;
+        this.mainFolder = item.mainFolder;
     }
 
     private setDescription() {
