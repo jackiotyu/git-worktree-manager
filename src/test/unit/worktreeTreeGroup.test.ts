@@ -4,10 +4,16 @@ import { WorktreeDataProvider } from '../../core/treeView/views/worktree';
 import folderRoot from '../../core/folderRoot';
 import * as worktreeListModule from '../../core/git/getWorktreeList';
 import * as groupModule from '../../core/util/worktreeGroup';
+import type { WorktreeSortOrder } from '../../core/util/worktreeSort';
 
 let mainFolders: Array<{ name: string; path: string }> = [];
+let sortOrder: WorktreeSortOrder = 'nameAsc';
 
 /* eslint-disable @typescript-eslint/naming-convention */
+rs.mock('../../core/config/setting', () => ({
+    Config: { get: () => sortOrder },
+}));
+
 rs.mock('vscode', () => ({
     EventEmitter: class {
         event = () => ({ dispose: () => {} });
@@ -80,6 +86,7 @@ describe('WorktreeDataProvider groups', () => {
 
     beforeEach(() => {
         rs.clearAllMocks();
+        sortOrder = 'nameAsc';
         mainFolders = [{ name: 'repo', path: '/repo' }];
         (folderRoot as any).folderPathSet = new Set(['/repo']);
         rs.mocked(worktreeListModule.getWorktreeList).mockResolvedValue([
@@ -102,7 +109,7 @@ describe('WorktreeDataProvider groups', () => {
         const provider = new WorktreeDataProvider(context);
         const items = (await provider.getChildren())!;
 
-        expect(items.map((item: any) => item.name ?? item.fsPath)).toEqual(['Alpha', 'Zeta', 'main', 'loose']);
+        expect(items.map((item: any) => item.name ?? item.fsPath)).toEqual(['Alpha', 'Zeta', 'loose', 'main']);
         const zeta = items[1] as any;
         expect(zeta.children.map((item: any) => item.fsPath)).toEqual(['/repo.worktrees/grouped']);
         expect(provider.getParent(zeta.children[0])).toBe(zeta);
@@ -124,5 +131,31 @@ describe('WorktreeDataProvider groups', () => {
         expect(group.type).toBe(TreeItemKind.worktreeGroup);
         expect(provider.getParent(group)).toBe(repository);
         expect(provider.getParent(group.children[0])).toBe(group);
+    });
+
+    it('applies the selected order within groups and to ungrouped worktrees after a preference change', async () => {
+        rs.mocked(worktreeListModule.getWorktreeList).mockResolvedValue([
+            { path: '/repo', name: 'main', mainFolder: '/repo' },
+            { path: '/repo.worktrees/grouped', name: 'feature-10', mainFolder: '/repo' },
+            { path: '/repo.worktrees/second', name: 'feature-2', mainFolder: '/repo' },
+            { path: '/repo.worktrees/loose', name: 'loose', mainFolder: '/repo' },
+        ] as any);
+        rs.mocked(groupModule.getRepositoryWorktreeGroups).mockReturnValue([
+            {
+                id: 'group',
+                name: 'Group',
+                repositoryPath: '/repo',
+                worktreePaths: ['/repo.worktrees/grouped', '/repo.worktrees/second'],
+            },
+        ]);
+        const provider = new WorktreeDataProvider(context);
+        const ascending = (await provider.getChildren())!;
+        expect(ascending.map((item: any) => item.name)).toEqual(['Group', 'loose', 'main']);
+        expect((ascending[0] as any).children.map((item: any) => item.name)).toEqual(['feature-2', 'feature-10']);
+
+        sortOrder = 'nameDesc';
+        const descending = (await provider.getChildren())!;
+        expect(descending.map((item: any) => item.name)).toEqual(['Group', 'main', 'loose']);
+        expect((descending[0] as any).children.map((item: any) => item.name)).toEqual(['feature-10', 'feature-2']);
     });
 });

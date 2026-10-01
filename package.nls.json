@@ -1,4 +1,10 @@
 {
+    "cmd.sortWorktreesByNameAsc": "Branch Name: A to Z",
+    "cmd.sortWorktreesByNameDesc": "Branch Name: Z to A",
+    "cmd.sortWorktreesByCreatedDesc": "Created: Newest First",
+    "cmd.sortWorktreesByCreatedAsc": "Created: Oldest First",
+    "submenus.worktreeSort": "Sort Worktrees",
+    "config.worktreeSortOrder.description": "Sort worktrees in the Worktree List, including within groups. Creation time uses the filesystem birth time of the `.git` entry (the repository directory for bare repositories), which may change when copied or recreated. Worktrees with unavailable creation times appear last.",
     "cmd.switchWorktree": "Switch Worktree",
     "cmd.switchToSelectWorkspace": "Open in Current Window",
     "cmd.freshWorktree": "Refresh Worktree",

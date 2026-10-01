@@ -8,7 +8,7 @@ import {
     FavoriteAndDropController,
 } from '@/core/treeView/views';
 import { TreeItemKind, ViewId } from '@/constants';
-import { revealTreeItemEvent } from '@/core/event/events';
+import { revealTreeItemEvent, treeDataEvent } from '@/core/event/events';
 import { GitFolderItem, WorktreeItem } from '@/core/treeView/items';
 import { Config } from '@/core/config/setting';
 
@@ -49,6 +49,7 @@ export class TreeViewManager {
 
         initActiveViews();
         Config.onChange('treeView.toSCM', initActiveViews);
+        Config.onChange('treeView.worktreeSortOrder', () => treeDataEvent.fire());
 
         const recentFolderView = vscode.window.createTreeView(RecentFoldersDataProvider.id, {
             treeDataProvider: new RecentFoldersDataProvider(context),

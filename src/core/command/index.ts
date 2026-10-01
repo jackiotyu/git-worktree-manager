@@ -55,6 +55,7 @@ import { removeMultiFavoriteCmd } from '@/core/command/removeMultiFavoriteCmd';
 import { addToFavoriteCmd } from '@/core/command/addToFavoriteCmd';
 import { Commands } from '@/constants';
 import { AllViewItem } from '@/core/treeView/items';
+import { sortWorktreesCmd } from '@/core/command/sortWorktreesCmd';
 import {
     assignWorktreeGroupCmd,
     createWorktreeGroupCmd,
@@ -137,5 +138,9 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.assignWorktreeGroup, assignWorktreeGroupCmd),
         registerCommand(Commands.renameWorktreeGroup, renameWorktreeGroupCmd),
         registerCommand(Commands.deleteWorktreeGroup, deleteWorktreeGroupCmd),
+        registerCommand(Commands.sortWorktreesByNameAsc, () => sortWorktreesCmd('nameAsc')),
+        registerCommand(Commands.sortWorktreesByNameDesc, () => sortWorktreesCmd('nameDesc')),
+        registerCommand(Commands.sortWorktreesByCreatedDesc, () => sortWorktreesCmd('createdDesc')),
+        registerCommand(Commands.sortWorktreesByCreatedAsc, () => sortWorktreesCmd('createdAsc')),
     );
 }

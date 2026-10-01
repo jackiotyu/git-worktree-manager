@@ -1,4 +1,10 @@
 {
+    "cmd.sortWorktreesByNameAsc": "ブランチ名：A から Z",
+    "cmd.sortWorktreesByNameDesc": "ブランチ名：Z から A",
+    "cmd.sortWorktreesByCreatedDesc": "作成日時：新しい順",
+    "cmd.sortWorktreesByCreatedAsc": "作成日時：古い順",
+    "submenus.worktreeSort": "ワークツリーの並べ替え",
+    "config.worktreeSortOrder.description": "グループ内を含むワークツリー一覧を並べ替えます。作成日時には `.git` エントリ（ベアリポジトリではリポジトリのディレクトリ）のファイルシステム上の作成日時を使用します。コピーや再作成により変わることがあります。作成日時を取得できないワークツリーは最後に表示されます。",
     "cmd.switchWorktree": "ワークツリーを切り替え",
     "cmd.switchToSelectWorkspace": "現在のウィンドウで開く",
     "cmd.freshWorktree": "ワークツリーを更新",
