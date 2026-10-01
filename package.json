@@ -51,26 +51,38 @@
       {
         "command": "git-worktree-manager.sortWorktreesByNameAsc",
         "title": "%cmd.sortWorktreesByNameAsc%",
-        "category": "Worktree",
-        "toggled": "config.git-worktree-manager.treeView.worktreeSortOrder == nameAsc"
+        "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.sortWorktreesByNameDesc",
         "title": "%cmd.sortWorktreesByNameDesc%",
-        "category": "Worktree",
-        "toggled": "config.git-worktree-manager.treeView.worktreeSortOrder == nameDesc"
+        "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.sortWorktreesByCreatedDesc",
         "title": "%cmd.sortWorktreesByCreatedDesc%",
-        "category": "Worktree",
-        "toggled": "config.git-worktree-manager.treeView.worktreeSortOrder == createdDesc"
+        "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.sortWorktreesByCreatedAsc",
         "title": "%cmd.sortWorktreesByCreatedAsc%",
-        "category": "Worktree",
-        "toggled": "config.git-worktree-manager.treeView.worktreeSortOrder == createdAsc"
+        "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.sortWorktreesByNameAsc.selected",
+        "title": "%cmd.sortWorktreesByNameAsc.selected%"
+      },
+      {
+        "command": "git-worktree-manager.sortWorktreesByNameDesc.selected",
+        "title": "%cmd.sortWorktreesByNameDesc.selected%"
+      },
+      {
+        "command": "git-worktree-manager.sortWorktreesByCreatedDesc.selected",
+        "title": "%cmd.sortWorktreesByCreatedDesc.selected%"
+      },
+      {
+        "command": "git-worktree-manager.sortWorktreesByCreatedAsc.selected",
+        "title": "%cmd.sortWorktreesByCreatedAsc.selected%"
       },
       {
         "command": "git-worktree-manager.switchWorktree",
@@ -430,18 +442,42 @@
       "git-worktree-manager.worktreeSort": [
         {
           "command": "git-worktree-manager.sortWorktreesByNameAsc",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder != nameAsc",
+          "group": "sort@1"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByNameAsc.selected",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder == nameAsc",
           "group": "sort@1"
         },
         {
           "command": "git-worktree-manager.sortWorktreesByNameDesc",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder != nameDesc",
+          "group": "sort@2"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByNameDesc.selected",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder == nameDesc",
           "group": "sort@2"
         },
         {
           "command": "git-worktree-manager.sortWorktreesByCreatedDesc",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder != createdDesc",
+          "group": "sort@3"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByCreatedDesc.selected",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder == createdDesc",
           "group": "sort@3"
         },
         {
           "command": "git-worktree-manager.sortWorktreesByCreatedAsc",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder != createdAsc",
+          "group": "sort@4"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByCreatedAsc.selected",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder == createdAsc",
           "group": "sort@4"
         }
       ],
@@ -804,6 +840,22 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "git-worktree-manager.sortWorktreesByNameAsc.selected",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByNameDesc.selected",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByCreatedDesc.selected",
+          "when": "false"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByCreatedAsc.selected",
+          "when": "false"
+        },
         {
           "command": "git-worktree-manager.assignWorktreeGroup",
           "when": "false"

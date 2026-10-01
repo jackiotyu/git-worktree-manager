@@ -142,5 +142,10 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.sortWorktreesByNameDesc, () => sortWorktreesCmd('nameDesc')),
         registerCommand(Commands.sortWorktreesByCreatedDesc, () => sortWorktreesCmd('createdDesc')),
         registerCommand(Commands.sortWorktreesByCreatedAsc, () => sortWorktreesCmd('createdAsc')),
+        // Contributed menus have no checked-state API; selected aliases display a checkmark in the label.
+        registerCommand(Commands.sortWorktreesByNameAscSelected, () => sortWorktreesCmd('nameAsc')),
+        registerCommand(Commands.sortWorktreesByNameDescSelected, () => sortWorktreesCmd('nameDesc')),
+        registerCommand(Commands.sortWorktreesByCreatedDescSelected, () => sortWorktreesCmd('createdDesc')),
+        registerCommand(Commands.sortWorktreesByCreatedAscSelected, () => sortWorktreesCmd('createdAsc')),
     );
 }

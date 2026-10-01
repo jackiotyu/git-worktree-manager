@@ -67,6 +67,10 @@ export enum Commands {
     sortWorktreesByNameDesc = 'git-worktree-manager.sortWorktreesByNameDesc',
     sortWorktreesByCreatedDesc = 'git-worktree-manager.sortWorktreesByCreatedDesc',
     sortWorktreesByCreatedAsc = 'git-worktree-manager.sortWorktreesByCreatedAsc',
+    sortWorktreesByNameAscSelected = 'git-worktree-manager.sortWorktreesByNameAsc.selected',
+    sortWorktreesByNameDescSelected = 'git-worktree-manager.sortWorktreesByNameDesc.selected',
+    sortWorktreesByCreatedDescSelected = 'git-worktree-manager.sortWorktreesByCreatedDesc.selected',
+    sortWorktreesByCreatedAscSelected = 'git-worktree-manager.sortWorktreesByCreatedAsc.selected',
 
     renameBranch = 'git-worktree-manager.internal.renameBranch',
     refreshWorktreeCache = 'git-worktree-manager.internal.refreshWorktreeCache',
