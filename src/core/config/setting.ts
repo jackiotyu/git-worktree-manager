@@ -6,7 +6,7 @@
 import * as vscode from 'vscode';
 import { APP_NAME, AlertLevel } from '@/constants';
 import { DefaultDisplayList, GitHistoryExtension } from '@/types';
-import type { WorktreeSortOrder } from '@/core/util/worktreeSort';
+import type { WorktreeSortOrder } from '@/types';
 
 /**
  * Configuration Management Class

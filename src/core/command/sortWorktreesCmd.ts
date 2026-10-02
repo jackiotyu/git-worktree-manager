@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Config } from '@/core/config/setting';
-import type { WorktreeSortOrder } from '@/core/util/worktreeSort';
+import type { WorktreeSortOrder } from '@/types';
 
 export function sortWorktreesCmd(order: WorktreeSortOrder): Thenable<void> {
     return Config.update('treeView.worktreeSortOrder', order, vscode.ConfigurationTarget.Global);

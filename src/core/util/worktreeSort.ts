@@ -1,8 +1,6 @@
 import fs from 'fs/promises';
 import { join } from 'path';
-import type { IWorktreeDetail } from '@/types';
-
-export type WorktreeSortOrder = 'nameAsc' | 'nameDesc' | 'createdDesc' | 'createdAsc';
+import type { IWorktreeDetail, WorktreeSortOrder } from '@/types';
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 

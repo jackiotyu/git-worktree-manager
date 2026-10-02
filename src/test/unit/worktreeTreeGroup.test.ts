@@ -4,7 +4,7 @@ import { WorktreeDataProvider } from '../../core/treeView/views/worktree';
 import folderRoot from '../../core/folderRoot';
 import * as worktreeListModule from '../../core/git/getWorktreeList';
 import * as groupModule from '../../core/util/worktreeGroup';
-import type { WorktreeSortOrder } from '../../core/util/worktreeSort';
+import type { WorktreeSortOrder } from '../../types';
 
 let mainFolders: Array<{ name: string; path: string }> = [];
 let sortOrder: WorktreeSortOrder = 'nameAsc';
