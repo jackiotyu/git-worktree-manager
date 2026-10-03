@@ -1,4 +1,6 @@
 {
+    "cmd.sortWorktreesByDefault": "デフォルト",
+    "cmd.sortWorktreesByDefault.selected": "✓ デフォルト",
     "cmd.sortWorktreesByNameAsc": "名前：A から Z",
     "cmd.sortWorktreesByNameDesc": "名前：Z から A",
     "cmd.sortWorktreesByCreatedDesc": "作成日時：新しい順",

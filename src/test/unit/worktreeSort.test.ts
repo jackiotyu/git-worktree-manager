@@ -43,6 +43,26 @@ describe('sortWorktrees', () => {
         mockStat.mockReset();
     });
 
+    describe('default mode', () => {
+        it('returns a copy preserving the exact input order without touching the filesystem', async () => {
+            const list = [
+                makeWorktree('zeta', '/repo/z', { isMain: true }),
+                makeWorktree('Alpha', '/repo/a'),
+                makeWorktree('beta-10', '/repo/b10'),
+                makeWorktree('beta-2', '/repo/b2'),
+            ];
+            const snapshot = [...list];
+
+            const result = await sortWorktrees(list, 'default');
+
+            expect(result).not.toBe(list);
+            expect(result).toEqual(snapshot);
+            result.forEach((item, index) => expect(item).toBe(snapshot[index]));
+            expect(list).toEqual(snapshot);
+            expect(mockStat).not.toHaveBeenCalled();
+        });
+    });
+
     describe('name modes', () => {
         it('sorts nameAsc naturally and case-insensitively', async () => {
             const list = ['feature-10', 'Feature-2', 'bugfix', 'feature-1', 'Alpha'].map((n) => makeWorktree(n));
@@ -201,7 +221,7 @@ describe('sortWorktrees', () => {
                 [gitEntry('/repo/b')]: 2,
                 [gitEntry('/repo/c')]: 3,
             });
-            for (const order of ['nameAsc', 'nameDesc', 'createdDesc', 'createdAsc'] as const) {
+            for (const order of ['default', 'nameAsc', 'nameDesc', 'createdDesc', 'createdAsc'] as const) {
                 const result = await sortWorktrees(frozen, order);
                 expect(result).not.toBe(frozen);
                 expect(result).toHaveLength(3);

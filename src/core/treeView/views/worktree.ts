@@ -130,7 +130,7 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
     ): Promise<Array<WorktreeGroupItem | WorktreeItem>> {
         const data = await sortWorktrees(
             await this.getWorktreeListWithCache(repositoryPath),
-            Config.get('treeView.worktreeSortOrder', 'nameAsc'),
+            Config.get('treeView.worktreeSortOrder', 'default'),
         );
         const groups = getRepositoryWorktreeGroups(repositoryPath).sort((a, b) => a.name.localeCompare(b.name));
         const groupsById = new Map(groups.map((group) => [group.id, group]));

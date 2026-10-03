@@ -29,6 +29,7 @@ export async function sortWorktrees<T extends IWorktreeDetail>(
     worktrees: readonly T[],
     order: WorktreeSortOrder,
 ): Promise<T[]> {
+    if (order === 'default') return [...worktrees];
     if (order === 'nameAsc') return [...worktrees].sort(compareByName);
     if (order === 'nameDesc') return [...worktrees].sort((a, b) => compareByName(b, a));
 

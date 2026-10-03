@@ -49,6 +49,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "git-worktree-manager.sortWorktreesByDefault",
+        "title": "%cmd.sortWorktreesByDefault%",
+        "category": "Worktree"
+      },
+      {
         "command": "git-worktree-manager.sortWorktreesByNameAsc",
         "title": "%cmd.sortWorktreesByNameAsc%",
         "category": "Worktree"
@@ -67,6 +72,10 @@
         "command": "git-worktree-manager.sortWorktreesByCreatedAsc",
         "title": "%cmd.sortWorktreesByCreatedAsc%",
         "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.sortWorktreesByDefault.selected",
+        "title": "%cmd.sortWorktreesByDefault.selected%"
       },
       {
         "command": "git-worktree-manager.sortWorktreesByNameAsc.selected",
@@ -440,6 +449,16 @@
     },
     "menus": {
       "git-worktree-manager.worktreeSort": [
+        {
+          "command": "git-worktree-manager.sortWorktreesByDefault",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder != default",
+          "group": "sort@0"
+        },
+        {
+          "command": "git-worktree-manager.sortWorktreesByDefault.selected",
+          "when": "config.git-worktree-manager.treeView.worktreeSortOrder == default",
+          "group": "sort@0"
+        },
         {
           "command": "git-worktree-manager.sortWorktreesByNameAsc",
           "when": "config.git-worktree-manager.treeView.worktreeSortOrder != nameAsc",
@@ -840,6 +859,10 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "git-worktree-manager.sortWorktreesByDefault.selected",
+          "when": "false"
+        },
         {
           "command": "git-worktree-manager.sortWorktreesByNameAsc.selected",
           "when": "false"
@@ -1262,14 +1285,15 @@
             "order": 10,
             "scope": "application",
             "type": "string",
-            "enum": ["nameAsc", "nameDesc", "createdDesc", "createdAsc"],
+            "enum": ["default", "nameAsc", "nameDesc", "createdDesc", "createdAsc"],
             "enumDescriptions": [
+              "%cmd.sortWorktreesByDefault%",
               "%cmd.sortWorktreesByNameAsc%",
               "%cmd.sortWorktreesByNameDesc%",
               "%cmd.sortWorktreesByCreatedDesc%",
               "%cmd.sortWorktreesByCreatedAsc%"
             ],
-            "default": "nameAsc",
+            "default": "default",
             "markdownDescription": "%config.worktreeSortOrder.description%"
           }
         }

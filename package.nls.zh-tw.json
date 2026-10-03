@@ -1,4 +1,6 @@
 {
+    "cmd.sortWorktreesByDefault": "預設",
+    "cmd.sortWorktreesByDefault.selected": "✓ 預設",
     "cmd.sortWorktreesByNameAsc": "名稱：A 到 Z",
     "cmd.sortWorktreesByNameDesc": "名稱：Z 到 A",
     "cmd.sortWorktreesByCreatedDesc": "建立時間：最新優先",

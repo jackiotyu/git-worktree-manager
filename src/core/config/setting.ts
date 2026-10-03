@@ -69,7 +69,7 @@ export class Config {
     static get(key: 'treeView.toSCM', defaultValue: false): boolean;
     static get(key: 'treeView.worktreeDescriptionTemplate', defaultValue: '$FULL_PATH'): string;
     static get(key: 'treeView.worktreeLabelTemplate', defaultValue: ''): string;
-    static get(key: 'treeView.worktreeSortOrder', defaultValue: 'nameAsc'): WorktreeSortOrder;
+    static get(key: 'treeView.worktreeSortOrder', defaultValue: 'default'): WorktreeSortOrder;
 
     // Path template configuration
     static get(key: 'worktreePathTemplate', defaultValue: '$BASE_PATH.worktrees'): string;

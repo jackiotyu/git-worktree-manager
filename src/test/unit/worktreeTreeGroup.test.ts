@@ -7,7 +7,7 @@ import * as groupModule from '../../core/util/worktreeGroup';
 import type { WorktreeSortOrder } from '../../types';
 
 let mainFolders: Array<{ name: string; path: string }> = [];
-let sortOrder: WorktreeSortOrder = 'nameAsc';
+let sortOrder: WorktreeSortOrder = 'default';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 rs.mock('../../core/config/setting', () => ({
@@ -86,7 +86,7 @@ describe('WorktreeDataProvider groups', () => {
 
     beforeEach(() => {
         rs.clearAllMocks();
-        sortOrder = 'nameAsc';
+        sortOrder = 'default';
         mainFolders = [{ name: 'repo', path: '/repo' }];
         (folderRoot as any).folderPathSet = new Set(['/repo']);
         rs.mocked(worktreeListModule.getWorktreeList).mockResolvedValue([
@@ -105,11 +105,11 @@ describe('WorktreeDataProvider groups', () => {
         ]);
     });
 
-    it('places alphabetical groups before ungrouped worktrees in a single repository', async () => {
+    it('places alphabetical groups before ungrouped worktrees in Git order by default', async () => {
         const provider = new WorktreeDataProvider(context);
         const items = (await provider.getChildren())!;
 
-        expect(items.map((item: any) => item.name ?? item.fsPath)).toEqual(['Alpha', 'Zeta', 'loose', 'main']);
+        expect(items.map((item: any) => item.name ?? item.fsPath)).toEqual(['Alpha', 'Zeta', 'main', 'loose']);
         const zeta = items[1] as any;
         expect(zeta.children.map((item: any) => item.fsPath)).toEqual(['/repo.worktrees/grouped']);
         expect(provider.getParent(zeta.children[0])).toBe(zeta);
@@ -149,6 +149,11 @@ describe('WorktreeDataProvider groups', () => {
             },
         ]);
         const provider = new WorktreeDataProvider(context);
+        const original = (await provider.getChildren())!;
+        expect(original.map((item: any) => item.name)).toEqual(['Group', 'main', 'loose']);
+        expect((original[0] as any).children.map((item: any) => item.name)).toEqual(['feature-10', 'feature-2']);
+
+        sortOrder = 'nameAsc';
         const ascending = (await provider.getChildren())!;
         expect(ascending.map((item: any) => item.name)).toEqual(['Group', 'loose', 'main']);
         expect((ascending[0] as any).children.map((item: any) => item.name)).toEqual(['feature-2', 'feature-10']);

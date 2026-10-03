@@ -1,4 +1,6 @@
 {
+    "cmd.sortWorktreesByDefault": "Default",
+    "cmd.sortWorktreesByDefault.selected": "✓ Default",
     "cmd.sortWorktreesByNameAsc": "Name: A to Z",
     "cmd.sortWorktreesByNameDesc": "Name: Z to A",
     "cmd.sortWorktreesByCreatedDesc": "Created: Newest First",

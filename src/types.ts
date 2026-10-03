@@ -2,7 +2,7 @@ import { Uri as URI, TreeItem } from 'vscode';
 import { Commands, ViewId, refArgList, RecentItemType } from '@/constants';
 import * as vscode from 'vscode';
 
-export type WorktreeSortOrder = 'nameAsc' | 'nameDesc' | 'createdDesc' | 'createdAsc';
+export type WorktreeSortOrder = 'default' | 'nameAsc' | 'nameDesc' | 'createdDesc' | 'createdAsc';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IWorktreeDetail {

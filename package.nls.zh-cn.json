@@ -1,4 +1,6 @@
 {
+    "cmd.sortWorktreesByDefault": "默认",
+    "cmd.sortWorktreesByDefault.selected": "✓ 默认",
     "cmd.sortWorktreesByNameAsc": "名称：A 到 Z",
     "cmd.sortWorktreesByNameDesc": "名称：Z 到 A",
     "cmd.sortWorktreesByCreatedDesc": "创建时间：最新优先",
