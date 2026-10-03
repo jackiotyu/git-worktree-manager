@@ -1,3 +1,11 @@
+## v3.31.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.30.0...v3.31.0)
+
+### 🚀 Enhancements
+
+- Add worktree sorting dropdown ([#72](https://github.com/jackiotyu/git-worktree-manager/pull/72))
+
 ## v3.30.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.29.0...v3.30.0)
