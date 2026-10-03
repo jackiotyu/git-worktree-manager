@@ -10,6 +10,8 @@ import { IWorktreeDetail } from '@/types';
 import { findPrefixPath } from '@/core/util/folder';
 import { getRepositoryWorktreeGroups } from '@/core/util/worktreeGroup';
 import { comparePath } from '@/core/util/path';
+import { Config } from '@/core/config/setting';
+import { sortWorktrees } from '@/core/util/worktreeSort';
 
 type WorktreeViewItem = WorkspaceMainGitFolderItem | WorktreeGroupItem | WorktreeItem;
 
@@ -126,7 +128,10 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
         repositoryPath: string,
         parent?: WorkspaceMainGitFolderItem,
     ): Promise<Array<WorktreeGroupItem | WorktreeItem>> {
-        const data = await this.getWorktreeListWithCache(repositoryPath);
+        const data = await sortWorktrees(
+            await this.getWorktreeListWithCache(repositoryPath),
+            Config.get('treeView.worktreeSortOrder', 'default'),
+        );
         const groups = getRepositoryWorktreeGroups(repositoryPath).sort((a, b) => a.name.localeCompare(b.name));
         const groupsById = new Map(groups.map((group) => [group.id, group]));
         const groupItems = groups.map((group) => new WorktreeGroupItem(group, parent));

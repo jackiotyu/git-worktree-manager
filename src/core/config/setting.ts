@@ -6,6 +6,7 @@
 import * as vscode from 'vscode';
 import { APP_NAME, AlertLevel } from '@/constants';
 import { DefaultDisplayList, GitHistoryExtension } from '@/types';
+import type { WorktreeSortOrder } from '@/types';
 
 /**
  * Configuration Management Class
@@ -68,6 +69,7 @@ export class Config {
     static get(key: 'treeView.toSCM', defaultValue: false): boolean;
     static get(key: 'treeView.worktreeDescriptionTemplate', defaultValue: '$FULL_PATH'): string;
     static get(key: 'treeView.worktreeLabelTemplate', defaultValue: ''): string;
+    static get(key: 'treeView.worktreeSortOrder', defaultValue: 'default'): WorktreeSortOrder;
 
     // Path template configuration
     static get(key: 'worktreePathTemplate', defaultValue: '$BASE_PATH.worktrees'): string;
@@ -94,8 +96,8 @@ export class Config {
      * @param defaultValue New configuration value
      * @returns Promise<void>
      */
-    static update<T>(key: string, defaultValue: T): Thenable<void> {
-        return vscode.workspace.getConfiguration(APP_NAME).update(key, defaultValue);
+    static update<T>(key: string, defaultValue: T, target?: vscode.ConfigurationTarget): Thenable<void> {
+        return vscode.workspace.getConfiguration(APP_NAME).update(key, defaultValue, target);
     }
 
     /**
