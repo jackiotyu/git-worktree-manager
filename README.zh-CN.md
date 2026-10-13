@@ -110,6 +110,10 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
   （例如本地配置文件或环境相关资源）。  
   **示例:** `[".env.local", "config/*.json"]`
 
+- **`git-worktree-manager.nestedRepoScanIgnores`**  
+  扫描工作区中的嵌套 Git 仓库时要跳过的目录和文件 glob 模式。内置的 `node_modules` 和 `.git` 元数据排除规则始终生效。  
+  **示例:** `["**/vendor/**", "**/generated/**"]`
+
 - **`git-worktree-manager.worktreeCopyIgnores`**  
   在创建 worktree 时排除某些文件或路径，即使它们匹配 `worktreeCopyPatterns`。  
   **示例:** `["node_modules", "dist"]`
