@@ -62,6 +62,10 @@ rs.mock('fs/promises', () => ({
     }),
 }));
 
+rs.mock('@/core/config/setting', () => ({
+    Config: { get: rs.fn(() => ['**/generated/**']) },
+}));
+
 rs.mock('../../core/folderRoot', () => ({
     default: { folderPathSet: new Set<string>() },
 }));
@@ -117,6 +121,6 @@ describe('scanNestedRepos', () => {
             onlyFiles: false,
             followSymbolicLinks: false,
         });
-        expect(capturedOptions?.ignore).toEqual(expect.arrayContaining(['**/node_modules/**', '**/.git/*']));
+        expect(capturedOptions?.ignore).toEqual(expect.arrayContaining(['**/node_modules/**', '**/.git/*', '**/generated/**']));
     });
 });
