@@ -6,18 +6,16 @@ import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { comparePath, toSimplePath } from '@/core/util/path';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
-// Ignore Git metadata contents while still matching the .git entry itself.
 const IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
 
-// Avoid starting Git for arbitrary files named HEAD: bare repositories have this layout.
+// A bare repository has a config file and object database at its root. Git verifies candidates to avoid false positives.
 const hasBareRepoLayout = async (dir: string): Promise<boolean> => {
     try {
-        const [config, objects, refs] = await Promise.all([
+        const [config, objects] = await Promise.all([
             fs.stat(path.join(dir, 'config')),
             fs.stat(path.join(dir, 'objects')),
-            fs.stat(path.join(dir, 'refs')),
         ]);
-        return config.isFile() && objects.isDirectory() && refs.isDirectory();
+        return config.isFile() && objects.isDirectory();
     } catch {
         return false;
     }
@@ -38,7 +36,7 @@ const isRepoRoot = async (dir: string): Promise<boolean> => {
     return Boolean(topLevel) && comparePath(topLevel, dir);
 };
 
-// Run a bounded number of Git validations at once instead of serially spawning a process per candidate.
+// Bound Git subprocess concurrency so large workspaces do not spawn one process per candidate at once.
 const mapConcurrent = async <T, R>(
     items: T[],
     concurrency: number,
@@ -76,14 +74,15 @@ export const scanNestedRepos = async (): Promise<string[]> => {
 
         for await (const entry of stream) {
             const entryPath = entry.toString();
-            const isBareCandidate = path.basename(entryPath) === 'HEAD';
-            const dir = isBareCandidate ? path.dirname(entryPath) : path.dirname(entryPath);
+            const bare = path.basename(entryPath) === 'HEAD';
+            const dir = path.dirname(entryPath);
             const normalized = toSimplePath(dir);
-            // Do not include workspace roots or scan the same repository twice across workspace folders.
             if (rootPaths.has(normalized)) continue;
+
             const existing = candidates.get(normalized);
-            if (!existing || (existing.bare && !isBareCandidate)) {
-                candidates.set(normalized, { path: dir, bare: isBareCandidate });
+            // Prefer a .git entry over a HEAD file if both patterns identify the same directory.
+            if (!existing || (existing.bare && !bare)) {
+                candidates.set(normalized, { path: dir, bare });
             }
         }
     }
