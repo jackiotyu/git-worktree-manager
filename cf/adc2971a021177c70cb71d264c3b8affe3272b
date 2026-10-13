@@ -1,0 +1,16 @@
+src/core/util/repoScan.ts
+  h_efb56b9ff7aea6 6,27,81-83
+src/test/unit/repoScan.test.ts
+  h_efb56b9ff7aea6 1,109-111,136-138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cfadc2971a021177c70cb71d264c3b8affe3272b",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
