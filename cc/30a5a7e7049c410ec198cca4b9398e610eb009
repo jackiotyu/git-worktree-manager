@@ -1,0 +1,14 @@
+src/core/util/path.ts
+  h_efb56b9ff7aea6 41-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cc30a5a7e7049c410ec198cca4b9398e610eb009",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
