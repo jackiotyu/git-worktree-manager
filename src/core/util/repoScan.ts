@@ -89,9 +89,7 @@ export const scanNestedRepos = async (): Promise<string[]> => {
 
     const candidateList = [...candidates.values()];
     const valid = await mapConcurrent(candidateList, 8, async (candidate) => {
-        const isValid = candidate.bare
-            ? await isBareRepository(candidate.path)
-            : await isRepoRoot(candidate.path);
+        const isValid = candidate.bare ? await isBareRepository(candidate.path) : await isRepoRoot(candidate.path);
         return isValid ? toSimplePath(candidate.path) : '';
     });
 
