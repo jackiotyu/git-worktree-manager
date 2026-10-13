@@ -58,6 +58,13 @@ rs.mock('fs/promises', () => ({
     stat: rs.fn(async (filePath: string) => {
         if (filePath === path.join(bareRepo, 'config')) return { isFile: () => true };
         if (filePath === path.join(bareRepo, 'objects')) return { isDirectory: () => true };
+        for (const dir of gitDirs) {
+            if (filePath === path.join(dir, '.git')) return { isDirectory: () => true };
+            if (filePath === path.join(dir, '.git', 'HEAD')) return { isFile: () => true };
+        }
+        throw new Error('not found');
+    }),
+    readFile: rs.fn(async () => {
         throw new Error('not found');
     }),
 }));
