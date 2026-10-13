@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { beforeEach, describe, expect, it, rs } from '@rstest/core';
 import path from 'path';
 import { scanNestedRepos } from '../../core/util/repoScan';
@@ -105,7 +106,9 @@ describe('scanNestedRepos', () => {
         const found = await scanNestedRepos();
 
         expect(new Set(found)).toEqual(
-            new Set([repoA, repoC, innerOfA, repoB, worktreeDir, rootRepoInner, bareRepo].map((item) => toSimplePath(item))),
+            new Set(
+                [repoA, repoC, innerOfA, repoB, worktreeDir, rootRepoInner, bareRepo].map((item) => toSimplePath(item)),
+            ),
         );
         expect(found).not.toContain(toSimplePath(root));
         expect(found).not.toContain(toSimplePath(skippedRepo));
@@ -130,6 +133,8 @@ describe('scanNestedRepos', () => {
             onlyFiles: false,
             followSymbolicLinks: false,
         });
-        expect(capturedOptions?.ignore).toEqual(expect.arrayContaining(['**/node_modules/**', '**/.git/*', '**/generated/**']));
+        expect(capturedOptions?.ignore).toEqual(
+            expect.arrayContaining(['**/node_modules/**', '**/.git/*', '**/generated/**']),
+        );
     });
 });

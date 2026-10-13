@@ -3,7 +3,7 @@ import path from 'path';
 import folderRoot from '@/core/folderRoot';
 import { Config } from '@/core/config/setting';
 import { execBase } from '@/core/git/exec-base';
-import { comparePath, toSimplePath } from '@/core/util/path';
+import { toSimplePath } from '@/core/util/path';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
 const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
@@ -24,10 +24,7 @@ const hasWorktreeGitMetadata = async (dir: string): Promise<boolean> => {
         if (!match) return false;
 
         const gitDir = path.resolve(dir, match[1].trim());
-        const [target, head] = await Promise.all([
-            fs.stat(gitDir),
-            fs.stat(path.join(gitDir, 'HEAD')),
-        ]);
+        const [target, head] = await Promise.all([fs.stat(gitDir), fs.stat(path.join(gitDir, 'HEAD'))]);
         return target.isDirectory() && head.isFile();
     } catch {
         return false;
@@ -81,7 +78,9 @@ export const scanNestedRepos = async (): Promise<string[]> => {
     const roots = [...folderRoot.folderPathSet];
     const rootPaths = new Set(roots.map((item) => toSimplePath(item)));
     const candidates = new Map<string, { path: string; bare: boolean }>();
-    const ignoreGlobs = [...new Set([...DEFAULT_IGNORE_GLOBS, ...Config.get('nestedRepoScanIgnores', []).filter(Boolean)])];
+    const ignoreGlobs = [
+        ...new Set([...DEFAULT_IGNORE_GLOBS, ...Config.get('nestedRepoScanIgnores', []).filter(Boolean)]),
+    ];
 
     for (const root of roots) {
         const stream = fgStream(GIT_ENTRY_GLOB, {
