@@ -83,7 +83,7 @@ rs.mock('../../core/git/getWorktreeTopLevel', () => ({
 }));
 
 rs.mock('../../core/git/exec-base', () => ({
-    execBase: rs.fn(async (cwd: string) => ({ stdout: cwd === bareRepo ? 'true\n' : 'false\n' })),
+    execBase: rs.fn(async (cwd: string) => ({ stdout: cwd === bareRepo ? 'true\\n' : 'false\\n' })),
 }));
 
 rs.mock('../../core/util/path', () => ({
@@ -101,15 +101,15 @@ describe('scanNestedRepos', () => {
         });
     });
 
-    it('finds repository roots and linked worktrees, skipping the workspace root and node_modules', async () => {
+    it('finds repositories with valid metadata, skipping the workspace root and node_modules', async () => {
         const found = await scanNestedRepos();
 
         expect(new Set(found)).toEqual(
-            new Set([repoA, repoC, repoB, worktreeDir, rootRepoInner, bareRepo].map((item) => toSimplePath(item))),
+            new Set([repoA, repoC, innerOfA, repoB, worktreeDir, rootRepoInner, bareRepo].map((item) => toSimplePath(item))),
         );
         expect(found).not.toContain(toSimplePath(root));
         expect(found).not.toContain(toSimplePath(skippedRepo));
-        expect(topLevelModule.getWorktreeTopLevel).not.toHaveBeenCalledWith(fakeGitDir);
+        expect(topLevelModule.getWorktreeTopLevel).not.toHaveBeenCalled();
     });
 
     it('discovers bare repositories and ignores unrelated HEAD files', async () => {
