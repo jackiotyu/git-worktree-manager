@@ -9,6 +9,7 @@ import {
 import { TreeItemKind } from '@/constants';
 import { globalStateEvent, treeDataEvent, updateTreeDataEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
+import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { WorkspaceState } from '@/core/state';
 import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
@@ -19,7 +20,7 @@ import { comparePath, isSubPath, toSimplePath } from '@/core/util/path';
 import { Config } from '@/core/config/setting';
 import { sortWorktrees } from '@/core/util/worktreeSort';
 import { getNestedRepos } from '@/core/util/nestedRepo';
-import { checkIsFolder } from '@/core/util/file';
+
 
 type WorktreeViewItem = NestedRepoGroupItem | WorkspaceMainGitFolderItem | WorktreeGroupItem | WorktreeItem;
 
@@ -154,9 +155,10 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
     private async getNestedRepoItems(group: NestedRepoGroupItem): Promise<WorkspaceMainGitFolderItem[]> {
         const items: WorkspaceMainGitFolderItem[] = [];
         for (const nestedPath of this.getNestedRepoPaths()) {
+            const isValidRepository = comparePath(await getWorktreeTopLevel(nestedPath), nestedPath);
             const nestedItem = new WorkspaceMainGitFolderItem(nestedPath, vscode.TreeItemCollapsibleState.Expanded, {
                 nested: true,
-                invalid: !(await checkIsFolder(nestedPath)),
+                invalid: !isValidRepository,
             });
             nestedItem.parent = group;
             this.worktreeRootMap.set(vscode.Uri.file(nestedPath).fsPath, nestedItem);
