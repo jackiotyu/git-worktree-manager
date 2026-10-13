@@ -110,6 +110,10 @@ Customize Git Worktree Manager to fit your workflow:
   (for example, local config files or environment-specific assets).  
   **Example:** `[".env.local", "config/*.json"]`
 
+- **`git-worktree-manager.nestedRepoScanIgnores`**  
+  Glob patterns for directories and files to skip when scanning workspace folders for nested Git repositories. Built-in exclusions for `node_modules` and `.git` metadata always apply.  
+  **Example:** `["**/vendor/**", "**/generated/**"]`
+
 - **`git-worktree-manager.worktreeCopyIgnores`**  
   Exclude specific files or paths from being copied when creating a worktree,  
   even if they match `worktreeCopyPatterns`.  
