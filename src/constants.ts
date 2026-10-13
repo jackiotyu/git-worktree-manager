@@ -11,6 +11,9 @@ export enum Commands {
     removeMultiFavorite = 'git-worktree-manager.removeMultiFavorite',
     removeGitFolder = 'git-worktree-manager.removeGitFolder',
     removeMultiGitFolder = 'git-worktree-manager.removeMultiGitFolder',
+    selectNestedRepos = 'git-worktree-manager.selectNestedRepos',
+    removeNestedRepo = 'git-worktree-manager.removeNestedRepo',
+    removeMultiNestedRepos = 'git-worktree-manager.removeMultiNestedRepos',
     renameGitFolder = 'git-worktree-manager.renameGitFolder',
     repairWorktree = 'git-worktree-manager.repairWorktree',
     removeWorktree = 'git-worktree-manager.removeWorktree',
@@ -92,6 +95,7 @@ export enum TreeItemKind {
     setting = 'setting',
     file = 'file',
     worktreeGroup = 'worktreeGroup',
+    nestedRepoGroup = 'nestedRepoGroup',
 }
 
 export enum QuickPickKind {

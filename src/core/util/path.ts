@@ -32,9 +32,18 @@ function comparePath(path1: string = '', path2: string = '') {
     return toSimplePath(path1) === toSimplePath(path2);
 }
 
-// find prefix path in list
+// Find the most specific root containing fsPath, respecting path boundaries.
 const findPrefixPath = (fsPath: string, strList: string[]) => {
-    return strList.find((str) => fsPath.startsWith(str));
+    const target = path.resolve(fsPath);
+    return strList
+        .filter((candidate) => {
+            const relative = path.relative(path.resolve(candidate), target);
+            return (
+                relative === '' ||
+                (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+            );
+        })
+        .sort((a, b) => path.resolve(b).length - path.resolve(a).length)[0];
 };
 
 // check if child is a subpath of parent

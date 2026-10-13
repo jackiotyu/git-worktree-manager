@@ -1,19 +1,27 @@
 import * as vscode from 'vscode';
-import { WorktreeGroupItem, WorktreeItem, WorkspaceMainGitFolderItem } from '@/core/treeView/items';
+import path from 'path';
+import {
+    NestedRepoGroupItem,
+    WorktreeGroupItem,
+    WorktreeItem,
+    WorkspaceMainGitFolderItem,
+} from '@/core/treeView/items';
 import { TreeItemKind } from '@/constants';
 import { globalStateEvent, treeDataEvent, updateTreeDataEvent, worktreeChangeEvent } from '@/core/event/events';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
+import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { WorkspaceState } from '@/core/state';
 import folderRoot from '@/core/folderRoot';
 import throttle from 'lodash-es/throttle';
 import { IWorktreeDetail } from '@/types';
 import { findPrefixPath } from '@/core/util/folder';
 import { getRepositoryWorktreeGroups } from '@/core/util/worktreeGroup';
-import { comparePath } from '@/core/util/path';
+import { comparePath, isSubPath, toSimplePath } from '@/core/util/path';
 import { Config } from '@/core/config/setting';
 import { sortWorktrees } from '@/core/util/worktreeSort';
+import { getNestedRepos } from '@/core/util/nestedRepo';
 
-type WorktreeViewItem = WorkspaceMainGitFolderItem | WorktreeGroupItem | WorktreeItem;
+type WorktreeViewItem = NestedRepoGroupItem | WorkspaceMainGitFolderItem | WorktreeGroupItem | WorktreeItem;
 
 export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeViewItem>, vscode.Disposable {
     private static readonly refreshThrottle = 150; // 150ms
@@ -97,12 +105,24 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
             return this.getRepositoryItems(element.fsPath, element);
         }
 
+        if (element.type === TreeItemKind.nestedRepoGroup) {
+            return this.getNestedRepoItems(element);
+        }
+
         if (element.type === TreeItemKind.worktreeGroup) {
             return element.children;
         }
     }
 
+    // Nested repositories registered for display by the user, excluding paths that duplicate workspace repositories
+    private getNestedRepoPaths(): string[] {
+        const mainFolderPaths = new Set(WorkspaceState.get('mainFolders', []).map((item) => toSimplePath(item.path)));
+        const registered = getNestedRepos().filter((repo) => !mainFolderPaths.has(repo));
+        return [...new Set(registered)].sort((a, b) => path.basename(a).localeCompare(path.basename(b)));
+    }
+
     private checkOnlyOneMainFolder() {
+        if (this.getNestedRepoPaths().length) return false;
         const workspaceFolderNum = folderRoot.folderPathSet.size;
         const mainFolders = WorkspaceState.get('mainFolders', []);
         return workspaceFolderNum === 1 || mainFolders.length === 1;
@@ -117,11 +137,33 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
             return this.getRepositoryItems(mainFolderPath);
         }
 
-        return mainFolders.map((item) => {
+        this.worktreeRootMap.clear();
+        const items: WorktreeViewItem[] = mainFolders.map((item) => {
             const gitFolderItem = new WorkspaceMainGitFolderItem(item.path, vscode.TreeItemCollapsibleState.Expanded);
             this.worktreeRootMap.set(vscode.Uri.file(item.path).fsPath, gitFolderItem);
             return gitFolderItem;
         });
+
+        if (this.getNestedRepoPaths().length) {
+            items.push(new NestedRepoGroupItem());
+        }
+
+        return items;
+    }
+
+    private async getNestedRepoItems(group: NestedRepoGroupItem): Promise<WorkspaceMainGitFolderItem[]> {
+        const items: WorkspaceMainGitFolderItem[] = [];
+        for (const nestedPath of this.getNestedRepoPaths()) {
+            const isValidRepository = comparePath(await getWorktreeTopLevel(nestedPath), nestedPath);
+            const nestedItem = new WorkspaceMainGitFolderItem(nestedPath, vscode.TreeItemCollapsibleState.Expanded, {
+                nested: true,
+                invalid: !isValidRepository,
+            });
+            nestedItem.parent = group;
+            this.worktreeRootMap.set(vscode.Uri.file(nestedPath).fsPath, nestedItem);
+            items.push(nestedItem);
+        }
+        return items;
     }
 
     private async getRepositoryItems(
@@ -136,6 +178,10 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
         const groupsById = new Map(groups.map((group) => [group.id, group]));
         const groupItems = groups.map((group) => new WorktreeGroupItem(group, parent));
         const ungroupedItems: WorktreeItem[] = [];
+        // Only nested repositories need marking: the worktree path is under the current workspace folder
+        const workspaceFolders = parent?.nested ? [...folderRoot.folderPathSet] : [];
+        const inWorkspace = (worktreePath: string) =>
+            workspaceFolders.some((folder) => isSubPath(folder, worktreePath));
 
         for (const worktree of data) {
             const groupItem = groupItems.find((item) => {
@@ -143,9 +189,23 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
                 return group?.worktreePaths.some((worktreePath) => comparePath(worktreePath, worktree.path));
             });
             if (groupItem) {
-                groupItem.children.push(new WorktreeItem(worktree, vscode.TreeItemCollapsibleState.None, groupItem));
+                groupItem.children.push(
+                    new WorktreeItem(
+                        worktree,
+                        vscode.TreeItemCollapsibleState.None,
+                        groupItem,
+                        inWorkspace(worktree.path),
+                    ),
+                );
             } else {
-                ungroupedItems.push(new WorktreeItem(worktree, vscode.TreeItemCollapsibleState.None, parent));
+                ungroupedItems.push(
+                    new WorktreeItem(
+                        worktree,
+                        vscode.TreeItemCollapsibleState.None,
+                        parent,
+                        inWorkspace(worktree.path),
+                    ),
+                );
             }
         }
 
@@ -153,7 +213,8 @@ export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeVie
     }
 
     getParent(element: WorktreeViewItem): vscode.ProviderResult<WorktreeViewItem> {
-        if (element.type === TreeItemKind.workspaceGitMainFolder) return;
+        if (element.type === TreeItemKind.workspaceGitMainFolder) return element.parent;
+        if (element.type === TreeItemKind.nestedRepoGroup) return;
         if (element.parent?.type === TreeItemKind.gitFolder) return;
         return element.parent;
     }

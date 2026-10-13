@@ -180,5 +180,13 @@
     "Create a worktree group before assigning worktrees": "ワークツリーを割り当てる前にグループを作成してください",
     "Ungrouped": "未グループ",
     "Assign {0} to a worktree group": "{0} をワークツリーグループに割り当て",
-    "Select a group or choose Ungrouped": "グループまたは未グループを選択してください"
+    "Select a group or choose Ungrouped": "グループまたは未グループを選択してください",
+    "Searching Git repositories": "Gitリポジトリを検索しています",
+    "Nested Git Repositories": "ネストされたGitリポジトリ",
+    "Select nested Git repositories to display": "表示するネストされたGitリポジトリを選択",
+    "No nested Git repositories found": "ネストされたGitリポジトリが見つかりません",
+    "Remove nested Git repository from workspace": "ワークスペースからネストされたGitリポジトリを削除",
+    "Are you sure you want to remove the nested Git repository {0} from the workspace view?": "ネストされたGitリポジトリ {0} をワークスペースビューから削除してもよろしいですか？",
+    "(not found)": "（見つかりません）",
+    "$(warning) Path does not exist\n\n": "$(warning) パスが存在しません\n\n"
 }

@@ -4,7 +4,7 @@
   "displayName": "Git Worktree Manager",
   "description": "Effortless multi-workspace management and fast Git project cloning across directories.轻松管理多工作区，快速克隆 Git 项目并跨目录运行。",
   "version": "3.31.0",
-  "packageManager": "pnpm@12.7.0",
+  "packageManager": "pnpm@12.11.2",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -118,6 +118,23 @@
         "command": "git-worktree-manager.addGitFolder",
         "title": "%cmd.addGitFolder%",
         "icon": "$(add)",
+        "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.selectNestedRepos",
+        "title": "%cmd.selectNestedRepos%",
+        "icon": "$(combine)",
+        "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.removeNestedRepo",
+        "title": "%cmd.removeNestedRepo%",
+        "icon": "$(close)"
+      },
+      {
+        "command": "git-worktree-manager.removeMultiNestedRepos",
+        "title": "%cmd.removeMultiNestedRepos%",
+        "icon": "$(trash)",
         "category": "Worktree"
       },
       {
@@ -497,6 +514,11 @@
           "group": "navigation@3"
         },
         {
+          "command": "git-worktree-manager.selectNestedRepos",
+          "when": "view =~ /git-worktree-manager-list/",
+          "group": "navigation@4"
+        },
+        {
           "command": "git-worktree-manager.pruneWorktree",
           "when": "view =~ /git-worktree-manager-list/",
           "group": "navigation@5"
@@ -607,6 +629,21 @@
           "command": "git-worktree-manager.renameGitFolder",
           "when": "viewItem =~ /git-worktree-manager\\.(gitFolderItem)/",
           "group": "file-action@1"
+        },
+        {
+          "command": "git-worktree-manager.removeNestedRepo",
+          "when": "viewItem =~ /git-worktree-manager\\.workspaceGitMainFolder\\.nested$/",
+          "group": "file-action@3"
+        },
+        {
+          "command": "git-worktree-manager.selectNestedRepos",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem == git-worktree-manager.nestedRepoGroup",
+          "group": "inline@1"
+        },
+        {
+          "command": "git-worktree-manager.removeMultiNestedRepos",
+          "when": "view =~ /git-worktree-manager-list/ && viewItem == git-worktree-manager.nestedRepoGroup",
+          "group": "inline@2"
         },
         {
           "command": "git-worktree-manager.removeMergedWorktrees",
@@ -1102,6 +1139,15 @@
             ],
             "markdownDescription": "%config.worktreeCopyIgnores.description%"
           },
+          "git-worktree-manager.nestedRepoScanIgnores": {
+            "order": 9,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "markdownDescription": "%config.nestedRepoScanIgnores.description%"
+          },
           "git-worktree-manager.checkoutIgnoreOtherWorktree": {
             "order": 4,
             "scope": "application",
@@ -1395,8 +1441,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@rspack/cli": "^2.2.7",
-    "@rspack/core": "^2.2.7",
+    "@rspack/cli": "^2.2.8",
+    "@rspack/core": "^2.2.8",
     "@rstest/core": "^0.11.12",
     "@swc/helpers": "^0.5.23",
     "@types/lodash-es": "^4.17.12",
@@ -1405,13 +1451,13 @@
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^4.0.0",
     "changelogithub": "^15.0.5",
-    "eslint": "^10.11.0",
+    "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "ovsx": "^1.2.0",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.70.1"
+    "typescript-eslint": "^8.71.1"
   },
   "dependencies": {
     "dayjs": "^1.11.23",

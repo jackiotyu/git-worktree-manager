@@ -17,6 +17,7 @@ type KeyMainFolders = 'mainFolders';
 type KeyGlobalRecentItemCache = 'global.recentItemCache';
 type KeyGlobalFavorite = 'global.favorite';
 type KeyWorktreeGroups = 'worktreeGroups';
+type KeyWorkspaceNestedRepos = 'workspaceNestedRepos';
 
 export type StateKey =
     | KeyGitRepoRefList
@@ -26,7 +27,8 @@ export type StateKey =
     | KeyMainFolders
     | KeyGlobalRecentItemCache
     | KeyGlobalFavorite
-    | KeyWorktreeGroups;
+    | KeyWorktreeGroups
+    | KeyWorkspaceNestedRepos;
 
 export class GlobalState {
     static context: vscode.ExtensionContext;
@@ -81,11 +83,13 @@ export class WorkspaceState {
     }
     static get(key: KeyWorkTreeCache, defaultValue: IRecentItem[]): IWorktreeCacheItem[];
     static get(key: KeyMainFolders, defaultValue: IFolderItemConfig[]): IFolderItemConfig[];
+    static get(key: KeyWorkspaceNestedRepos, defaultValue: string[]): string[];
     static get<T>(key: string, defaultValue: T): T {
         return this.state.get<T>(key, defaultValue);
     }
     static update(key: KeyWorkTreeCache, value: IWorktreeCacheItem[]): Thenable<void>;
     static update(key: KeyMainFolders, value: IFolderItemConfig[]): Thenable<void>;
+    static update(key: KeyWorkspaceNestedRepos, value: string[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {
             globalStateEvent.fire(key as KeyGitRepoRefList);

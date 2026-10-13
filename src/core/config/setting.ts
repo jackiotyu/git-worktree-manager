@@ -59,6 +59,7 @@ export class Config {
     static get(key: 'promptDeleteBranchAfterWorktreeDeletion', defaultValue: false): boolean;
     static get(key: 'worktreeCopyPatterns', defaultValue: []): string[];
     static get(key: 'worktreeCopyIgnores', defaultValue: []): string[];
+    static get(key: 'nestedRepoScanIgnores', defaultValue: []): string[];
     static get(key: 'checkoutIgnoreOtherWorktree', defaultValue: false): boolean;
 
     // Explorer configuration
