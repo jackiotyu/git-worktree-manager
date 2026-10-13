@@ -1,12 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
 import folderRoot from '@/core/folderRoot';
+import { Config } from '@/core/config/setting';
 import { execBase } from '@/core/git/exec-base';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { comparePath, toSimplePath } from '@/core/util/path';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
-const IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
+const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
 
 // A bare repository has a config file and object database at its root. Git verifies candidates to avoid false positives.
 const hasBareRepoLayout = async (dir: string): Promise<boolean> => {
@@ -60,6 +61,7 @@ export const scanNestedRepos = async (): Promise<string[]> => {
     const roots = [...folderRoot.folderPathSet];
     const rootPaths = new Set(roots.map((item) => toSimplePath(item)));
     const candidates = new Map<string, { path: string; bare: boolean }>();
+    const ignoreGlobs = [...new Set([...DEFAULT_IGNORE_GLOBS, ...Config.get('nestedRepoScanIgnores', []).filter(Boolean)])];
 
     for (const root of roots) {
         const stream = fgStream(GIT_ENTRY_GLOB, {
@@ -69,7 +71,7 @@ export const scanNestedRepos = async (): Promise<string[]> => {
             onlyFiles: false,
             followSymbolicLinks: false,
             suppressErrors: true,
-            ignore: IGNORE_GLOBS,
+            ignore: ignoreGlobs,
         });
 
         for await (const entry of stream) {
