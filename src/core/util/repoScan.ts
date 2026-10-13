@@ -24,7 +24,7 @@ const hasWorktreeGitMetadata = async (dir: string): Promise<boolean> => {
         const match = /^gitdir:\s*(.+)\s*$/im.exec(content);
         if (!match) return false;
 
-        const gitDir = path.resolve(dir, match[1]);
+        const gitDir = path.resolve(dir, match[1].trim());
         const [target, head] = await Promise.all([
             fs.stat(gitDir),
             fs.stat(path.join(gitDir, 'HEAD')),
