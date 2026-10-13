@@ -93,6 +93,10 @@ rs.mock('../../core/util/file', () => ({
     checkIsFolder: rs.fn().mockResolvedValue(true),
 }));
 
+rs.mock('../../core/git/getWorktreeTopLevel', () => ({
+    getWorktreeTopLevel: rs.fn(async (cwd: string) => cwd),
+}));
+
 rs.mock('../../core/folderRoot', () => ({
     default: { folderPathSet: new Set<string>() },
 }));
