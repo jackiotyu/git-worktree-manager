@@ -3,13 +3,12 @@ import path from 'path';
 import folderRoot from '@/core/folderRoot';
 import { Config } from '@/core/config/setting';
 import { execBase } from '@/core/git/exec-base';
-import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { comparePath, toSimplePath } from '@/core/util/path';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
 const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
 
-// Reject obvious false positives before spawning Git. Git remains the source of truth for repository identity.
+// A worktree's .git entry is either a metadata directory or a gitdir pointer file.
 const hasWorktreeGitMetadata = async (dir: string): Promise<boolean> => {
     const gitEntry = path.join(dir, '.git');
     try {
@@ -56,11 +55,6 @@ const isBareRepository = async (dir: string): Promise<boolean> => {
     } catch {
         return false;
     }
-};
-
-const isRepoRoot = async (dir: string): Promise<boolean> => {
-    const topLevel = await getWorktreeTopLevel(dir);
-    return Boolean(topLevel) && comparePath(topLevel, dir);
 };
 
 // Bound Git subprocess concurrency so large workspaces do not spawn one process per candidate at once.
@@ -117,8 +111,9 @@ export const scanNestedRepos = async (): Promise<string[]> => {
 
     const candidateList = [...candidates.values()];
     const valid = await mapConcurrent(candidateList, 8, async (candidate) => {
-        const hasMetadata = candidate.bare || (await hasWorktreeGitMetadata(candidate.path));
-        const isValid = hasMetadata && (candidate.bare ? await isBareRepository(candidate.path) : await isRepoRoot(candidate.path));
+        const isValid = candidate.bare
+            ? await isBareRepository(candidate.path)
+            : await hasWorktreeGitMetadata(candidate.path);
         return isValid ? toSimplePath(candidate.path) : '';
     });
 
