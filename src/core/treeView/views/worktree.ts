@@ -21,7 +21,6 @@ import { Config } from '@/core/config/setting';
 import { sortWorktrees } from '@/core/util/worktreeSort';
 import { getNestedRepos } from '@/core/util/nestedRepo';
 
-
 type WorktreeViewItem = NestedRepoGroupItem | WorkspaceMainGitFolderItem | WorktreeGroupItem | WorktreeItem;
 
 export class WorktreeDataProvider implements vscode.TreeDataProvider<WorktreeViewItem>, vscode.Disposable {

@@ -38,7 +38,10 @@ const findPrefixPath = (fsPath: string, strList: string[]) => {
     return strList
         .filter((candidate) => {
             const relative = path.relative(path.resolve(candidate), target);
-            return relative === '' || (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+            return (
+                relative === '' ||
+                (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+            );
         })
         .sort((a, b) => path.resolve(b).length - path.resolve(a).length)[0];
 };
