@@ -121,6 +121,6 @@ describe('scanNestedRepos', () => {
             onlyFiles: false,
             followSymbolicLinks: false,
         });
-        expect(capturedOptions?.ignore).toEqual(expect.arrayContaining(['**/node_modules/**', '**/.git/*', '**/generated/**']));
+        expect(capturedOptions?.ignore).toEqual(expect.arrayContaining(['**/node_modules/**', '**/.git/**', '**/generated/**']));
     });
 });
