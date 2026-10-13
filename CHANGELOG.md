@@ -1,3 +1,11 @@
+## v3.32.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.31.0...v3.32.0)
+
+### 🚀 Enhancements
+
+- Add nested Git repository management features ([#63](https://github.com/jackiotyu/git-worktree-manager/pull/63), [#74](https://github.com/jackiotyu/git-worktree-manager/pull/74))
+
 ## v3.31.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.30.0...v3.31.0)
