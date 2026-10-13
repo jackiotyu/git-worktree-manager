@@ -180,5 +180,13 @@
     "Create a worktree group before assigning worktrees": "请先创建 Worktree 分组，再分配 Worktree",
     "Ungrouped": "未分组",
     "Assign {0} to a worktree group": "将 {0} 分配到 Worktree 分组",
-    "Select a group or choose Ungrouped": "选择分组或选择未分组"
+    "Select a group or choose Ungrouped": "选择分组或选择未分组",
+    "Searching Git repositories": "正在搜索 Git 仓库",
+    "Nested Git Repositories": "嵌套 Git 仓库",
+    "Select nested Git repositories to display": "选择要展示的嵌套 Git 仓库",
+    "No nested Git repositories found": "未找到嵌套 Git 仓库",
+    "Remove nested Git repository from workspace": "从工作区移除嵌套 Git 仓库",
+    "Are you sure you want to remove the nested Git repository {0} from the workspace view?": "确定从工作区视图中移除嵌套 Git 仓库 {0}？",
+    "(not found)": "（未找到）",
+    "$(warning) Path does not exist\n\n": "$(warning) 路径不存在\n\n"
 }

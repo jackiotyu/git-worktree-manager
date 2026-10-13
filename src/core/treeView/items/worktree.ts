@@ -36,6 +36,8 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         private viewItem: IWorktreeDetail,
         collapsible: vscode.TreeItemCollapsibleState,
         public parent?: GitFolderItem | WorkspaceMainGitFolderItem | WorktreeGroupItem,
+        // Worktrees of nested repositories under the current workspace folder are marked with the check icon
+        private inWorkspace: boolean = false,
     ) {
         super(WorktreeItem.generateLabel(viewItem), collapsible);
         this.isCurrent = judgeIncludeFolder(viewItem.path);
@@ -120,8 +122,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
 
     private setIcon() {
         const item = this.viewItem;
-        const isCurrent = this.isCurrent;
-        const themeColor = isCurrent ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
+        const themeColor = this.isCurrent || this.inWorkspace ? new vscode.ThemeColor('terminal.ansiBlue') : void 0;
         switch (true) {
             case this.updatingAheadBehind:
                 this.iconPath = new vscode.ThemeIcon('loading~spin', themeColor);
@@ -131,6 +132,9 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
                 break;
             case item.locked:
                 this.iconPath = new vscode.ThemeIcon('lock', themeColor);
+                break;
+            case this.inWorkspace:
+                this.iconPath = new vscode.ThemeIcon('check', themeColor);
                 break;
             default:
                 this.iconPath = getFolderIcon(item.path, themeColor);
@@ -193,7 +197,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         this.tooltip = tooltip;
     }
 
-    // 手动获取ahead/behind
+    // Manually obtain ahead/behind
     private async initUpstreamInfo() {
         const needFetch = Config.get('treeView.showFetchInTreeItem', true);
         if (!needFetch) return;

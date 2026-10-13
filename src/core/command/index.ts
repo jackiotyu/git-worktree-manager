@@ -25,6 +25,9 @@ import { addToWorkspaceCmd } from '@/core/command/addToWorkspaceCmd';
 import { removeFromWorkspaceCmd } from '@/core/command/removeFromWorkspaceCmd';
 import { refreshRecentFolderCmd } from '@/core/command/refreshRecentFolderCmd';
 import { addToGitFolderCmd } from '@/core/command/addToGitFolderCmd';
+import { selectNestedReposCmd } from '@/core/command/selectNestedReposCmd';
+import { removeNestedRepoCmd } from '@/core/command/removeNestedRepoCmd';
+import { removeMultiNestedReposCmd } from '@/core/command/removeMultiNestedReposCmd';
 import { copyFilePathCmd } from '@/core/command/copyFilePathCmd';
 import { checkoutBranchCmd } from '@/core/command/checkoutBranchCmd';
 import { toggleGitFolderOpenCmd } from '@/core/command/toggleGitFolderOpenCmd';
@@ -100,6 +103,9 @@ export function registerCommands(context: vscode.ExtensionContext) {
         registerCommand(Commands.copyFilePath, copyFilePathCmd),
         registerCommand(Commands.refreshRecentFolder, refreshRecentFolderCmd),
         registerCommand(Commands.addToGitFolder, addToGitFolderCmd),
+        registerCommand(Commands.selectNestedRepos, selectNestedReposCmd),
+        registerCommand(Commands.removeNestedRepo, removeNestedRepoCmd),
+        registerCommand(Commands.removeMultiNestedRepos, removeMultiNestedReposCmd),
         registerCommand(Commands.checkoutBranch, checkoutBranchCmd),
         registerCommand(Commands.gitFolderSetOpen, toggleGitFolderOpenCmd),
         registerCommand(Commands.gitFolderSetClose, toggleGitFolderOpenCmd),

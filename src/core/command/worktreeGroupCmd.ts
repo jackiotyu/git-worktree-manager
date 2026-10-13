@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { WorkspaceMainGitFolderItem, WorktreeGroupItem, WorktreeItem } from '@/core/treeView/items';
+import { TreeItemKind } from '@/constants';
 import { pickGitFolder } from '@/core/ui/pickGitFolder';
 import { Alert } from '@/core/ui/message';
 import { confirmModal } from '@/core/ui/modal';
@@ -63,9 +64,22 @@ export const deleteWorktreeGroupCmd = async (item?: WorktreeGroupItem) => {
 
 type GroupQuickPickItem = vscode.QuickPickItem & { groupId?: string };
 
+// Groups are keyed by the fsPath of the tree node (repository folder item). For nested
+// repositories, worktree.mainFolder may point to the main repository and differ from the
+// folder item, so resolve it from the parent node to stay consistent with the view/create commands.
+export const resolveGroupRepositoryPath = (item: WorktreeItem): string => {
+    const parent = item.parent;
+    if (parent) {
+        if (parent.type === TreeItemKind.worktreeGroup) return parent.parent?.fsPath ?? item.mainFolder;
+        if (parent.type === TreeItemKind.workspaceGitMainFolder) return parent.fsPath;
+    }
+    return item.mainFolder;
+};
+
 export const assignWorktreeGroupCmd = async (item?: WorktreeItem) => {
     if (!item) return;
-    const groups = getRepositoryWorktreeGroups(item.mainFolder).sort((a, b) => a.name.localeCompare(b.name));
+    const repositoryPath = resolveGroupRepositoryPath(item);
+    const groups = getRepositoryWorktreeGroups(repositoryPath).sort((a, b) => a.name.localeCompare(b.name));
     if (!groups.length) {
         Alert.showInformationMessage(vscode.l10n.t('Create a worktree group before assigning worktrees'));
         return;
@@ -90,5 +104,5 @@ export const assignWorktreeGroupCmd = async (item?: WorktreeItem) => {
         },
     );
     if (!selected) return;
-    await assignWorktreeToGroup(item.mainFolder, item.fsPath, selected.groupId);
+    await assignWorktreeToGroup(repositoryPath, item.fsPath, selected.groupId);
 };

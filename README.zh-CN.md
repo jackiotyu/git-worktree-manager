@@ -57,6 +57,7 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 - **收藏夹管理**：保存常用 Worktree，方便快速访问。 
   <video src="https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video> 
   > [将 Worktree 拖入收藏夹，随时访问。](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/drop-to-favorites.mp4) 
+- **嵌套 Git 仓库**：执行 **选择嵌套的 Git 仓库** 扫描工作区内嵌套的 Git 仓库，多选要展示的仓库。可移除不再需要的仓库。
 - **Worktree 分组**：将 Worktree 整理到本地可折叠分组中，不会修改 Git 元数据或仓库文件。
 - **Worktree 排序**：使用 Worktree 列表标题栏中搜索图标旁的 **排序 Worktree** 下拉菜单，保持 Git 默认顺序（未分组的 Worktree 中主工作树排在最前），或选择按名称（A 到 Z / Z 到 A）或创建时间（最新 / 最早优先）排序。当前排序方式在菜单中显示为灰色且不可点击。选择会在重启后保留，并同样应用于组内的 Worktree。
 - **复制未跟踪文件**：创建 Worktree 时自动复制主仓库的未跟踪文件。
@@ -102,9 +103,7 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 
 - **`git-worktree-manager.treeView.worktreeSortOrder`**
 
-  设置 Worktree 列表的排序方式：`default`（默认；保持 `git worktree list` 返回的顺序，未分组的 Worktree 中主工作树排在最前）、`nameAsc`、`nameDesc`、`createdDesc` 或 `createdAsc`。分组自身的顺序不变。适用于扩展侧边栏和源码管理视图。名称指分支名称（分离工作树使用标签或修订名称），不受标签模板影响。
-
-  Git 不记录 Worktree 的创建时间。按日期排序时使用文件系统中 Worktree 的 `.git` 条目的创建时间（裸仓库使用仓库目录）。复制或重新创建该条目可能改变时间；无法获取创建时间的 Worktree 始终排在最后，时间相同时按名称排序。
+  设置 Worktree 列表的排序方式：`default`、`nameAsc`、`nameDesc`、`createdDesc` 或 `createdAsc`。适用于扩展侧边栏和源码管理视图，组内顺序不变。
 
 - **`git-worktree-manager.worktreeCopyPatterns`**  
   指定在创建新 worktree 时需要复制的文件或目录  

@@ -57,6 +57,7 @@ helping you create, switch, and clean up worktrees safely while keeping your rep
 - **Favorites Management**: Save frequently used worktrees for quick access. 
   <video src="./images/drop-to-favorites.mp4" controls="controls" width="800" height="450"></video> 
   > [Drop worktrees to favorites for instant access.](https://cdn.jsdelivr.net/gh/jackiotyu/git-worktree-manager@0.4.6/images/drop-to-favorites.mp4) 
+- **Nested Git Repositories**: Run **Select Nested Git Repositories** to scan your workspace folders for nested Git repositories, then multi-select which to show. Remove repositories you no longer need.
 - **Worktree Groups**: Organize worktrees into local, collapsible groups without changing Git metadata or repository files.
 - **Worktree Sorting**: Use the **Sort Worktrees** dropdown beside the search icon in the Worktree List header to keep Git's default order (the main worktree stays first among ungrouped worktrees) or opt in to sorting by name (A to Z / Z to A) or creation time (newest / oldest first). The current order is greyed out in the menu. Your choice is remembered across sessions and also applies within groups.
 - **Copy Untracked Files**: Automatically include untracked files when creating a new worktree.
@@ -102,9 +103,7 @@ Customize Git Worktree Manager to fit your workflow:
 
 - **`git-worktree-manager.treeView.worktreeSortOrder`**
 
-  Sort the Worktree List: `default` (default; keeps the order reported by `git worktree list`, so the main worktree comes first among ungrouped worktrees), `nameAsc`, `nameDesc`, `createdDesc`, or `createdAsc`. Groups keep their own order. Works in both the extension sidebar and Source Control view. Names are branch names (or tag/revision names for detached worktrees), independent of the label template.
-
-  Git does not record worktree creation time. Date sorting uses the filesystem birth time of the worktree's `.git` entry (the repository directory for bare repositories). Copying or recreating that entry may change the time; unavailable dates always appear last, with ties sorted by name.
+  Sort the Worktree List: `default`, `nameAsc`, `nameDesc`, `createdDesc`, or `createdAsc`. Applies to the sidebar and Source Control view; groups keep their own order.
 
 - **`git-worktree-manager.worktreeCopyPatterns`**  
   Specify files or directories to be copied into a newly created worktree  

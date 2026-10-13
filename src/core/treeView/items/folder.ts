@@ -66,31 +66,73 @@ export class FolderLoadMore extends vscode.TreeItem implements ILoadMoreItem {
     }
 }
 
+export interface IWorkspaceMainGitFolderOptions {
+    // Root node of a nested repository selected for display by the user
+    nested?: boolean;
+    // The path is no longer valid (missing or no longer a directory)
+    invalid?: boolean;
+}
+
+// Synthetic common parent node for nested repositories (not a real directory on disk)
+export class NestedRepoGroupItem extends vscode.TreeItem {
+    readonly type = TreeItemKind.nestedRepoGroup;
+
+    constructor() {
+        super(vscode.l10n.t('Nested Git Repositories'), vscode.TreeItemCollapsibleState.Collapsed);
+        this.id = 'git-worktree-manager.nestedRepoGroup';
+        this.contextValue = 'git-worktree-manager.nestedRepoGroup';
+        this.iconPath = new vscode.ThemeIcon('combine');
+    }
+}
+
 export class WorkspaceMainGitFolderItem extends vscode.TreeItem implements IWorktreeLess {
     readonly type = TreeItemKind.workspaceGitMainFolder;
     label?: string;
     fsPath: string = '';
     uriPath: string = '';
     name: string = '';
+    // Whether this is a nested repository root selected for display by the user
+    nested: boolean = false;
+    parent?: NestedRepoGroupItem;
 
-    constructor(filepath: string, collapsible: vscode.TreeItemCollapsibleState) {
+    constructor(
+        filepath: string,
+        collapsible: vscode.TreeItemCollapsibleState,
+        options: IWorkspaceMainGitFolderOptions = {},
+    ) {
         const name = path.basename(filepath);
         super(name, collapsible);
-        this.setProperties(filepath, name);
-        this.setTooltip(filepath);
+        this.label = name;
+        this.setProperties(filepath, name, options);
+        this.setTooltip(filepath, options);
     }
 
-    private setProperties(filepath: string, name: string) {
+    private setProperties(filepath: string, name: string, options: IWorkspaceMainGitFolderOptions) {
         const uri = vscode.Uri.file(filepath);
         this.fsPath = uri.fsPath;
         this.uriPath = uri.toString();
         this.name = name;
-        this.description = filepath;
-        this.contextValue = `git-worktree-manager.workspaceGitMainFolder`;
+        this.nested = Boolean(options.nested);
+        this.description = options.invalid ? `${filepath} ${vscode.l10n.t('(not found)')}` : filepath;
+        if (options.nested) {
+            this.contextValue = 'git-worktree-manager.workspaceGitMainFolder.nested';
+        } else {
+            this.contextValue = 'git-worktree-manager.workspaceGitMainFolder';
+        }
+        if (options.invalid) {
+            this.iconPath = new vscode.ThemeIcon('warning');
+        } else if (options.nested) {
+            this.iconPath = new vscode.ThemeIcon('repo');
+        } else {
+            this.iconPath = new vscode.ThemeIcon('root-folder');
+        }
     }
 
-    private setTooltip(filepath: string) {
+    private setTooltip(filepath: string, options: IWorkspaceMainGitFolderOptions) {
         this.tooltip = new vscode.MarkdownString('', true);
         this.tooltip.appendMarkdown(vscode.l10n.t('$(folder) folder {0}\n\n', filepath));
+        if (options.invalid) {
+            this.tooltip.appendMarkdown(vscode.l10n.t('$(warning) Path does not exist\n\n'));
+        }
     }
 }

@@ -180,5 +180,13 @@
     "Create a worktree group before assigning worktrees": "請先建立 Worktree 群組，再指派 Worktree",
     "Ungrouped": "未分組",
     "Assign {0} to a worktree group": "將 {0} 指派到 Worktree 群組",
-    "Select a group or choose Ungrouped": "選擇群組或選擇未分組"
+    "Select a group or choose Ungrouped": "選擇群組或選擇未分組",
+    "Searching Git repositories": "正在搜尋 Git 儲存庫",
+    "Nested Git Repositories": "巢狀 Git 儲存庫",
+    "Select nested Git repositories to display": "選擇要顯示的巢狀 Git 儲存庫",
+    "No nested Git repositories found": "找不到巢狀 Git 儲存庫",
+    "Remove nested Git repository from workspace": "從工作區移除巢狀 Git 儲存庫",
+    "Are you sure you want to remove the nested Git repository {0} from the workspace view?": "確定從工作區檢視中移除巢狀 Git 儲存庫 {0}？",
+    "(not found)": "（找不到）",
+    "$(warning) Path does not exist\n\n": "$(warning) 路徑不存在\n\n"
 }

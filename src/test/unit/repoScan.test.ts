@@ -1,0 +1,93 @@
+import { beforeEach, describe, expect, it, rs } from '@rstest/core';
+import path from 'path';
+import { scanNestedRepos } from '../../core/util/repoScan';
+import { toSimplePath } from '../../core/util/path';
+import folderRoot from '../../core/folderRoot';
+import * as topLevelModule from '../../core/git/getWorktreeTopLevel';
+
+const root = 'wsroot';
+const repoA = path.join(root, 'A');
+const repoB = path.join(root, 'sub', 'B');
+const worktreeDir = path.join(root, 'wt');
+const rootRepoInner = path.join(root, 'rootinner');
+const innerOfA = path.join(repoA, 'inner');
+const repoC = path.join(repoA, 'C');
+const skippedRepo = path.join(root, 'node_modules', 'C');
+
+// Directories containing a .git entry: root itself is a repo (should be skipped); repoA embeds repoC; skippedRepo under node_modules should be ignored
+const gitDirs = [root, repoA, repoC, innerOfA, repoB, worktreeDir, rootRepoInner, skippedRepo];
+
+// Top-level worktree of each directory: a linked worktree returns itself, a subdirectory inside a repo returns the repo root
+const topLevels = new Map<string, string>([
+    [root, root],
+    [repoA, repoA],
+    [repoC, repoC],
+    [innerOfA, repoA],
+    [repoB, repoB],
+    [worktreeDir, worktreeDir],
+    [rootRepoInner, rootRepoInner],
+    [skippedRepo, skippedRepo],
+]);
+
+let capturedOptions: Record<string, unknown> | undefined;
+
+rs.mock('fast-glob', () => ({
+    stream: rs.fn((_patterns: string[], options: Record<string, unknown>) => {
+        capturedOptions = options;
+        return (async function* () {
+            for (const dir of gitDirs) {
+                const entry = path.join(dir, '.git');
+                // Simulate fast-glob's ignore semantics (node_modules produces no output)
+                if (entry.split(/[\\/]/).includes('node_modules')) continue;
+                yield entry;
+            }
+        })();
+    }),
+}));
+
+rs.mock('../../core/folderRoot', () => ({
+    default: { folderPathSet: new Set<string>() },
+}));
+
+rs.mock('../../core/git/getWorktreeTopLevel', () => ({
+    getWorktreeTopLevel: rs.fn(),
+}));
+
+rs.mock('../../core/util/path', () => ({
+    toSimplePath: (input: string = '') => input.replace(/\\/g, '/').trim(),
+    comparePath: (a: string, b: string) => a.replace(/\\/g, '/').trim() === b.replace(/\\/g, '/').trim(),
+}));
+
+describe('scanNestedRepos', () => {
+    beforeEach(() => {
+        rs.clearAllMocks();
+        capturedOptions = undefined;
+        (folderRoot as any).folderPathSet = new Set([root]);
+        rs.mocked(topLevelModule.getWorktreeTopLevel).mockImplementation(async (dir: string) => {
+            return topLevels.get(dir) || '';
+        });
+    });
+
+    it('globs .git entries, keeps worktree roots, skips the workspace root and node_modules', async () => {
+        const found = await scanNestedRepos();
+
+        expect(new Set(found)).toEqual(
+            new Set([repoA, repoC, repoB, worktreeDir, rootRepoInner].map((item) => toSimplePath(item))),
+        );
+        expect(found).not.toContain(toSimplePath(root));
+        expect(found).not.toContain(toSimplePath(skippedRepo));
+    });
+
+    it('asks fast-glob to ignore node_modules and .git contents', async () => {
+        await scanNestedRepos();
+
+        expect(capturedOptions).toMatchObject({
+            cwd: root,
+            absolute: true,
+            dot: true,
+            onlyFiles: false,
+            followSymbolicLinks: false,
+        });
+        expect(capturedOptions?.ignore).toEqual(expect.arrayContaining(['**/node_modules/**', '**/.git/*']));
+    });
+});

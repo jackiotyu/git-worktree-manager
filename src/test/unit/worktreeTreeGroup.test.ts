@@ -7,6 +7,7 @@ import * as groupModule from '../../core/util/worktreeGroup';
 import type { WorktreeSortOrder } from '../../types';
 
 let mainFolders: Array<{ name: string; path: string }> = [];
+let nestedRepos: string[] = [];
 let sortOrder: WorktreeSortOrder = 'default';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -29,9 +30,18 @@ rs.mock('../../core/treeView/items', () => ({
         type = TreeItemKind.workspaceGitMainFolder;
         parent = undefined;
         fsPath: string;
-        constructor(path: string) {
+        options: unknown;
+        nested: boolean;
+        constructor(path: string, _collapsible?: unknown, options?: { nested?: boolean }) {
             this.fsPath = path;
+            this.options = options;
+            this.nested = Boolean(options?.nested);
         }
+    },
+    NestedRepoGroupItem: class {
+        type = TreeItemKind.nestedRepoGroup;
+        id = 'git-worktree-manager.nestedRepoGroup';
+        contextValue = 'git-worktree-manager.nestedRepoGroup';
     },
     WorktreeGroupItem: class {
         type = TreeItemKind.worktreeGroup;
@@ -53,19 +63,34 @@ rs.mock('../../core/treeView/items', () => ({
         mainFolder: string;
         name: string;
         parent?: unknown;
-        constructor(item: { path: string; mainFolder: string; name: string }, _collapsible: unknown, parent?: unknown) {
+        inWorkspace: boolean;
+        constructor(
+            item: { path: string; mainFolder: string; name: string },
+            _collapsible: unknown,
+            parent?: unknown,
+            inWorkspace = false,
+        ) {
             this.fsPath = item.path;
             this.mainFolder = item.mainFolder;
             this.name = item.name;
             this.parent = parent;
+            this.inWorkspace = inWorkspace;
         }
     },
 }));
 
 rs.mock('../../core/state', () => ({
     WorkspaceState: {
-        get: (_key: string, defaultValue: unknown) => mainFolders || defaultValue,
+        get: (key: string, defaultValue: unknown) => {
+            if (key === 'mainFolders') return mainFolders;
+            if (key === 'workspaceNestedRepos') return nestedRepos;
+            return defaultValue;
+        },
     },
+}));
+
+rs.mock('../../core/util/file', () => ({
+    checkIsFolder: rs.fn().mockResolvedValue(true),
 }));
 
 rs.mock('../../core/folderRoot', () => ({
@@ -87,6 +112,7 @@ describe('WorktreeDataProvider groups', () => {
     beforeEach(() => {
         rs.clearAllMocks();
         sortOrder = 'default';
+        nestedRepos = [];
         mainFolders = [{ name: 'repo', path: '/repo' }];
         (folderRoot as any).folderPathSet = new Set(['/repo']);
         rs.mocked(worktreeListModule.getWorktreeList).mockResolvedValue([
@@ -162,5 +188,106 @@ describe('WorktreeDataProvider groups', () => {
         const descending = (await provider.getChildren())!;
         expect(descending.map((item: any) => item.name)).toEqual(['Group', 'main', 'loose']);
         expect((descending[0] as any).children.map((item: any) => item.name)).toEqual(['feature-10', 'feature-2']);
+    });
+
+    it('renders a nested repository group after workspace repositories', async () => {
+        nestedRepos = ['/repo/nested'];
+        const provider = new WorktreeDataProvider(context);
+        const roots = (await provider.getChildren())!;
+
+        expect(roots.map((item: any) => item.type)).toEqual([
+            TreeItemKind.workspaceGitMainFolder,
+            TreeItemKind.nestedRepoGroup,
+        ]);
+        const group = roots[1] as any;
+        const groupChildren = (await provider.getChildren(group))!;
+        expect(groupChildren.map((item: any) => item.fsPath)).toEqual(['/repo/nested']);
+        expect(provider.getParent(groupChildren[0])).toBe(group);
+    });
+
+    it('loads worktrees for a nested repository from its own path', async () => {
+        nestedRepos = ['/repo/nested'];
+        const provider = new WorktreeDataProvider(context);
+        const roots = (await provider.getChildren())!;
+        const group = roots.find((item: any) => item.type === TreeItemKind.nestedRepoGroup) as any;
+        const groupChildren = (await provider.getChildren(group))!;
+        const nested = groupChildren[0];
+        const children = (await provider.getChildren(nested))!;
+
+        expect(children.length).toBeGreaterThan(0);
+        expect(worktreeListModule.getWorktreeList).toHaveBeenCalledWith('/repo/nested');
+    });
+
+    it('marks all displayed nested repos as nested and valid', async () => {
+        nestedRepos = ['/repo/selected'];
+        const provider = new WorktreeDataProvider(context);
+        const roots = (await provider.getChildren())!;
+        const group = roots.find((item: any) => item.type === TreeItemKind.nestedRepoGroup) as any;
+        const groupChildren = (await provider.getChildren(group))!;
+
+        expect(groupChildren.map((item: any) => item.fsPath)).toEqual(['/repo/selected']);
+        expect((groupChildren[0] as any).options).toMatchObject({ nested: true, invalid: false });
+    });
+
+    it('sorts nested repos by name and de-duplicates registered paths', async () => {
+        nestedRepos = ['/repo/zeta', '/repo/alpha', '/repo/alpha/'];
+        const provider = new WorktreeDataProvider(context);
+        const roots = (await provider.getChildren())!;
+        const group = roots.find((item: any) => item.type === TreeItemKind.nestedRepoGroup) as any;
+        const groupChildren = (await provider.getChildren(group))!;
+
+        expect(groupChildren.map((item: any) => item.fsPath)).toEqual(['/repo/alpha', '/repo/zeta']);
+    });
+
+    it('marks nested-repo worktrees that live under a workspace folder', async () => {
+        nestedRepos = ['/repo/nested'];
+        rs.mocked(worktreeListModule.getWorktreeList).mockResolvedValue([
+            { path: '/repo/nested', name: 'main', mainFolder: '/repo/nested' },
+            { path: '/repo/nested.worktrees/feature', name: 'feature', mainFolder: '/repo/nested' },
+            { path: '/outside/wt', name: 'outside', mainFolder: '/repo/nested' },
+        ] as any);
+        rs.mocked(groupModule.getRepositoryWorktreeGroups).mockReturnValue([]);
+        const provider = new WorktreeDataProvider(context);
+        const roots = (await provider.getChildren())!;
+        const group = roots.find((item: any) => item.type === TreeItemKind.nestedRepoGroup) as any;
+        const nested = (await provider.getChildren(group))![0];
+        const worktrees = (await provider.getChildren(nested))!;
+
+        expect(worktrees.map((item: any) => [item.fsPath, item.inWorkspace])).toEqual([
+            ['/repo/nested', true],
+            ['/repo/nested.worktrees/feature', true],
+            ['/outside/wt', false],
+        ]);
+    });
+
+    it('does not mark workspace-repository worktrees as in-workspace', async () => {
+        mainFolders = [
+            { name: 'repo', path: '/repo' },
+            { name: 'other', path: '/other' },
+        ];
+        (folderRoot as any).folderPathSet = new Set(['/repo', '/other']);
+        const provider = new WorktreeDataProvider(context);
+        const repositories = (await provider.getChildren())!;
+        const children = (await provider.getChildren(repositories[0]))!;
+        const worktrees = children.filter((item: any) => item.type === TreeItemKind.worktree);
+
+        expect(worktrees.length).toBeGreaterThan(0);
+        expect(worktrees.every((item: any) => item.inWorkspace === false)).toBe(true);
+    });
+
+    it('skips nested repository paths that are already shown as workspace repositories', async () => {
+        mainFolders = [
+            { name: 'repo', path: '/repo' },
+            { name: 'other', path: '/other' },
+        ];
+        (folderRoot as any).folderPathSet = new Set(['/repo', '/other']);
+        nestedRepos = ['/repo'];
+        const provider = new WorktreeDataProvider(context);
+        const roots = (await provider.getChildren())!;
+
+        expect(roots.map((item: any) => item.type)).toEqual([
+            TreeItemKind.workspaceGitMainFolder,
+            TreeItemKind.workspaceGitMainFolder,
+        ]);
     });
 });
