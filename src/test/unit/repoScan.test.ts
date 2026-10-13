@@ -83,7 +83,7 @@ rs.mock('../../core/git/getWorktreeTopLevel', () => ({
 }));
 
 rs.mock('../../core/git/exec-base', () => ({
-    execBase: rs.fn(async (cwd: string) => ({ stdout: cwd === bareRepo ? 'true\\n' : 'false\\n' })),
+    execBase: rs.fn(async (cwd: string) => ({ stdout: cwd === bareRepo ? 'true\n' : 'false\n' })),
 }));
 
 rs.mock('../../core/util/path', () => ({
