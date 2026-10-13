@@ -16,9 +16,10 @@ const repoC = path.join(repoA, 'C');
 const skippedRepo = path.join(root, 'node_modules', 'C');
 const bareRepo = path.join(root, 'bare.git');
 const fakeHeadDir = path.join(root, 'fake-head');
+const fakeGitDir = path.join(root, 'fake-git');
 
 // Directories containing a .git entry: root itself is a repo (should be skipped); repoA embeds repoC; skippedRepo under node_modules should be ignored
-const gitDirs = [root, repoA, repoC, innerOfA, repoB, worktreeDir, rootRepoInner, skippedRepo];
+const gitDirs = [root, repoA, repoC, innerOfA, repoB, worktreeDir, rootRepoInner, skippedRepo, fakeGitDir];
 
 // Top-level worktree of each directory: a linked worktree returns itself, a subdirectory inside a repo returns the repo root
 const topLevels = new Map<string, string>([
@@ -60,7 +61,7 @@ rs.mock('fs/promises', () => ({
         if (filePath === path.join(bareRepo, 'objects')) return { isDirectory: () => true };
         for (const dir of gitDirs) {
             if (filePath === path.join(dir, '.git')) return { isDirectory: () => true };
-            if (filePath === path.join(dir, '.git', 'HEAD')) return { isFile: () => true };
+            if (filePath === path.join(dir, '.git', 'HEAD') && dir !== fakeGitDir) return { isFile: () => true };
         }
         throw new Error('not found');
     }),
@@ -108,6 +109,7 @@ describe('scanNestedRepos', () => {
         );
         expect(found).not.toContain(toSimplePath(root));
         expect(found).not.toContain(toSimplePath(skippedRepo));
+        expect(topLevelModule.getWorktreeTopLevel).not.toHaveBeenCalledWith(fakeGitDir);
     });
 
     it('discovers bare repositories and ignores unrelated HEAD files', async () => {
