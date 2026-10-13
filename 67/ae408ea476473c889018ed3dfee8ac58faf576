@@ -1,0 +1,19 @@
+src/core/command/removeNestedRepoCmd.ts
+  s_e77ad37bdb2ae2::t_743b6788cd0b39 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "67ae408ea476473c889018ed3dfee8ac58faf576",
+  "prompts": {},
+  "sessions": {
+    "s_e77ad37bdb2ae2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_eccc2b2a1ffefp3JciUcol28KM",
+        "model": "unknown"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
