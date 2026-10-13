@@ -97,7 +97,7 @@ describe('scanNestedRepos', () => {
         const found = await scanNestedRepos();
 
         expect(new Set(found)).toEqual(
-            new Set([repoA, repoC, repoB, worktreeDir, rootRepoInner].map((item) => toSimplePath(item))),
+            new Set([repoA, repoC, repoB, worktreeDir, rootRepoInner, bareRepo].map((item) => toSimplePath(item))),
         );
         expect(found).not.toContain(toSimplePath(root));
         expect(found).not.toContain(toSimplePath(skippedRepo));
