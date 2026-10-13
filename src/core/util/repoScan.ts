@@ -7,7 +7,7 @@ import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { comparePath, toSimplePath } from '@/core/util/path';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
-const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
+const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/**'];
 
 // A bare repository has a config file and object database at its root. Git verifies candidates to avoid false positives.
 const hasBareRepoLayout = async (dir: string): Promise<boolean> => {
