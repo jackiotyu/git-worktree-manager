@@ -114,6 +114,7 @@
     "config.promptDeleteBranchAfterWorktreeDeletion.description": "ワークツリー削除後、以前関連付けられていたブランチの削除を促す",
     "config.worktreeCopyPatterns.description": "新しいワークツリーを作成する際にコピーするファイルのglobマッチパターン。拡張機能は [fast-glob](https://github.com/mrmlnc/fast-glob) を使用してマッチングを行い、標準的なglob構文（`*`、`?`、`**`、`{}`、`[]`）等の高度な機能をサポートしています。マッチパスはソースリポジトリのルートを基準とします。",
     "config.worktreeCopyIgnores.description": "新しいワークツリーを作成する際に除外するファイルのglobマッチパターン。拡張機能は [fast-glob](https://github.com/mrmlnc/fast-glob) を使用してマッチングを行い、標準的なglob構文（`*`、`?`、`**`、`{}`、`[]`）等の高度な機能をサポートしています。マッチパスはソースリポジトリのルートを基準とします。",
+    "config.nestedRepoScanIgnores.description": "ワークスペース内のネストされた Git リポジトリを検索する際にスキップするディレクトリとファイルの glob パターン。fast-glob 構文を使用します。node_modules と .git メタデータの組み込み除外は常に適用されます。",
     "submenus.worktree-action": "ワークツリー操作",
     "config.checkoutIgnoreOtherWorktree.description": "有効にすると、ブランチの切り替え時に他のワークツリーの状態を無視し、複数のワークツリーで同じブランチを使用できるようになります",
     "config.branchPick.showRenameBranch.description": "「ブランチを選択」の結果に「ブランチのリネーム」ボタンを表示",
