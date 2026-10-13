@@ -1139,6 +1139,15 @@
             ],
             "markdownDescription": "%config.worktreeCopyIgnores.description%"
           },
+          "git-worktree-manager.nestedRepoScanIgnores": {
+            "order": 9,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "markdownDescription": "%config.nestedRepoScanIgnores.description%"
+          },
           "git-worktree-manager.checkoutIgnoreOtherWorktree": {
             "order": 4,
             "scope": "application",
