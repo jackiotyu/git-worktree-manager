@@ -1,0 +1,14 @@
+.github/workflows/release.yml
+  h_efb56b9ff7aea6 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f5016e540b592dd84361b108c6ac63bf301cdbfc",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
