@@ -57,7 +57,6 @@ const isSubPath = (parent: string, child: string) => {
 
 export { toSimplePath, comparePath, findPrefixPath, isSubPath };
 
-
 export function resolveSafeRelativePath(root: string, relativePath: string): string {
     const segments = relativePath.split(/[\\/]/);
     if (
@@ -67,12 +66,12 @@ export function resolveSafeRelativePath(root: string, relativePath: string): str
         path.win32.parse(relativePath).root ||
         segments.includes('..')
     ) {
-        throw new Error(\`Path must be a safe relative path: \${relativePath}\`);
+        throw new Error(`Path must be a safe relative path: ${relativePath}`);
     }
     const resolved = path.resolve(root, relativePath);
     const relative = path.relative(root, resolved);
-    if (!relative || relative === '..' || relative.startsWith(\`..\${path.sep}\`) || path.isAbsolute(relative)) {
-        throw new Error(\`Path escapes the root directory: \${relativePath}\`);
+    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+        throw new Error(`Path escapes the root directory: ${relativePath}`);
     }
     return resolved;
 }
