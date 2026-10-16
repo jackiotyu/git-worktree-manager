@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, rs } from '@rstest/core';
+import os from 'os';
+import path from 'path';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import * as execModule from '@/core/git/exec';
 import * as addWorktreeModule from '@/core/git/addWorktree';
@@ -67,6 +69,26 @@ describe('addBranchWorktree', () => {
             'release/2.x',
         ]);
         expect(addWorktreeModule.addWorktreeRaw).not.toHaveBeenCalled();
+    });
+
+    it('removes a partially created worktree when checkout fails', async () => {
+        const targetPath = path.join(os.tmpdir(), `gwm-partial-worktree-${process.pid}-missing`);
+        rs.mocked(execModule.execAuto)
+            .mockResolvedValueOnce(result())
+            .mockResolvedValueOnce(result())
+            .mockResolvedValueOnce(result(`worktree ${targetPath}\\nHEAD abc\\n`))
+            .mockResolvedValueOnce(result());
+        rs.mocked(addWorktreeModule.addWorktreeRaw).mockRejectedValueOnce(new Error('checkout failed'));
+
+        await expect(addBranchWorktree('/repos/main', targetPath, 'feature')).rejects.toThrow('checkout failed');
+
+        expect(execModule.execAuto).toHaveBeenNthCalledWith(3, '/repos/main', ['worktree', 'list', '--porcelain']);
+        expect(execModule.execAuto).toHaveBeenNthCalledWith(4, '/repos/main', [
+            'worktree',
+            'remove',
+            '--force',
+            targetPath,
+        ]);
     });
 
     it('rejects ambiguous names matching multiple remotes', async () => {
