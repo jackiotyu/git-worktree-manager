@@ -73,8 +73,13 @@ async function loadConfig(root: string, sourceRoot = root): Promise<{ config: Wo
     const repos: RepoEntry[] = [];
     const seenPaths = new Set<string>();
     for (const [relativePath, value] of Object.entries(config.repo)) {
-        if (!value || typeof value.name !== 'string' || !value.name.trim() ||
-            typeof value.remote !== 'string' || !value.remote.trim()) {
+        if (
+            !value ||
+            typeof value.name !== 'string' ||
+            !value.name.trim() ||
+            typeof value.remote !== 'string' ||
+            !value.remote.trim()
+        ) {
             throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `invalid repo entry: ${relativePath}`));
         }
         const sourcePath = resolveRepoPath(sourceRoot, relativePath);
@@ -92,7 +97,12 @@ async function loadConfig(root: string, sourceRoot = root): Promise<{ config: Wo
             if (repo === other) continue;
             const relative = path.relative(repo.sourcePath, other.sourcePath);
             if (relative && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative)) {
-                throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `overlapping paths: ${repo.relativePath} and ${other.relativePath}`));
+                throw new Error(
+                    vscode.l10n.t(
+                        'Invalid workspace.json: {0}',
+                        `overlapping paths: ${repo.relativePath} and ${other.relativePath}`,
+                    ),
+                );
             }
         }
     }
@@ -104,9 +114,7 @@ async function isGitRepository(repoPath: string): Promise<boolean> {
         const { stdout } = await execAuto(repoPath, ['rev-parse', '--show-toplevel']);
         const repoRoot = path.resolve(stdout.trim());
         const target = path.resolve(repoPath);
-        return process.platform === 'win32'
-            ? repoRoot.toLowerCase() === target.toLowerCase()
-            : repoRoot === target;
+        return process.platform === 'win32' ? repoRoot.toLowerCase() === target.toLowerCase() : repoRoot === target;
     } catch {
         return false;
     }
@@ -115,23 +123,29 @@ async function isGitRepository(repoPath: string): Promise<boolean> {
 async function addBranchWorktree(repoPath: string, targetPath: string, branch: string): Promise<void> {
     await fs.mkdir(path.dirname(targetPath), { recursive: true });
 
-    const localBranch = await execAuto(repoPath, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`])
-        .then(() => true, () => false);
+    const localBranch = await execAuto(repoPath, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).then(
+        () => true,
+        () => false,
+    );
     if (localBranch) {
         await execAuto(repoPath, ['worktree', 'add', targetPath, branch]);
         return;
     }
 
-    const remoteBranches = (await execAuto(repoPath, [
-        'for-each-ref', '--format=%(refname:short)', 'refs/remotes',
-    ])).stdout.split(/\r?\n/).filter((ref) => ref.endsWith(`/${branch}`) && !ref.endsWith('/HEAD'));
+    const remoteBranches = (
+        await execAuto(repoPath, ['for-each-ref', '--format=%(refname:short)', 'refs/remotes'])
+    ).stdout
+        .split(/\r?\n/)
+        .filter((ref) => ref.endsWith(`/${branch}`) && !ref.endsWith('/HEAD'));
 
     if (remoteBranches.length === 1) {
         await execAuto(repoPath, ['worktree', 'add', '--track', '-b', branch, targetPath, remoteBranches[0]]);
         return;
     }
     if (remoteBranches.length > 1) {
-        throw new Error(`Branch "${branch}" matches multiple remote branches in ${repoPath}; specify a unique branch name.`);
+        throw new Error(
+            `Branch "${branch}" matches multiple remote branches in ${repoPath}; specify a unique branch name.`,
+        );
     }
 
     await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath]);
@@ -152,9 +166,10 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
-    const isRoot = process.platform === 'win32'
-        ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
-        : normalizedRoot === normalizedRepoRoot;
+    const isRoot =
+        process.platform === 'win32'
+            ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
+            : normalizedRoot === normalizedRepoRoot;
     if (!isRoot) {
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
@@ -166,7 +181,10 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     let index = 1;
     let targetRoot: string;
     while (true) {
-        const candidate = path.join(parentDir, getSubDir(path.basename(mainRepo), branch.replace(/[\\/]/g, '-'), index));
+        const candidate = path.join(
+            parentDir,
+            getSubDir(path.basename(mainRepo), branch.replace(/[\\/]/g, '-'), index),
+        );
         if (!(await pathExists(candidate))) {
             targetRoot = candidate;
             break;
@@ -211,7 +229,10 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
             }
         }
         if (cleanupErrors.length) {
-            throw new Error(vscode.l10n.t('Partially created; cleanup may be required: {0}', cleanupErrors.join('; ')), { cause: error });
+            throw new Error(
+                vscode.l10n.t('Partially created; cleanup may be required: {0}', cleanupErrors.join('; ')),
+                { cause: error },
+            );
         }
         throw error;
     }
@@ -221,22 +242,27 @@ async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: st
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
-    const isRoot = process.platform === 'win32'
-        ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
-        : normalizedRoot === normalizedRepoRoot;
+    const isRoot =
+        process.platform === 'win32'
+            ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
+            : normalizedRoot === normalizedRepoRoot;
     if (!isRoot) {
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
     const mainRepo = await getMainFolder(root);
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
     const { repos } = await loadConfig(root, mainRepo);
-    const entries = (await getWorktrees(mainRepo)).filter((entry) => path.resolve(entry.path) !== path.resolve(mainRepo));
+    const entries = (await getWorktrees(mainRepo)).filter(
+        (entry) => path.resolve(entry.path) !== path.resolve(mainRepo),
+    );
     const result: WorktreeEntry[] = [];
     for (const entry of entries) {
-        const complete = await Promise.all(repos.map(async (repo) => {
-            const childPath = resolveRepoPath(entry.path, repo.relativePath);
-            return pathExists(childPath) && isGitRepository(childPath);
-        }));
+        const complete = await Promise.all(
+            repos.map(async (repo) => {
+                const childPath = resolveRepoPath(entry.path, repo.relativePath);
+                return pathExists(childPath) && isGitRepository(childPath);
+            }),
+        );
         if (complete.some(Boolean)) result.push(entry);
     }
     return { mainRepo, entries: result };
@@ -249,12 +275,15 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
         return;
     }
 
-    const action = await vscode.window.showQuickPick([
-        { label: vscode.l10n.t('Create worktrees'), value: 'create' },
-        { label: vscode.l10n.t('Show repository status'), value: 'status' },
-        { label: vscode.l10n.t('Open a worktree'), value: 'open' },
-        { label: vscode.l10n.t('Remove a worktree'), value: 'remove' },
-    ], { title: vscode.l10n.t('Multi-repository workspace') });
+    const action = await vscode.window.showQuickPick(
+        [
+            { label: vscode.l10n.t('Create worktrees'), value: 'create' },
+            { label: vscode.l10n.t('Show repository status'), value: 'status' },
+            { label: vscode.l10n.t('Open a worktree'), value: 'open' },
+            { label: vscode.l10n.t('Remove a worktree'), value: 'remove' },
+        ],
+        { title: vscode.l10n.t('Multi-repository workspace') },
+    );
     if (!action) return;
 
     try {
@@ -265,14 +294,17 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             const branch = await vscode.window.showInputBox({
                 title: vscode.l10n.t('Create worktrees'),
                 prompt: vscode.l10n.t('Enter the branch name for the multi-repository worktree'),
-                validateInput: (value) => value.trim() ? undefined : 'Branch name cannot be empty',
+                validateInput: (value) => (value.trim() ? undefined : 'Branch name cannot be empty'),
             });
             if (!branch) return;
-            const target = await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Notification,
-                title: vscode.l10n.t('Creating multi-repository worktree'),
-                cancellable: false,
-            }, () => createMultiRepositoryWorktree(root, branch.trim()));
+            const target = await vscode.window.withProgress(
+                {
+                    location: vscode.ProgressLocation.Notification,
+                    title: vscode.l10n.t('Creating multi-repository worktree'),
+                    cancellable: false,
+                },
+                () => createMultiRepositoryWorktree(root, branch.trim()),
+            );
             void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
             return;
         }
@@ -283,20 +315,33 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             return;
         }
         if (action.value === 'status') {
-            const items = await Promise.all(entries.map(async (entry) => {
-                const statuses = await Promise.all(repos.map(async (repo) => {
-                    const childPath = resolveRepoPath(entry.path, repo.relativePath);
-                    return `${repo.name}: ${await isGitRepository(childPath) ? vscode.l10n.t('Ready') : vscode.l10n.t('Missing')}`;
-                }));
-                return { label: entry.branch, description: entry.path, detail: statuses.join(' · '), entry };
-            }));
-            await vscode.window.showQuickPick(items, { title: vscode.l10n.t('Show repository status'), matchOnDescription: true, matchOnDetail: true });
+            const items = await Promise.all(
+                entries.map(async (entry) => {
+                    const statuses = await Promise.all(
+                        repos.map(async (repo) => {
+                            const childPath = resolveRepoPath(entry.path, repo.relativePath);
+                            return `${repo.name}: ${(await isGitRepository(childPath)) ? vscode.l10n.t('Ready') : vscode.l10n.t('Missing')}`;
+                        }),
+                    );
+                    return { label: entry.branch, description: entry.path, detail: statuses.join(' · '), entry };
+                }),
+            );
+            await vscode.window.showQuickPick(items, {
+                title: vscode.l10n.t('Show repository status'),
+                matchOnDescription: true,
+                matchOnDetail: true,
+            });
             return;
         }
 
-        const selected = await vscode.window.showQuickPick(entries.map((entry) => ({
-            label: entry.branch, description: entry.path, entry,
-        })), { title: action.value === 'open' ? vscode.l10n.t('Open a worktree') : vscode.l10n.t('Remove a worktree') });
+        const selected = await vscode.window.showQuickPick(
+            entries.map((entry) => ({
+                label: entry.branch,
+                description: entry.path,
+                entry,
+            })),
+            { title: action.value === 'open' ? vscode.l10n.t('Open a worktree') : vscode.l10n.t('Remove a worktree') },
+        );
         if (!selected) return;
         if (action.value === 'open') {
             await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
@@ -319,7 +364,9 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             }
         }
         await execAuto(mainRepo, ['worktree', 'remove', selected.entry.path]);
-        void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree removed: {0}', selected.entry.path));
+        void vscode.window.showInformationMessage(
+            vscode.l10n.t('Multi-repository worktree removed: {0}', selected.entry.path),
+        );
     } catch (error) {
         Alert.showErrorMessage(String(error));
     }
