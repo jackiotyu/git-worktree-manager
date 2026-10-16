@@ -182,7 +182,11 @@ async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
     return entries;
 }
 
-async function createMultiRepositoryWorktree(root: string, branch: string, selectedRepoPaths: string[]): Promise<string> {
+async function createMultiRepositoryWorktree(
+    root: string,
+    branch: string,
+    selectedRepoPaths: string[],
+): Promise<string> {
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
@@ -285,7 +289,9 @@ async function getMultiRepositoryWorktrees(
                 isMain,
                 repoStatuses: await Promise.all(
                     repos.map((repo) =>
-                        isGitRepositoryPresent(isMain ? repo.sourcePath : resolveRepoPath(entry.path, repo.relativePath)),
+                        isGitRepositoryPresent(
+                            isMain ? repo.sourcePath : resolveRepoPath(entry.path, repo.relativePath),
+                        ),
                     ),
                 ),
             };
@@ -310,12 +316,12 @@ const openInCurrentWindowButton: vscode.QuickInputButton = {
 };
 
 const completeRepositoriesButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('add'),
+    iconPath: new vscode.ThemeIcon('diff-single'),
     tooltip: vscode.l10n.t('Complete Missing Repositories'),
 };
 
 const removeChildRepositoryButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('folder-minus'),
+    iconPath: new vscode.ThemeIcon('diff-removed'),
     tooltip: vscode.l10n.t('Remove Child Repository'),
 };
 
@@ -335,8 +341,13 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
         buttons: entry.isMain
-            ? [openInCurrentWindowButton]
-            : [completeRepositoriesButton, removeChildRepositoryButton, removeWorktreeButton, openInCurrentWindowButton],
+            ? [completeRepositoriesButton, removeChildRepositoryButton, openInCurrentWindowButton]
+            : [
+                  removeWorktreeButton,
+                  completeRepositoriesButton,
+                  removeChildRepositoryButton,
+                  openInCurrentWindowButton,
+              ],
     };
 }
 
@@ -377,7 +388,9 @@ async function completeMultiRepositoryWorktree(
             }
         }
         if (cleanupErrors.length) {
-            throw new Error(vscode.l10n.t('Partially completed; cleanup may be required: {0}', cleanupErrors.join('; ')));
+            throw new Error(
+                vscode.l10n.t('Partially completed; cleanup may be required: {0}', cleanupErrors.join('; ')),
+            );
         }
         throw error;
     }
@@ -595,7 +608,11 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                         });
                         if (!selectedRepos?.length) return;
                         const confirmation = await vscode.window.showWarningMessage(
-                            vscode.l10n.t('Remove {0} repositories from worktree {1}?', selectedRepos.length, event.item.entry.path),
+                            vscode.l10n.t(
+                                'Remove {0} repositories from worktree {1}?',
+                                selectedRepos.length,
+                                event.item.entry.path,
+                            ),
                             { modal: true },
                             vscode.l10n.t('Remove'),
                         );
