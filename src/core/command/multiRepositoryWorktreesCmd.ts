@@ -5,7 +5,7 @@ import { execAuto } from '@/core/git/exec';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
 import { pathExists } from '@/core/util/fs';
-import { resolveSafeRelativePath } from '@/core/util/path';
+import { resolveSafeRelativePath, toSimplePath } from '@/core/util/path';
 import { hasGitMetadata, isGitRepository } from '@/core/util/repo';
 import {
     hasConfiguredRemote,
@@ -76,8 +76,7 @@ async function getWorkspaceConfigValidator(): Promise<import('ajv').ValidateFunc
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
 
 function getWorktreeCacheKey(root: string): string {
-    const resolved = path.resolve(root);
-    return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+    return toSimplePath(path.resolve(root));
 }
 
 async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
