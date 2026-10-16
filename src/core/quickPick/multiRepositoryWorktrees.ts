@@ -53,6 +53,7 @@ export function createMultiRepositoryWorktreePickItem(
 export interface MultiRepositoryWorktreeQuickPickOptions {
     entries: MultiRepositoryWorktreeEntry[];
     refreshEntries: () => Promise<MultiRepositoryWorktreeEntry[]>;
+    onLoadError?: (error: unknown) => void;
     onCreate: () => Promise<void>;
     onAccept: (
         selected: MultiRepositoryWorktreePickItem,
@@ -77,13 +78,26 @@ export function showMultiRepositoryWorktreesQuickPick(
     quickPick.items = options.entries.map(createMultiRepositoryWorktreePickItem);
 
     const disposables: vscode.Disposable[] = [];
+    let isDisposed = false;
     let resolveHidden: (() => void) | undefined;
     const hidden = new Promise<void>((resolve) => {
         resolveHidden = resolve;
     });
     const refreshItems = async () => {
-        const entries = await options.refreshEntries();
-        quickPick.items = entries.map(createMultiRepositoryWorktreePickItem);
+        quickPick.busy = true;
+        try {
+            const entries = await options.refreshEntries();
+            if (!isDisposed) {
+                quickPick.items = entries.map(createMultiRepositoryWorktreePickItem);
+            }
+        } catch (error) {
+            if (!isDisposed) {
+                options.onLoadError?.(error);
+                quickPick.hide();
+            }
+        } finally {
+            if (!isDisposed) quickPick.busy = false;
+        }
     };
 
     disposables.push(
@@ -101,11 +115,14 @@ export function showMultiRepositoryWorktreesQuickPick(
         }),
         quickPick.onDidTriggerItemButton((event) => options.onItemButton(event, quickPick, refreshItems)),
         quickPick.onDidHide(() => {
+            isDisposed = true;
             resolveHidden?.();
             quickPick.dispose();
             disposables.forEach((disposable) => disposable.dispose());
         }),
     );
+    quickPick.busy = true;
     quickPick.show();
+    void refreshItems();
     return quickPick;
 }
