@@ -325,11 +325,14 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
         });
 
     let selectedBranch = await pickBranchStep();
-    while (selectedBranch && selectedBranch?.branch) {
+    while (true) {
+        const branchSelection = selectedBranch;
+        if (!branchSelection || !branchSelection.branch) return;
+
         const branch = (
-            selectedBranch.remote
-                ? selectedBranch.branch.slice(selectedBranch.branch.indexOf('/') + 1)
-                : selectedBranch.branch
+            branchSelection.remote
+                ? branchSelection.branch.slice(branchSelection.branch.indexOf('/') + 1)
+                : branchSelection.branch
         ).trim();
 
         const targetRoot = await inputWorktreeDir({
@@ -361,7 +364,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
                 title: vscode.l10n.t('Creating multi-repository worktree'),
                 cancellable: false,
             },
-            () => createMultiRepositoryWorktree(root, branch, selectedRepoPaths, targetRoot, selectedBranch.startPoint),
+            () => createMultiRepositoryWorktree(root, branch, selectedRepoPaths, targetRoot, branchSelection.startPoint),
         );
         if (target) {
             void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
