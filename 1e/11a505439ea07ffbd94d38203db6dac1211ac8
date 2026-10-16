@@ -1,0 +1,14 @@
+src/test/unit/addBranchWorktree.test.ts
+  h_efb56b9ff7aea6 82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e11a505439ea07ffbd94d38203db6dac1211ac8",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
