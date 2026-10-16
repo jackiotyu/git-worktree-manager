@@ -212,5 +212,9 @@
     "Select a generated repository to remove from this worktree": "选择要从此 Worktree 中删除的已生成子仓库",
     "Remove repository {0} from worktree {1}?": "确定从 Worktree {1} 中删除仓库 {0}？",
     "Removing child repository worktree": "正在删除子仓库 Worktree",
-    "Child repository worktree removed: {0}": "子仓库 Worktree 已删除：{0}"
+    "Child repository worktree removed: {0}": "子仓库 Worktree 已删除：{0}",
+    "Select generated repositories to remove from this worktree": "选择要从此 Worktree 中删除的已生成子仓库",
+    "Remove {0} repositories from worktree {1}?": "确定从 Worktree {1} 中删除 {0} 个子仓库？",
+    "Removing child repository worktrees": "正在删除子仓库 Worktree",
+    "Child repository worktrees removed: {0}": "已删除 {0} 个子仓库 Worktree"
 }
