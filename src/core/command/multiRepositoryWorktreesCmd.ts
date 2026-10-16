@@ -25,7 +25,6 @@ import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPi
 import {
     showMultiRepositoryWorktreesQuickPick,
     type MultiRepositoryWorktreeEntry,
-    type MultiRepositoryWorktreePickItem,
 } from '@/core/quickPick/multiRepositoryWorktrees';
 
 interface WorkspaceRepo {
@@ -362,21 +361,19 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             entries,
             refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
             onCreate: async (quickPick) => {
-                quickPick.hide();
-                try {
-                    await createMultiRepositoryWorktreeFromWorkspace(root);
-                    await multiRepositoryWorktreesCmd();
-                } catch (error) {
-                    Alert.showErrorMessage(String(error));
-                }
-            
+                    quickPick.hide();
+                    try {
+                        await createMultiRepositoryWorktreeFromWorkspace(root);
+                        await multiRepositoryWorktreesCmd();
+                    } catch (error) {
+                        Alert.showErrorMessage(String(error));
+                    }
             },
             onAccept: async (selected, quickPick) => {
-                quickPick.hide();
-                await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
-                    forceNewWindow: true,
-                });
-            
+                    quickPick.hide();
+                    await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
+                        forceNewWindow: true,
+                    });
             },
             onItemButton: async (event, quickPick, refreshItems) => {
                 if (event.button === completeRepositoriesQuickInputButton) {
