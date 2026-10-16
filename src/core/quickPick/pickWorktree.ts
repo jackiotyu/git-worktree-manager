@@ -369,6 +369,7 @@ const handleTriggerButton = ({ quickPick, event, actionService }: TriggerButtonH
         return;
     }
     if (event === refreshRecentlyQuickInputButton) {
+        quickPick.busy = true;
         vscode.commands.executeCommand(Commands.refreshRecentFolder);
         return;
     }
@@ -500,7 +501,10 @@ class ActionService implements IActionService {
         this.updateButtons(displayType);
         this.disposables.push(
             globalStateEvent.event((e) => {
-                e === 'global.recentItemCache' && this.updateList(true);
+                if (e === 'global.recentItemCache') {
+                    this.updateList(true);
+                    if (this.displayType === DefaultDisplayList.recentlyOpened) this.quickPick.busy = false;
+                }
                 e === 'global.favorite' && this.updateList();
                 if (e === 'workTreeCache') {
                     this.updateList();
