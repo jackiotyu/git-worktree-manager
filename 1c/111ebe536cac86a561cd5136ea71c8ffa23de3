@@ -1,0 +1,19 @@
+src/core/command/multiRepositoryWorktreesCmd.ts
+  s_26e9839bca8945::t_3eb91b1d3dee9e 38,89,152-155,383,414-416,423-426,462
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1c111ebe536cac86a561cd5136ea71c8ffa23de3",
+  "prompts": {},
+  "sessions": {
+    "s_26e9839bca8945": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ce157e2a-3015-432b-bbf0-d18f79c38d50",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
