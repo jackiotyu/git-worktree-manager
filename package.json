@@ -597,7 +597,7 @@
         {
           "command": "git-worktree-manager.createMultiRepositoryWorktree",
           "when": "view =~ /git-worktree-manager-list/",
-          "group": "navigation@2.5"
+          "group": "navigation@1.5"
         }
       ],
       "view/item/context": [
