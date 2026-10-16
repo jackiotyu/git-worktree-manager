@@ -355,7 +355,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
     const selectedBranch = await pickBranch({
         title: vscode.l10n.t('Create Multi-Repository Worktree'),
         placeholder: vscode.l10n.t('Select an existing branch or create a new branch'),
-        mainFolder: root,
+        mainFolder: mainRepo,
         cwd: mainRepo,
         showCreate: true,
         createBranchOnPick: false,
