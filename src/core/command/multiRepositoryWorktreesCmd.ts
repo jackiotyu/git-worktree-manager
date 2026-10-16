@@ -167,11 +167,9 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                         repos,
                         onError: (error) => Alert.showErrorMessage(String(error)),
                         onAccept: async (selected) => {
-                            await vscode.commands.executeCommand(
-                                'vscode.openFolder',
-                                vscode.Uri.file(selected.path),
-                                { forceNewWindow: true },
-                            );
+                            await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.path), {
+                                forceNewWindow: true,
+                            });
                         },
                         onItemButton: async (childEvent, refreshItems, close) => {
                             if (childEvent.button === openInCurrentWindowQuickInputButton) {

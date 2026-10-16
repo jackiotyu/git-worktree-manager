@@ -67,10 +67,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
         const normalized = normalizeRepositoryPath(sourcePath);
         if (seenPaths.has(normalized)) {
             throw new Error(
-                vscode.l10n.t(
-                    'Invalid gwm.json: {0}',
-                    vscode.l10n.t('Duplicate repository path: {0}', relativePath),
-                ),
+                vscode.l10n.t('Invalid gwm.json: {0}', vscode.l10n.t('Duplicate repository path: {0}', relativePath)),
             );
         }
         seenPaths.add(normalized);
