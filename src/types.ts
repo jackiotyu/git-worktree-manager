@@ -207,3 +207,21 @@ export interface ICreateWorktreeInfo {
     isBranch: boolean;
     cwd: string;
 }
+
+export interface WorkspaceRepo {
+    name: string;
+    remote: string;
+}
+
+export interface WorkspaceConfig {
+    version: 1;
+    parent?: string;
+    repo: Record<string, WorkspaceRepo>;
+}
+
+export interface RepoEntry {
+    relativePath: string;
+    name: string;
+    remote: string;
+    sourcePath: string;
+}
