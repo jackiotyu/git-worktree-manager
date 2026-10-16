@@ -308,6 +308,11 @@ const openInCurrentWindowButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Open in Current Window'),
 };
 
+const completeRepositoriesButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('add'),
+    tooltip: vscode.l10n.t('Complete Missing Repositories'),
+};
+
 function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepositoryWorktreePickItem {
     const readyCount = entry.repoStatuses.filter(Boolean).length;
     const missingCount = entry.repoStatuses.length - readyCount;
@@ -323,8 +328,51 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
               )
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
-        buttons: entry.isMain ? [openInCurrentWindowButton] : [removeWorktreeButton, openInCurrentWindowButton],
+        buttons: entry.isMain ? [openInCurrentWindowButton] : [completeRepositoriesButton, removeWorktreeButton, openInCurrentWindowButton],
     };
+}
+
+async function completeMultiRepositoryWorktree(
+    repos: RepoEntry[],
+    entry: MultiRepositoryWorktreeEntry,
+    selectedRepoPaths: string[],
+): Promise<void> {
+    const selectedPaths = new Set(selectedRepoPaths);
+    const selectedRepos = repos.filter(
+        (repo, index) => selectedPaths.has(repo.relativePath) && !entry.repoStatuses[index],
+    );
+    const created: Array<{ repoPath: string; worktreePath: string }> = [];
+
+    try {
+        for (const repo of selectedRepos) {
+            if (!(await pathExists(repo.sourcePath))) {
+                await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
+                await execAuto(entry.path, ['clone', '--', repo.remote, repo.sourcePath]);
+            } else if (!(await isGitRepository(repo.sourcePath))) {
+                throw new Error(`Configured path exists but is not a Git repository: ${repo.relativePath}`);
+            }
+
+            const targetPath = resolveRepoPath(entry.path, repo.relativePath);
+            if (await pathExists(targetPath)) {
+                throw new Error(`Target path already exists: ${targetPath}`);
+            }
+            await addBranchWorktree(repo.sourcePath, targetPath, entry.branch);
+            created.push({ repoPath: repo.sourcePath, worktreePath: targetPath });
+        }
+    } catch (error) {
+        const cleanupErrors: string[] = [];
+        for (const item of created.reverse()) {
+            try {
+                await execAuto(item.repoPath, ['worktree', 'remove', '--force', item.worktreePath]);
+            } catch (cleanupError) {
+                cleanupErrors.push(String(cleanupError));
+            }
+        }
+        if (cleanupErrors.length) {
+            throw new Error(vscode.l10n.t('Partially completed; cleanup may be required: {0}', cleanupErrors.join('; ')));
+        }
+        throw error;
+    }
 }
 
 async function removeMultiRepositoryWorktree(
@@ -439,6 +487,50 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 });
             }),
             quickPick.onDidTriggerItemButton(async (event) => {
+                if (event.button === completeRepositoriesButton) {
+                    const missingRepos = repos.filter((_, index) => !event.item.entry.repoStatuses[index]);
+                    if (!missingRepos.length) return;
+                    quickPick.hide();
+                    try {
+                        const selectedRepos = await vscode.window.showQuickPick(
+                            missingRepos.map((repo) => ({
+                                label: repo.name,
+                                description: repo.relativePath,
+                                detail: repo.remote,
+                                relativePath: repo.relativePath,
+                            })),
+                            {
+                                title: vscode.l10n.t('Complete Missing Repositories'),
+                                placeHolder: vscode.l10n.t('Select repositories to add to this worktree'),
+                                canPickMany: true,
+                                ignoreFocusOut: true,
+                            },
+                        );
+                        if (selectedRepos?.length) {
+                            await vscode.window.withProgress(
+                                {
+                                    location: vscode.ProgressLocation.Notification,
+                                    title: vscode.l10n.t('Completing multi-repository worktree'),
+                                    cancellable: false,
+                                },
+                                () =>
+                                    completeMultiRepositoryWorktree(
+                                        repos,
+                                        event.item.entry,
+                                        selectedRepos.map((repo) => repo.relativePath),
+                                    ),
+                            );
+                            void vscode.window.showInformationMessage(
+                                vscode.l10n.t('Multi-repository worktree completed: {0}', event.item.entry.path),
+                            );
+                        }
+                    } catch (error) {
+                        Alert.showErrorMessage(String(error));
+                    } finally {
+                        await multiRepositoryWorktreesCmd();
+                    }
+                    return;
+                }
                 if (event.button === openInCurrentWindowButton) {
                     quickPick.hide();
                     await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(event.item.entry.path), {
