@@ -54,6 +54,12 @@
         "category": "Worktree"
       },
       {
+        "command": "git-worktree-manager.createMultiRepositoryWorktree",
+        "title": "Create Multi-Repository Worktree",
+        "icon": "$(new-folder)",
+        "category": "Worktree"
+      },
+      {
         "command": "git-worktree-manager.sortWorktreesByDefault",
         "title": "%cmd.sortWorktreesByDefault%",
         "category": "Worktree",
@@ -587,6 +593,11 @@
           "command": "git-worktree-manager.openFavorite",
           "when": "view === git-worktree-manager-favorite",
           "group": "navigation@90"
+        },
+        {
+          "command": "git-worktree-manager.createMultiRepositoryWorktree",
+          "when": "view =~ /git-worktree-manager-list/",
+          "group": "navigation@2.5"
         }
       ],
       "view/item/context": [
