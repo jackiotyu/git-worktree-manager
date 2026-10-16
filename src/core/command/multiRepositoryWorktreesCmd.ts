@@ -5,11 +5,11 @@ import { execAuto } from '@/core/git/exec';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
 import { pathExists } from '@/core/util/fs';
-import { resolveSafeRelativePath, toSimplePath } from '@/core/util/path';
-import { hasGitMetadata, isGitRepository } from '@/core/util/repo';
-import { loadConfig, type RepoEntry } from '@/core/util/workspaceConfig';
+import { resolveSafeRelativePath } from '@/core/util/path';
+import { hasGitMetadata } from '@/core/util/repo';
+import { loadConfig } from '@/core/util/workspaceConfig';
+import type { RepoEntry } from '@/types';
 import {
-    hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
@@ -33,6 +33,34 @@ import {
     showMultiRepositoryWorktreesQuickPick,
     type MultiRepositoryWorktreeEntry,
 } from '@/core/quickPick/multiRepositoryWorktrees';
+
+const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
+
+function getWorktreeCacheKey(root: string): string {
+    return toSimplePath(path.resolve(root));
+}
+
+async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
+    try {
+        return (await isGitRepository(repo.sourcePath)) && (await hasConfiguredRemote(repo.sourcePath, repo.remote));
+    } catch {
+        return false;
+    }
+}
+
+async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promise<void> {
+    if (!(await pathExists(repo.sourcePath))) {
+        await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
+        await execAuto(cloneCwd, ['clone', '--', repo.remote, repo.sourcePath]);
+    }
+
+    if (!(await isGitRepository(repo.sourcePath))) {
+        throw new Error(vscode.l10n.t('Configured path exists but is not a Git repository: {0}', repo.relativePath));
+    }
+    if (!(await hasConfiguredRemote(repo.sourcePath, repo.remote))) {
+        throw new Error(vscode.l10n.t('Configured repository remote does not match: {0}', repo.relativePath));
+    }
+}
 
 async function getMainWorktreeRootFromMetadata(root: string): Promise<string> {
     const gitEntry = path.join(root, '.git');
