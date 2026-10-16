@@ -356,10 +356,12 @@ const handleTriggerButton = ({ quickPick, event, actionService }: TriggerButtonH
         return;
     }
     if (event === refreshAllWorktreeQuickInputButton) {
+        quickPick.busy = true;
         vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.all);
         return;
     }
     if (event === refreshWorkspaceWorktreeQuickInputButton) {
+        quickPick.busy = true;
         vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
         return;
     }
@@ -496,7 +498,10 @@ class ActionService implements IActionService {
             globalStateEvent.event((e) => {
                 e === 'global.recentItemCache' && this.updateList(true);
                 e === 'global.favorite' && this.updateList();
-                e === 'workTreeCache' && this.updateList();
+                if (e === 'workTreeCache') {
+                    this.updateList();
+                    this.quickPick.busy = false;
+                }
             }),
             workspaceStateEvent.event((e) => {
                 e === 'workTreeCache' && this.updateList();
@@ -597,7 +602,7 @@ class ActionService implements IActionService {
 
 let firstOpen = true;
 export const pickWorktree = async (type?: DefaultDisplayList) => {
-    if (firstOpen) vscode.commands.executeCommand(Commands.refreshWorktreeCache, RefreshCacheType.workspace);
+    const shouldRefreshCache = firstOpen;
     firstOpen = false;
     const disposables: vscode.Disposable[] = [];
     const quickPick = vscode.window.createQuickPick<WorktreePick>();
@@ -621,9 +626,20 @@ export const pickWorktree = async (type?: DefaultDisplayList) => {
             handleHide({ resolve, reject, quickPick, actionService, disposables }),
         );
         disposables.push(onDidAccept, onDidHide, onDidTriggerButton, onDidTriggerItemButton, actionService);
+        const showCacheLoading =
+            shouldRefreshCache &&
+            (actionService.displayType === DefaultDisplayList.all ||
+                actionService.displayType === DefaultDisplayList.workspace);
+        quickPick.busy = showCacheLoading;
         quickPick.show();
         actionService.updateList();
-        // 先展示出缓存的数据
+
+        if (shouldRefreshCache) {
+            const refreshType = actionService.displayAll ? RefreshCacheType.all : RefreshCacheType.workspace;
+            void vscode.commands.executeCommand(Commands.refreshWorktreeCache, refreshType);
+        }
+
+        // Render cached rows immediately while the first cache refresh runs.
         await new Promise<void>((resolve) => setTimeout(resolve, 30));
         return promise;
     } catch {
