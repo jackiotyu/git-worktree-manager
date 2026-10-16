@@ -361,17 +361,17 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             entries,
             refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
             onCreate: async (quickPick) => {
-                    quickPick.hide();
-                    try {
-                        await createMultiRepositoryWorktreeFromWorkspace(root);
-                        await multiRepositoryWorktreesCmd();
-                    } catch (error) {
-                        Alert.showErrorMessage(String(error));
+                quickPick.hide();
+                try {
+                    await createMultiRepositoryWorktreeFromWorkspace(root);
+                    await multiRepositoryWorktreesCmd();
+                } catch (error) {
+                    Alert.showErrorMessage(String(error));
                     }
             },
             onAccept: async (selected, quickPick) => {
-                    quickPick.hide();
-                    await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
+                quickPick.hide();
+                await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
                         forceNewWindow: true,
                     });
             },
