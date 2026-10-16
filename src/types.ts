@@ -190,6 +190,7 @@ export type IPickBranchParams = {
     step?: number;
     totalSteps?: number;
     showCreate: boolean;
+    createBranchOnPick?: boolean;
 };
 export type IPickBranch = (params: IPickBranchParams) => Promise<IPickBranchResolveValue>;
 
