@@ -291,6 +291,11 @@ async function getMultiRepositoryWorktrees(
     return { mainRepo, repos, entries: result.filter((entry) => entry.isMain || entry.repoStatuses.some(Boolean)) };
 }
 
+const createMultiRepositoryWorktreeButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('new-folder'),
+    tooltip: vscode.l10n.t('Create Multi-Repository Worktree'),
+};
+
 const removeWorktreeButton: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('trash'),
     tooltip: vscode.l10n.t('Remove Multi-Repository Worktree'),
@@ -379,13 +384,10 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
 
     try {
         const { mainRepo, repos, entries } = await getMultiRepositoryWorktrees(root);
-        if (!entries.length) {
-            void vscode.window.showInformationMessage(vscode.l10n.t('No multi-repository worktrees found'));
-            return;
-        }
 
         const quickPick = vscode.window.createQuickPick<MultiRepositoryWorktreePickItem>();
         quickPick.title = vscode.l10n.t('Multi-Repository Worktrees');
+        quickPick.buttons = [createMultiRepositoryWorktreeButton];
         quickPick.placeholder = vscode.l10n.t('Select a worktree to open in a new window');
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
@@ -398,6 +400,16 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
         };
 
         disposables.push(
+            quickPick.onDidTriggerButton(async (button) => {
+                if (button !== createMultiRepositoryWorktreeButton) return;
+                quickPick.hide();
+                try {
+                    await createMultiRepositoryWorktreeFromWorkspace(root);
+                    await multiRepositoryWorktreesCmd();
+                } catch (error) {
+                    Alert.showErrorMessage(String(error));
+                }
+            }),
             quickPick.onDidAccept(async () => {
                 const selected = quickPick.selectedItems[0];
                 if (!selected) return;
