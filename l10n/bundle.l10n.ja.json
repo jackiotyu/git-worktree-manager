@@ -254,5 +254,15 @@
     "View Child Repositories": "子リポジトリを表示",
     "Child Repositories in {0}": "{0} の子リポジトリ",
     "Select a child repository to open in a new window": "新しいウィンドウで開く子リポジトリを選択",
-    "No child repositories found in this worktree": "このワークツリーに子リポジトリが見つかりません"
+    "No child repositories found in this worktree": "このワークツリーに子リポジトリが見つかりません",
+    "Switch Branch Across Repositories": "全リポジトリのブランチを切り替え",
+    "Complete all child repositories before switching branches.": "ブランチを切り替える前に、すべての子リポジトリを補完してください。",
+    "Branch {0} is already checked out in another worktree: {1}": "ブランチ {0} は別の worktree ですでにチェックアウトされています: {1}",
+    "Branch {0} exists in only some repositories. No repositories were changed.": "ブランチ {0} は一部のリポジトリにしか存在しません。リポジトリは変更されていません。",
+    "Branch operation partially completed for {0}. Updated: {1}. Failed at {2}: {3}": "ブランチ {0} の操作は一部のみ完了しました。更新済み: {1}。失敗箇所 {2}: {3}",
+    "Unable to switch to branch {0} in {1}: {2}": "{1} でブランチ {0} に切り替えられません: {2}",
+    "Select a common branch or create a new branch": "共通ブランチを選択するか、新しいブランチを作成",
+    "Switching branch across repositories": "全リポジトリのブランチを切り替え中",
+    "Switched all repositories to branch: {0}": "すべてのリポジトリをブランチ {0} に切り替えました",
+    "Cannot create a branch from detached HEAD in {0}.": "{0} の detached HEAD からブランチを作成できません。"
 }
