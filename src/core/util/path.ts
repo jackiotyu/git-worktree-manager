@@ -62,7 +62,7 @@ function resolveSafeRelativePath(root: string, relativePath: string): string {
         path.isAbsolute(relativePath) ||
         path.win32.isAbsolute(relativePath) ||
         path.win32.parse(relativePath).root ||
-        segments.some((segment) => segment === '.' || segment === '..')
+        segments.some((segment) => segment === '.' || segment === '..' || /[:*?"<>|]/.test(segment))
     ) {
         throw new Error(`Path must be a safe relative path: ${relativePath}`);
     }
