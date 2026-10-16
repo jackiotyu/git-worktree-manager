@@ -57,7 +57,7 @@ import { removeFavoriteCmd } from '@/core/command/removeFavoriteCmd';
 import { removeMultiFavoriteCmd } from '@/core/command/removeMultiFavoriteCmd';
 import { addToFavoriteCmd } from '@/core/command/addToFavoriteCmd';
 import { Commands } from '@/constants';
-import { multiRepositoryWorktreesCmd } from '@/core/command/multiRepositoryWorktreesCmd';
+import { createMultiRepositoryWorktreeCmd, multiRepositoryWorktreesCmd } from '@/core/command/multiRepositoryWorktreesCmd';
 import { AllViewItem } from '@/core/treeView/items';
 import { sortWorktreesCmd } from '@/core/command/sortWorktreesCmd';
 import {
@@ -72,6 +72,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         registerCommand(Commands.refreshWorktree, refreshWorktreeCmd),
         registerCommand(Commands.multiRepositoryWorktrees, multiRepositoryWorktreesCmd),
+        registerCommand(Commands.createMultiRepositoryWorktree, createMultiRepositoryWorktreeCmd),
         registerCommand(Commands.switchWorktree, switchWorktreeCmd),
         registerCommand(Commands.addWorktree, addWorktreeCmd),
         registerCommand(Commands.repairWorktree, repairWorktreeCmd),
