@@ -1,3 +1,4 @@
+import { execAuto } from '@/core/git/exec';
 import fs from 'fs/promises';
 import path from 'path';
 import { toSimplePath } from '@/core/util/path';
