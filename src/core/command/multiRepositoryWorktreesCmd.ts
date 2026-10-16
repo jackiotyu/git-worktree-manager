@@ -248,7 +248,11 @@ async function getMultiRepositoryWorktrees(
                 repos.map(async (repo, index) => {
                     if (isMain) return isConfiguredRepository(repo);
                     const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
-                    return registeredWorktrees[index].has(normalizeWorktreePath(childPath));
+                    return (
+                        registeredWorktrees[index].has(normalizeWorktreePath(childPath)) &&
+                        (await pathExists(childPath)) &&
+                        (await isGitRepository(childPath))
+                    );
                 }),
             );
             return {
@@ -368,7 +372,7 @@ async function removeMultiRepositoryWorktree(
         const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
         const exists = await pathExists(childPath);
         const registered =
-            (await isGitRepository(repo.sourcePath)) && (await isRegisteredWorktree(repo.sourcePath, childPath));
+            (await isConfiguredRepository(repo)) && (await isRegisteredWorktree(repo.sourcePath, childPath));
         if (registered) {
             if (exists) children.push({ repo, path: childPath });
             continue;
@@ -418,7 +422,7 @@ async function removeChildRepositoryWorktree(
 
     const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
     if (
-        !(await isGitRepository(repo.sourcePath)) ||
+        !(await isConfiguredRepository(repo)) ||
         !(await isRegisteredWorktree(repo.sourcePath, childPath))
     ) {
         throw new Error(`No generated worktree found for repository: ${repo.relativePath}`);
