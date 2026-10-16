@@ -130,6 +130,11 @@ describe('resolveSafeRelativePath', () => {
         expect(resolveSafeRelativePath(root, 'packages\\client')).toBe(expected);
     });
 
+    it('rejects path segments that are not portable across platforms', () => {
+        expect(() => resolveSafeRelativePath(root, 'packages/a:b')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, 'packages/a*b')).toThrow('Path must be a safe relative path');
+    });
+
     it('rejects absolute paths on POSIX and Windows', () => {
         expect(() => resolveSafeRelativePath(root, '/tmp/outside')).toThrow('Path must be a safe relative path');
         expect(() => resolveSafeRelativePath(root, 'C:\\outside')).toThrow('Path must be a safe relative path');
