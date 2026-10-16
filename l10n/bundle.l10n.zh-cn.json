@@ -239,5 +239,9 @@
     "Target path already exists: {0}": "目标路径已存在：{0}",
     "The main worktree cannot be removed.": "不能移除主 Worktree。",
     "No generated worktree found for repository: {0}": "未找到仓库对应的已生成 Worktree：{0}",
-    "Repository is not configured: {0}": "未配置此仓库：{0}"
+    "Repository is not configured: {0}": "未配置此仓库：{0}",
+    "Invalid repository entry: {0}": "仓库配置项无效：{0}",
+    "Expected version 1 and a repo object": "预期 version 为 1 且 repo 为对象",
+    "Duplicate repository path: {0}": "仓库路径重复：{0}",
+    "Overlapping repository paths: {0} and {1}": "仓库路径重叠：{0} 和 {1}"
 }
