@@ -231,5 +231,6 @@
     "Configured repository remote does not match: {0}": "設定的儲存庫遠端與現有儲存庫不符：{0}",
     "Path exists but is not a worktree of the configured repository: {0}": "路徑已存在，但不是設定儲存庫的 Worktree：{0}",
     "Worktree contains uncommitted changes: {0}": "Worktree 存在尚未提交的變更：{0}",
-    "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "Worktree 已部分移除。已移除：{0}。在 {1} 處失敗：{2}"
+    "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "Worktree 已部分移除。已移除：{0}。在 {1} 處失敗：{2}",
+    "Repository path resolves outside the workspace root: {0}": "儲存庫路徑解析後位於工作區根目錄之外：{0}"
 }
