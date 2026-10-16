@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import Ajv from 'ajv';
 import fs from 'fs/promises';
 import path from 'path';
 import { execAuto } from '@/core/git/exec';
@@ -67,9 +66,9 @@ async function getWorkspaceConfigValidator(): Promise<import('ajv').ValidateFunc
     if (!validateWorkspaceConfigPromise) {
         validateWorkspaceConfigPromise = Promise.all([
             import('ajv'),
-            // @ts-expect-error Rspack resolves this JSON module; it is outside tsconfig's src root.
             import('../../../schemas/workspace.schema.json'),
         ]).then(([ajvModule, schemaModule]) => {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             const Ajv = ajvModule.default;
             const schema = schemaModule.default as object;
             return new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(schema);
