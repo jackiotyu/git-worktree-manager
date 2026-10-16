@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { pathExists } from '../../core/util/fs';
-import { hasGitMetadata, isGitRepository, isGitRepositoryPresent } from '../../core/util/repo';
+import { hasGitMetadata, isGitRepository } from '../../core/util/repo';
 import * as topLevelModule from '@/core/git/getWorktreeTopLevel';
 
 rs.mock('@/core/git/getWorktreeTopLevel', () => ({
@@ -54,7 +54,6 @@ describe('Git repository metadata utilities', () => {
         await fs.writeFile(path.join(gitDir, 'HEAD'), 'ref: refs/heads/main\n');
 
         expect(await hasGitMetadata(repo)).toBe(true);
-        expect(await isGitRepositoryPresent(repo)).toBe(true);
     });
 
     it('rejects incomplete .git directories', async () => {
@@ -62,7 +61,6 @@ describe('Git repository metadata utilities', () => {
         await fs.mkdir(path.join(repo, '.git'), { recursive: true });
 
         expect(await hasGitMetadata(repo)).toBe(false);
-        expect(await isGitRepositoryPresent(repo)).toBe(false);
     });
 
     it('recognizes linked worktrees whose .git file points to a git directory', async () => {
@@ -74,7 +72,6 @@ describe('Git repository metadata utilities', () => {
         await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, gitDir)}\n`);
 
         expect(await hasGitMetadata(worktree)).toBe(true);
-        expect(await isGitRepositoryPresent(worktree)).toBe(true);
     });
 
     it('rejects malformed or dangling .git files', async () => {
@@ -87,7 +84,6 @@ describe('Git repository metadata utilities', () => {
 
         expect(await hasGitMetadata(malformed)).toBe(false);
         expect(await hasGitMetadata(dangling)).toBe(false);
-        expect(await isGitRepositoryPresent(path.join(repoTempRoot, 'missing'))).toBe(false);
     });
 
     it('requires the path itself to be the Git worktree root', async () => {
