@@ -235,6 +235,7 @@
     "Completing multi-repository worktree": "正在补全多仓库 Worktree",
     "Multi-repository worktree completed: {0}": "已补全多仓库 Worktree：{0}",
     "Removing multi-repository worktree": "正在移除多仓库 Worktree",
+    "Remove Multi-Repository Worktree": "移除多仓库 Worktree",
     "Configured path exists but is not a Git repository: {0}": "配置路径已存在，但不是 Git 仓库：{0}",
     "Target path already exists: {0}": "目标路径已存在：{0}",
     "The main worktree cannot be removed.": "不能移除主 Worktree。",
