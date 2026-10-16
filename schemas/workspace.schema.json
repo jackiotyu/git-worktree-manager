@@ -35,12 +35,14 @@
           "name": {
             "type": "string",
             "minLength": 1,
-            "description": "Display name shown in the repository picker."
+            "description": "Display name shown in the repository picker.",
+            "pattern": "\\S"
           },
           "remote": {
             "type": "string",
             "minLength": 1,
-            "description": "Git remote URL or clone source used when the repository is missing."
+            "description": "Git remote URL or clone source used when the repository is missing.",
+            "pattern": "\\S"
           }
         }
       }
