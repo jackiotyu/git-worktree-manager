@@ -9,6 +9,7 @@ import {
     removeMultiRepositoryWorktreeQuickInputButton,
     completeRepositoriesQuickInputButton,
     removeChildRepositoryQuickInputButton,
+    viewChildRepositoriesQuickInputButton,
 } from './quickPick.button';
 
 export interface MultiRepositoryWorktreePickItem extends vscode.QuickPickItem {
@@ -42,6 +43,7 @@ export function createMultiRepositoryWorktreePickItem(
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
             completeRepositoriesQuickInputButton,
+            viewChildRepositoriesQuickInputButton,
             removeChildRepositoryQuickInputButton,
             openInCurrentWindowQuickInputButton,
         ].filter((button) => button.enabled),

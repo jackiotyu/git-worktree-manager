@@ -20,10 +20,12 @@ import {
     removeMultiRepositoryWorktreeQuickInputButton,
     completeRepositoriesQuickInputButton,
     removeChildRepositoryQuickInputButton,
+    viewChildRepositoriesQuickInputButton,
 } from '@/core/quickPick/quickPick.button';
 import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPick/pickRepositories';
 
 import { showMultiRepositoryWorktreesQuickPick } from '@/core/quickPick/multiRepositoryWorktrees';
+import { showMultiRepositoryChildRepositoriesQuickPick } from '@/core/quickPick/multiRepositoryChildRepositories';
 
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
 
@@ -157,6 +159,78 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 const currentState = state;
                 if (!currentState) return;
                 const { mainRepo, repos } = currentState;
+
+                if (event.button === viewChildRepositoriesQuickInputButton) {
+                    quickPick.hide();
+                    const childQuickPick = showMultiRepositoryChildRepositoriesQuickPick({
+                        entry: event.item.entry,
+                        repos,
+                        onError: (error) => Alert.showErrorMessage(String(error)),
+                        onAccept: async (selected) => {
+                            await vscode.commands.executeCommand(
+                                'vscode.openFolder',
+                                vscode.Uri.file(selected.path),
+                                { forceNewWindow: true },
+                            );
+                        },
+                        onItemButton: async (childEvent, refreshItems, close) => {
+                            if (childEvent.button === openInCurrentWindowQuickInputButton) {
+                                close(false);
+                                await vscode.commands.executeCommand(
+                                    'vscode.openFolder',
+                                    vscode.Uri.file(childEvent.item.path),
+                                    { forceNewWindow: false, forceReuseWindow: true },
+                                );
+                                return;
+                            }
+                            if (
+                                childEvent.button !== removeChildRepositoryQuickInputButton ||
+                                event.item.entry.isMain
+                            ) {
+                                return;
+                            }
+
+                            const confirmation = await vscode.window.showWarningMessage(
+                                vscode.l10n.t(
+                                    'Remove repository {0} from worktree {1}?',
+                                    childEvent.item.repo.relativePath,
+                                    event.item.entry.path,
+                                ),
+                                { modal: true },
+                                vscode.l10n.t('Remove'),
+                            );
+                            if (!confirmation) return;
+
+                            await vscode.window.withProgress(
+                                {
+                                    location: vscode.ProgressLocation.Notification,
+                                    title: vscode.l10n.t('Removing child repository worktree'),
+                                    cancellable: false,
+                                },
+                                () =>
+                                    removeChildRepositoryWorktree(
+                                        repos,
+                                        event.item.entry,
+                                        childEvent.item.repo.relativePath,
+                                    ),
+                            );
+
+                            const repoIndex = repos.findIndex(
+                                (repo) => repo.relativePath === childEvent.item.repo.relativePath,
+                            );
+                            if (repoIndex >= 0) event.item.entry.repoStatuses[repoIndex] = false;
+                            refreshItems();
+                            void vscode.window.showInformationMessage(
+                                vscode.l10n.t(
+                                    'Child repository worktree removed: {0}',
+                                    childEvent.item.repo.relativePath,
+                                ),
+                            );
+                        },
+                    });
+                    if (await childQuickPick.closed) await multiRepositoryWorktreesCmd();
+                    return;
+                }
 
                 if (event.button === completeRepositoriesQuickInputButton) {
                     const missingRepos = repos.filter((_, index) => !event.item.entry.repoStatuses[index]);

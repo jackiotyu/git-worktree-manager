@@ -234,5 +234,9 @@
     "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "Worktree 已部分移除。已移除：{0}。在 {1} 處失敗：{2}",
     "Invalid parent path in gwm.json": "gwm.json 中的 parent 路徑無效",
     "Configured parent path is not a Git repository: {0}": "設定的 parent 路徑不是 Git 儲存庫：{0}",
-    "Repository path resolves outside the configured parent root: {0}": "儲存庫路徑解析後位於設定的 parent 根目錄之外：{0}"
+    "Repository path resolves outside the configured parent root: {0}": "儲存庫路徑解析後位於設定的 parent 根目錄之外：{0}",
+    "View Child Repositories": "檢視子儲存庫",
+    "Child Repositories in {0}": "{0} 中的子儲存庫",
+    "Select a child repository to open in a new window": "選擇要在新視窗中開啟的子儲存庫",
+    "No child repositories found in this worktree": "此工作樹中沒有子儲存庫"
 }

@@ -250,5 +250,9 @@
     "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "ワークツリーの削除は一部のみ完了しました。削除済み: {0}。失敗箇所: {1}。エラー: {2}",
     "Invalid parent path in gwm.json": "gwm.json の parent パスが無効です",
     "Configured parent path is not a Git repository: {0}": "設定された parent パスは Git リポジトリではありません: {0}",
-    "Repository path resolves outside the configured parent root: {0}": "リポジトリパスの解決先が設定された parent ルートの外です: {0}"
+    "Repository path resolves outside the configured parent root: {0}": "リポジトリパスの解決先が設定された parent ルートの外です: {0}",
+    "View Child Repositories": "子リポジトリを表示",
+    "Child Repositories in {0}": "{0} の子リポジトリ",
+    "Select a child repository to open in a new window": "新しいウィンドウで開く子リポジトリを選択",
+    "No child repositories found in this worktree": "このワークツリーに子リポジトリが見つかりません"
 }

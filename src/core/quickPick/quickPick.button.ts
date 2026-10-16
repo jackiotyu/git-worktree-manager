@@ -207,6 +207,10 @@ export const completeRepositoriesQuickInputButton = new QuickInputButton({
     tooltip: vscode.l10n.t('Complete Missing Repositories'),
 });
 export const removeChildRepositoryQuickInputButton = new QuickInputButton({
-    iconPath: new vscode.ThemeIcon('diff-removed'),
+    iconPath: new vscode.ThemeIcon('trash'),
     tooltip: vscode.l10n.t('Remove Child Repository'),
+});
+export const viewChildRepositoriesQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('list-tree'),
+    tooltip: vscode.l10n.t('View Child Repositories'),
 });
