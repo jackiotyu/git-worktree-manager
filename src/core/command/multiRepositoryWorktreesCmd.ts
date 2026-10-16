@@ -59,10 +59,24 @@ interface RepoEntry {
     sourcePath: string;
 }
 
-const workspaceSchema = require('../../../schemas/workspace.schema.json') as object;
-const validateWorkspaceConfig = new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(workspaceSchema);
-
 const configFileName = 'workspace.json';
+
+let validateWorkspaceConfigPromise: Promise<import('ajv').ValidateFunction<WorkspaceConfig>> | undefined;
+
+async function getWorkspaceConfigValidator(): Promise<import('ajv').ValidateFunction<WorkspaceConfig>> {
+    if (!validateWorkspaceConfigPromise) {
+        validateWorkspaceConfigPromise = Promise.all([
+            import('ajv'),
+            // @ts-expect-error Rspack resolves this JSON module; it is outside tsconfig's src root.
+            import('../../../schemas/workspace.schema.json'),
+        ]).then(([ajvModule, schemaModule]) => {
+            const Ajv = ajvModule.default;
+            const schema = schemaModule.default as object;
+            return new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(schema);
+        });
+    }
+    return validateWorkspaceConfigPromise;
+}
 
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
 
@@ -109,6 +123,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
     }
 
+    const validateWorkspaceConfig = await getWorkspaceConfigValidator();
     if (!validateWorkspaceConfig(parsedConfig)) {
         const details = (validateWorkspaceConfig.errors ?? [])
             .map((error) => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)
