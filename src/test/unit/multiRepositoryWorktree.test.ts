@@ -33,28 +33,39 @@ describe('multi-repository worktree utilities', () => {
         await fs.rm(tempRoot, { recursive: true, force: true });
     });
 
-    it('lists exact worktree paths from porcelain output', async () => {
-        rs.mocked(execModule.execAuto).mockResolvedValue(
-            result(
-                'worktree /repos/main\nHEAD abc\nbranch refs/heads/main\n\n' +
-                    'worktree /repos/feature\nHEAD def\nbranch refs/heads/feature\n',
-            ),
-        );
+    it('lists exact worktree paths from Git metadata', async () => {
+        const repo = path.join(tempRoot, 'main');
+        const commonDir = path.join(repo, '.git');
+        const worktree = path.join(tempRoot, 'feature');
+        const adminDir = path.join(commonDir, 'worktrees', 'feature');
+        await fs.mkdir(path.join(commonDir, 'worktrees'), { recursive: true });
+        await fs.writeFile(path.join(commonDir, 'HEAD'), 'ref: refs/heads/main\\n');
+        await fs.mkdir(worktree, { recursive: true });
+        await fs.mkdir(adminDir, { recursive: true });
+        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, adminDir)}\\n`);
+        await fs.writeFile(path.join(adminDir, 'gitdir'), path.relative(adminDir, path.join(worktree, '.git')));
 
-        const paths = await getRegisteredWorktreePaths('/repos/main');
+        const paths = await getRegisteredWorktreePaths(repo);
 
-        expect(paths.has(normalizeRepositoryPath('/repos/main'))).toBe(true);
-        expect(paths.has(normalizeRepositoryPath('/repos/feature'))).toBe(true);
-        expect(paths.has(normalizeRepositoryPath('/repos/feature-copy'))).toBe(false);
+        expect(paths.has(normalizeRepositoryPath(repo))).toBe(true);
+        expect(paths.has(normalizeRepositoryPath(worktree))).toBe(true);
+        expect(paths.has(normalizeRepositoryPath(path.join(tempRoot, 'feature-copy')))).toBe(false);
     });
 
     it('checks whether a path is registered by its source repository', async () => {
-        rs.mocked(execModule.execAuto).mockResolvedValue(
-            result('worktree /repos/main\nHEAD abc\n\nworktree /repos/feature\nHEAD def\n'),
-        );
+        const repo = path.join(tempRoot, 'main');
+        const commonDir = path.join(repo, '.git');
+        const worktree = path.join(tempRoot, 'feature');
+        const adminDir = path.join(commonDir, 'worktrees', 'feature');
+        await fs.mkdir(path.join(commonDir, 'worktrees'), { recursive: true });
+        await fs.writeFile(path.join(commonDir, 'HEAD'), 'ref: refs/heads/main\\n');
+        await fs.mkdir(worktree, { recursive: true });
+        await fs.mkdir(adminDir, { recursive: true });
+        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, adminDir)}\\n`);
+        await fs.writeFile(path.join(adminDir, 'gitdir'), path.relative(adminDir, path.join(worktree, '.git')));
 
-        await expect(isRegisteredWorktree('/repos/main', '/repos/feature')).resolves.toBe(true);
-        await expect(isRegisteredWorktree('/repos/main', '/repos/other')).resolves.toBe(false);
+        await expect(isRegisteredWorktree(repo, worktree)).resolves.toBe(true);
+        await expect(isRegisteredWorktree(repo, path.join(tempRoot, 'other'))).resolves.toBe(false);
     });
 
     it('compares repository paths with path boundaries', () => {
@@ -109,16 +120,16 @@ describe('multi-repository worktree utilities', () => {
     });
 
     it('marks a linked worktree in its own Git directory', async () => {
-        rs.mocked(execModule.execAuto).mockImplementation(async (cwd, args) => {
-            if (args?.[0] === 'rev-parse') {
-                return result(cwd === '/worktrees/feature' ? tempRoot : path.join(tempRoot, 'unknown-git-dir'));
-            }
-            return result();
-        });
+        const worktree = path.join(tempRoot, 'feature');
+        const gitDir = path.join(tempRoot, '.git', 'worktrees', 'feature');
+        await fs.mkdir(worktree, { recursive: true });
+        await fs.mkdir(gitDir, { recursive: true });
+        await fs.writeFile(path.join(gitDir, 'HEAD'), 'ref: refs/heads/feature\\n');
+        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, gitDir)}\\n`);
 
-        await markMultiRepositoryWorktree('/worktrees/feature');
+        await markMultiRepositoryWorktree(worktree);
 
-        expect(await isMarkedMultiRepositoryWorktree('/worktrees/feature')).toBe(true);
-        expect(await isMarkedMultiRepositoryWorktree('/worktrees/unknown')).toBe(false);
+        expect(await isMarkedMultiRepositoryWorktree(worktree)).toBe(true);
+        expect(await isMarkedMultiRepositoryWorktree(path.join(tempRoot, 'unknown'))).toBe(false);
     });
 });
