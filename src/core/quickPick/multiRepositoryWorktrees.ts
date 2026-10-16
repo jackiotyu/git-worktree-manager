@@ -102,7 +102,7 @@ export function showMultiRepositoryWorktreesQuickPick(
 
     disposables.push(
         quickPick.onDidTriggerButton(async (button) => {
-            if (button !== createMultiRepositoryWorktreeQuickInputButton) return;
+            if (quickPick.busy || button !== createMultiRepositoryWorktreeQuickInputButton) return;
 
             quickPick.hide();
             await hidden;
