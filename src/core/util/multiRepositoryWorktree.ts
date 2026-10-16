@@ -19,8 +19,9 @@ async function getCommonGitDir(repoPath: string): Promise<string> {
     try {
         const commonDirContent = await fs.readFile(path.join(gitDir, 'commondir'), 'utf8');
         return path.resolve(gitDir, commonDirContent.trim());
-    } catch {
-        return gitDir;
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return gitDir;
+        throw error;
     }
 }
 
