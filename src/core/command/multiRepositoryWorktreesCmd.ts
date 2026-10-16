@@ -293,9 +293,10 @@ async function getMultiRepositoryWorktrees(
         worktrees.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => {
             const isMain = normalizeRepositoryPath(entry.path) === normalizeRepositoryPath(mainRepo);
             const repoStatuses = await Promise.all(
-                repos.map((repo) => {
+                repos.map(async (repo) => {
                     const repoPath = isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath);
-                    return hasGitMetadata(repoPath);
+                    if (!(await hasGitMetadata(repoPath))) return false;
+                    return isMain || (await isRegisteredWorktree(repo.sourcePath, repoPath));
                 }),
             );
             return {
