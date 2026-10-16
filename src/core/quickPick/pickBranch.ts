@@ -346,6 +346,7 @@ const mapRemoteBranchItems = (remoteBranchList: RefList) => {
                 iconPath: new vscode.ThemeIcon('cloud'),
                 description: buildRemoteBranchDesc(item['objectname:short'], item['authordate']),
                 branch: item['refname:short'],
+                remote: true,
                 detail: buildCommitDesc(item),
             };
         }),
