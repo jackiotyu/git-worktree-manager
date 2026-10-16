@@ -13,7 +13,6 @@ import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
 import { Commands } from '@/constants';
 import {
-    backButton,
     openInCurrentWindowQuickInputButton,
     openExternalTerminalQuickInputButton,
     openTerminalQuickInputButton,
@@ -22,6 +21,7 @@ import {
     completeRepositoriesQuickInputButton,
     removeChildRepositoryQuickInputButton,
 } from '@/core/quickPick/quickPick.button';
+import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPick/pickRepositories';
 
 interface WorkspaceRepo {
     name: string;
@@ -350,60 +350,14 @@ async function removeChildRepositoryWorktree(
     await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
 }
 
-async function pickRepositoriesWithBackButton(
-    repos: RepoEntry[],
-    options: { title: string; placeHolder: string; canSelectMany: boolean },
-): Promise<RepoEntry[] | undefined> {
-    return new Promise((resolve) => {
-        const quickPick = vscode.window.createQuickPick<vscode.QuickPickItem & { repo: RepoEntry }>();
-        let resolved = false;
-        const finish = (selected?: RepoEntry[]) => {
-            if (resolved) return;
-            resolved = true;
-            quickPick.hide();
-            quickPick.dispose();
-            resolve(selected);
-        };
-
-        quickPick.title = options.title;
-        quickPick.placeholder = options.placeHolder;
-        quickPick.buttons = [backButton];
-        quickPick.canSelectMany = options.canSelectMany;
-        quickPick.ignoreFocusOut = true;
-        quickPick.items = repos.map((repo) => ({
-            label: repo.name,
-            description: repo.relativePath,
-            detail: repo.remote,
-            repo,
-        }));
-        quickPick.onDidTriggerButton((button) => {
-            if (button === backButton) finish();
-        });
-        quickPick.onDidAccept(() => {
-            const selected = quickPick.selectedItems.map((item) => item.repo);
-            finish(selected.length ? selected : undefined);
-        });
-        quickPick.onDidHide(() => finish());
-        quickPick.show();
-    });
-}
 
 async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise<void> {
     const { repos } = await getWorkspaceContext(root);
-    const selectedRepos = await vscode.window.showQuickPick(
-        repos.map((repo) => ({
-            label: repo.name,
-            description: repo.relativePath,
-            detail: repo.remote,
-            relativePath: repo.relativePath,
-        })),
-        {
-            title: vscode.l10n.t('Create Multi-Repository Worktree'),
-            placeHolder: vscode.l10n.t('Select repositories to include in this worktree'),
-            canPickMany: true,
-            ignoreFocusOut: true,
-        },
-    );
+    const selectedRepos = await pickRepositories(repos, {
+        title: vscode.l10n.t('Create Multi-Repository Worktree'),
+        placeHolder: vscode.l10n.t('Select repositories to include in this worktree'),
+        canSelectMany: true,
+    });
     if (!selectedRepos?.length) return;
 
     const branch = await vscode.window.showInputBox({
