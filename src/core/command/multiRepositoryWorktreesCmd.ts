@@ -7,7 +7,14 @@ import { getWorktrees } from '@/core/git/getWorktrees';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { pathExists } from '@/core/util/fs';
 import { resolveSafeRelativePath } from '@/core/util/path';
-import { isGitRepository, isGitRepositoryPresent } from '@/core/util/repo';
+import { isGitRepository } from '@/core/util/repo';
+import {
+    getRegisteredWorktreePaths,
+    isMarkedMultiRepositoryWorktree,
+    isRegisteredWorktree,
+    markMultiRepositoryWorktree,
+    normalizeWorktreePath,
+} from '@/core/util/multiRepositoryWorktree';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
 import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
@@ -45,6 +52,74 @@ interface RepoEntry {
 }
 
 const configFileName = 'workspace.json';
+
+function isNestedPath(parent: string, candidate: string): boolean {
+    const relative = path.relative(parent, candidate);
+    return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
+}
+
+function normalizeRemote(remote: string): string {
+    const value = remote.trim();
+    const scpRemote = value.match(/^(?:[^@/:]+@)?([^/:]+):(.+)$/);
+    if (scpRemote && !/^[a-zA-Z]:[\\/]/.test(value) && !value.includes('://')) {
+        const host = scpRemote[1].toLowerCase();
+        let remotePath = scpRemote[2].replace(/^\\/+|\\/+$/g, '').replace(/\\.git$/i, '');
+        if (host === 'github.com') remotePath = remotePath.toLowerCase();
+        return `${host}/${remotePath}`;
+    }
+
+    try {
+        const url = new URL(value);
+        if (['file:', 'git:', 'http:', 'https:', 'ssh:'].includes(url.protocol)) {
+            const port = url.port && !(['https:', 'http:'].includes(url.protocol) && ['443', '80'].includes(url.port)) &&
+                !(url.protocol === 'ssh:' && url.port === '22')
+                ? `:${url.port}`
+                : '';
+            const host = `${url.hostname.toLowerCase()}${port}`;
+            let remotePath = url.pathname.replace(/^\\/+|\\/+$/g, '').replace(/\\.git$/i, '');
+            if (url.hostname.toLowerCase() === 'github.com') remotePath = remotePath.toLowerCase();
+            return `${host}/${remotePath}`;
+        }
+    } catch {
+        // Local paths and non-URL remotes are compared in their literal form below.
+    }
+
+    return value.replace(/\\/g, '/').replace(/\\.git$/i, '').replace(/\\/+$/g, '');
+}
+
+async function hasConfiguredRemote(repo: RepoEntry): Promise<boolean> {
+    const { stdout } = await execAuto(repo.sourcePath, ['remote', '-v']);
+    const configuredRemote = normalizeRemote(repo.remote);
+    const remoteUrls = stdout
+        .split(/\\r?\\n/)
+        .map((line) => line.trim().split(/\\s+/)[1])
+        .filter((remote): remote is string => Boolean(remote));
+    return remoteUrls.some((remote) => normalizeRemote(remote) === configuredRemote);
+}
+
+async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
+    try {
+        return (await isGitRepository(repo.sourcePath)) && (await hasConfiguredRemote(repo));
+    } catch {
+        return false;
+    }
+}
+
+async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promise<void> {
+    if (!(await pathExists(repo.sourcePath))) {
+        await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
+        await execAuto(cloneCwd, ['clone', '--', repo.remote, repo.sourcePath]);
+    }
+
+    if (!(await isGitRepository(repo.sourcePath))) {
+        throw new Error(
+            vscode.l10n.t('Configured path exists but is not a Git repository: {0}', repo.relativePath),
+        );
+    }
+    if (!(await hasConfiguredRemote(repo))) {
+        throw new Error(vscode.l10n.t('Configured repository remote does not match: {0}', repo.relativePath));
+    }
+}
 
 async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
     const configPath = path.join(root, configFileName);
@@ -99,18 +174,18 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     }
     if (!repos.length) throw new Error(vscode.l10n.t('No repositories are configured in workspace.json'));
 
-    for (const repo of repos) {
-        for (const other of repos) {
-            if (repo === other) continue;
-            const relative = path.relative(repo.sourcePath, other.sourcePath);
-            if (relative && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative)) {
+    for (let i = 0; i < repos.length; i++) {
+        for (let j = i + 1; j < repos.length; j++) {
+            const first = repos[i];
+            const second = repos[j];
+            if (isNestedPath(first.sourcePath, second.sourcePath) || isNestedPath(second.sourcePath, first.sourcePath)) {
                 throw new Error(
                     vscode.l10n.t(
                         'Invalid workspace.json: {0}',
                         vscode.l10n.t(
                             'Overlapping repository paths: {0} and {1}',
-                            repo.relativePath,
-                            other.relativePath,
+                            first.relativePath,
+                            second.relativePath,
                         ),
                     ),
                 );
@@ -154,17 +229,14 @@ async function createMultiRepositoryWorktree(
     try {
         await addBranchWorktree(mainRepo, targetRoot, branch, startPoint);
         parentCreated = true;
+        await markMultiRepositoryWorktree(targetRoot);
         for (const repo of repos) {
-            if (!(await pathExists(repo.sourcePath))) {
-                await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
-                await execAuto(root, ['clone', '--', repo.remote, repo.sourcePath]);
-            } else if (!(await isGitRepository(repo.sourcePath))) {
-                throw new Error(`Configured path exists but is not a Git repository: ${repo.relativePath}`);
-            }
+            await ensureRepositorySource(repo, root);
             const targetPath = resolveSafeRelativePath(targetRoot, repo.relativePath);
             if (await pathExists(targetPath)) {
                 throw new Error(`Target path already exists: ${targetPath}`);
             }
+            await fs.mkdir(path.dirname(targetPath), { recursive: true });
             await addBranchWorktree(repo.sourcePath, targetPath, branch);
             created.push({ repoPath: repo.sourcePath, worktreePath: targetPath });
         }
@@ -197,26 +269,39 @@ async function getMultiRepositoryWorktrees(
 ): Promise<{ mainRepo: string; repos: RepoEntry[]; entries: MultiRepositoryWorktreeEntry[] }> {
     const { mainRepo, repos } = await getWorkspaceContext(root);
     const worktrees = await getWorktrees(mainRepo);
+    const registeredWorktrees = await Promise.all(
+        repos.map(async (repo) => {
+            if (!(await isConfiguredRepository(repo))) return new Set<string>();
+            try {
+                return await getRegisteredWorktreePaths(repo.sourcePath);
+            } catch {
+                return new Set<string>();
+            }
+        }),
+    );
     const result = await Promise.all(
         worktrees.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => {
-            const isMain =
-                process.platform === 'win32'
-                    ? path.resolve(entry.path).toLowerCase() === path.resolve(mainRepo).toLowerCase()
-                    : path.resolve(entry.path) === path.resolve(mainRepo);
+            const isMain = normalizeWorktreePath(entry.path) === normalizeWorktreePath(mainRepo);
+            const repoStatuses = await Promise.all(
+                repos.map(async (repo, index) => {
+                    if (isMain) return isConfiguredRepository(repo);
+                    const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
+                    return registeredWorktrees[index].has(normalizeWorktreePath(childPath));
+                }),
+            );
             return {
                 ...entry,
                 isMain,
-                repoStatuses: await Promise.all(
-                    repos.map((repo) =>
-                        isGitRepositoryPresent(
-                            isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath),
-                        ),
-                    ),
-                ),
+                isMultiRepository: !isMain && (await isMarkedMultiRepositoryWorktree(entry.path)),
+                repoStatuses,
             };
         }),
     );
-    return { mainRepo, repos, entries: result.filter((entry) => entry.isMain || entry.repoStatuses.some(Boolean)) };
+    return {
+        mainRepo,
+        repos,
+        entries: result.filter((entry) => entry.isMain || entry.isMultiRepository || entry.repoStatuses.some(Boolean)),
+    };
 }
 
 async function openWorktreeTerminal(
@@ -246,17 +331,12 @@ async function completeMultiRepositoryWorktree(
 
     try {
         for (const repo of selectedRepos) {
-            if (!(await pathExists(repo.sourcePath))) {
-                await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
-                await execAuto(entry.path, ['clone', '--', repo.remote, repo.sourcePath]);
-            } else if (!(await isGitRepository(repo.sourcePath))) {
-                throw new Error(`Configured path exists but is not a Git repository: ${repo.relativePath}`);
-            }
-
+            await ensureRepositorySource(repo, entry.path);
             const targetPath = resolveSafeRelativePath(entry.path, repo.relativePath);
             if (await pathExists(targetPath)) {
                 throw new Error(`Target path already exists: ${targetPath}`);
             }
+            await fs.mkdir(path.dirname(targetPath), { recursive: true });
             await addBranchWorktree(repo.sourcePath, targetPath, entry.branch);
             created.push({ repoPath: repo.sourcePath, worktreePath: targetPath });
         }
@@ -278,6 +358,34 @@ async function completeMultiRepositoryWorktree(
     }
 }
 
+interface WorktreeChange {
+    status: string;
+    filePath: string;
+}
+
+async function getWorktreeChanges(worktreePath: string, ignoredChildPaths: string[] = []): Promise<WorktreeChange[]> {
+    const { stdout } = await execAuto(worktreePath, ['status', '--porcelain=v1', '-z', '--untracked-files=all']);
+    const ignoredPaths = ignoredChildPaths.map((item) => path.normalize(item).replace(/[\\/]+$/, ''));
+    return stdout
+        .split('\\0')
+        .filter(Boolean)
+        .map((record) => ({ status: record.slice(0, 2), filePath: record.slice(3).replace(/\\\\/g, '/') }))
+        .filter((change) => {
+            if (change.status !== '??') return true;
+            const filePath = path.posix.normalize(change.filePath).replace(/\\/+$/, '');
+            return !ignoredPaths.some(
+                (childPath) => filePath === childPath || filePath.startsWith(`${childPath}/`),
+            );
+        });
+}
+
+async function assertWorktreeClean(worktreePath: string, ignoredChildPaths: string[] = []): Promise<void> {
+    const changes = await getWorktreeChanges(worktreePath, ignoredChildPaths);
+    if (changes.length) {
+        throw new Error(vscode.l10n.t('Worktree contains uncommitted changes: {0}', worktreePath));
+    }
+}
+
 async function removeMultiRepositoryWorktree(
     mainRepo: string,
     repos: RepoEntry[],
@@ -286,13 +394,49 @@ async function removeMultiRepositoryWorktree(
     if (entry.isMain) {
         throw new Error('The main worktree cannot be removed.');
     }
+
+    const children: Array<{ repo: RepoEntry; path: string }> = [];
     for (const repo of repos) {
         const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
-        if (await isGitRepository(childPath)) {
-            await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
+        const exists = await pathExists(childPath);
+        const registered = await isRegisteredWorktree(repo.sourcePath, childPath);
+        if (registered) {
+            if (exists) children.push({ repo, path: childPath });
+            continue;
+        }
+        if (exists) {
+            throw new Error(vscode.l10n.t('Path exists but is not a worktree of the configured repository: {0}', repo.relativePath));
         }
     }
-    await execAuto(mainRepo, ['worktree', 'remove', entry.path]);
+
+    for (const child of children) {
+        await assertWorktreeClean(child.path);
+    }
+    await assertWorktreeClean(entry.path, children.map((child) => child.repo.relativePath));
+
+    const removed: string[] = [];
+    let removing = '';
+    try {
+        for (const child of children) {
+            removing = child.repo.relativePath;
+            await execAuto(child.repo.sourcePath, ['worktree', 'remove', child.path]);
+            removed.push(child.repo.relativePath);
+        }
+        removing = entry.path;
+        await execAuto(mainRepo, ['worktree', 'remove', entry.path]);
+    } catch (error) {
+        if (removed.length) {
+            throw new Error(
+                vscode.l10n.t(
+                    'Partially removed worktree. Removed: {0}. Failed at {1}: {2}',
+                    removed.join(', '),
+                    removing,
+                    String(error),
+                ),
+            );
+        }
+        throw error;
+    }
 }
 
 async function removeChildRepositoryWorktree(
@@ -304,9 +448,10 @@ async function removeChildRepositoryWorktree(
     if (!repo) throw new Error(`Repository is not configured: ${relativePath}`);
 
     const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
-    if (!(await isGitRepository(childPath))) {
+    if (!(await isRegisteredWorktree(repo.sourcePath, childPath))) {
         throw new Error(`No generated worktree found for repository: ${repo.relativePath}`);
     }
+    await assertWorktreeClean(childPath);
     await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
 }
 
