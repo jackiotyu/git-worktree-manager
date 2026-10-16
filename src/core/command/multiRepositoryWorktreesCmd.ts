@@ -142,7 +142,9 @@ async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; re
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
 
-    const { repos } = await getWorkspaceContext(root);
+    const mainRepo = await getMainFolder(root);
+    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+    const { repos } = await loadConfig(root, mainRepo);
     return { mainRepo, repos };
 }
 
@@ -460,9 +462,7 @@ async function pickRepositoriesWithBackButton(
 }
 
 async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise<void> {
-    const mainRepo = await getMainFolder(root);
-    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
-    const { repos } = await loadConfig(root, mainRepo);
+    const { repos } = await getWorkspaceContext(root);
     const selectedRepos = await vscode.window.showQuickPick(
         repos.map((repo) => ({
             label: repo.name,
@@ -613,7 +613,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                         await vscode.window.withProgress(
                             {
                                 location: vscode.ProgressLocation.Notification,
-                                title: vscode.l10n.t('Removing child repository worktreess'),
+                                title: vscode.l10n.t('Removing child repository worktrees'),
                                 cancellable: false,
                             },
                             async () => {
