@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
+import { toSimplePath } from '@/core/util/path';
 
 export async function hasGitMetadata(dir: string): Promise<boolean> {
     const gitEntry = path.join(dir, '.git');
@@ -27,8 +28,6 @@ export async function hasGitMetadata(dir: string): Promise<boolean> {
 export async function isGitRepository(repoPath: string): Promise<boolean> {
     const repoRoot = await getWorktreeTopLevel(repoPath);
     if (!repoRoot) return false;
-    const target = path.resolve(repoPath);
-    const resolvedRoot = path.resolve(repoRoot);
-    return process.platform === 'win32' ? resolvedRoot.toLowerCase() === target.toLowerCase() : resolvedRoot === target;
+    return toSimplePath(repoRoot) === toSimplePath(repoPath);
 }
 
