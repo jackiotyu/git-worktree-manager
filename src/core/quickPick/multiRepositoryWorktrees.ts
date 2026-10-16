@@ -53,7 +53,7 @@ export function createMultiRepositoryWorktreePickItem(
 export interface MultiRepositoryWorktreeQuickPickOptions {
     entries: MultiRepositoryWorktreeEntry[];
     refreshEntries: () => Promise<MultiRepositoryWorktreeEntry[]>;
-    onCreate: (quickPick: vscode.QuickPick<MultiRepositoryWorktreePickItem>) => Promise<void>;
+    onCreate: () => Promise<void>;
     onAccept: (
         selected: MultiRepositoryWorktreePickItem,
         quickPick: vscode.QuickPick<MultiRepositoryWorktreePickItem>,
@@ -84,9 +84,14 @@ export function showMultiRepositoryWorktreesQuickPick(
 
     disposables.push(
         quickPick.onDidTriggerButton(async (button) => {
-            if (button === createMultiRepositoryWorktreeQuickInputButton) {
-                await options.onCreate(quickPick);
-            }
+            if (button !== createMultiRepositoryWorktreeQuickInputButton) return;
+
+            const hidden = new Promise<void>((resolve) => {
+                quickPick.onDidHide(resolve);
+            });
+            quickPick.hide();
+            await hidden;
+            await options.onCreate();
         }),
         quickPick.onDidAccept(async () => {
             const selected = quickPick.selectedItems[0];
