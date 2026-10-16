@@ -544,7 +544,18 @@ export const pickBranch: IPickBranch = async ({
         quickPick.step = step;
         quickPick.totalSteps = totalSteps;
         quickPick.onDidAccept(() =>
-            handleAccept({ resolve, reject, quickPick, cwd, mainFolder, title, refreshItems, createBranchOnPick, step, totalSteps }),
+            handleAccept({
+                resolve,
+                reject,
+                quickPick,
+                cwd,
+                mainFolder,
+                title,
+                refreshItems,
+                createBranchOnPick,
+                step,
+                totalSteps,
+            }),
         );
         quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
         quickPick.onDidTriggerButton((event) =>
