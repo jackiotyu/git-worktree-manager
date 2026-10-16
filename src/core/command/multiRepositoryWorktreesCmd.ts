@@ -130,6 +130,22 @@ async function loadConfig(root: string, sourceRoot = root): Promise<{ config: Wo
     return { config, repos };
 }
 
+async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
+    const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
+    const normalizedRoot = path.resolve(root);
+    const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
+    const isRoot =
+        process.platform === 'win32'
+            ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
+            : normalizedRoot === normalizedRepoRoot;
+    if (!isRoot) {
+        throw new Error('Open the repository root containing workspace.json, not a subfolder.');
+    }
+
+    const { repos } = await getWorkspaceContext(root);
+    return { mainRepo, repos };
+}
+
 async function isGitRepository(repoPath: string): Promise<boolean> {
     try {
         const { stdout } = await execAuto(repoPath, ['rev-parse', '--show-toplevel']);
@@ -197,19 +213,7 @@ async function createMultiRepositoryWorktree(
     branch: string,
     selectedRepoPaths: string[],
 ): Promise<string> {
-    const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
-    const normalizedRoot = path.resolve(root);
-    const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
-    const isRoot =
-        process.platform === 'win32'
-            ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
-            : normalizedRoot === normalizedRepoRoot;
-    if (!isRoot) {
-        throw new Error('Open the repository root containing workspace.json, not a subfolder.');
-    }
-    const mainRepo = await getMainFolder(root);
-    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
-    const { repos: configuredRepos } = await loadConfig(root, mainRepo);
+    const { mainRepo, repos: configuredRepos } = await getWorkspaceContext(root);
     const selectedPaths = new Set(selectedRepoPaths);
     const repos = configuredRepos.filter((repo) => selectedPaths.has(repo.relativePath));
     const parentDir = getBaseWorktreeDir(mainRepo);
@@ -274,19 +278,7 @@ async function createMultiRepositoryWorktree(
 async function getMultiRepositoryWorktrees(
     root: string,
 ): Promise<{ mainRepo: string; repos: RepoEntry[]; entries: MultiRepositoryWorktreeEntry[] }> {
-    const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
-    const normalizedRoot = path.resolve(root);
-    const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
-    const isRoot =
-        process.platform === 'win32'
-            ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
-            : normalizedRoot === normalizedRepoRoot;
-    if (!isRoot) {
-        throw new Error('Open the repository root containing workspace.json, not a subfolder.');
-    }
-    const mainRepo = await getMainFolder(root);
-    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
-    const { repos } = await loadConfig(root, mainRepo);
+    const { mainRepo, repos } = await getWorkspaceContext(root);
     const worktrees = await getWorktrees(mainRepo);
     const result = await Promise.all(
         worktrees.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => {
@@ -310,8 +302,6 @@ async function getMultiRepositoryWorktrees(
     return { mainRepo, repos, entries: result.filter((entry) => entry.isMain || entry.repoStatuses.some(Boolean)) };
 }
 
-const removeWorktreeButton = removeMultiRepositoryWorktreeQuickInputButton;
-
 function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepositoryWorktreePickItem {
     const readyCount = entry.repoStatuses.filter(Boolean).length;
     const missingCount = entry.repoStatuses.length - readyCount;
@@ -328,7 +318,7 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
         buttons: [
-            ...(entry.isMain ? [] : [removeWorktreeButton]),
+            ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
             completeRepositoriesQuickInputButton,
@@ -336,6 +326,22 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
             openInCurrentWindowQuickInputButton,
         ],
     };
+}
+
+async function openWorktreeTerminal(
+    entry: MultiRepositoryWorktreeEntry,
+    button: vscode.QuickInputButton,
+): Promise<void> {
+    const item = {
+        name: entry.branch,
+        fsPath: entry.path,
+        uriPath: vscode.Uri.file(entry.path).toString(),
+    };
+    const command =
+        button === openExternalTerminalQuickInputButton
+            ? Commands.openExternalTerminalContext
+            : Commands.openTerminal;
+    await vscode.commands.executeCommand(command, item);
 }
 
 async function completeMultiRepositoryWorktree(
@@ -630,16 +636,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     event.button === openExternalTerminalQuickInputButton ||
                     event.button === openTerminalQuickInputButton
                 ) {
-                    const item = {
-                        name: event.item.entry.branch,
-                        fsPath: event.item.entry.path,
-                        uriPath: vscode.Uri.file(event.item.entry.path).toString(),
-                    };
-                    const command =
-                        event.button === openExternalTerminalQuickInputButton
-                            ? Commands.openExternalTerminalContext
-                            : Commands.openTerminal;
-                    await vscode.commands.executeCommand(command, item);
+                    await openWorktreeTerminal(event.item.entry, event.button);
                     return;
                 }
                 if (event.button === openInCurrentWindowQuickInputButton) {
@@ -650,7 +647,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     });
                     return;
                 }
-                if (event.button !== removeWorktreeButton || event.item.entry.isMain) return;
+                if (event.button !== removeMultiRepositoryWorktreeQuickInputButton || event.item.entry.isMain) return;
 
                 const confirmation = await vscode.window.showWarningMessage(
                     vscode.l10n.t('Remove the multi-repository worktree {0}?', event.item.entry.path),
