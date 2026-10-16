@@ -42,8 +42,8 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
             raw = await fs.readFile(candidate, 'utf8');
             configPath = candidate;
             break;
-        } catch {
-            // Try the next supported configuration location.
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
         }
     }
     if (raw === undefined) {
