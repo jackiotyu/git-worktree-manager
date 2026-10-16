@@ -66,15 +66,24 @@ function stripRemotePath(remotePath: string): string {
     return result;
 }
 
+function stripRemotePath(remotePath: string): string {
+    let result = remotePath;
+    while (result.startsWith('/')) result = result.slice(1);
+    while (result.endsWith('/')) result = result.slice(0, -1);
+    if (result.toLowerCase().endsWith('.git')) result = result.slice(0, -4);
+    return result;
+}
+
 function normalizeRemote(remote: string): string {
     const value = remote.trim();
+    const backslash = String.fromCharCode(92);
     const isWindowsDrivePath =
-        value.length >= 3 && /^[a-zA-Z]:/.test(value) && (value[2] === '/' || value[2] === '\\\\');
+        value.length >= 3 && /^[a-zA-Z]:/.test(value) && (value[2] === '/' || value[2] === backslash);
 
     if (!value.includes('://') && !isWindowsDrivePath) {
         const colonIndex = value.indexOf(':');
         const hostAndUser = colonIndex > 0 ? value.slice(0, colonIndex) : '';
-        if (hostAndUser && !hostAndUser.includes('/') && !hostAndUser.includes('\\\\')) {
+        if (hostAndUser && !hostAndUser.includes('/') && !hostAndUser.includes(backslash)) {
             const host = hostAndUser.slice(hostAndUser.lastIndexOf('@') + 1).toLowerCase();
             let remotePath = stripRemotePath(value.slice(colonIndex + 1));
             if (host === 'github.com') remotePath = remotePath.toLowerCase();
@@ -99,7 +108,7 @@ function normalizeRemote(remote: string): string {
         // Local paths and non-URL remotes are compared in their literal form below.
     }
 
-    let normalized = value.split('\\\\').join('/');
+    let normalized = value.split(backslash).join('/');
     while (normalized.endsWith('/')) normalized = normalized.slice(0, -1);
     if (normalized.toLowerCase().endsWith('.git')) normalized = normalized.slice(0, -4);
     return normalized;
