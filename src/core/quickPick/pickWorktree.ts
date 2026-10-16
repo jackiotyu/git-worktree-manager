@@ -262,7 +262,9 @@ const mapWorkspacePickItems = (list: IRecentItem[], disPlayType: DefaultDisplayL
 };
 
 const handleAccept = ({ resolve, quickPick }: HandlerArgs) => {
+    if (quickPick.busy) return;
     const selectedItem = quickPick.selectedItems[0];
+    if (!selectedItem) return;
     if (selectedItem.uriPath) {
         vscode.commands
             .executeCommand('vscode.openFolder', vscode.Uri.parse(selectedItem.uriPath), { forceNewWindow: true })
@@ -283,6 +285,7 @@ const handleHide = ({ resolve, quickPick, actionService, disposables }: HideHand
 };
 
 const handleTriggerButton = ({ quickPick, event, actionService }: TriggerButtonHandlerArgs) => {
+    if (quickPick.busy) return;
     if (event === sortByBranchQuickInputButton) {
         actionService.sortByBranch = true;
         quickPick.buttons = actionService.updateButtons();
@@ -376,6 +379,7 @@ const handleTriggerButton = ({ quickPick, event, actionService }: TriggerButtonH
 };
 
 const handleTriggerItemButton = ({ resolve, quickPick, event, actionService }: TriggerItemButtonHandlerArgs) => {
+    if (quickPick.busy) return;
     const selectedItem = event.item;
     const button = event.button;
     if (!selectedItem.fsPath || !selectedItem.uriPath) {
