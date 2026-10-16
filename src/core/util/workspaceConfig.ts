@@ -36,17 +36,6 @@ function validateWorkspaceConfig(value: unknown): string | undefined {
     const paths = Object.keys(repos);
     if (!paths.length) return invalid('/repo', 'must NOT have fewer than 1 properties');
     for (const repoPath of paths) {
-        if (
-            !repoPath ||
-            repoPath.startsWith('/') ||
-            repoPath.startsWith('\\') ||
-            /^[A-Za-z]:/.test(repoPath) ||
-            /[:*?"<>|]/.test(repoPath) ||
-            repoPath.split(/[\\/]/).some((part) => part === '.' || part === '..')
-        ) {
-            return invalid(`/repo/${repoPath}`, 'must be a safe relative path');
-        }
-
         const repo = repos[repoPath];
         if (!repo || typeof repo !== 'object' || Array.isArray(repo)) {
             return invalid(`/repo/${repoPath}`, 'must be an object');
