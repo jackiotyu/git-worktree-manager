@@ -24,9 +24,7 @@ import {
 } from '@/core/quickPick/quickPick.button';
 import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPick/pickRepositories';
 
-import {
-    showMultiRepositoryWorktreesQuickPick,
-} from '@/core/quickPick/multiRepositoryWorktrees';
+import { showMultiRepositoryWorktreesQuickPick } from '@/core/quickPick/multiRepositoryWorktrees';
 
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
 
@@ -111,6 +109,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
         return;
     }
 }
+
 export async function createMultiRepositoryWorktreeCmd(): Promise<void> {
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root) {
