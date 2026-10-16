@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Git Worktree Manager workspace configuration",
+  "description": "Configures the child repositories managed alongside a Git Worktree Manager workspace.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "repo"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Workspace configuration format version."
+    },
+    "repo": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Child repositories keyed by safe relative paths under the main repository.",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(?![/\\\\\\\\])(?![A-Za-z]:)(?!.*(?:^|[/\\\\\\\\])\\\\.{1,2}(?:[/\\\\\\\\]|$)).+$",
+        "description": "A relative repository path. Absolute paths and '.' or '..' path segments are not allowed."
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "remote"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Display name shown in the repository picker."
+          },
+          "remote": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Git remote URL or clone source used when the repository is missing."
+          }
+        }
+      }
+    }
+  }
+}
