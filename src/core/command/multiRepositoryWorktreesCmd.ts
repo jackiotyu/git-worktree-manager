@@ -7,7 +7,7 @@ import { getWorktrees } from '@/core/git/getWorktrees';
 import { pathExists } from '@/core/util/fs';
 import { resolveSafeRelativePath, toSimplePath } from '@/core/util/path';
 import { hasGitMetadata, isGitRepository } from '@/core/util/repo';
-import { loadConfig } from '@/core/util/workspaceConfig';
+import { loadConfig, type RepoEntry } from '@/core/util/workspaceConfig';
 import {
     hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
