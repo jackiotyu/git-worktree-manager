@@ -109,11 +109,15 @@ export function showMultiRepositoryWorktreesQuickPick(
             await options.onCreate();
         }),
         quickPick.onDidAccept(async () => {
+            if (quickPick.busy) return;
             const selected = quickPick.selectedItems[0];
             if (!selected) return;
             await options.onAccept(selected, quickPick);
         }),
-        quickPick.onDidTriggerItemButton((event) => options.onItemButton(event, quickPick, refreshItems)),
+        quickPick.onDidTriggerItemButton((event) => {
+            if (quickPick.busy) return;
+            return options.onItemButton(event, quickPick, refreshItems);
+        }),
         quickPick.onDidHide(() => {
             isDisposed = true;
             resolveHidden?.();
