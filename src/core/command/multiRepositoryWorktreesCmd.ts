@@ -101,8 +101,12 @@ async function loadConfig(root: string): Promise<{ config: WorkspaceConfig; repo
 
 async function isGitRepository(repoPath: string): Promise<boolean> {
     try {
-        await execAuto(repoPath, ['rev-parse', '--show-toplevel']);
-        return true;
+        const { stdout } = await execAuto(repoPath, ['rev-parse', '--show-toplevel']);
+        const repoRoot = path.resolve(stdout.trim());
+        const target = path.resolve(repoPath);
+        return process.platform === 'win32'
+            ? repoRoot.toLowerCase() === target.toLowerCase()
+            : repoRoot === target;
     } catch {
         return false;
     }
