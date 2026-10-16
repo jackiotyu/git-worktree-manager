@@ -190,6 +190,7 @@
     "(not found)": "（找不到）",
     "$(warning) Path does not exist\n\n": "$(warning) 路徑不存在\n\n",
     "gwm.json was not found in the workspace root": "工作區根目錄中找不到 gwm.json",
+    "gwm.json was not found in the workspace root or .vscode folder": "工作區根目錄或 .vscode 目錄中找不到 gwm.json",
     "Invalid gwm.json: {0}": "gwm.json 無效：{0}",
     "No repositories are configured in gwm.json": "gwm.json 中未設定儲存庫",
     "Open the repository root containing gwm.json, not a subfolder.": "請開啟包含 gwm.json 的儲存庫根目錄，而非子資料夾。",
