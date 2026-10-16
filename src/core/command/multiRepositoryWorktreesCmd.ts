@@ -181,7 +181,7 @@ async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
     return entries;
 }
 
-async function createMultiRepositoryWorktree(root: string, branch: string): Promise<string> {
+async function createMultiRepositoryWorktree(root: string, branch: string, selectedRepoPaths: string[]): Promise<string> {
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
@@ -194,7 +194,9 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     }
     const mainRepo = await getMainFolder(root);
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
-    const { repos } = await loadConfig(root, mainRepo);
+    const { repos: configuredRepos } = await loadConfig(root, mainRepo);
+    const selectedPaths = new Set(selectedRepoPaths);
+    const repos = configuredRepos.filter((repo) => selectedPaths.has(repo.relativePath));
     const parentDir = getBaseWorktreeDir(mainRepo);
     await fs.mkdir(parentDir, { recursive: true });
     let index = 1;
@@ -345,19 +347,36 @@ async function removeMultiRepositoryWorktree(
 async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise<void> {
     const mainRepo = await getMainFolder(root);
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+    const { repos } = await loadConfig(root, mainRepo);
+    const selectedRepos = await vscode.window.showQuickPick(
+        repos.map((repo) => ({
+            label: repo.name,
+            description: repo.relativePath,
+            detail: repo.remote,
+        })),
+        {
+            title: vscode.l10n.t('Create Multi-Repository Worktree'),
+            placeHolder: vscode.l10n.t('Select repositories to include in this worktree'),
+            canPickMany: true,
+            ignoreFocusOut: true,
+        },
+    );
+    if (!selectedRepos?.length) return;
+
     const branch = await vscode.window.showInputBox({
         title: vscode.l10n.t('Create Multi-Repository Worktree'),
         prompt: vscode.l10n.t('Enter the branch name for the multi-repository worktree'),
         validateInput: (value) => (value.trim() ? undefined : 'Branch name cannot be empty'),
     });
     if (!branch) return;
+    const selectedRepoPaths = selectedRepos.map((repo) => repo.description!);
     const target = await vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Notification,
             title: vscode.l10n.t('Creating multi-repository worktree'),
             cancellable: false,
         },
-        () => createMultiRepositoryWorktree(root, branch.trim()),
+        () => createMultiRepositoryWorktree(root, branch.trim(), selectedRepoPaths),
     );
     void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
 }
