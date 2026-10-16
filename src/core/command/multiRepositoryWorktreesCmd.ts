@@ -254,7 +254,9 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     }
 }
 
-async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: string; entries: MultiRepositoryWorktreeEntry[] }> {
+async function getMultiRepositoryWorktrees(
+    root: string,
+): Promise<{ mainRepo: string; entries: MultiRepositoryWorktreeEntry[] }> {
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
@@ -275,7 +277,9 @@ async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: st
         entries.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => ({
             ...entry,
             repoStatuses: await Promise.all(
-                repos.map((repo) => isGitRepositoryPresent(resolveRepoPath(entry.path, repo.relativePath))),
+                repos.map((repo) =>
+                    isGitRepositoryPresent(resolveRepoPath(entry.path, repo.relativePath)),
+                ),
             ),
         })),
     );
