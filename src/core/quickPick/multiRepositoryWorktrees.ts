@@ -13,6 +13,7 @@ export interface MultiRepositoryWorktreeEntry {
     path: string;
     branch: string;
     isMain: boolean;
+    isMultiRepository: boolean;
     repoStatuses: boolean[];
 }
 
