@@ -8,9 +8,9 @@ import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { pathExists } from '@/core/util/fs';
 import { resolveSafeRelativePath } from '@/core/util/path';
 import { isGitRepository, isGitRepositoryPresent } from '@/core/util/repo';
-import { getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
+import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
 import { Commands } from '@/constants';
 import {
     openInCurrentWindowQuickInputButton,
@@ -141,21 +141,12 @@ async function createMultiRepositoryWorktree(
     const { mainRepo, repos: configuredRepos } = await getWorkspaceContext(root);
     const selectedPaths = new Set(selectedRepoPaths);
     const repos = configuredRepos.filter((repo) => selectedPaths.has(repo.relativePath));
-    const parentDir = getBaseWorktreeDir(mainRepo);
-    await fs.mkdir(parentDir, { recursive: true });
-    let index = 1;
-    let targetRoot: string;
-    while (true) {
-        const candidate = path.join(
-            parentDir,
-            getSubDir(path.basename(mainRepo), branch.replace(/[\\/]/g, '-'), index),
-        );
-        if (!(await pathExists(candidate))) {
-            targetRoot = candidate;
-            break;
-        }
-        index += 1;
-    }
+    const targetRoot = await inputWorktreeDir({
+        baseDir: mainRepo,
+        refName: branch.replace(/[\\/]/g, '-'),
+        targetDirTip: vscode.l10n.t('Select the folder for the multi-repository worktree'),
+    });
+    if (!targetRoot) throw new Error('Worktree directory selection was cancelled.');
 
     const created: Array<{ repoPath: string; worktreePath: string }> = [];
     let parentCreated = false;
