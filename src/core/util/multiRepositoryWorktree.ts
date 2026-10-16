@@ -103,3 +103,40 @@ export async function hasConfiguredRemote(repoPath: string, configuredRemote: st
         .filter((remote): remote is string => Boolean(remote));
     return remoteUrls.some((remote) => normalizeRemote(remote) === expected);
 }
+
+export function normalizeRepositoryPath(targetPath: string): string {
+    const normalized = path.normalize(path.resolve(targetPath));
+    return process.platform === 'win32' || process.platform === 'darwin' ? normalized.toLowerCase() : normalized;
+}
+
+export function isNestedPath(parent: string, candidate: string): boolean {
+    const relative = path.relative(parent, candidate);
+    return relative !== '' && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
+}
+
+export async function resolveCanonicalPath(targetPath: string): Promise<string> {
+    const absolutePath = path.resolve(targetPath);
+    const root = path.parse(absolutePath).root;
+    const segments = path.relative(root, absolutePath).split(path.sep).filter(Boolean);
+    let current = root;
+
+    for (let i = 0; i < segments.length; i++) {
+        const nextPath = path.join(current, segments[i]);
+        try {
+            await fs.lstat(nextPath);
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+                return path.resolve(current, ...segments.slice(i));
+            }
+            throw error;
+        }
+        current = await fs.realpath(nextPath);
+    }
+
+    return current;
+}
+
+export function isPathWithinRoot(root: string, candidate: string): boolean {
+    const relative = path.relative(root, candidate);
+    return relative !== '' && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
+}
