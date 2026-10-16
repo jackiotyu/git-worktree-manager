@@ -30,4 +30,3 @@ export async function isGitRepository(repoPath: string): Promise<boolean> {
     if (!repoRoot) return false;
     return toSimplePath(repoRoot) === toSimplePath(repoPath);
 }
-

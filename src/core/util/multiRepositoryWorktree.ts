@@ -41,7 +41,7 @@ async function getMarkerPath(worktreePath: string): Promise<string> {
 
 export async function markMultiRepositoryWorktree(worktreePath: string): Promise<void> {
     const markerPath = await getMarkerPath(worktreePath);
-    await fs.writeFile(markerPath, JSON.stringify({ version: 1 }) + '\n', 'utf8');
+    await fs.writeFile(markerPath, `${JSON.stringify({ version: 1 })}\n`, 'utf8');
 }
 
 export async function isMarkedMultiRepositoryWorktree(worktreePath: string): Promise<boolean> {
@@ -75,7 +75,7 @@ function normalizeRemote(remote: string): string {
             const host = hostAndUser.slice(hostAndUser.lastIndexOf('@') + 1).toLowerCase();
             let remotePath = stripRemotePath(value.slice(colonIndex + 1));
             if (host === 'github.com') remotePath = remotePath.toLowerCase();
-            return host + '/' + remotePath;
+            return `${host}/${remotePath}`;
         }
     }
 
@@ -86,11 +86,11 @@ function normalizeRemote(remote: string): string {
                 (url.protocol === 'http:' && url.port === '80') ||
                 (url.protocol === 'https:' && url.port === '443') ||
                 (url.protocol === 'ssh:' && url.port === '22');
-            const port = url.port && !isDefaultPort ? ':' + url.port : '';
+            const port = url.port && !isDefaultPort ? `:${url.port}` : '';
             const host = url.hostname.toLowerCase() + port;
             let remotePath = stripRemotePath(url.pathname);
             if (url.hostname.toLowerCase() === 'github.com') remotePath = remotePath.toLowerCase();
-            return host + '/' + remotePath;
+            return `${host}/${remotePath}`;
         }
     } catch {
         // Local paths and non-URL remotes are compared in their literal form below.
@@ -118,7 +118,7 @@ export function normalizeRepositoryPath(targetPath: string): string {
 
 export function isNestedPath(parent: string, candidate: string): boolean {
     const relative = path.relative(parent, candidate);
-    return relative !== '' && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
+    return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
 }
 
 export async function resolveCanonicalPath(targetPath: string): Promise<string> {
@@ -145,5 +145,5 @@ export async function resolveCanonicalPath(targetPath: string): Promise<string> 
 
 export function isPathWithinRoot(root: string, candidate: string): boolean {
     const relative = path.relative(root, candidate);
-    return relative !== '' && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
+    return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
 }

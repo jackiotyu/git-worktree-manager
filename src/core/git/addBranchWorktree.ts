@@ -63,9 +63,7 @@ export async function addBranchWorktree(
     }
 
     if (localBranch || remoteBranches.length === 1) {
-        await createOrAttachWorktree(repoPath, targetPath, () =>
-            addWorktreeRaw(targetPath, branch, true, repoPath),
-        );
+        await createOrAttachWorktree(repoPath, targetPath, () => addWorktreeRaw(targetPath, branch, true, repoPath));
         return;
     }
 
