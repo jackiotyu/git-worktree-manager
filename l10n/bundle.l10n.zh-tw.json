@@ -223,5 +223,9 @@
     "Target path already exists: {0}": "目標路徑已存在：{0}",
     "The main worktree cannot be removed.": "無法移除主 Worktree。",
     "No generated worktree found for repository: {0}": "找不到此儲存庫對應的已產生 Worktree：{0}",
-    "Repository is not configured: {0}": "未設定此儲存庫：{0}"
+    "Repository is not configured: {0}": "未設定此儲存庫：{0}",
+    "Invalid repository entry: {0}": "儲存庫設定項目無效：{0}",
+    "Expected version 1 and a repo object": "預期 version 為 1 且 repo 為物件",
+    "Duplicate repository path: {0}": "儲存庫路徑重複：{0}",
+    "Overlapping repository paths: {0} and {1}": "儲存庫路徑重疊：{0} 和 {1}"
 }
