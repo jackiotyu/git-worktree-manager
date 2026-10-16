@@ -6,7 +6,7 @@ import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
 import { pathExists } from '@/core/util/fs';
 import { resolveSafeRelativePath } from '@/core/util/path';
-import { isGitRepository, isGitRepositoryPresent } from '@/core/util/repo';
+import { hasGitMetadata, isGitRepository } from '@/core/util/repo';
 import {
     hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
@@ -128,7 +128,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     const config = parsedConfig as WorkspaceConfig;
     const parentPath = config.parent?.trim() ?? '';
     const repositoryRoot = parentPath ? path.resolve(root, parentPath) : sourceRoot;
-    if (parentPath && !(await isGitRepositoryPresent(repositoryRoot))) {
+    if (parentPath && !(await hasGitMetadata(repositoryRoot))) {
         throw new Error(vscode.l10n.t('Configured parent path is not a Git repository: {0}', repositoryRoot));
     }
 
@@ -220,7 +220,7 @@ async function getMainWorktreeRootFromMetadata(root: string): Promise<string> {
 }
 
 async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
-    if (!(await isGitRepositoryPresent(root))) {
+    if (!(await hasGitMetadata(root))) {
         throw new Error(vscode.l10n.t('Open the repository root containing workspace.json, not a subfolder.'));
     }
 
@@ -296,7 +296,7 @@ async function getMultiRepositoryWorktrees(
             const repoStatuses = await Promise.all(
                 repos.map((repo) => {
                     const repoPath = isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath);
-                    return isGitRepositoryPresent(repoPath);
+                    return hasGitMetadata(repoPath);
                 }),
             );
             return {
