@@ -344,7 +344,7 @@ async function removeChildRepositoryWorktree(
 
 
 async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise<void> {
-    const { repos } = await getWorkspaceContext(root);
+    const { mainRepo, repos } = await getWorkspaceContext(root);
     const selectedRepos = await pickRepositories(repos, {
         title: vscode.l10n.t('Create Multi-Repository Worktree'),
         placeHolder: vscode.l10n.t('Select repositories to include in this worktree'),
@@ -356,12 +356,14 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
         title: vscode.l10n.t('Create Multi-Repository Worktree'),
         placeholder: vscode.l10n.t('Select an existing branch or create a new branch'),
         mainFolder: root,
-        cwd: (await getWorkspaceContext(root)).mainRepo,
+        cwd: mainRepo,
         showCreate: true,
         createBranchOnPick: false,
     });
     if (!selectedBranch || !selectedBranch.branch) return;
-    const branch = selectedBranch.branch;
+    const branch = selectedBranch.remote
+        ? selectedBranch.branch.slice(selectedBranch.branch.indexOf('/') + 1)
+        : selectedBranch.branch;
     const selectedRepoPaths = selectedRepos.map((repo) => repo.relativePath);
     const target = await vscode.window.withProgress(
         {
