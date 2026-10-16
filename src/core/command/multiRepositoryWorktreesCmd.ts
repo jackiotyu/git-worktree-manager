@@ -63,6 +63,9 @@ const validateWorkspaceConfig = new Ajv({ allErrors: true, strict: false }).comp
 
 const configFileName = 'workspace.json';
 
+const workspaceSchema = require('../../../schemas/workspace.schema.json') as object;
+const validateWorkspaceConfig = new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(workspaceSchema);
+
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
 
 function getWorktreeCacheKey(root: string): string {
