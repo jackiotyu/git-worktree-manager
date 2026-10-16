@@ -593,7 +593,7 @@
           "command": "git-worktree-manager.openFavorite",
           "when": "view === git-worktree-manager-favorite",
           "group": "navigation@90"
-        },
+        }
       ],
       "view/item/context": [
         {
