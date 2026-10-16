@@ -8,7 +8,11 @@ import {
     isMarkedMultiRepositoryWorktree,
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
+    normalizeRepositoryPath,
     normalizeWorktreePath,
+    isNestedPath,
+    isPathWithinRoot,
+    resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 import * as execModule from '@/core/git/exec';
 
@@ -52,6 +56,45 @@ describe('multi-repository worktree utilities', () => {
 
         await expect(isRegisteredWorktree('/repos/main', '/repos/feature')).resolves.toBe(true);
         await expect(isRegisteredWorktree('/repos/main', '/repos/other')).resolves.toBe(false);
+    });
+
+    it('compares repository paths with path boundaries', () => {
+        const root = normalizeRepositoryPath(path.join(tempRoot, 'workspace'));
+        const child = normalizeRepositoryPath(path.join(tempRoot, 'workspace', 'packages', 'client'));
+        const sibling = normalizeRepositoryPath(path.join(tempRoot, 'workspace-copy'));
+
+        expect(isNestedPath(root, child)).toBe(true);
+        expect(isNestedPath(root, sibling)).toBe(false);
+        expect(isNestedPath(root, root)).toBe(false);
+        expect(isPathWithinRoot(root, child)).toBe(true);
+        expect(isPathWithinRoot(root, root)).toBe(false);
+        expect(isPathWithinRoot(root, sibling)).toBe(false);
+    });
+
+    it('resolves missing path suffixes after canonicalizing existing ancestors', async () => {
+        const root = path.join(tempRoot, 'workspace');
+        await fs.mkdir(root, { recursive: true });
+
+        await expect(resolveCanonicalPath(path.join(root, 'packages', 'client'))).resolves.toBe(
+            path.join(await fs.realpath(root), 'packages', 'client'),
+        );
+    });
+
+    it('resolves paths through directory symlinks', async () => {
+        const root = path.join(tempRoot, 'workspace');
+        const actual = path.join(root, 'repositories');
+        const alias = path.join(root, 'alias');
+        await fs.mkdir(actual, { recursive: true });
+
+        try {
+            await fs.symlink(actual, alias, 'dir');
+        } catch {
+            return;
+        }
+
+        await expect(resolveCanonicalPath(path.join(alias, 'new-repo'))).resolves.toBe(
+            path.join(await fs.realpath(actual), 'new-repo'),
+        );
     });
 
     it('matches equivalent HTTPS and SSH remotes', async () => {
