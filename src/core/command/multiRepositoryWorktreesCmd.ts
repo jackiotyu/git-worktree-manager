@@ -551,12 +551,17 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
         return;
     }
 
-    try {
-        const { mainRepo, repos, entries } = await getMultiRepositoryWorktrees(root);
+    let state: Awaited<ReturnType<typeof getMultiRepositoryWorktrees>> | undefined;
+    const loadState = async () => {
+        state = await getMultiRepositoryWorktrees(root);
+        return state;
+    };
 
+    try {
         showMultiRepositoryWorktreesQuickPick({
-            entries,
-            refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
+            entries: [],
+            refreshEntries: async () => (await loadState()).entries,
+            onLoadError: (error) => Alert.showErrorMessage(String(error)),
             onCreate: async () => {
                 try {
                     await createMultiRepositoryWorktreeFromWorkspace(root);
@@ -572,6 +577,10 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 });
             },
             onItemButton: async (event, quickPick, refreshItems) => {
+                const currentState = state;
+                if (!currentState) return;
+                const { mainRepo, repos } = currentState;
+
                 if (event.button === completeRepositoriesQuickInputButton) {
                     const missingRepos = repos.filter((_, index) => !event.item.entry.repoStatuses[index]);
                     if (!missingRepos.length) return;
