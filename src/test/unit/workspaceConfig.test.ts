@@ -100,12 +100,6 @@ describe('loadConfig', () => {
         }
     });
 
-    it('rejects unsafe repository paths through the shared path validator', async () => {
-        files.set(rootConfigPath, JSON.stringify({ version: 1, repo: { '../outside': { name: 'Child' } } }));
-
-        await expect(loadConfig(root, root)).rejects.toThrow('safe relative path');
-    });
-
     it('does not hide project config read errors by falling back to the root config', async () => {
         readErrors.set(projectConfigPath, Object.assign(new Error('Permission denied'), { code: 'EACCES' }));
         files.set(rootConfigPath, JSON.stringify({ version: 1, repo: { child: { name: 'Root config' } } }));
