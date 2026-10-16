@@ -137,7 +137,7 @@ async function createMultiRepositoryWorktree(
     root: string,
     branch: string,
     selectedRepoPaths: string[],
-): Promise<string> {
+): Promise<string | undefined> {
     const { mainRepo, repos: configuredRepos } = await getWorkspaceContext(root);
     const selectedPaths = new Set(selectedRepoPaths);
     const repos = configuredRepos.filter((repo) => selectedPaths.has(repo.relativePath));
@@ -146,7 +146,7 @@ async function createMultiRepositoryWorktree(
         refName: branch.replace(/[\\/]/g, '-'),
         targetDirTip: vscode.l10n.t('Select the folder for the multi-repository worktree'),
     });
-    if (!targetRoot) throw new Error('Worktree directory selection was cancelled.');
+    if (!targetRoot) return undefined;
 
     const created: Array<{ repoPath: string; worktreePath: string }> = [];
     let parentCreated = false;
@@ -366,7 +366,9 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
         },
         () => createMultiRepositoryWorktree(root, branch.trim(), selectedRepoPaths),
     );
-    void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
+    if (target) {
+        void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
+    }
 }
 
 export async function createMultiRepositoryWorktreeCmd(): Promise<void> {
