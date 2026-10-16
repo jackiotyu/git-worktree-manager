@@ -46,6 +46,7 @@ interface HandleTriggerItemButtonArgs {
 async function createBranchStrategy({
     cwd,
     mainFolder,
+    title,
     showSelectRef,
     createBranchOnPick,
     quickPick,
@@ -56,6 +57,7 @@ async function createBranchStrategy({
 }: {
     cwd: string;
     mainFolder: string;
+    title: string;
     showSelectRef: boolean;
     createBranchOnPick: boolean;
     quickPick: vscode.QuickPick<BranchForWorktree>;
@@ -87,7 +89,7 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    const branchName = await inputNewBranch(cwd);
+    const branchName = await inputNewBranch(cwd, undefined, { title, step, totalSteps });
     if (branchName === false) {
         quickPick.dispose();
         resolve(false);
@@ -119,6 +121,7 @@ async function handleAccept({
     quickPick,
     cwd,
     mainFolder,
+    title,
     refreshItems,
     createBranchOnPick,
     step,
@@ -126,6 +129,7 @@ async function handleAccept({
 }: HandlerArgs & {
     cwd: string;
     mainFolder: string;
+    title: string;
     refreshItems: () => void;
     createBranchOnPick: boolean;
     step?: number;
@@ -137,6 +141,7 @@ async function handleAccept({
             await createBranchStrategy({
                 cwd,
                 mainFolder,
+                title,
                 showSelectRef: selected === createNewBranchFromItem,
                 createBranchOnPick,
                 quickPick,
@@ -539,7 +544,7 @@ export const pickBranch: IPickBranch = async ({
         quickPick.step = step;
         quickPick.totalSteps = totalSteps;
         quickPick.onDidAccept(() =>
-            handleAccept({ resolve, reject, quickPick, cwd, mainFolder, refreshItems, createBranchOnPick, step, totalSteps }),
+            handleAccept({ resolve, reject, quickPick, cwd, mainFolder, title, refreshItems, createBranchOnPick, step, totalSteps }),
         );
         quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
         quickPick.onDidTriggerButton((event) =>
