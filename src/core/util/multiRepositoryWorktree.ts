@@ -5,22 +5,17 @@ import { toSimplePath } from '@/core/util/path';
 
 const markerFileName = 'git-worktree-manager-multi-repository.json';
 
-export function normalizeWorktreePath(targetPath: string): string {
-    const normalized = path.normalize(path.resolve(targetPath));
-    return process.platform === 'win32' ? normalized.toLowerCase() : normalized;
-}
-
 export async function getRegisteredWorktreePaths(repoPath: string): Promise<Set<string>> {
     const { stdout } = await execAuto(repoPath, ['worktree', 'list', '--porcelain']);
     const paths = [...stdout.matchAll(/^worktree (.+)$/gm)].map((match) =>
-        normalizeWorktreePath(match[1].replace(/\r$/, '')),
+        normalizeRepositoryPath(match[1].replace(/\r$/, '')),
     );
     return new Set(paths);
 }
 
 export async function isRegisteredWorktree(repoPath: string, targetPath: string): Promise<boolean> {
     const paths = await getRegisteredWorktreePaths(repoPath);
-    return paths.has(normalizeWorktreePath(targetPath));
+    return paths.has(normalizeRepositoryPath(targetPath));
 }
 
 async function getMarkerPath(worktreePath: string): Promise<string> {
