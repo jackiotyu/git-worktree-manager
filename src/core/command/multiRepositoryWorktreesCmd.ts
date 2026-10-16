@@ -135,6 +135,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
 
     try {
         showMultiRepositoryWorktreesQuickPick({
+            currentWorktreePath: root,
             entries: multiRepositoryWorktreeCache.get(cacheKey) ?? [],
             refreshEntries: async () => (await loadState()).entries,
             onLoadError: (error) => Alert.showErrorMessage(String(error)),
