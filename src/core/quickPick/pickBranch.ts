@@ -486,7 +486,15 @@ const updateQuickItems = async ({
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
     const checkoutTypes = getCheckoutTypes();
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, createBranchOnPick, mainFolder, checkoutTypes, sortBy });
+    if (refList)
+        quickPick.items = mapRefItems({
+            ...refList,
+            showCreate,
+            createBranchOnPick,
+            mainFolder,
+            checkoutTypes,
+            sortBy,
+        });
 };
 
 export const pickBranch: IPickBranch = async ({

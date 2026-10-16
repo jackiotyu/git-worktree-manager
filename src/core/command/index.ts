@@ -57,7 +57,10 @@ import { removeFavoriteCmd } from '@/core/command/removeFavoriteCmd';
 import { removeMultiFavoriteCmd } from '@/core/command/removeMultiFavoriteCmd';
 import { addToFavoriteCmd } from '@/core/command/addToFavoriteCmd';
 import { Commands } from '@/constants';
-import { createMultiRepositoryWorktreeCmd, multiRepositoryWorktreesCmd } from '@/core/command/multiRepositoryWorktreesCmd';
+import {
+    createMultiRepositoryWorktreeCmd,
+    multiRepositoryWorktreesCmd,
+} from '@/core/command/multiRepositoryWorktreesCmd';
 import { AllViewItem } from '@/core/treeView/items';
 import { sortWorktreesCmd } from '@/core/command/sortWorktreesCmd';
 import {

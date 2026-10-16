@@ -194,7 +194,6 @@ export const renameBranchQuickInputButton = new QuickInputButton({
     defaultValue: true,
 });
 
-
 export const createMultiRepositoryWorktreeQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('new-folder'),
     tooltip: vscode.l10n.t('Create Multi-Repository Worktree'),

@@ -29,9 +29,7 @@ export async function isGitRepository(repoPath: string): Promise<boolean> {
     if (!repoRoot) return false;
     const target = path.resolve(repoPath);
     const resolvedRoot = path.resolve(repoRoot);
-    return process.platform === 'win32'
-        ? resolvedRoot.toLowerCase() === target.toLowerCase()
-        : resolvedRoot === target;
+    return process.platform === 'win32' ? resolvedRoot.toLowerCase() === target.toLowerCase() : resolvedRoot === target;
 }
 
 export async function isGitRepositoryPresent(repoPath: string): Promise<boolean> {

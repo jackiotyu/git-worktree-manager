@@ -235,15 +235,11 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
         buttons: [
+            ...(entry.isMain ? [removeMultiRepositoryWorktreeQuickInputButton] : []),
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
-            ...(entry.isMain
-                ? []
-                : [
-                      removeMultiRepositoryWorktreeQuickInputButton,
-                      completeRepositoriesQuickInputButton,
-                      removeChildRepositoryQuickInputButton,
-                  ]),
+            completeRepositoriesQuickInputButton,
+            removeChildRepositoryQuickInputButton,
             openInCurrentWindowQuickInputButton,
         ].filter((button) => button.enabled),
     };
@@ -259,9 +255,7 @@ async function openWorktreeTerminal(
         uriPath: vscode.Uri.file(entry.path).toString(),
     };
     const command =
-        button === openExternalTerminalQuickInputButton
-            ? Commands.openExternalTerminalContext
-            : Commands.openTerminal;
+        button === openExternalTerminalQuickInputButton ? Commands.openExternalTerminalContext : Commands.openTerminal;
     await vscode.commands.executeCommand(command, item);
 }
 
@@ -341,7 +335,6 @@ async function removeChildRepositoryWorktree(
     }
     await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
 }
-
 
 async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise<void> {
     const { mainRepo, repos } = await getWorkspaceContext(root);
