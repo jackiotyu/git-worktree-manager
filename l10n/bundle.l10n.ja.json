@@ -247,5 +247,6 @@
     "Configured repository remote does not match: {0}": "設定されたリモート URL が既存のリポジトリと一致しません: {0}",
     "Path exists but is not a worktree of the configured repository: {0}": "パスは存在しますが、設定されたリポジトリのワークツリーではありません: {0}",
     "Worktree contains uncommitted changes: {0}": "ワークツリーに未コミットの変更があります: {0}",
-    "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "ワークツリーの削除は一部のみ完了しました。削除済み: {0}。失敗箇所: {1}。エラー: {2}"
+    "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "ワークツリーの削除は一部のみ完了しました。削除済み: {0}。失敗箇所: {1}。エラー: {2}",
+    "Repository path resolves outside the workspace root: {0}": "設定されたリポジトリパスの解決先がワークスペースのルート外です: {0}"
 }
