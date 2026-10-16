@@ -4,6 +4,7 @@ import path from 'path';
 import { execAuto } from '@/core/git/exec';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
+import { getMainWorktreeRoot } from '@/core/git/getMainWorktreeRoot';
 import { pathExists } from '@/core/util/fs';
 import { resolveSafeRelativePath, toSimplePath } from '@/core/util/path';
 import { hasGitMetadata, isGitRepository } from '@/core/util/repo';
@@ -63,35 +64,12 @@ async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promis
     }
 }
 
-async function getMainWorktreeRootFromMetadata(root: string): Promise<string> {
-    const gitEntry = path.join(root, '.git');
-    const stat = await fs.stat(gitEntry);
-
-    if (stat.isDirectory()) return root;
-    if (!stat.isFile()) return '';
-
-    const content = await fs.readFile(gitEntry, 'utf8');
-    const match = /^gitdir:\s*(.+)\s*$/im.exec(content);
-    if (!match) return '';
-
-    const gitDir = path.resolve(root, match[1].trim());
-    let commonDir = gitDir;
-    try {
-        const commonDirContent = await fs.readFile(path.join(gitDir, 'commondir'), 'utf8');
-        commonDir = path.resolve(gitDir, commonDirContent.trim());
-    } catch {
-        // A worktree created from a bare repository may not have a .git common directory.
-    }
-
-    return path.basename(commonDir) === '.git' ? path.dirname(commonDir) : root;
-}
-
 async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
     if (!(await hasGitMetadata(root))) {
         throw new Error(vscode.l10n.t('Open the repository root containing workspace.json, not a subfolder.'));
     }
 
-    const mainRepo = await getMainWorktreeRootFromMetadata(root);
+    const mainRepo = await getMainWorktreeRoot(root);
     if (!mainRepo) throw new Error(vscode.l10n.t('Unable to resolve the main repository.'));
     const repos = await loadConfig(root, mainRepo);
     return { mainRepo, repos };
