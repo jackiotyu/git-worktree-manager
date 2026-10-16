@@ -14,11 +14,11 @@ import {
     isMarkedMultiRepositoryWorktree,
     isNestedPath,
     isPathWithinRoot,
-    normalizeRepositoryPath,
-    resolveCanonicalPath,
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
+    normalizeRepositoryPath,
     normalizeWorktreePath,
+    resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
