@@ -50,12 +50,12 @@
     "commands": [
       {
         "command": "git-worktree-manager.multiRepositoryWorktrees",
-        "title": "Manage Multi-Repository Worktrees",
+        "title": "%cmd.multiRepositoryWorktrees%",
         "category": "Worktree"
       },
       {
         "command": "git-worktree-manager.createMultiRepositoryWorktree",
-        "title": "Create Multi-Repository Worktree",
+        "title": "%cmd.createMultiRepositoryWorktree%",
         "icon": "$(new-folder)",
         "category": "Worktree"
       },
