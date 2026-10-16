@@ -47,6 +47,12 @@
   "main": "./dist/extension.js",
   "l10n": "./l10n",
   "contributes": {
+    "jsonValidation": [
+      {
+        "fileMatch": "workspace.json",
+        "url": "./schemas/workspace.schema.json"
+      }
+    ],
     "commands": [
       {
         "command": "git-worktree-manager.multiRepositoryWorktrees",
