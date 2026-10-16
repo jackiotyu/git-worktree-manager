@@ -329,9 +329,13 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
         buttons: [
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
-            ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
-            completeRepositoriesQuickInputButton,
-            removeChildRepositoryQuickInputButton,
+            ...(entry.isMain
+                ? []
+                : [
+                      removeMultiRepositoryWorktreeQuickInputButton,
+                      completeRepositoriesQuickInputButton,
+                      removeChildRepositoryQuickInputButton,
+                  ]),
             openInCurrentWindowQuickInputButton,
         ].filter((button) => button.enabled),
     };
