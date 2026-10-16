@@ -240,13 +240,13 @@ class WorktreeActionPicker {
                     reject();
                     disposables.forEach((d) => d.dispose());
                     disposables.length = 0;
-                    quickPick.dispose();
+                    activeQuickPick.dispose();
                 }),
                 activeQuickPick.onDidAccept(() => this.handleAccept({ quickPick: activeQuickPick, resolve, reject, viewItem })),
                 activeQuickPick.onDidTriggerButton((event) => {
                     if (event === backButton) {
                         resolve();
-                        quickPick.hide();
+                        activeQuickPick.hide();
                     }
                 }),
             );
