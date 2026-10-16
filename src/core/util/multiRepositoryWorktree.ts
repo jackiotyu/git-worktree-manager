@@ -1,16 +1,56 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { execAuto } from '@/core/git/exec';
 import { toSimplePath } from '@/core/util/path';
 
 const markerFileName = 'git-worktree-manager-multi-repository.json';
 
+async function getCommonGitDir(repoPath: string): Promise<string> {
+    const gitEntry = path.join(repoPath, '.git');
+    const entryStat = await fs.stat(gitEntry);
+    if (entryStat.isDirectory()) return gitEntry;
+    if (!entryStat.isFile()) throw new Error(`Invalid Git metadata entry: ${gitEntry}`);
+
+    const content = await fs.readFile(gitEntry, 'utf8');
+    const match = /^gitdir:\s*(.+)\s*$/im.exec(content);
+    if (!match) throw new Error(`Invalid .git file: ${gitEntry}`);
+
+    const gitDir = path.resolve(repoPath, match[1].trim());
+    try {
+        const commonDirContent = await fs.readFile(path.join(gitDir, 'commondir'), 'utf8');
+        return path.resolve(gitDir, commonDirContent.trim());
+    } catch {
+        return gitDir;
+    }
+}
+
 export async function getRegisteredWorktreePaths(repoPath: string): Promise<Set<string>> {
-    const { stdout } = await execAuto(repoPath, ['worktree', 'list', '--porcelain']);
-    const paths = [...stdout.matchAll(/^worktree (.+)$/gm)].map((match) =>
-        normalizeRepositoryPath(match[1].replace(/\r$/, '')),
+    const commonDir = await getCommonGitDir(repoPath);
+    const paths = new Set<string>();
+    if (path.basename(commonDir) === '.git') {
+        paths.add(normalizeRepositoryPath(path.dirname(commonDir)));
+    }
+
+    const worktreesDir = path.join(commonDir, 'worktrees');
+    let entries: string[];
+    try {
+        entries = await fs.readdir(worktreesDir);
+    } catch {
+        return paths;
+    }
+
+    await Promise.all(
+        entries.map(async (entry) => {
+            const adminDir = path.join(worktreesDir, entry);
+            try {
+                const gitdir = (await fs.readFile(path.join(adminDir, 'gitdir'), 'utf8')).trim();
+                const gitEntry = path.resolve(adminDir, gitdir);
+                paths.add(normalizeRepositoryPath(path.dirname(gitEntry)));
+            } catch {
+                // Ignore incomplete or stale worktree metadata.
+            }
+        }),
     );
-    return new Set(paths);
+    return paths;
 }
 
 export async function isRegisteredWorktree(repoPath: string, targetPath: string): Promise<boolean> {
