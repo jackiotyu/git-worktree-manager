@@ -83,6 +83,23 @@ describe('loadConfig', () => {
         expect(readFileCalls).toEqual([projectConfigPath, rootConfigPath]);
     });
 
+    it('rejects invalid workspace config structure', async () => {
+        const invalidConfigs = [
+            { repo: { child: { name: 'Child' } } },
+            { version: 2, repo: { child: { name: 'Child' } } },
+            { version: 1, repo: {} },
+            { version: 1, repo: { child: { name: 'Child', unknown: true } } },
+            { version: 1, repo: { child: { name: '   ' } } },
+            { version: 1, repo: { child: { name: 'Child', remote: '   ' } } },
+        ];
+
+        for (const config of invalidConfigs) {
+            files.set(rootConfigPath, JSON.stringify(config));
+            await expect(loadConfig(root, root)).rejects.toThrow('Invalid gwm.json');
+            files.delete(rootConfigPath);
+        }
+    });
+
     it('does not hide project config read errors by falling back to the root config', async () => {
         readErrors.set(projectConfigPath, Object.assign(new Error('Permission denied'), { code: 'EACCES' }));
         files.set(rootConfigPath, JSON.stringify({ version: 1, repo: { child: { name: 'Root config' } } }));

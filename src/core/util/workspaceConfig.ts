@@ -14,21 +14,44 @@ import {
 const configFileName = 'gwm.json';
 const configFilePaths = (root: string) => [path.join(root, '.vscode', configFileName), path.join(root, configFileName)];
 
-let validateWorkspaceConfigPromise: Promise<import('ajv').ValidateFunction<WorkspaceConfig>> | undefined;
-
-async function getWorkspaceConfigValidator(): Promise<import('ajv').ValidateFunction<WorkspaceConfig>> {
-    if (!validateWorkspaceConfigPromise) {
-        validateWorkspaceConfigPromise = Promise.all([
-            import('ajv'),
-            import('../../../schemas/workspace.schema.json'),
-        ]).then(([ajvModule, schemaModule]) => {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const Ajv = ajvModule.default;
-            const schema = schemaModule.default as object;
-            return new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(schema);
-        });
+function validateWorkspaceConfig(value: unknown): string | undefined {
+    const invalid = (path: string, message: string) => `${path} ${message}`;
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        return invalid('/', 'must be an object');
     }
-    return validateWorkspaceConfigPromise;
+
+    const config = value as Record<string, unknown>;
+    if (Object.keys(config).some((key) => !['version', 'parent', 'repo'].includes(key))) {
+        return invalid('/', 'must NOT have additional properties');
+    }
+    if (config.version !== 1) return invalid('/version', 'must be equal to constant');
+    if (config.parent !== undefined && (typeof config.parent !== 'string' || !/\S/.test(config.parent))) {
+        return invalid('/parent', 'must be a non-empty string');
+    }
+    if (!config.repo || typeof config.repo !== 'object' || Array.isArray(config.repo)) {
+        return invalid('/repo', 'must be an object');
+    }
+
+    const repos = config.repo as Record<string, unknown>;
+    const paths = Object.keys(repos);
+    if (!paths.length) return invalid('/repo', 'must NOT have fewer than 1 properties');
+    for (const repoPath of paths) {
+        const repo = repos[repoPath];
+        if (!repo || typeof repo !== 'object' || Array.isArray(repo)) {
+            return invalid(`/repo/${repoPath}`, 'must be an object');
+        }
+        const entry = repo as Record<string, unknown>;
+        if (Object.keys(entry).some((key) => !['name', 'remote'].includes(key))) {
+            return invalid(`/repo/${repoPath}`, 'must NOT have additional properties');
+        }
+        if (typeof entry.name !== 'string' || !/\S/.test(entry.name)) {
+            return invalid(`/repo/${repoPath}/name`, 'must be a non-empty string');
+        }
+        if (entry.remote !== undefined && (typeof entry.remote !== 'string' || !/\S/.test(entry.remote))) {
+            return invalid(`/repo/${repoPath}/remote`, 'must be a non-empty string');
+        }
+    }
+    return undefined;
 }
 
 export async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
@@ -54,12 +77,9 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
         throw new Error(vscode.l10n.t('Invalid gwm.json: {0}', String(error)));
     }
 
-    const validateWorkspaceConfig = await getWorkspaceConfigValidator();
-    if (!validateWorkspaceConfig(parsedConfig)) {
-        const details = (validateWorkspaceConfig.errors ?? [])
-            .map((error) => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)
-            .join('; ');
-        throw new Error(vscode.l10n.t('Invalid gwm.json: {0}', details));
+    const validationError = validateWorkspaceConfig(parsedConfig);
+    if (validationError) {
+        throw new Error(vscode.l10n.t('Invalid gwm.json: {0}', validationError));
     }
     const config = parsedConfig as WorkspaceConfig;
     const parentPath = config.parent?.trim() ?? '';
