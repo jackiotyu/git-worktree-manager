@@ -248,7 +248,6 @@
     "Path exists but is not a worktree of the configured repository: {0}": "パスは存在しますが、設定されたリポジトリのワークツリーではありません: {0}",
     "Worktree contains uncommitted changes: {0}": "ワークツリーに未コミットの変更があります: {0}",
     "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "ワークツリーの削除は一部のみ完了しました。削除済み: {0}。失敗箇所: {1}。エラー: {2}",
-    "Repository path resolves outside the workspace root: {0}": "設定されたリポジトリパスの解決先がワークスペースのルート外です: {0}",
     "Invalid parent path in workspace.json": "workspace.json の parent パスが無効です",
     "Configured parent path is not a Git repository: {0}": "設定された parent パスは Git リポジトリではありません: {0}",
     "Repository path resolves outside the configured parent root: {0}": "リポジトリパスの解決先が設定された parent ルートの外です: {0}"
