@@ -51,7 +51,7 @@ function resolveRepoPath(root: string, relativePath: string): string {
     return resolved;
 }
 
-async function loadConfig(root: string): Promise<{ config: WorkspaceConfig; repos: RepoEntry[] }> {
+async function loadConfig(root: string, sourceRoot = root): Promise<{ config: WorkspaceConfig; repos: RepoEntry[] }> {
     const configPath = path.join(root, configFileName);
     let raw: string;
     try {
@@ -77,7 +77,7 @@ async function loadConfig(root: string): Promise<{ config: WorkspaceConfig; repo
             typeof value.remote !== 'string' || !value.remote.trim()) {
             throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `invalid repo entry: ${relativePath}`));
         }
-        const sourcePath = resolveRepoPath(root, relativePath);
+        const sourcePath = resolveRepoPath(sourceRoot, relativePath);
         const normalized = process.platform === 'win32' ? sourcePath.toLowerCase() : sourcePath;
         if (seenPaths.has(normalized)) {
             throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `duplicate path: ${relativePath}`));
@@ -149,7 +149,6 @@ async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
 }
 
 async function createMultiRepositoryWorktree(root: string, branch: string): Promise<string> {
-    const { repos } = await loadConfig(root);
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
@@ -161,6 +160,7 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     }
     const mainRepo = await getMainFolder(root);
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+    const { repos } = await loadConfig(root, mainRepo);
     const parentDir = getBaseWorktreeDir(mainRepo);
     await fs.mkdir(parentDir, { recursive: true });
     let index = 1;
@@ -215,13 +215,13 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
 }
 
 async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: string; entries: WorktreeEntry[] }> {
-    const { repos } = await loadConfig(root);
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     if (path.resolve(workspaceRepoRoot) !== path.resolve(root)) {
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
     const mainRepo = await getMainFolder(root);
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+    const { repos } = await loadConfig(root, mainRepo);
     const entries = (await getWorktrees(mainRepo)).filter((entry) => path.resolve(entry.path) !== path.resolve(mainRepo));
     const result: WorktreeEntry[] = [];
     for (const entry of entries) {
@@ -250,7 +250,9 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
     if (!action) return;
 
     try {
-        const { repos } = await loadConfig(root);
+        const mainRepo = await getMainFolder(root);
+        if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+        await loadConfig(root, mainRepo);
         if (action.value === 'create') {
             const branch = await vscode.window.showInputBox({
                 title: vscode.l10n.t('Create worktrees'),
