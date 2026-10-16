@@ -21,7 +21,7 @@
       "propertyNames": {
         "type": "string",
         "minLength": 1,
-        "pattern": "^(?![/\\\\])(?![A-Za-z]:)(?!.*(?:^|[/\\\\])\\.{1,2}(?:[/\\\\]|$)).+$",
+        "pattern": "^(?![/\\\\\\\\])(?![A-Za-z]:)(?!.*[:*?\\\"<>|])(?!.*(?:^|[/\\\\\\\\])\\\\.{1,2}(?:[/\\\\\\\\]|$)).+$",
         "description": "A relative repository path. Absolute paths and '.' or '..' path segments are not allowed."
       },
       "additionalProperties": {
