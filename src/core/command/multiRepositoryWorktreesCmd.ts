@@ -549,7 +549,14 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 if (!confirmation) return;
 
                 try {
-                    await removeMultiRepositoryWorktree(mainRepo, repos, event.item.entry);
+                    await vscode.window.withProgress(
+                        {
+                            location: vscode.ProgressLocation.Notification,
+                            title: vscode.l10n.t('Removing multi-repository worktree'),
+                            cancellable: false,
+                        },
+                        () => removeMultiRepositoryWorktree(mainRepo, repos, event.item.entry),
+                    );
                     void vscode.window.showInformationMessage(
                         vscode.l10n.t('Multi-repository worktree removed: {0}', event.item.entry.path),
                     );
