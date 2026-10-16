@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import type { MultiRepositoryWorktreeEntry } from '@/core/multiRepository/worktreeService';
+import { normalizeRepositoryPath } from '@/core/util/multiRepositoryWorktree';
 import {
     openInCurrentWindowQuickInputButton,
     openExternalTerminalQuickInputButton,
@@ -17,6 +18,7 @@ export interface MultiRepositoryWorktreePickItem extends vscode.QuickPickItem {
 
 export function createMultiRepositoryWorktreePickItem(
     entry: MultiRepositoryWorktreeEntry,
+    currentWorktreePath: string,
 ): MultiRepositoryWorktreePickItem {
     const readyCount = entry.repoStatuses.filter(Boolean).length;
     const missingCount = entry.repoStatuses.length - readyCount;
@@ -32,6 +34,9 @@ export function createMultiRepositoryWorktreePickItem(
               )
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
+        iconPath: new vscode.ThemeIcon(
+            normalizeRepositoryPath(entry.path) === normalizeRepositoryPath(currentWorktreePath) ? 'check' : 'window',
+        ),
         buttons: [
             ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
@@ -45,6 +50,7 @@ export function createMultiRepositoryWorktreePickItem(
 
 export interface MultiRepositoryWorktreeQuickPickOptions {
     entries: MultiRepositoryWorktreeEntry[];
+    currentWorktreePath: string;
     refreshEntries: () => Promise<MultiRepositoryWorktreeEntry[]>;
     onLoadError?: (error: unknown) => void;
     onCreate: () => Promise<void>;
@@ -68,7 +74,7 @@ export function showMultiRepositoryWorktreesQuickPick(
     quickPick.placeholder = vscode.l10n.t('Select a worktree to open in a new window');
     quickPick.matchOnDescription = true;
     quickPick.matchOnDetail = true;
-    quickPick.items = options.entries.map(createMultiRepositoryWorktreePickItem);
+    quickPick.items = options.entries.map((entry) => createMultiRepositoryWorktreePickItem(entry, options.currentWorktreePath));
 
     const disposables: vscode.Disposable[] = [];
     let isDisposed = false;
@@ -81,7 +87,7 @@ export function showMultiRepositoryWorktreesQuickPick(
         try {
             const entries = await options.refreshEntries();
             if (!isDisposed) {
-                quickPick.items = entries.map(createMultiRepositoryWorktreePickItem);
+                quickPick.items = entries.map((entry) => createMultiRepositoryWorktreePickItem(entry, options.currentWorktreePath));
             }
         } catch (error) {
             if (!isDisposed) {
