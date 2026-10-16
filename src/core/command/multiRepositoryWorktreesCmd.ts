@@ -336,7 +336,7 @@ async function getWorktreeChanges(worktreePath: string, ignoredChildPaths: strin
         .filter(Boolean)
         .map((record) => ({
             status: record.slice(0, 2),
-            filePath: record.slice(3).split(backslash).join('/'),
+            filePath: record.slice(3),
         }))
         .filter((change) => {
             if (change.status !== '??') return true;
