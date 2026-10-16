@@ -61,8 +61,15 @@ async function pathExists(target: string): Promise<boolean> {
 }
 
 function resolveRepoPath(root: string, relativePath: string): string {
-    if (!relativePath || path.isAbsolute(relativePath) || path.win32.isAbsolute(relativePath)) {
-        throw new Error(`Repository path must be relative: ${relativePath}`);
+    const segments = relativePath.split(/[\\/]/);
+    if (
+        !relativePath ||
+        path.isAbsolute(relativePath) ||
+        path.win32.isAbsolute(relativePath) ||
+        path.win32.parse(relativePath).root ||
+        segments.includes('..')
+    ) {
+        throw new Error(`Repository path must be a safe relative path: ${relativePath}`);
     }
     const resolved = path.resolve(root, relativePath);
     const relative = path.relative(root, resolved);
@@ -320,13 +327,13 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
         buttons: [
-            ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
+            ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
             completeRepositoriesQuickInputButton,
             removeChildRepositoryQuickInputButton,
             openInCurrentWindowQuickInputButton,
-        ],
+        ].filter((button) => button.enabled),
     };
 }
 
