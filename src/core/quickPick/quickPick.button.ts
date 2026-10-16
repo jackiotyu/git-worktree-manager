@@ -193,3 +193,21 @@ export const renameBranchQuickInputButton = new QuickInputButton({
     configKey: 'branchPick.showRenameBranch',
     defaultValue: true,
 });
+
+
+export const createMultiRepositoryWorktreeQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('new-folder'),
+    tooltip: vscode.l10n.t('Create Multi-Repository Worktree'),
+});
+export const removeMultiRepositoryWorktreeQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('trash'),
+    tooltip: vscode.l10n.t('Remove Multi-Repository Worktree'),
+});
+export const completeRepositoriesQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('diff-single'),
+    tooltip: vscode.l10n.t('Complete Missing Repositories'),
+});
+export const removeChildRepositoryQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('diff-removed'),
+    tooltip: vscode.l10n.t('Remove Child Repository'),
+});
