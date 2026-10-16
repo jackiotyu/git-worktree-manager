@@ -125,11 +125,11 @@ async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; re
             ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
             : normalizedRoot === normalizedRepoRoot;
     if (!workspaceRepoRoot || !isRoot) {
-        throw new Error('Open the repository root containing workspace.json, not a subfolder.');
+        throw new Error(vscode.l10n.t('Open the repository root containing workspace.json, not a subfolder.'));
     }
 
     const mainRepo = await getMainFolder(root);
-    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+    if (!mainRepo) throw new Error(vscode.l10n.t('Unable to resolve the main repository.'));
     const repos = await loadConfig(root, mainRepo);
     return { mainRepo, repos };
 }
@@ -138,6 +138,7 @@ async function createMultiRepositoryWorktree(
     root: string,
     branch: string,
     selectedRepoPaths: string[],
+    startPoint?: string,
 ): Promise<string | undefined> {
     const { mainRepo, repos: configuredRepos } = await getWorkspaceContext(root);
     const selectedPaths = new Set(selectedRepoPaths);
@@ -152,7 +153,7 @@ async function createMultiRepositoryWorktree(
     const created: Array<{ repoPath: string; worktreePath: string }> = [];
     let parentCreated = false;
     try {
-        await addBranchWorktree(mainRepo, targetRoot, branch);
+        await addBranchWorktree(mainRepo, targetRoot, branch, startPoint);
         parentCreated = true;
         for (const repo of repos) {
             if (!(await pathExists(repo.sourcePath))) {
@@ -165,7 +166,7 @@ async function createMultiRepositoryWorktree(
             if (await pathExists(targetPath)) {
                 throw new Error(`Target path already exists: ${targetPath}`);
             }
-            await addBranchWorktree(repo.sourcePath, targetPath, branch);
+            await addBranchWorktree(repo.sourcePath, targetPath, branch, startPoint);
             created.push({ repoPath: repo.sourcePath, worktreePath: targetPath });
         }
         return targetRoot;
@@ -364,7 +365,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
             title: vscode.l10n.t('Creating multi-repository worktree'),
             cancellable: false,
         },
-        () => createMultiRepositoryWorktree(root, branch.trim(), selectedRepoPaths),
+        () => createMultiRepositoryWorktree(root, branch.trim(), selectedRepoPaths, selectedBranch.startPoint),
     );
     if (target) {
         void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
