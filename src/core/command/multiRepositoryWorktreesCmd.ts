@@ -130,7 +130,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', details));
     }
     const config = parsedConfig as WorkspaceConfig;
-    const parentPath = typeof config.parent === 'string' ? config.parent.trim() : '';
+    const parentPath = config.parent?.trim() ?? '';
     const repositoryRoot = parentPath ? path.resolve(root, parentPath) : sourceRoot;
     if (parentPath && !(await isGitRepository(repositoryRoot))) {
         throw new Error(vscode.l10n.t('Configured parent path is not a Git repository: {0}', repositoryRoot));
@@ -152,8 +152,6 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         seenPaths.add(normalized);
         repos.push({ relativePath, name: value.name, remote: value.remote, sourcePath });
     }
-    if (!repos.length) throw new Error(vscode.l10n.t('No repositories are configured in workspace.json'));
-
     const canonicalRoot = normalizeRepositoryPath(await resolveCanonicalPath(repositoryRoot));
     const canonicalPaths = await Promise.all(repos.map((repo) => resolveCanonicalPath(repo.sourcePath)));
     const normalizedCanonicalPaths = canonicalPaths.map(normalizeRepositoryPath);
