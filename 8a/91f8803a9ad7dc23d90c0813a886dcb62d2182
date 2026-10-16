@@ -1,0 +1,16 @@
+src/core/command/multiRepositoryWorktreesCmd.ts
+  h_efb56b9ff7aea6 367-368
+src/test/unit/addBranchWorktree.test.ts
+  h_efb56b9ff7aea6 61-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8a91f8803a9ad7dc23d90c0813a886dcb62d2182",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
