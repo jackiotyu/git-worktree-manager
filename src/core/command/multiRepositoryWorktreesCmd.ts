@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import Ajv from 'ajv';
 import fs from 'fs/promises';
 import path from 'path';
 import { execAuto } from '@/core/git/exec';
@@ -57,7 +58,18 @@ interface RepoEntry {
     sourcePath: string;
 }
 
+const workspaceSchema = require('../../../schemas/workspace.schema.json') as object;
+const validateWorkspaceConfig = new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(workspaceSchema);
+
 const configFileName = 'workspace.json';
+
+const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
+
+function getWorktreeCacheKey(root: string): string {
+    const resolved = path.resolve(root);
+    return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+}
+
 
 async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
     try {
@@ -92,21 +104,20 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         throw new Error(vscode.l10n.t('workspace.json was not found in the workspace root'));
     }
 
-    let config: WorkspaceConfig;
+    let parsedConfig: unknown;
     try {
-        config = JSON.parse(raw) as WorkspaceConfig;
+        parsedConfig = JSON.parse(raw);
     } catch (error) {
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
     }
-    if (config?.version !== 1 || !config.repo || typeof config.repo !== 'object' || Array.isArray(config.repo)) {
-        throw new Error(
-            vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Expected version 1 and a repo object')),
-        );
-    }
 
-    if (config.parent !== undefined && (typeof config.parent !== 'string' || !config.parent.trim())) {
-        throw new Error(vscode.l10n.t('Invalid parent path in workspace.json'));
+    if (!validateWorkspaceConfig(parsedConfig)) {
+        const details = (validateWorkspaceConfig.errors ?? [])
+            .map((error) => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)
+            .join('; ');
+        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', details));
     }
+    const config = parsedConfig as WorkspaceConfig;
     const parentPath = typeof config.parent === 'string' ? config.parent.trim() : '';
     const repositoryRoot = parentPath ? path.resolve(root, parentPath) : sourceRoot;
     if (parentPath && !(await isGitRepository(repositoryRoot))) {
@@ -116,20 +127,6 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     const repos: RepoEntry[] = [];
     const seenPaths = new Set<string>();
     for (const [relativePath, value] of Object.entries(config.repo)) {
-        if (
-            !value ||
-            typeof value.name !== 'string' ||
-            !value.name.trim() ||
-            typeof value.remote !== 'string' ||
-            !value.remote.trim()
-        ) {
-            throw new Error(
-                vscode.l10n.t(
-                    'Invalid workspace.json: {0}',
-                    vscode.l10n.t('Invalid repository entry: {0}', relativePath),
-                ),
-            );
-        }
         const sourcePath = resolveSafeRelativePath(repositoryRoot, relativePath);
         const normalized = normalizeRepositoryPath(sourcePath);
         if (seenPaths.has(normalized)) {
@@ -552,14 +549,16 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
     }
 
     let state: Awaited<ReturnType<typeof getMultiRepositoryWorktrees>> | undefined;
+    const cacheKey = getWorktreeCacheKey(root);
     const loadState = async () => {
         state = await getMultiRepositoryWorktrees(root);
+        multiRepositoryWorktreeCache.set(cacheKey, state.entries);
         return state;
     };
 
     try {
         showMultiRepositoryWorktreesQuickPick({
-            entries: [],
+            entries: multiRepositoryWorktreeCache.get(cacheKey) ?? [],
             refreshEntries: async () => (await loadState()).entries,
             onLoadError: (error) => Alert.showErrorMessage(String(error)),
             onCreate: async () => {
