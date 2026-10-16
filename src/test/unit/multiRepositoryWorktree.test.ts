@@ -6,12 +6,12 @@ import {
     getRegisteredWorktreePaths,
     hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
+    isNestedPath,
+    isPathWithinRoot,
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
     normalizeRepositoryPath,
     normalizeWorktreePath,
-    isNestedPath,
-    isPathWithinRoot,
     resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 import * as execModule from '@/core/git/exec';
