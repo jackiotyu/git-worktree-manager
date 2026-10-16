@@ -210,7 +210,7 @@ export interface ICreateWorktreeInfo {
 
 export interface WorkspaceRepo {
     name: string;
-    remote: string;
+    remote?: string;
 }
 
 export interface WorkspaceConfig {
@@ -222,6 +222,6 @@ export interface WorkspaceConfig {
 export interface RepoEntry {
     relativePath: string;
     name: string;
-    remote: string;
+    remote?: string;
     sourcePath: string;
 }
