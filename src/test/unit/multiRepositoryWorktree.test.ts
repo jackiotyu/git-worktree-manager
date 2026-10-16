@@ -39,10 +39,10 @@ describe('multi-repository worktree utilities', () => {
         const worktree = path.join(tempRoot, 'feature');
         const adminDir = path.join(commonDir, 'worktrees', 'feature');
         await fs.mkdir(path.join(commonDir, 'worktrees'), { recursive: true });
-        await fs.writeFile(path.join(commonDir, 'HEAD'), 'ref: refs/heads/main\\n');
+        await fs.writeFile(path.join(commonDir, 'HEAD'), 'ref: refs/heads/main\n');
         await fs.mkdir(worktree, { recursive: true });
         await fs.mkdir(adminDir, { recursive: true });
-        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, adminDir)}\\n`);
+        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, adminDir)}\n`);
         await fs.writeFile(path.join(adminDir, 'gitdir'), path.relative(adminDir, path.join(worktree, '.git')));
 
         const paths = await getRegisteredWorktreePaths(repo);
@@ -58,10 +58,10 @@ describe('multi-repository worktree utilities', () => {
         const worktree = path.join(tempRoot, 'feature');
         const adminDir = path.join(commonDir, 'worktrees', 'feature');
         await fs.mkdir(path.join(commonDir, 'worktrees'), { recursive: true });
-        await fs.writeFile(path.join(commonDir, 'HEAD'), 'ref: refs/heads/main\\n');
+        await fs.writeFile(path.join(commonDir, 'HEAD'), 'ref: refs/heads/main\n');
         await fs.mkdir(worktree, { recursive: true });
         await fs.mkdir(adminDir, { recursive: true });
-        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, adminDir)}\\n`);
+        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, adminDir)}\n`);
         await fs.writeFile(path.join(adminDir, 'gitdir'), path.relative(adminDir, path.join(worktree, '.git')));
 
         await expect(isRegisteredWorktree(repo, worktree)).resolves.toBe(true);
@@ -124,8 +124,8 @@ describe('multi-repository worktree utilities', () => {
         const gitDir = path.join(tempRoot, '.git', 'worktrees', 'feature');
         await fs.mkdir(worktree, { recursive: true });
         await fs.mkdir(gitDir, { recursive: true });
-        await fs.writeFile(path.join(gitDir, 'HEAD'), 'ref: refs/heads/feature\\n');
-        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, gitDir)}\\n`);
+        await fs.writeFile(path.join(gitDir, 'HEAD'), 'ref: refs/heads/feature\n');
+        await fs.writeFile(path.join(worktree, '.git'), `gitdir: ${path.relative(worktree, gitDir)}\n`);
 
         await markMultiRepositoryWorktree(worktree);
 
