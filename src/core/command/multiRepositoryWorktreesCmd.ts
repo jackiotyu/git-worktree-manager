@@ -2,6 +2,10 @@ import * as vscode from 'vscode';
 import fs from 'fs/promises';
 import path from 'path';
 import { execAuto } from '@/core/git/exec';
+import { addBranchWorktree } from '@/core/git/addBranchWorktree';
+import { getWorktrees } from '@/core/git/getWorktrees';
+import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
+import { pathExists, resolveRepoPath, isGitRepository, isGitRepositoryPresent } from '@/core/util/multiRepositoryWorktree';
 import { getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
@@ -50,34 +54,6 @@ interface MultiRepositoryWorktreePickItem extends vscode.QuickPickItem {
 }
 
 const configFileName = 'workspace.json';
-
-async function pathExists(target: string): Promise<boolean> {
-    try {
-        await fs.access(target);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-function resolveRepoPath(root: string, relativePath: string): string {
-    const segments = relativePath.split(/[\\/]/);
-    if (
-        !relativePath ||
-        path.isAbsolute(relativePath) ||
-        path.win32.isAbsolute(relativePath) ||
-        path.win32.parse(relativePath).root ||
-        segments.includes('..')
-    ) {
-        throw new Error(`Repository path must be a safe relative path: ${relativePath}`);
-    }
-    const resolved = path.resolve(root, relativePath);
-    const relative = path.relative(root, resolved);
-    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
-        throw new Error(`Repository path escapes the workspace root: ${relativePath}`);
-    }
-    return resolved;
-}
 
 async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
     const configPath = path.join(root, configFileName);
@@ -138,14 +114,14 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
 }
 
 async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
-    const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
+    const workspaceRepoRoot = await getWorktreeTopLevel(root);
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
     const isRoot =
         process.platform === 'win32'
             ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
             : normalizedRoot === normalizedRepoRoot;
-    if (!isRoot) {
+    if (!workspaceRepoRoot || !isRoot) {
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
 
@@ -153,68 +129,6 @@ async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; re
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
     const repos = await loadConfig(root, mainRepo);
     return { mainRepo, repos };
-}
-
-async function isGitRepository(repoPath: string): Promise<boolean> {
-    try {
-        const { stdout } = await execAuto(repoPath, ['rev-parse', '--show-toplevel']);
-        const repoRoot = path.resolve(stdout.trim());
-        const target = path.resolve(repoPath);
-        return process.platform === 'win32' ? repoRoot.toLowerCase() === target.toLowerCase() : repoRoot === target;
-    } catch {
-        return false;
-    }
-}
-
-async function isGitRepositoryPresent(repoPath: string): Promise<boolean> {
-    try {
-        const [repoStat, gitStat] = await Promise.all([fs.stat(repoPath), fs.stat(path.join(repoPath, '.git'))]);
-        return repoStat.isDirectory() && (gitStat.isFile() || gitStat.isDirectory());
-    } catch {
-        return false;
-    }
-}
-
-async function addBranchWorktree(repoPath: string, targetPath: string, branch: string): Promise<void> {
-    await fs.mkdir(path.dirname(targetPath), { recursive: true });
-
-    const localBranch = await execAuto(repoPath, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).then(
-        () => true,
-        () => false,
-    );
-    if (localBranch) {
-        await execAuto(repoPath, ['worktree', 'add', targetPath, branch]);
-        return;
-    }
-
-    const remoteBranches = (
-        await execAuto(repoPath, ['for-each-ref', '--format=%(refname:short)', 'refs/remotes'])
-    ).stdout
-        .split(/\r?\n/)
-        .filter((ref) => ref.endsWith(`/${branch}`) && !ref.endsWith('/HEAD'));
-
-    if (remoteBranches.length === 1) {
-        await execAuto(repoPath, ['worktree', 'add', '--track', '-b', branch, targetPath, remoteBranches[0]]);
-        return;
-    }
-    if (remoteBranches.length > 1) {
-        throw new Error(
-            `Branch "${branch}" matches multiple remote branches in ${repoPath}; specify a unique branch name.`,
-        );
-    }
-
-    await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath]);
-}
-
-async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
-    const { stdout } = await execAuto(repoPath, ['worktree', 'list', '--porcelain']);
-    const entries: WorktreeEntry[] = [];
-    for (const block of stdout.trim().split(/\n\s*\n/)) {
-        const worktreePath = block.match(/^worktree (.+)$/m)?.[1];
-        const branch = block.match(/^branch refs\/heads\/(.+)$/m)?.[1] || '';
-        if (worktreePath && branch) entries.push({ path: worktreePath, branch });
-    }
-    return entries;
 }
 
 async function createMultiRepositoryWorktree(
