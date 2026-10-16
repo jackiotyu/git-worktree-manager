@@ -257,7 +257,7 @@ class WorktreeActionPicker {
             activeQuickPick.busy = false;
 
             return promise;
-        } catch (error) {
+        } catch {
             if (quickPick) {
                 resolve(false);
                 quickPick.busy = false;
