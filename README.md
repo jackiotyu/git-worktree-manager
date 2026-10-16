@@ -84,6 +84,28 @@ helping you create, switch, and clean up worktrees safely while keeping your rep
    - Add it to your VSCode workspace to work on multiple branches side by side.
    - Save it to favorites for quick access in the future.
 
+## Multi-Repository Worktrees
+
+Create a `gwm.json` file in the main repository root to configure child repositories:
+
+```json
+{
+  "version": 1,
+  "repo": {
+    "packages/api": {
+      "name": "api",
+      "remote": "https://github.com/your-org/api.git"
+    }
+  }
+}
+```
+
+Each `repo` key is a safe relative path for a child repository inside the multi-repository worktree. The `name` is shown in the picker, and `remote` is used to clone the child source repository when it is missing.
+
+The optional `parent` property sets the base repository root used to locate child repository source folders. It accepts an absolute path or a path relative to the directory containing `gwm.json`. When omitted, the extension uses the main worktree root inferred from Git metadata, or the current worktree in a bare-repository layout. `parent` does not change which Git repository owns the multi-repository worktrees.
+
+To open the manager, open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **Worktree: Manage Multi-Repository Worktrees**.
+
 ## Configuration ⚙️
 
 Customize Git Worktree Manager to fit your workflow:

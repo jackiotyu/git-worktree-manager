@@ -3,3 +3,4 @@
 *.md
 pnpm-lock.yaml
 package.json
+schemas/*

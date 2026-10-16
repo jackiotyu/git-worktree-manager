@@ -4,32 +4,10 @@ import folderRoot from '@/core/folderRoot';
 import { Config } from '@/core/config/setting';
 import { execBase } from '@/core/git/exec-base';
 import { toSimplePath } from '@/core/util/path';
+import { hasGitMetadata } from '@/core/util/repo';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
 const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
-
-// A worktree's .git entry is either a metadata directory or a gitdir pointer file.
-const hasWorktreeGitMetadata = async (dir: string): Promise<boolean> => {
-    const gitEntry = path.join(dir, '.git');
-    try {
-        const entry = await fs.stat(gitEntry);
-        if (entry.isDirectory()) {
-            const head = await fs.stat(path.join(gitEntry, 'HEAD'));
-            return head.isFile();
-        }
-        if (!entry.isFile()) return false;
-
-        const content = await fs.readFile(gitEntry, 'utf8');
-        const match = /^gitdir:\s*(.+)\s*$/im.exec(content);
-        if (!match) return false;
-
-        const gitDir = path.resolve(dir, match[1].trim());
-        const [target, head] = await Promise.all([fs.stat(gitDir), fs.stat(path.join(gitDir, 'HEAD'))]);
-        return target.isDirectory() && head.isFile();
-    } catch {
-        return false;
-    }
-};
 
 // A bare repository has a config file and object database at its root. Git verifies candidates to avoid false positives.
 const hasBareRepoLayout = async (dir: string): Promise<boolean> => {
@@ -110,9 +88,7 @@ export const scanNestedRepos = async (): Promise<string[]> => {
 
     const candidateList = [...candidates.values()];
     const valid = await mapConcurrent(candidateList, 8, async (candidate) => {
-        const isValid = candidate.bare
-            ? await isBareRepository(candidate.path)
-            : await hasWorktreeGitMetadata(candidate.path);
+        const isValid = candidate.bare ? await isBareRepository(candidate.path) : await hasGitMetadata(candidate.path);
         return isValid ? toSimplePath(candidate.path) : '';
     });
 

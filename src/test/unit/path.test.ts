@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, rs } from '@rstest/core';
 import path from 'path';
-import { comparePath, toSimplePath, findPrefixPath, isSubPath } from '../../core/util/path';
+import { comparePath, toSimplePath, findPrefixPath, isSubPath, resolveSafeRelativePath } from '../../core/util/path';
 
 function withPlatform(platform: NodeJS.Platform, run: () => void) {
     describe(platform, () => {
@@ -107,5 +107,47 @@ describe('isSubPath', () => {
     it('handles cross-platform separators', () => {
         const sep = path.sep === '\\' ? '\\' : '/';
         expect(isSubPath(`${sep}parent`, `${sep}parent${sep}child`)).toBe(true);
+    });
+});
+
+describe('resolveSafeRelativePath', () => {
+    const root = path.resolve('workspace');
+
+    it('resolves a safe nested relative path under the root', () => {
+        expect(resolveSafeRelativePath(root, 'packages/client')).toBe(path.resolve(root, 'packages/client'));
+    });
+
+    it('rejects empty paths and the root itself', () => {
+        expect(() => resolveSafeRelativePath(root, '')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, '.')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, './packages/client')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, 'packages/./client')).toThrow('Path must be a safe relative path');
+    });
+
+    it('normalizes both separator styles when resolving relative paths', () => {
+        const expected = path.resolve(root, 'packages/client');
+        expect(resolveSafeRelativePath(root, 'packages/client')).toBe(expected);
+        expect(resolveSafeRelativePath(root, 'packages\\client')).toBe(expected);
+    });
+
+    it('rejects path segments that are not portable across platforms', () => {
+        expect(() => resolveSafeRelativePath(root, 'packages/a:b')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, 'packages/a*b')).toThrow('Path must be a safe relative path');
+    });
+
+    it('rejects absolute paths on POSIX and Windows', () => {
+        expect(() => resolveSafeRelativePath(root, '/tmp/outside')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, 'C:\\outside')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, '\\\\server\\share')).toThrow('Path must be a safe relative path');
+    });
+
+    it('rejects parent traversal segments regardless of separator', () => {
+        expect(() => resolveSafeRelativePath(root, '../outside')).toThrow('Path must be a safe relative path');
+        expect(() => resolveSafeRelativePath(root, 'packages/../../outside')).toThrow(
+            'Path must be a safe relative path',
+        );
+        expect(() => resolveSafeRelativePath(root, 'packages\\..\\outside')).toThrow(
+            'Path must be a safe relative path',
+        );
     });
 });

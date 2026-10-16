@@ -45,6 +45,7 @@ export default [
             'no-useless-escape': 'error',
             // Prettier 集成
             'prettier/prettier': 'warn',
+            'preserve-caught-error': 'off',
         },
     },
     prettierConfig,

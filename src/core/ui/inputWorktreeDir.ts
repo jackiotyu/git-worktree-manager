@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import path from 'path';
-import { checkExist, isDirEmpty } from '@/core/util/file';
+import { checkExist, checkIsFolder, isDirEmpty } from '@/core/util/file';
 import { comparePath, getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
 import { Alert } from '@/core/ui/message';
 import { withResolvers } from '@/core/util/promise';
@@ -87,6 +87,7 @@ export const inputWorktreeDir = async ({
             const dir = await pickWorktreeDir(path.dirname(baseDir), targetDirTip);
             if (!dir) return inputBox.show();
             inputBox.value = verifySameDir(dir, workTreeDir) ? finalWorktreeDir : dir;
+            inputBox.valueSelection = [inputBox.value.length, inputBox.value.length];
             inputBox.show();
         } catch (err) {
             if (err instanceof Error) Alert.showErrorMessage(err.message);
@@ -98,20 +99,30 @@ export const inputWorktreeDir = async ({
     };
     const handleAccept = async () => {
         try {
-            const input = inputBox.value;
+            const input = inputBox.value.trim();
             if (!input) return;
-            if (verifySameDir(input, workTreeDir)) return;
-            if (!(await isDirEmpty(input))) {
-                return Alert.showErrorMessage(vscode.l10n.t('The selected folder is not empty'));
+            const targetPath = path.isAbsolute(input) ? path.resolve(input) : path.resolve(baseDir, input);
+            if (verifySameDir(targetPath, workTreeDir)) return;
+            if (await checkExist(targetPath)) {
+                if (!(await checkIsFolder(targetPath))) {
+                    return Alert.showErrorMessage(vscode.l10n.t('The path is not a folder'));
+                }
+                if (!(await isDirEmpty(targetPath))) {
+                    return Alert.showErrorMessage(vscode.l10n.t('The selected folder is not empty'));
+                }
             }
-            resolve(input);
+            resolve(targetPath);
             inputBox.hide();
             inputBox.dispose();
         } catch (error) {
             reject(error);
         }
     };
-    const handleHide = () => canClose && inputBox.dispose();
+    const handleHide = () => {
+        if (!canClose) return;
+        resolve(undefined);
+        inputBox.dispose();
+    };
     inputBox.onDidTriggerButton(handleTriggerButton);
     inputBox.onDidHide(handleHide);
     inputBox.onDidAccept(handleAccept);

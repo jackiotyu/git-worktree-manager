@@ -46,15 +46,23 @@ interface HandleTriggerItemButtonArgs {
 async function createBranchStrategy({
     cwd,
     mainFolder,
+    title,
     showSelectRef,
+    createBranchOnPick,
     quickPick,
     resolve,
     refreshItems,
+    step,
+    totalSteps,
 }: {
     cwd: string;
     mainFolder: string;
+    title: string;
     showSelectRef: boolean;
+    createBranchOnPick: boolean;
     quickPick: vscode.QuickPick<BranchForWorktree>;
+    step?: number;
+    totalSteps?: number;
     resolve: (value: ResolveValue) => void;
     refreshItems: () => void;
 }) {
@@ -67,6 +75,8 @@ async function createBranchStrategy({
             mainFolder: mainFolder,
             cwd: cwd,
             showCreate: false,
+            step,
+            totalSteps,
         });
     }
     if (branchItem === false) {
@@ -79,7 +89,7 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    const branchName = await inputNewBranch(cwd);
+    const branchName = await inputNewBranch(cwd, undefined, { title, step, totalSteps });
     if (branchName === false) {
         quickPick.dispose();
         resolve(false);
@@ -90,9 +100,13 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    await createBranchFrom(cwd, branchName, branchItem.branch || branchItem.hash);
-    const hash = await getLastCommitHash(cwd, true);
-    resolve({ branch: branchName, hash });
+    if (createBranchOnPick) {
+        await createBranchFrom(cwd, branchName, branchItem.branch || branchItem.hash);
+        const hash = await getLastCommitHash(cwd, true);
+        resolve({ branch: branchName, hash });
+    } else {
+        resolve({ branch: branchName, startPoint: branchItem.branch || branchItem.hash });
+    }
     quickPick.hide();
     quickPick.dispose();
 }
@@ -107,18 +121,34 @@ async function handleAccept({
     quickPick,
     cwd,
     mainFolder,
+    title,
     refreshItems,
-}: HandlerArgs & { cwd: string; mainFolder: string; refreshItems: () => void }) {
+    createBranchOnPick,
+    step,
+    totalSteps,
+}: HandlerArgs & {
+    cwd: string;
+    mainFolder: string;
+    title: string;
+    refreshItems: () => void;
+    createBranchOnPick: boolean;
+    step?: number;
+    totalSteps?: number;
+}) {
     try {
         const selected = quickPick.selectedItems[0];
         if (isSelectCreateBranch(selected)) {
             await createBranchStrategy({
                 cwd,
                 mainFolder,
+                title,
                 showSelectRef: selected === createNewBranchFromItem,
+                createBranchOnPick,
                 quickPick,
                 resolve,
                 refreshItems,
+                step,
+                totalSteps,
             });
             return;
         }
@@ -338,6 +368,7 @@ const mapRemoteBranchItems = (remoteBranchList: RefList) => {
                 iconPath: new vscode.ThemeIcon('cloud'),
                 description: buildRemoteBranchDesc(item['objectname:short'], item['authordate']),
                 branch: item['refname:short'],
+                remote: true,
                 detail: buildCommitDesc(item),
             };
         }),
@@ -472,7 +503,14 @@ const updateQuickItems = async ({
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
     const checkoutTypes = getCheckoutTypes();
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutTypes, sortBy });
+    if (refList)
+        quickPick.items = mapRefItems({
+            ...refList,
+            showCreate,
+            mainFolder,
+            checkoutTypes,
+            sortBy,
+        });
 };
 
 export const pickBranch: IPickBranch = async ({
@@ -483,61 +521,108 @@ export const pickBranch: IPickBranch = async ({
     step,
     totalSteps,
     showCreate,
+    createBranchOnPick = true,
 }) => {
     const { resolve, reject, promise } = withResolvers<ResolveValue>();
+    let quickPick: vscode.QuickPick<BranchForWorktree> | undefined;
+    let cancelledWhileLoading = false;
+
     try {
-        const isValidGit = await checkGitValid(cwd);
-        if (!isValidGit) {
-            Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
-            return;
-        }
-        const quickPick = vscode.window.createQuickPick();
+        quickPick = vscode.window.createQuickPick<BranchForWorktree>();
+        const activeQuickPick = quickPick;
         const sortState = { sortBy: 'name' as BranchSortBy };
         const refreshItems = () =>
-            updateQuickItems({ mainFolder, cwd, showCreate, quickPick, sortBy: sortState.sortBy });
+            updateQuickItems({
+                mainFolder,
+                cwd,
+                showCreate,
+                quickPick: activeQuickPick,
+                sortBy: sortState.sortBy,
+            });
         const updateButtons = () => {
-            quickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
+            activeQuickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
         };
-        quickPick.title = title;
-        quickPick.placeholder = placeholder;
-        quickPick.canSelectMany = false;
+        activeQuickPick.title = title;
+        activeQuickPick.placeholder = placeholder;
+        activeQuickPick.canSelectMany = false;
         updateButtons();
-        quickPick.step = step;
-        quickPick.totalSteps = totalSteps;
-        quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, refreshItems }));
-        quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
-        quickPick.onDidTriggerButton((event) =>
+        activeQuickPick.step = step;
+        activeQuickPick.totalSteps = totalSteps;
+        activeQuickPick.onDidAccept(() => {
+            if (activeQuickPick.busy) return;
+            return handleAccept({
+                resolve,
+                reject,
+                quickPick: activeQuickPick,
+                cwd,
+                mainFolder,
+                title,
+                refreshItems,
+                createBranchOnPick,
+                step,
+                totalSteps,
+            });
+        });
+        activeQuickPick.onDidHide(() => {
+            if (activeQuickPick.busy) cancelledWhileLoading = true;
+            handleHide({ resolve, reject, quickPick: activeQuickPick });
+        });
+        activeQuickPick.onDidTriggerButton((event) =>
             handleTriggerButton({
                 resolve,
                 reject,
                 event,
-                quickPick,
+                quickPick: activeQuickPick,
                 onSortChange: (sortBy) => {
                     sortState.sortBy = sortBy;
                     updateButtons();
-                    refreshItems();
+                    void refreshItems();
                 },
             }),
         );
-        quickPick.onDidTriggerItemButton((event) => handleTriggerItemButton({ event }));
-        quickPick.show();
-        quickPick.busy = true;
-        refreshItems();
+        activeQuickPick.onDidTriggerItemButton((event) => handleTriggerItemButton({ event }));
+
+        // Show the picker before checking Git state or loading branch and tag data.
+        activeQuickPick.busy = true;
+        activeQuickPick.show();
+
+        const isValidGit = await checkGitValid(cwd);
+        if (cancelledWhileLoading) return promise;
+        if (!isValidGit) {
+            Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
+            resolve();
+            activeQuickPick.busy = false;
+            activeQuickPick.hide();
+            return promise;
+        }
+
+        await refreshItems();
+        if (cancelledWhileLoading) return promise;
+
         const { branchList, remoteBranchList, tagList } = await getRefList(cwd);
+        if (cancelledWhileLoading) return promise;
         if (!branchList) {
-            quickPick.hide();
-            return;
+            resolve();
+            activeQuickPick.busy = false;
+            activeQuickPick.hide();
+            return promise;
         }
         updateRefListCache(mainFolder, {
             branchList,
             remoteBranchList,
             tagList,
         });
-        refreshItems();
-        quickPick.busy = false;
-        return await promise;
+        await refreshItems();
+        if (!cancelledWhileLoading) activeQuickPick.busy = false;
     } catch (error) {
-        logger.error(error);
-        reject(error);
+        if (!cancelledWhileLoading) {
+            logger.error(error);
+            reject(error);
+            if (quickPick) {
+                quickPick.busy = false;
+                quickPick.hide();
+            }
+        }
     }
+    return promise;
 };

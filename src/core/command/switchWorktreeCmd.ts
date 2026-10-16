@@ -2,31 +2,67 @@ import * as vscode from 'vscode';
 import { getWorktreeList } from '@/core/git/getWorktreeList';
 import { getFolderIcon } from '@/core/util/folder';
 
+interface WorktreeQuickPickItem extends vscode.QuickPickItem {
+    fsPath: string;
+}
+
 export const switchWorktreeCmd = async () => {
-    const workTrees = await getWorktreeList();
-    const items: vscode.QuickPickItem[] = workTrees.map((item) => {
-        return {
-            label: item.name,
-            description: item.path,
-            iconPath: getFolderIcon(item.path),
-        };
+    const quickPick = vscode.window.createQuickPick<WorktreeQuickPickItem>();
+    let isDisposed = false;
+    let resolveSelection: (value: string | undefined) => void = () => {};
+    const selection = new Promise<string | undefined>((resolve) => {
+        resolveSelection = resolve;
     });
-    const options: vscode.QuickPickOptions = {
-        canPickMany: false,
-        placeHolder: vscode.l10n.t('Please select the directory to switch to'),
-        title: vscode.l10n.t('Switch Worktree'),
-        matchOnDetail: true,
-        matchOnDescription: true,
-    };
-    vscode.window.showQuickPick(items, options).then((workTree) => {
-        if (!workTree) {
-            return;
+
+    quickPick.title = vscode.l10n.t('Switch Worktree');
+    quickPick.placeholder = vscode.l10n.t('Please select the directory to switch to');
+    quickPick.canSelectMany = false;
+    quickPick.matchOnDescription = true;
+    quickPick.matchOnDetail = true;
+    quickPick.items = [];
+    quickPick.busy = true;
+
+    quickPick.onDidAccept(() => {
+        if (quickPick.busy) return;
+        const selected = quickPick.selectedItems[0];
+        if (!selected) return;
+        resolveSelection(selected.fsPath);
+        quickPick.hide();
+    });
+    quickPick.onDidHide(() => {
+        isDisposed = true;
+        resolveSelection(undefined);
+        quickPick.dispose();
+    });
+
+    quickPick.show();
+
+    void (async () => {
+        try {
+            const worktrees = await getWorktreeList();
+            if (isDisposed) return;
+
+            quickPick.items = worktrees.map((item) => ({
+                label: item.name,
+                description: item.path,
+                iconPath: getFolderIcon(item.path),
+                fsPath: item.path,
+            }));
+        } catch (error) {
+            if (!isDisposed) {
+                void vscode.window.showErrorMessage(String(error));
+                quickPick.hide();
+            }
+        } finally {
+            if (!isDisposed) quickPick.busy = false;
         }
-        const path = workTrees[workTrees.findIndex((object) => object.name === workTree.label)].path;
-        const uri = vscode.Uri.file(path);
-        vscode.commands.executeCommand('vscode.openFolder', uri, {
-            forceNewWindow: false,
-            forceReuseWindow: true,
-        });
+    })();
+
+    const selectedPath = await selection;
+    if (!selectedPath) return;
+
+    await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selectedPath), {
+        forceNewWindow: false,
+        forceReuseWindow: true,
     });
 };

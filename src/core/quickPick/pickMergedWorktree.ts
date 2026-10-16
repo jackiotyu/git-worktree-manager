@@ -31,9 +31,9 @@ export const pickMergedWorktree = async (
     repoPath: string,
     preselectMerged: boolean,
 ): Promise<IMergedWorktreeCandidate[] | void> => {
-    const candidates = await getMergedWorktreeCandidates(repoPath);
-    const items = candidates.map(createQuickPickItem).filter((item) => !item.isMain);
-    const { resolve, promise } = withResolvers<IMergedWorktreeCandidate[] | void>();
+    const { resolve, reject, promise } = withResolvers<IMergedWorktreeCandidate[] | void>();
+    let candidates: IMergedWorktreeCandidate[] = [];
+    let isDisposed = false;
 
     const quickPick = vscode.window.createQuickPick<IMergedWorktreePick>();
     quickPick.title = vscode.l10n.t('Select worktrees to remove');
@@ -41,33 +41,49 @@ export const pickMergedWorktree = async (
     quickPick.matchOnDescription = true;
     quickPick.matchOnDetail = true;
     quickPick.buttons = [selectAllMergedButton];
-    quickPick.items = items;
-    quickPick.selectedItems = preselectMerged ? items.filter((item) => item.isMerged) : [];
+    quickPick.items = [];
+    quickPick.busy = true;
 
     const handleAccept = () => {
-        const result = quickPick.selectedItems.map((item) => {
-            const candidate = candidates.find((candidate) => candidate.fsPath === item.fsPath);
-            return candidate as IMergedWorktreeCandidate;
-        });
-        resolve(result);
+        if (quickPick.busy) return;
+        const selectedPaths = new Set(quickPick.selectedItems.map((item) => item.fsPath));
+        resolve(candidates.filter((candidate) => selectedPaths.has(candidate.fsPath)));
         quickPick.hide();
     };
 
     const handleHide = () => {
+        isDisposed = true;
         resolve();
         quickPick.dispose();
     };
 
     const handleSelectAllMerged = (event: vscode.QuickInputButton) => {
-        if (event === selectAllMergedButton) {
-            quickPick.selectedItems = items.filter((item) => item.isMerged);
-        }
+        if (quickPick.busy || event !== selectAllMergedButton) return;
+        quickPick.selectedItems = quickPick.items.filter((item) => item.isMerged);
     };
 
     quickPick.onDidAccept(handleAccept);
     quickPick.onDidHide(handleHide);
     quickPick.onDidTriggerButton(handleSelectAllMerged);
     quickPick.show();
+
+    void (async () => {
+        try {
+            candidates = await getMergedWorktreeCandidates(repoPath);
+            if (isDisposed) return;
+
+            const items = candidates.map(createQuickPickItem).filter((item) => !item.isMain);
+            quickPick.items = items;
+            quickPick.selectedItems = preselectMerged ? items.filter((item) => item.isMerged) : [];
+        } catch (error) {
+            if (!isDisposed) {
+                reject(error);
+                quickPick.hide();
+            }
+        } finally {
+            if (!isDisposed) quickPick.busy = false;
+        }
+    })();
 
     return promise;
 };

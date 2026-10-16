@@ -47,7 +47,24 @@
   "main": "./dist/extension.js",
   "l10n": "./l10n",
   "contributes": {
+    "jsonValidation": [
+      {
+        "fileMatch": "gwm.json",
+        "url": "./schemas/workspace.schema.json"
+      }
+    ],
     "commands": [
+      {
+        "command": "git-worktree-manager.multiRepositoryWorktrees",
+        "title": "%cmd.multiRepositoryWorktrees%",
+        "category": "Worktree"
+      },
+      {
+        "command": "git-worktree-manager.createMultiRepositoryWorktree",
+        "title": "%cmd.createMultiRepositoryWorktree%",
+        "icon": "$(new-folder)",
+        "category": "Worktree"
+      },
       {
         "command": "git-worktree-manager.sortWorktreesByDefault",
         "title": "%cmd.sortWorktreesByDefault%",
@@ -1460,6 +1477,7 @@
     "typescript-eslint": "^8.71.1"
   },
   "dependencies": {
+    "ajv": "^8.20.0",
     "dayjs": "^1.11.23",
     "fast-glob": "^3.3.3",
     "lodash-es": "^4.18.1",

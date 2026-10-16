@@ -4,9 +4,16 @@ import { validateBranchName } from '@/core/util/branch';
 
 const backButton = vscode.QuickInputButtons.Back;
 
-export const inputNewBranch = async (cwd: string, defaultValue?: string) => {
+export const inputNewBranch = async (
+    cwd: string,
+    defaultValue?: string,
+    options?: { title?: string; step?: number; totalSteps?: number },
+) => {
     const { promise, resolve } = withResolvers<string | undefined | false>();
     const inputBox = vscode.window.createInputBox();
+    if (options?.title) inputBox.title = options.title;
+    if (options?.step !== undefined) inputBox.step = options.step;
+    if (options?.totalSteps !== undefined) inputBox.totalSteps = options.totalSteps;
     inputBox.ignoreFocusOut = true;
     inputBox.value = defaultValue || vscode.workspace.getConfiguration('git').get('branchPrefix', '');
     inputBox.valueSelection = [-1, -1];

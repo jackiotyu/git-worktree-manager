@@ -179,7 +179,13 @@ export type FetchArgs = {
     remoteRef: string;
     cwd: string;
 };
-export type IBranchForWorktree = { branch?: string; hash?: string; mainFolder?: string };
+export type IBranchForWorktree = {
+    branch?: string;
+    hash?: string;
+    mainFolder?: string;
+    remote?: boolean;
+    startPoint?: string;
+};
 export type BranchForWorktree = vscode.QuickPickItem & IBranchForWorktree;
 export type IPickBranchResolveValue = IBranchForWorktree | void | false;
 export type IPickBranchParams = {
@@ -190,6 +196,7 @@ export type IPickBranchParams = {
     step?: number;
     totalSteps?: number;
     showCreate: boolean;
+    createBranchOnPick?: boolean;
 };
 export type IPickBranch = (params: IPickBranchParams) => Promise<IPickBranchResolveValue>;
 
@@ -199,4 +206,22 @@ export interface ICreateWorktreeInfo {
     label: string;
     isBranch: boolean;
     cwd: string;
+}
+
+export interface WorkspaceRepo {
+    name: string;
+    remote: string;
+}
+
+export interface WorkspaceConfig {
+    version: 1;
+    parent?: string;
+    repo: Record<string, WorkspaceRepo>;
+}
+
+export interface RepoEntry {
+    relativePath: string;
+    name: string;
+    remote: string;
+    sourcePath: string;
 }

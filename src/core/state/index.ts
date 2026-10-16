@@ -7,7 +7,7 @@ import {
     IRecentItem,
     IWorktreeGroup,
 } from '@/types';
-import { globalStateEvent } from '@/core/event/events';
+import { globalStateEvent, workspaceStateEvent } from '@/core/event/events';
 
 type KeyGitRepoRefList = `global.gitRepo.refList.${string}`;
 type KeyGitFolderViewAsTree = 'gitFolderViewAsTree';
@@ -92,7 +92,7 @@ export class WorkspaceState {
     static update(key: KeyWorkspaceNestedRepos, value: string[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {
-            globalStateEvent.fire(key as KeyGitRepoRefList);
+            workspaceStateEvent.fire(key as StateKey);
         });
     }
 }
