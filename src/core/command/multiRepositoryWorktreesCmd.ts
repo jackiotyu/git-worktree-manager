@@ -46,6 +46,7 @@ interface WorkspaceRepo {
 
 interface WorkspaceConfig {
     version: 1;
+    parent?: string;
     repo: Record<string, WorkspaceRepo>;
 }
 
@@ -103,6 +104,15 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         );
     }
 
+    if (config.parent !== undefined && (typeof config.parent !== 'string' || !config.parent.trim())) {
+        throw new Error(vscode.l10n.t('Invalid parent path in workspace.json'));
+    }
+    const parentPath = typeof config.parent === 'string' ? config.parent.trim() : '';
+    const repositoryRoot = parentPath ? path.resolve(root, parentPath) : sourceRoot;
+    if (parentPath && !(await isGitRepository(repositoryRoot))) {
+        throw new Error(vscode.l10n.t('Configured parent path is not a Git repository: {0}', repositoryRoot));
+    }
+
     const repos: RepoEntry[] = [];
     const seenPaths = new Set<string>();
     for (const [relativePath, value] of Object.entries(config.repo)) {
@@ -120,7 +130,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
                 ),
             );
         }
-        const sourcePath = resolveSafeRelativePath(sourceRoot, relativePath);
+        const sourcePath = resolveSafeRelativePath(repositoryRoot, relativePath);
         const normalized = normalizeRepositoryPath(sourcePath);
         if (seenPaths.has(normalized)) {
             throw new Error(
@@ -135,7 +145,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     }
     if (!repos.length) throw new Error(vscode.l10n.t('No repositories are configured in workspace.json'));
 
-    const canonicalRoot = normalizeRepositoryPath(await resolveCanonicalPath(sourceRoot));
+    const canonicalRoot = normalizeRepositoryPath(await resolveCanonicalPath(repositoryRoot));
     const canonicalPaths = await Promise.all(repos.map((repo) => resolveCanonicalPath(repo.sourcePath)));
     const normalizedCanonicalPaths = canonicalPaths.map(normalizeRepositoryPath);
 
@@ -144,7 +154,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
             throw new Error(
                 vscode.l10n.t(
                     'Invalid workspace.json: {0}',
-                    vscode.l10n.t('Repository path resolves outside the workspace root: {0}', repos[i].relativePath),
+                    vscode.l10n.t('Repository path resolves outside the configured parent root: {0}', repos[i].relativePath),
                 ),
             );
         }
