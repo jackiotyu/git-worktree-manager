@@ -313,6 +313,11 @@ const completeRepositoriesButton: vscode.QuickInputButton = {
     tooltip: vscode.l10n.t('Complete Missing Repositories'),
 };
 
+const removeChildRepositoryButton: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('folder-minus'),
+    tooltip: vscode.l10n.t('Remove Child Repository'),
+};
+
 function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepositoryWorktreePickItem {
     const readyCount = entry.repoStatuses.filter(Boolean).length;
     const missingCount = entry.repoStatuses.length - readyCount;
@@ -328,7 +333,9 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
               )
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
-        buttons: entry.isMain ? [openInCurrentWindowButton] : [completeRepositoriesButton, removeWorktreeButton, openInCurrentWindowButton],
+        buttons: entry.isMain
+            ? [openInCurrentWindowButton]
+            : [completeRepositoriesButton, removeChildRepositoryButton, removeWorktreeButton, openInCurrentWindowButton],
     };
 }
 
@@ -390,6 +397,21 @@ async function removeMultiRepositoryWorktree(
         }
     }
     await execAuto(mainRepo, ['worktree', 'remove', entry.path]);
+}
+
+async function removeChildRepositoryWorktree(
+    repos: RepoEntry[],
+    entry: MultiRepositoryWorktreeEntry,
+    relativePath: string,
+): Promise<void> {
+    const repo = repos.find((item) => item.relativePath === relativePath);
+    if (!repo) throw new Error(`Repository is not configured: ${relativePath}`);
+
+    const childPath = resolveRepoPath(entry.path, repo.relativePath);
+    if (!(await isGitRepository(childPath))) {
+        throw new Error(`No generated worktree found for repository: ${repo.relativePath}`);
+    }
+    await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
 }
 
 async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise<void> {
@@ -524,6 +546,49 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                                 vscode.l10n.t('Multi-repository worktree completed: {0}', event.item.entry.path),
                             );
                         }
+                    } catch (error) {
+                        Alert.showErrorMessage(String(error));
+                    } finally {
+                        await multiRepositoryWorktreesCmd();
+                    }
+                    return;
+                }
+                if (event.button === removeChildRepositoryButton) {
+                    const generatedRepos = repos.filter((_, index) => event.item.entry.repoStatuses[index]);
+                    if (!generatedRepos.length) return;
+                    quickPick.hide();
+                    try {
+                        const selectedRepo = await vscode.window.showQuickPick(
+                            generatedRepos.map((repo) => ({
+                                label: repo.name,
+                                description: repo.relativePath,
+                                detail: repo.remote,
+                                relativePath: repo.relativePath,
+                            })),
+                            {
+                                title: vscode.l10n.t('Remove Child Repository'),
+                                placeHolder: vscode.l10n.t('Select a generated repository to remove from this worktree'),
+                                ignoreFocusOut: true,
+                            },
+                        );
+                        if (!selectedRepo) return;
+                        const confirmation = await vscode.window.showWarningMessage(
+                            vscode.l10n.t('Remove repository {0} from worktree {1}?', selectedRepo.relativePath, event.item.entry.path),
+                            { modal: true },
+                            vscode.l10n.t('Remove'),
+                        );
+                        if (!confirmation) return;
+                        await vscode.window.withProgress(
+                            {
+                                location: vscode.ProgressLocation.Notification,
+                                title: vscode.l10n.t('Removing child repository worktree'),
+                                cancellable: false,
+                            },
+                            () => removeChildRepositoryWorktree(repos, event.item.entry, selectedRepo.relativePath),
+                        );
+                        void vscode.window.showInformationMessage(
+                            vscode.l10n.t('Child repository worktree removed: {0}', selectedRepo.relativePath),
+                        );
                     } catch (error) {
                         Alert.showErrorMessage(String(error));
                     } finally {
