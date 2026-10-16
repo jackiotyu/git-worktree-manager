@@ -115,7 +115,7 @@ describe('resolveSafeRelativePath', () => {
     const root = path.resolve('workspace');
 
     it('resolves a safe nested relative path under the root', () => {
-        expect(resolveSafeRelativePath(root, 'packages/client')).toBe(path.resolve(root, 'packages/client'));
+        expect(() => resolveSafeRelativePath(root, 'packages\\..\\outside')).toThrow(
     });
 
     it('rejects empty paths and the root itself', () => {
