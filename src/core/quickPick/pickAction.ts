@@ -263,7 +263,7 @@ class WorktreeActionPicker {
                 quickPick.busy = false;
                 quickPick.hide();
             } else {
-                reject(error);
+                resolve(false);
             }
             return false;
         }
