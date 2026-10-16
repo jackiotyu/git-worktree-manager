@@ -127,7 +127,7 @@ describe('resolveSafeRelativePath', () => {
     it('normalizes both separator styles when resolving relative paths', () => {
         const expected = path.resolve(root, 'packages/client');
         expect(resolveSafeRelativePath(root, 'packages/client')).toBe(expected);
-        expect(resolveSafeRelativePath(root, 'packages\\\\client')).toBe(expected);
+        expect(resolveSafeRelativePath(root, 'packages\\client')).toBe(expected);
     });
 
     it('rejects absolute paths on POSIX and Windows', () => {
