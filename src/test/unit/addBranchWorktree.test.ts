@@ -76,7 +76,7 @@ describe('addBranchWorktree', () => {
         rs.mocked(execModule.execAuto)
             .mockResolvedValueOnce(result())
             .mockResolvedValueOnce(result())
-            .mockResolvedValueOnce(result(`worktree ${targetPath}\\nHEAD abc\\n`))
+            .mockResolvedValueOnce(result(`worktree ${targetPath}\nHEAD abc\n`))
             .mockResolvedValueOnce(result());
         rs.mocked(addWorktreeModule.addWorktreeRaw).mockRejectedValueOnce(new Error('checkout failed'));
 
