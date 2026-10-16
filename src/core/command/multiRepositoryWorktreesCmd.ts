@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import fs from 'fs/promises';
 import path from 'path';
 import { execAuto } from '@/core/git/exec';
+import { getMainWorktreeRoot } from '@/core/git/getMainWorktreeRoot';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
@@ -189,19 +190,6 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     return repos;
 }
 
-async function getMainRepositoryRoot(root: string): Promise<string> {
-    try {
-        const { stdout } = await execAuto(root, ['rev-parse', '--git-common-dir']);
-        const commonDir = stdout.trim();
-        if (!commonDir) return '';
-
-        const resolvedCommonDir = path.resolve(root, commonDir);
-        return path.basename(resolvedCommonDir) === '.git' ? path.dirname(resolvedCommonDir) : root;
-    } catch {
-        return '';
-    }
-}
-
 async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
     const workspaceRepoRoot = await getWorktreeTopLevel(root);
     const normalizedRoot = path.resolve(root);
@@ -214,7 +202,7 @@ async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; re
         throw new Error(vscode.l10n.t('Open the repository root containing workspace.json, not a subfolder.'));
     }
 
-    const mainRepo = await getMainRepositoryRoot(root);
+    const mainRepo = await getMainWorktreeRoot(root);
     if (!mainRepo) throw new Error(vscode.l10n.t('Unable to resolve the main repository.'));
     const repos = await loadConfig(root, mainRepo);
     return { mainRepo, repos };
