@@ -104,6 +104,8 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 
 可选的 `parent` 用于指定查找子仓库源目录的基准仓库根路径，支持绝对路径或相对于 `gwm.json` 所在目录的路径。省略时，扩展会根据 Git 元数据推导主工作树根目录；使用 bare 仓库布局时则采用当前工作树。此属性不会改变负责管理多仓库 Worktree 的 Git 仓库。
 
+需要打开多仓库 Worktree 管理器时，打开命令面板（`Ctrl+Shift+P` / `Cmd+Shift+P`），搜索并执行 **Worktree: 管理多仓库 Worktree**。
+
 ## 配置 ⚙️
 
 根据你的工作流程自定义 Git Worktree Manager：

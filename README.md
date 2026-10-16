@@ -104,6 +104,8 @@ Each `repo` key is a safe relative path for a child repository inside the multi-
 
 The optional `parent` property sets the base repository root used to locate child repository source folders. It accepts an absolute path or a path relative to the directory containing `gwm.json`. When omitted, the extension uses the main worktree root inferred from Git metadata, or the current worktree in a bare-repository layout. `parent` does not change which Git repository owns the multi-repository worktrees.
 
+To open the manager, open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **Worktree: Manage Multi-Repository Worktrees**.
+
 ## Configuration ⚙️
 
 Customize Git Worktree Manager to fit your workflow:
