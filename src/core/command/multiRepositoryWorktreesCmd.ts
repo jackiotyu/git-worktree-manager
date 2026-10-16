@@ -683,6 +683,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 );
                 if (!confirmation) return;
 
+                quickPick.busy = true;
                 try {
                     await vscode.window.withProgress(
                         {
@@ -697,6 +698,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     );
                     await refreshItems();
                 } catch (error) {
+                    quickPick.busy = false;
                     Alert.showErrorMessage(String(error));
                 }
             },
