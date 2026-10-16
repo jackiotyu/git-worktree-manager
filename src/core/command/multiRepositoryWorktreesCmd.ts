@@ -5,11 +5,12 @@ import { execAuto } from '@/core/git/exec';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
 import { pathExists } from '@/core/util/fs';
-import { resolveSafeRelativePath } from '@/core/util/path';
-import { hasGitMetadata } from '@/core/util/repo';
+import { resolveSafeRelativePath, toSimplePath } from '@/core/util/path';
+import { hasGitMetadata, isGitRepository } from '@/core/util/repo';
 import { loadConfig } from '@/core/util/workspaceConfig';
 import type { RepoEntry } from '@/types';
 import {
+    hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
