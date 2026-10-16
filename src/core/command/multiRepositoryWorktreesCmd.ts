@@ -124,7 +124,7 @@ async function addBranchWorktree(repoPath: string, targetPath: string, branch: s
 
     const remoteBranches = (await execAuto(repoPath, [
         'for-each-ref', '--format=%(refname:short)', 'refs/remotes',
-    ])).stdout.split(/\\r?\\n/).filter((ref) => ref.endsWith(`/${branch}`) && !ref.endsWith('/HEAD'));
+    ])).stdout.split(/\r?\n/).filter((ref) => ref.endsWith(`/${branch}`) && !ref.endsWith('/HEAD'));
 
     if (remoteBranches.length === 1) {
         await execAuto(repoPath, ['worktree', 'add', '--track', '-b', branch, targetPath, remoteBranches[0]]);
@@ -257,7 +257,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
     try {
         const mainRepo = await getMainFolder(root);
         if (!mainRepo) throw new Error('Unable to resolve the main repository.');
-        await loadConfig(root, mainRepo);
+        const { repos } = await loadConfig(root, mainRepo);
         if (action.value === 'create') {
             const branch = await vscode.window.showInputBox({
                 title: vscode.l10n.t('Create worktrees'),
@@ -274,7 +274,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             return;
         }
 
-        const { mainRepo, entries } = await getMultiRepositoryWorktrees(root);
+        const { entries } = await getMultiRepositoryWorktrees(root);
         if (!entries.length) {
             void vscode.window.showInformationMessage(vscode.l10n.t('No multi-repository worktrees found'));
             return;
