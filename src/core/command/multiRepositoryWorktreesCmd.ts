@@ -108,7 +108,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
 export async function createMultiRepositoryWorktreeCmd(): Promise<void> {
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root) {
-        void vscode.window.showErrorMessage(vscode.l10n.t('Open a folder containing workspace.json first'));
+        void vscode.window.showErrorMessage(vscode.l10n.t('Open a folder containing gwm.json first'));
         return;
     }
     try {
@@ -121,7 +121,7 @@ export async function createMultiRepositoryWorktreeCmd(): Promise<void> {
 export async function multiRepositoryWorktreesCmd(): Promise<void> {
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root) {
-        void vscode.window.showErrorMessage(vscode.l10n.t('Open a folder containing workspace.json first'));
+        void vscode.window.showErrorMessage(vscode.l10n.t('Open a folder containing gwm.json first'));
         return;
     }
 

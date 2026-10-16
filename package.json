@@ -49,7 +49,7 @@
   "contributes": {
     "jsonValidation": [
       {
-        "fileMatch": "workspace.json",
+        "fileMatch": "gwm.json",
         "url": "./schemas/workspace.schema.json"
       }
     ],

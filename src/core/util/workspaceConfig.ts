@@ -11,7 +11,7 @@ import {
     resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 
-const configFileName = 'workspace.json';
+const configFileName = 'gwm.json';
 
 let validateWorkspaceConfigPromise: Promise<import('ajv').ValidateFunction<WorkspaceConfig>> | undefined;
 
@@ -36,14 +36,14 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
     try {
         raw = await fs.readFile(configPath, 'utf8');
     } catch {
-        throw new Error(vscode.l10n.t('workspace.json was not found in the workspace root'));
+        throw new Error(vscode.l10n.t('gwm.json was not found in the workspace root'));
     }
 
     let parsedConfig: unknown;
     try {
         parsedConfig = JSON.parse(raw);
     } catch (error) {
-        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
+        throw new Error(vscode.l10n.t('Invalid gwm.json: {0}', String(error)));
     }
 
     const validateWorkspaceConfig = await getWorkspaceConfigValidator();
@@ -51,7 +51,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
         const details = (validateWorkspaceConfig.errors ?? [])
             .map((error) => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)
             .join('; ');
-        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', details));
+        throw new Error(vscode.l10n.t('Invalid gwm.json: {0}', details));
     }
     const config = parsedConfig as WorkspaceConfig;
     const parentPath = config.parent?.trim() ?? '';
@@ -68,7 +68,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
         if (seenPaths.has(normalized)) {
             throw new Error(
                 vscode.l10n.t(
-                    'Invalid workspace.json: {0}',
+                    'Invalid gwm.json: {0}',
                     vscode.l10n.t('Duplicate repository path: {0}', relativePath),
                 ),
             );
@@ -84,7 +84,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
         if (!isPathWithinRoot(canonicalRoot, normalizedCanonicalPaths[i])) {
             throw new Error(
                 vscode.l10n.t(
-                    'Invalid workspace.json: {0}',
+                    'Invalid gwm.json: {0}',
                     vscode.l10n.t(
                         'Repository path resolves outside the configured parent root: {0}',
                         repos[i].relativePath,
@@ -99,7 +99,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
             if (normalizedCanonicalPaths[i] === normalizedCanonicalPaths[j]) {
                 throw new Error(
                     vscode.l10n.t(
-                        'Invalid workspace.json: {0}',
+                        'Invalid gwm.json: {0}',
                         vscode.l10n.t('Duplicate repository path: {0}', second.relativePath),
                     ),
                 );
@@ -110,7 +110,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
             ) {
                 throw new Error(
                     vscode.l10n.t(
-                        'Invalid workspace.json: {0}',
+                        'Invalid gwm.json: {0}',
                         vscode.l10n.t(
                             'Overlapping repository paths: {0} and {1}',
                             first.relativePath,

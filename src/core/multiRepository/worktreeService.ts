@@ -50,7 +50,7 @@ async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promis
 
 export async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
     if (!(await hasGitMetadata(root))) {
-        throw new Error(vscode.l10n.t('Open the repository root containing workspace.json, not a subfolder.'));
+        throw new Error(vscode.l10n.t('Open the repository root containing gwm.json, not a subfolder.'));
     }
 
     const mainRepo = await getMainWorktreeRoot(root);
