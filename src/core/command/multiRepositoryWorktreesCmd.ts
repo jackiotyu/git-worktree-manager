@@ -114,7 +114,27 @@ async function isGitRepository(repoPath: string): Promise<boolean> {
 
 async function addBranchWorktree(repoPath: string, targetPath: string, branch: string): Promise<void> {
     await fs.mkdir(path.dirname(targetPath), { recursive: true });
-    await execAuto(repoPath, ['worktree', 'add', '--guess-remote', targetPath, branch]);
+
+    const localBranch = await execAuto(repoPath, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`])
+        .then(() => true, () => false);
+    if (localBranch) {
+        await execAuto(repoPath, ['worktree', 'add', targetPath, branch]);
+        return;
+    }
+
+    const remoteBranches = (await execAuto(repoPath, [
+        'for-each-ref', '--format=%(refname:short)', 'refs/remotes',
+    ])).stdout.split(/\\r?\\n/).filter((ref) => ref.endsWith(`/${branch}`) && !ref.endsWith('/HEAD'));
+
+    if (remoteBranches.length === 1) {
+        await execAuto(repoPath, ['worktree', 'add', '--track', '-b', branch, targetPath, remoteBranches[0]]);
+        return;
+    }
+    if (remoteBranches.length > 1) {
+        throw new Error(`Branch "${branch}" matches multiple remote branches in ${repoPath}; specify a unique branch name.`);
+    }
+
+    await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath]);
 }
 
 async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
@@ -131,7 +151,12 @@ async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
 async function createMultiRepositoryWorktree(root: string, branch: string): Promise<string> {
     const { repos } = await loadConfig(root);
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
-    if (path.resolve(workspaceRepoRoot) !== path.resolve(root)) {
+    const normalizedRoot = path.resolve(root);
+    const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
+    const isRoot = process.platform === 'win32'
+        ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
+        : normalizedRoot === normalizedRepoRoot;
+    if (!isRoot) {
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
     const mainRepo = await getMainFolder(root);
