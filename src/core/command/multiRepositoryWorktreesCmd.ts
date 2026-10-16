@@ -557,14 +557,13 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
         showMultiRepositoryWorktreesQuickPick({
             entries,
             refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
-            onCreate: async (quickPick) => {
-                quickPick.hide();
+            onCreate: async () => {
                 try {
                     await createMultiRepositoryWorktreeFromWorkspace(root);
-                    await multiRepositoryWorktreesCmd();
                 } catch (error) {
                     Alert.showErrorMessage(String(error));
                 }
+                await multiRepositoryWorktreesCmd();
             },
             onAccept: async (selected, quickPick) => {
                 quickPick.hide();
