@@ -11,21 +11,23 @@ export async function pickRepositories(
     repos: RepositoryQuickPickItem[],
     options: { title: string; placeHolder: string; canSelectMany: boolean },
 ): Promise<RepositoryQuickPickItem[] | undefined> {
-    const selected = await vscode.window.showQuickPick(
-        repos.map((repo) => ({
-            label: repo.name,
-            description: repo.relativePath,
-            detail: repo.remote,
-            repo,
-        })),
-        {
-            title: options.title,
-            placeHolder: options.placeHolder,
-            canPickMany: options.canSelectMany,
-            ignoreFocusOut: true,
-        },
-    );
-    return selected?.map((item) => item.repo);
+    const items = repos.map((repo) => ({
+        label: repo.name,
+        description: repo.relativePath,
+        detail: repo.remote,
+        repo,
+    }));
+    const pickOptions = {
+        title: options.title,
+        placeHolder: options.placeHolder,
+        ignoreFocusOut: true,
+    };
+    if (options.canSelectMany) {
+        const selected = await vscode.window.showQuickPick(items, { ...pickOptions, canPickMany: true });
+        return selected?.map((item) => item.repo);
+    }
+    const selected = await vscode.window.showQuickPick(items, { ...pickOptions, canPickMany: false });
+    return selected ? [selected.repo] : undefined;
 }
 
 async function pickRepositoriesWithBackButton(
