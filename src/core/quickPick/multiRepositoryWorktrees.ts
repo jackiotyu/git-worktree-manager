@@ -74,7 +74,9 @@ export function showMultiRepositoryWorktreesQuickPick(
     quickPick.placeholder = vscode.l10n.t('Select a worktree to open in a new window');
     quickPick.matchOnDescription = true;
     quickPick.matchOnDetail = true;
-    quickPick.items = options.entries.map((entry) => createMultiRepositoryWorktreePickItem(entry, options.currentWorktreePath));
+    quickPick.items = options.entries.map((entry) =>
+        createMultiRepositoryWorktreePickItem(entry, options.currentWorktreePath),
+    );
 
     const disposables: vscode.Disposable[] = [];
     let isDisposed = false;
@@ -87,7 +89,9 @@ export function showMultiRepositoryWorktreesQuickPick(
         try {
             const entries = await options.refreshEntries();
             if (!isDisposed) {
-                quickPick.items = entries.map((entry) => createMultiRepositoryWorktreePickItem(entry, options.currentWorktreePath));
+                quickPick.items = entries.map((entry) =>
+                    createMultiRepositoryWorktreePickItem(entry, options.currentWorktreePath),
+                );
             }
         } catch (error) {
             if (!isDisposed) {
