@@ -8,9 +8,8 @@ import { getWorktrees } from '@/core/git/getWorktrees';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 import { pathExists } from '@/core/util/fs';
 import { resolveSafeRelativePath } from '@/core/util/path';
-import { isGitRepository } from '@/core/util/repo';
+import { isGitRepository, isGitRepositoryPresent } from '@/core/util/repo';
 import {
-    getRegisteredWorktreePaths,
     hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
     isNestedPath,
@@ -277,28 +276,13 @@ async function getMultiRepositoryWorktrees(
 ): Promise<{ mainRepo: string; repos: RepoEntry[]; entries: MultiRepositoryWorktreeEntry[] }> {
     const { mainRepo, repos } = await getWorkspaceContext(root);
     const worktrees = await getWorktrees(mainRepo);
-    const registeredWorktrees = await Promise.all(
-        repos.map(async (repo) => {
-            if (!(await isConfiguredRepository(repo))) return new Set<string>();
-            try {
-                return await getRegisteredWorktreePaths(repo.sourcePath);
-            } catch {
-                return new Set<string>();
-            }
-        }),
-    );
     const result = await Promise.all(
         worktrees.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => {
             const isMain = normalizeRepositoryPath(entry.path) === normalizeRepositoryPath(mainRepo);
             const repoStatuses = await Promise.all(
-                repos.map(async (repo, index) => {
-                    if (isMain) return isConfiguredRepository(repo);
-                    const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
-                    return (
-                        registeredWorktrees[index].has(normalizeRepositoryPath(childPath)) &&
-                        (await pathExists(childPath)) &&
-                        (await isGitRepository(childPath))
-                    );
+                repos.map((repo) => {
+                    const repoPath = isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath);
+                    return isGitRepositoryPresent(repoPath);
                 }),
             );
             return {

@@ -19,11 +19,23 @@ export async function isRegisteredWorktree(repoPath: string, targetPath: string)
 }
 
 async function getMarkerPath(worktreePath: string): Promise<string> {
-    const { stdout } = await execAuto(worktreePath, ['rev-parse', '--absolute-git-dir']);
-    const gitDir = stdout.trim();
-    if (!path.isAbsolute(gitDir)) {
-        throw new Error(`Git returned a non-absolute git directory for worktree: ${worktreePath}`);
+    const gitEntry = path.join(worktreePath, '.git');
+    const entryStat = await fs.stat(gitEntry);
+    let gitDir: string;
+
+    if (entryStat.isDirectory()) {
+        gitDir = gitEntry;
+    } else if (entryStat.isFile()) {
+        const content = await fs.readFile(gitEntry, 'utf8');
+        const match = /^gitdir:\s*(.+)\s*$/im.exec(content);
+        if (!match) throw new Error(`Invalid .git file: ${gitEntry}`);
+        gitDir = path.resolve(worktreePath, match[1].trim());
+        const gitDirStat = await fs.stat(gitDir);
+        if (!gitDirStat.isDirectory()) throw new Error(`Git directory is not a directory: ${gitDir}`);
+    } else {
+        throw new Error(`Invalid Git metadata entry: ${gitEntry}`);
     }
+
     return path.join(gitDir, markerFileName);
 }
 
