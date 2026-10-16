@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, rs } from '@rstest/core';
-import fs from 'fs/promises';
 import path from 'path';
 import { loadConfig } from '../../core/util/workspaceConfig';
 
