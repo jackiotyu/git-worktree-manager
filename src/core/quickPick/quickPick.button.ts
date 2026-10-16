@@ -214,3 +214,7 @@ export const viewChildRepositoriesQuickInputButton = new QuickInputButton({
     iconPath: new vscode.ThemeIcon('list-tree'),
     tooltip: vscode.l10n.t('View Child Repositories'),
 });
+export const switchMultiRepositoryBranchQuickInputButton = new QuickInputButton({
+    iconPath: new vscode.ThemeIcon('git-branch'),
+    tooltip: vscode.l10n.t('Switch Branch Across Repositories'),
+});
