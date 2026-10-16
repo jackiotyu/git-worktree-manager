@@ -68,8 +68,9 @@ export function resolveSafeRelativePath(root: string, relativePath: string): str
     ) {
         throw new Error(`Path must be a safe relative path: ${relativePath}`);
     }
-    const resolved = path.resolve(root, relativePath);
-    const relative = path.relative(root, resolved);
+    const resolvedRoot = path.resolve(root);
+    const resolved = path.resolve(resolvedRoot, relativePath);
+    const relative = path.relative(resolvedRoot, resolved);
     if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
         throw new Error(`Path escapes the root directory: ${relativePath}`);
     }
