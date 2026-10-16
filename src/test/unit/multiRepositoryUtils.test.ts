@@ -10,19 +10,20 @@ rs.mock('@/core/git/getWorktreeTopLevel', () => ({
     getWorktreeTopLevel: rs.fn(),
 }));
 
-let tempRoot = '';
+let fsTempRoot = '';
+let repoTempRoot = '';
 
 describe('pathExists', () => {
     beforeEach(async () => {
-        tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'gwm-fs-'));
+        fsTempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'gwm-fs-'));
     });
 
     afterEach(async () => {
-        await fs.rm(tempRoot, { recursive: true, force: true });
+        await fs.rm(fsTempRoot, { recursive: true, force: true });
     });
 
     it('returns true for existing files and directories', async () => {
-        const directory = path.join(tempRoot, 'repo');
+        const directory = path.join(fsTempRoot, 'repo');
         const file = path.join(directory, 'README.md');
         await fs.mkdir(directory);
         await fs.writeFile(file, 'test');
@@ -32,22 +33,22 @@ describe('pathExists', () => {
     });
 
     it('returns false for missing paths', async () => {
-        expect(await pathExists(path.join(tempRoot, 'missing'))).toBe(false);
+        expect(await pathExists(path.join(fsTempRoot, 'missing'))).toBe(false);
     });
 });
 
 describe('Git repository metadata utilities', () => {
     beforeEach(async () => {
         rs.clearAllMocks();
-        tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'gwm-repo-'));
+        repoTempRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'gwm-repo-'));
     });
 
     afterEach(async () => {
-        await fs.rm(tempRoot, { recursive: true, force: true });
+        await fs.rm(repoTempRoot, { recursive: true, force: true });
     });
 
     it('recognizes a repository with a .git directory and HEAD file', async () => {
-        const repo = path.join(tempRoot, 'repo');
+        const repo = path.join(repoTempRoot, 'repo');
         const gitDir = path.join(repo, '.git');
         await fs.mkdir(gitDir, { recursive: true });
         await fs.writeFile(path.join(gitDir, 'HEAD'), 'ref: refs/heads/main\n');
@@ -57,7 +58,7 @@ describe('Git repository metadata utilities', () => {
     });
 
     it('rejects incomplete .git directories', async () => {
-        const repo = path.join(tempRoot, 'repo');
+        const repo = path.join(repoTempRoot, 'repo');
         await fs.mkdir(path.join(repo, '.git'), { recursive: true });
 
         expect(await hasGitMetadata(repo)).toBe(false);
@@ -65,8 +66,8 @@ describe('Git repository metadata utilities', () => {
     });
 
     it('recognizes linked worktrees whose .git file points to a git directory', async () => {
-        const worktree = path.join(tempRoot, 'worktree');
-        const gitDir = path.join(tempRoot, '.git', 'worktrees', 'worktree');
+        const worktree = path.join(repoTempRoot, 'worktree');
+        const gitDir = path.join(repoTempRoot, '.git', 'worktrees', 'worktree');
         await fs.mkdir(worktree, { recursive: true });
         await fs.mkdir(gitDir, { recursive: true });
         await fs.writeFile(path.join(gitDir, 'HEAD'), 'ref: refs/heads/feature/test\n');
@@ -77,8 +78,8 @@ describe('Git repository metadata utilities', () => {
     });
 
     it('rejects malformed or dangling .git files', async () => {
-        const malformed = path.join(tempRoot, 'malformed');
-        const dangling = path.join(tempRoot, 'dangling');
+        const malformed = path.join(repoTempRoot, 'malformed');
+        const dangling = path.join(repoTempRoot, 'dangling');
         await fs.mkdir(malformed);
         await fs.mkdir(dangling);
         await fs.writeFile(path.join(malformed, '.git'), 'not a gitdir pointer\n');
@@ -86,11 +87,11 @@ describe('Git repository metadata utilities', () => {
 
         expect(await hasGitMetadata(malformed)).toBe(false);
         expect(await hasGitMetadata(dangling)).toBe(false);
-        expect(await isGitRepositoryPresent(path.join(tempRoot, 'missing'))).toBe(false);
+        expect(await isGitRepositoryPresent(path.join(repoTempRoot, 'missing'))).toBe(false);
     });
 
     it('requires the path itself to be the Git worktree root', async () => {
-        const repo = path.join(tempRoot, 'repo');
+        const repo = path.join(repoTempRoot, 'repo');
         const nested = path.join(repo, 'src');
         await fs.mkdir(nested, { recursive: true });
         rs.mocked(topLevelModule.getWorktreeTopLevel).mockResolvedValue(repo);
@@ -102,6 +103,6 @@ describe('Git repository metadata utilities', () => {
     it('returns false when Git cannot resolve a worktree root', async () => {
         rs.mocked(topLevelModule.getWorktreeTopLevel).mockResolvedValue('');
 
-        expect(await isGitRepository(path.join(tempRoot, 'missing'))).toBe(false);
+        expect(await isGitRepository(path.join(repoTempRoot, 'missing'))).toBe(false);
     });
 });
