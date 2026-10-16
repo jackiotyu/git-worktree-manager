@@ -179,6 +179,7 @@ class WorktreeActionPicker {
             return;
         }
 
+        quickPick.busy = true;
         try {
             switch (item.action) {
                 case 'copy':
@@ -210,6 +211,7 @@ class WorktreeActionPicker {
             resolve(item);
             quickPick.hide();
         } catch (error) {
+            quickPick.busy = false;
             reject(error);
             Alert.showErrorMessage(`${error}`);
         }
