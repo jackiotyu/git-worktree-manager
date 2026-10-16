@@ -5,7 +5,17 @@ import { execAuto } from '@/core/git/exec';
 import { getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
-import { backButton } from '@/core/quickPick/quickPick.button';
+import { Commands } from '@/constants';
+import {
+    backButton,
+    openInCurrentWindowQuickInputButton,
+    openExternalTerminalQuickInputButton,
+    openTerminalQuickInputButton,
+    createMultiRepositoryWorktreeQuickInputButton,
+    removeMultiRepositoryWorktreeQuickInputButton,
+    completeRepositoriesQuickInputButton,
+    removeChildRepositoryQuickInputButton,
+} from '@/core/quickPick/quickPick.button';
 
 interface WorkspaceRepo {
     name: string;
@@ -300,30 +310,7 @@ async function getMultiRepositoryWorktrees(
     return { mainRepo, repos, entries: result.filter((entry) => entry.isMain || entry.repoStatuses.some(Boolean)) };
 }
 
-const createMultiRepositoryWorktreeButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('new-folder'),
-    tooltip: vscode.l10n.t('Create Multi-Repository Worktree'),
-};
-
-const removeWorktreeButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: vscode.l10n.t('Remove Multi-Repository Worktree'),
-};
-
-const openInCurrentWindowButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('arrow-right'),
-    tooltip: vscode.l10n.t('Open in Current Window'),
-};
-
-const completeRepositoriesButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('diff-single'),
-    tooltip: vscode.l10n.t('Complete Missing Repositories'),
-};
-
-const removeChildRepositoryButton: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('diff-removed'),
-    tooltip: vscode.l10n.t('Remove Child Repository'),
-};
+const removeWorktreeButton = removeMultiRepositoryWorktreeQuickInputButton;
 
 function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepositoryWorktreePickItem {
     const readyCount = entry.repoStatuses.filter(Boolean).length;
@@ -340,14 +327,14 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
               )
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
-        buttons: entry.isMain
-            ? [completeRepositoriesButton, removeChildRepositoryButton, openInCurrentWindowButton]
-            : [
-                  removeWorktreeButton,
-                  completeRepositoriesButton,
-                  removeChildRepositoryButton,
-                  openInCurrentWindowButton,
-              ],
+        buttons: [
+            ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
+            ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
+            ...(entry.isMain ? [] : [removeWorktreeButton]),
+            completeRepositoriesQuickInputButton,
+            removeChildRepositoryQuickInputButton,
+            openInCurrentWindowQuickInputButton,
+        ],
     };
 }
 
@@ -529,7 +516,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
 
         const quickPick = vscode.window.createQuickPick<MultiRepositoryWorktreePickItem>();
         quickPick.title = vscode.l10n.t('Multi-Repository Worktrees');
-        quickPick.buttons = [createMultiRepositoryWorktreeButton];
+        quickPick.buttons = [createMultiRepositoryWorktreeQuickInputButton];
         quickPick.placeholder = vscode.l10n.t('Select a worktree to open in a new window');
         quickPick.matchOnDescription = true;
         quickPick.matchOnDetail = true;
@@ -543,7 +530,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
 
         disposables.push(
             quickPick.onDidTriggerButton(async (button) => {
-                if (button !== createMultiRepositoryWorktreeButton) return;
+                if (button !== createMultiRepositoryWorktreeQuickInputButton) return;
                 quickPick.hide();
                 try {
                     await createMultiRepositoryWorktreeFromWorkspace(root);
@@ -561,7 +548,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 });
             }),
             quickPick.onDidTriggerItemButton(async (event) => {
-                if (event.button === completeRepositoriesButton) {
+                if (event.button === completeRepositoriesQuickInputButton) {
                     const missingRepos = repos.filter((_, index) => !event.item.entry.repoStatuses[index]);
                     if (!missingRepos.length) return;
                     quickPick.hide();
@@ -596,7 +583,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     }
                     return;
                 }
-                if (event.button === removeChildRepositoryButton) {
+                if (event.button === removeChildRepositoryQuickInputButton) {
                     const generatedRepos = repos.filter((_, index) => event.item.entry.repoStatuses[index]);
                     if (!generatedRepos.length) return;
                     quickPick.hide();
@@ -639,7 +626,23 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     }
                     return;
                 }
-                if (event.button === openInCurrentWindowButton) {
+                if (
+                    event.button === openExternalTerminalQuickInputButton ||
+                    event.button === openTerminalQuickInputButton
+                ) {
+                    const item = {
+                        name: event.item.entry.branch,
+                        fsPath: event.item.entry.path,
+                        uriPath: vscode.Uri.file(event.item.entry.path).toString(),
+                    };
+                    const command =
+                        event.button === openExternalTerminalQuickInputButton
+                            ? Commands.openExternalTerminalContext
+                            : Commands.openTerminal;
+                    await vscode.commands.executeCommand(command, item);
+                    return;
+                }
+                if (event.button === openInCurrentWindowQuickInputButton) {
                     quickPick.hide();
                     await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(event.item.entry.path), {
                         forceNewWindow: false,
