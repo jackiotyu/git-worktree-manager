@@ -5,7 +5,9 @@ import { execAuto } from '@/core/git/exec';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import { getWorktrees } from '@/core/git/getWorktrees';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
-import { pathExists, resolveRepoPath, isGitRepository, isGitRepositoryPresent } from '@/core/util/multiRepositoryWorktree';
+import { pathExists } from '@/core/util/fs';
+import { resolveSafeRelativePath } from '@/core/util/path';
+import { isGitRepository, isGitRepositoryPresent } from '@/core/util/repo';
 import { getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
@@ -86,7 +88,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         ) {
             throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `invalid repo entry: ${relativePath}`));
         }
-        const sourcePath = resolveRepoPath(sourceRoot, relativePath);
+        const sourcePath = resolveSafeRelativePath(sourceRoot, relativePath);
         const normalized = process.platform === 'win32' ? sourcePath.toLowerCase() : sourcePath;
         if (seenPaths.has(normalized)) {
             throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `duplicate path: ${relativePath}`));
@@ -167,7 +169,7 @@ async function createMultiRepositoryWorktree(
             } else if (!(await isGitRepository(repo.sourcePath))) {
                 throw new Error(`Configured path exists but is not a Git repository: ${repo.relativePath}`);
             }
-            const targetPath = resolveRepoPath(targetRoot, repo.relativePath);
+            const targetPath = resolveSafeRelativePath(targetRoot, repo.relativePath);
             if (await pathExists(targetPath)) {
                 throw new Error(`Target path already exists: ${targetPath}`);
             }
@@ -215,7 +217,7 @@ async function getMultiRepositoryWorktrees(
                 repoStatuses: await Promise.all(
                     repos.map((repo) =>
                         isGitRepositoryPresent(
-                            isMain ? repo.sourcePath : resolveRepoPath(entry.path, repo.relativePath),
+                            isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath),
                         ),
                     ),
                 ),
@@ -291,7 +293,7 @@ async function completeMultiRepositoryWorktree(
                 throw new Error(`Configured path exists but is not a Git repository: ${repo.relativePath}`);
             }
 
-            const targetPath = resolveRepoPath(entry.path, repo.relativePath);
+            const targetPath = resolveSafeRelativePath(entry.path, repo.relativePath);
             if (await pathExists(targetPath)) {
                 throw new Error(`Target path already exists: ${targetPath}`);
             }
@@ -325,7 +327,7 @@ async function removeMultiRepositoryWorktree(
         throw new Error('The main worktree cannot be removed.');
     }
     for (const repo of repos) {
-        const childPath = resolveRepoPath(entry.path, repo.relativePath);
+        const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
         if (await isGitRepository(childPath)) {
             await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
         }
@@ -341,7 +343,7 @@ async function removeChildRepositoryWorktree(
     const repo = repos.find((item) => item.relativePath === relativePath);
     if (!repo) throw new Error(`Repository is not configured: ${relativePath}`);
 
-    const childPath = resolveRepoPath(entry.path, repo.relativePath);
+    const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
     if (!(await isGitRepository(childPath))) {
         throw new Error(`No generated worktree found for repository: ${repo.relativePath}`);
     }
