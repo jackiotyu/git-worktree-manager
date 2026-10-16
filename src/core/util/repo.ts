@@ -32,6 +32,3 @@ export async function isGitRepository(repoPath: string): Promise<boolean> {
     return process.platform === 'win32' ? resolvedRoot.toLowerCase() === target.toLowerCase() : resolvedRoot === target;
 }
 
-export async function isGitRepositoryPresent(repoPath: string): Promise<boolean> {
-    return hasGitMetadata(repoPath);
-}
