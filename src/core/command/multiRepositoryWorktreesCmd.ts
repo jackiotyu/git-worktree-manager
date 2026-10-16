@@ -18,7 +18,7 @@ import {
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
     normalizeRepositoryPath,
-    normalizeWorktreePath,
+    normalizeRepositoryPath,
     resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 import { Alert } from '@/core/ui/message';
@@ -290,13 +290,13 @@ async function getMultiRepositoryWorktrees(
     );
     const result = await Promise.all(
         worktrees.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => {
-            const isMain = normalizeWorktreePath(entry.path) === normalizeWorktreePath(mainRepo);
+            const isMain = normalizeRepositoryPath(entry.path) === normalizeRepositoryPath(mainRepo);
             const repoStatuses = await Promise.all(
                 repos.map(async (repo, index) => {
                     if (isMain) return isConfiguredRepository(repo);
                     const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
                     return (
-                        registeredWorktrees[index].has(normalizeWorktreePath(childPath)) &&
+                        registeredWorktrees[index].has(normalizeRepositoryPath(childPath)) &&
                         (await pathExists(childPath)) &&
                         (await isGitRepository(childPath))
                     );
