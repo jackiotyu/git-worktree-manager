@@ -500,11 +500,14 @@ class ActionService implements IActionService {
                 e === 'global.favorite' && this.updateList();
                 if (e === 'workTreeCache') {
                     this.updateList();
-                    this.quickPick.busy = false;
+                    if (this.displayAll) this.quickPick.busy = false;
                 }
             }),
             workspaceStateEvent.event((e) => {
-                e === 'workTreeCache' && this.updateList();
+                if (e === 'workTreeCache') {
+                    this.updateList();
+                    if (this.displayType === DefaultDisplayList.workspace) this.quickPick.busy = false;
+                }
             }),
         );
     }
