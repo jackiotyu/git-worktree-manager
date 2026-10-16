@@ -4,6 +4,7 @@ import path from 'path';
 import { addBranchWorktree } from '@/core/git/addBranchWorktree';
 import * as execModule from '@/core/git/exec';
 import * as addWorktreeModule from '@/core/git/addWorktree';
+import * as multiRepositoryWorktreeModule from '@/core/util/multiRepositoryWorktree';
 
 rs.mock('@/core/git/exec', () => ({
     execAuto: rs.fn(),
@@ -13,12 +14,17 @@ rs.mock('@/core/git/addWorktree', () => ({
     addWorktreeRaw: rs.fn(),
 }));
 
+rs.mock('@/core/util/multiRepositoryWorktree', () => ({
+    isRegisteredWorktree: rs.fn(),
+}));
+
 const result = (stdout = '') => ({ stdout, stderr: '', code: 0 });
 
 describe('addBranchWorktree', () => {
     beforeEach(() => {
         rs.clearAllMocks();
         rs.mocked(addWorktreeModule.addWorktreeRaw).mockResolvedValue(undefined);
+        rs.mocked(multiRepositoryWorktreeModule.isRegisteredWorktree).mockResolvedValue(false);
     });
 
     it('adds an existing local branch as a worktree', async () => {
@@ -75,15 +81,13 @@ describe('addBranchWorktree', () => {
         const targetPath = path.join(os.tmpdir(), `gwm-partial-worktree-${process.pid}-missing`);
         rs.mocked(execModule.execAuto)
             .mockResolvedValueOnce(result())
-            .mockResolvedValueOnce(result())
-            .mockResolvedValueOnce(result(`worktree ${targetPath}\nHEAD abc\n`))
             .mockResolvedValueOnce(result());
+        rs.mocked(multiRepositoryWorktreeModule.isRegisteredWorktree).mockResolvedValueOnce(true);
         rs.mocked(addWorktreeModule.addWorktreeRaw).mockRejectedValueOnce(new Error('checkout failed'));
 
         await expect(addBranchWorktree('/repos/main', targetPath, 'feature')).rejects.toThrow('checkout failed');
 
-        expect(execModule.execAuto).toHaveBeenNthCalledWith(3, '/repos/main', ['worktree', 'list', '--porcelain']);
-        expect(execModule.execAuto).toHaveBeenNthCalledWith(4, '/repos/main', [
+        expect(execModule.execAuto).toHaveBeenNthCalledWith(3, '/repos/main', [
             'worktree',
             'remove',
             '--force',
@@ -92,9 +96,11 @@ describe('addBranchWorktree', () => {
     });
 
     it('rejects ambiguous names matching multiple remotes', async () => {
-        rs.mocked(execModule.execAuto)
-            .mockRejectedValueOnce(new Error('no local branch'))
-            .mockResolvedValueOnce(result('origin/feature\nupstream/feature\n'));
+        rs.mocked(execModule.execAuto).mockImplementation(async (_cwd, args) => {
+            if (args?.[0] === 'show-ref') throw new Error('no local branch');
+            if (args?.[0] === 'for-each-ref') return result('origin/feature\nupstream/feature\n');
+            return result();
+        });
 
         await expect(addBranchWorktree('/repos/main', '/worktrees/feature', 'feature')).rejects.toThrow(
             'matches multiple remote branches',
