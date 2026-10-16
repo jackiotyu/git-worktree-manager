@@ -225,23 +225,25 @@ class WorktreeActionPicker {
     public static pick = async (viewItem: IWorktreeLess): Promise<QuickPickAction | void | false> => {
         const disposables: vscode.Disposable[] = [];
         const { resolve, reject, promise } = withResolvers<QuickPickAction | void | false>();
+        let quickPick: vscode.QuickPick<QuickPickAction> | undefined;
 
         try {
-            const quickPick = vscode.window.createQuickPick<QuickPickAction>();
-            quickPick.title = this.buildTitle(viewItem);
-            quickPick.placeholder = vscode.l10n.t('Please select an action');
-            quickPick.buttons = [backButton];
-            quickPick.busy = true;
+            quickPick = vscode.window.createQuickPick<QuickPickAction>();
+            const activeQuickPick = quickPick;
+            activeQuickPick.title = this.buildTitle(viewItem);
+            activeQuickPick.placeholder = vscode.l10n.t('Please select an action');
+            activeQuickPick.buttons = [backButton];
+            activeQuickPick.busy = true;
 
             disposables.push(
-                quickPick.onDidHide(() => {
+                activeQuickPick.onDidHide(() => {
                     reject();
                     disposables.forEach((d) => d.dispose());
                     disposables.length = 0;
                     quickPick.dispose();
                 }),
-                quickPick.onDidAccept(() => this.handleAccept({ quickPick, resolve, reject, viewItem })),
-                quickPick.onDidTriggerButton((event) => {
+                activeQuickPick.onDidAccept(() => this.handleAccept({ quickPick: activeQuickPick, resolve, reject, viewItem })),
+                activeQuickPick.onDidTriggerButton((event) => {
                     if (event === backButton) {
                         resolve();
                         quickPick.hide();
@@ -249,14 +251,20 @@ class WorktreeActionPicker {
                 }),
             );
 
-            quickPick.show();
+            activeQuickPick.show();
             await new Promise((r) => process.nextTick(r));
-            quickPick.items = await this.getPickActionsByWorktree(viewItem);
-            quickPick.busy = false;
+            activeQuickPick.items = await this.getPickActionsByWorktree(viewItem);
+            activeQuickPick.busy = false;
 
             return promise;
         } catch (error) {
-            reject(error);
+            if (quickPick) {
+                resolve(false);
+                quickPick.busy = false;
+                quickPick.hide();
+            } else {
+                reject(error);
+            }
             return false;
         }
     };
