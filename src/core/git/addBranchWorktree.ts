@@ -1,7 +1,12 @@
 import { execAuto } from '@/core/git/exec';
 import { addWorktreeRaw } from '@/core/git/addWorktree';
 
-export async function addBranchWorktree(repoPath: string, targetPath: string, branch: string): Promise<void> {
+export async function addBranchWorktree(
+    repoPath: string,
+    targetPath: string,
+    branch: string,
+    startPoint?: string,
+): Promise<void> {
     const localBranch = await execAuto(repoPath, ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`]).then(
         () => true,
         () => false,
@@ -23,5 +28,5 @@ export async function addBranchWorktree(repoPath: string, targetPath: string, br
         return;
     }
 
-    await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath]);
+    await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath, ...(startPoint ? [startPoint] : [])]);
 }
