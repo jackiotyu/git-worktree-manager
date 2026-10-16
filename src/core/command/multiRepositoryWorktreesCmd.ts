@@ -216,7 +216,12 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
 
 async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: string; entries: WorktreeEntry[] }> {
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
-    if (path.resolve(workspaceRepoRoot) !== path.resolve(root)) {
+    const normalizedRoot = path.resolve(root);
+    const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
+    const isRoot = process.platform === 'win32'
+        ? normalizedRoot.toLowerCase() === normalizedRepoRoot.toLowerCase()
+        : normalizedRoot === normalizedRepoRoot;
+    if (!isRoot) {
         throw new Error('Open the repository root containing workspace.json, not a subfolder.');
     }
     const mainRepo = await getMainFolder(root);
