@@ -594,11 +594,6 @@
           "when": "view === git-worktree-manager-favorite",
           "group": "navigation@90"
         },
-        {
-          "command": "git-worktree-manager.createMultiRepositoryWorktree",
-          "when": "view =~ /git-worktree-manager-list/",
-          "group": "navigation@1.5"
-        }
       ],
       "view/item/context": [
         {
