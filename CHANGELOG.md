@@ -1,3 +1,11 @@
+## v3.33.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.1...v3.33.2)
+
+### 🚀 Enhancements
+
+- Support project-level gwm.json configuration ([#77](https://github.com/jackiotyu/git-worktree-manager/pull/77))
+
 ## v3.33.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.0...v3.33.1)

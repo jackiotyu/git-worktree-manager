@@ -3,7 +3,7 @@
   "name": "git-worktree-manager",
   "displayName": "Git Worktree Manager",
   "description": "Effortless multi-workspace management and fast Git project cloning across directories.轻松管理多工作区，快速克隆 Git 项目并跨目录运行。",
-  "version": "3.33.1",
+  "version": "3.33.2",
   "packageManager": "pnpm@12.11.2",
   "engines": {
     "vscode": "^1.85.0"
@@ -49,7 +49,10 @@
   "contributes": {
     "jsonValidation": [
       {
-        "fileMatch": ["gwm.json", "**/.vscode/gwm.json"],
+        "fileMatch": [
+          "gwm.json",
+          "**/.vscode/gwm.json"
+        ],
         "url": "./schemas/workspace.schema.json"
       }
     ],
