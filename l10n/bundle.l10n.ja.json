@@ -195,7 +195,7 @@
     "Open a worktree": "ワークツリーを開く",
     "Remove a worktree": "ワークツリーを削除",
     "Enter the branch name for the multi-repository worktree": "複数リポジトリのワークツリーに使用するブランチ名を入力",
-    "gwm.json was not found in the workspace root": "ワークスペースのルートに gwm.json が見つかりません",
+    "gwm.json was not found in the workspace root or .vscode folder": "ワークスペースのルートまたは .vscode フォルダーに gwm.json が見つかりません",
     "Invalid gwm.json: {0}": "gwm.json が無効です: {0}",
     "No repositories are configured in gwm.json": "gwm.json にリポジトリが設定されていません",
     "Multi-repository worktree created: {0}": "複数リポジトリのワークツリーを作成しました: {0}",

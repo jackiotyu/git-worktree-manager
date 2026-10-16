@@ -86,7 +86,7 @@ helping you create, switch, and clean up worktrees safely while keeping your rep
 
 ## Multi-Repository Worktrees
 
-Create a `gwm.json` file in the main repository root to configure child repositories:
+Create `gwm.json` in the main repository root or `.vscode/gwm.json` for project-level configuration. If both exist, `.vscode/gwm.json` takes precedence:
 
 ```json
 {
@@ -102,7 +102,7 @@ Create a `gwm.json` file in the main repository root to configure child reposito
 
 Each `repo` key is a safe relative path for a child repository inside the multi-repository worktree. The `name` is shown in the picker. The optional `remote` is used to clone the child source repository when it is missing and to validate its configured remote when present.
 
-The optional `parent` property sets the base repository root used to locate child repository source folders. It accepts an absolute path or a path relative to the directory containing `gwm.json`. When omitted, the extension uses the main worktree root inferred from Git metadata, or the current worktree in a bare-repository layout. `parent` does not change which Git repository owns the multi-repository worktrees.
+The optional `parent` property sets the base repository root used to locate child repository source folders. It accepts an absolute path or a path relative to the directory containing the selected `gwm.json` file. When omitted, the extension uses the main worktree root inferred from Git metadata, or the current worktree in a bare-repository layout. `parent` does not change which Git repository owns the multi-repository worktrees.
 
 To open the manager, open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **Worktree: Manage Multi-Repository Worktrees**.
 
