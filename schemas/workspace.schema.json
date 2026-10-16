@@ -18,7 +18,7 @@
       "type": "string",
       "minLength": 1,
       "pattern": "\\S",
-      "description": "Optional base repository root used to locate child repository source folders; may be absolute or relative to workspace.json. Defaults to the Git main repository root."
+      "description": "Optional base repository root used to locate child repository source folders; may be absolute or relative to workspace.json. Defaults to the main worktree root inferred from Git metadata, or the current worktree in a bare-repository layout."
     },
     "repo": {
       "type": "object",
