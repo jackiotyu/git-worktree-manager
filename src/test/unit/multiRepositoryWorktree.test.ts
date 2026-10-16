@@ -57,8 +57,8 @@ describe('multi-repository worktree utilities', () => {
     it('matches equivalent HTTPS and SSH remotes', async () => {
         rs.mocked(execModule.execAuto).mockResolvedValue(
             result(
-                'origin https://github.com/JackIoTyu/Example.git (fetch)\\n' +
-                    'origin https://github.com/JackIoTyu/Example.git (push)\\n',
+                'origin https://github.com/JackIoTyu/Example.git (fetch)\n' +
+                    'origin https://github.com/JackIoTyu/Example.git (push)\n',
             ),
         );
 
