@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import type { MultiRepositoryWorktreeEntry } from '@/core/multiRepository/worktreeService';
 import {
     openInCurrentWindowQuickInputButton,
     openExternalTerminalQuickInputButton,
@@ -8,14 +9,6 @@ import {
     completeRepositoriesQuickInputButton,
     removeChildRepositoryQuickInputButton,
 } from './quickPick.button';
-
-export interface MultiRepositoryWorktreeEntry {
-    path: string;
-    branch: string;
-    isMain: boolean;
-    isMultiRepository: boolean;
-    repoStatuses: boolean[];
-}
 
 export interface MultiRepositoryWorktreePickItem extends vscode.QuickPickItem {
     entry: MultiRepositoryWorktreeEntry;
