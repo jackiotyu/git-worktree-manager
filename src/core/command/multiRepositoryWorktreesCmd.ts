@@ -79,7 +79,7 @@ function resolveRepoPath(root: string, relativePath: string): string {
     return resolved;
 }
 
-async function loadConfig(root: string, sourceRoot = root): Promise<{ config: WorkspaceConfig; repos: RepoEntry[] }> {
+async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
     const configPath = path.join(root, configFileName);
     let raw: string;
     try {
@@ -134,7 +134,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<{ config: Wo
             }
         }
     }
-    return { config, repos };
+    return repos;
 }
 
 async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; repos: RepoEntry[] }> {
@@ -151,7 +151,7 @@ async function getWorkspaceContext(root: string): Promise<{ mainRepo: string; re
 
     const mainRepo = await getMainFolder(root);
     if (!mainRepo) throw new Error('Unable to resolve the main repository.');
-    const { repos } = await loadConfig(root, mainRepo);
+    const repos = await loadConfig(root, mainRepo);
     return { mainRepo, repos };
 }
 
