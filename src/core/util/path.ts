@@ -55,9 +55,9 @@ const isSubPath = (parent: string, child: string) => {
     return !relative.startsWith(`..${path.sep}`) && relative !== '..';
 };
 
-export { toSimplePath, comparePath, findPrefixPath, isSubPath };
+export { toSimplePath, comparePath, findPrefixPath, isSubPath, resolveSafeRelativePath };
 
-export function resolveSafeRelativePath(root: string, relativePath: string): string {
+function resolveSafeRelativePath(root: string, relativePath: string): string {
     const segments = relativePath.split(/[\\/]/);
     if (
         !relativePath ||
