@@ -1,0 +1,24 @@
+README.md
+  h_efb56b9ff7aea6 103
+README.zh-CN.md
+  h_efb56b9ff7aea6 103
+schemas/workspace.schema.json
+  h_efb56b9ff7aea6 37
+src/core/multiRepository/worktreeService.ts
+  h_efb56b9ff7aea6 31-34,42-46,54
+src/core/quickPick/pickRepositories.ts
+  h_efb56b9ff7aea6 7
+src/types.ts
+  h_efb56b9ff7aea6 213,225
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2a6459c07656484b0a33bfb3503e0a5ec6fc848e",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
