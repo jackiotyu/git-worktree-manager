@@ -35,6 +35,7 @@ import {
     removeChildRepositoryQuickInputButton,
 } from '@/core/quickPick/quickPick.button';
 import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPick/pickRepositories';
+
 import {
     showMultiRepositoryWorktreesQuickPick,
     type MultiRepositoryWorktreeEntry,
@@ -63,16 +64,12 @@ const validateWorkspaceConfig = new Ajv({ allErrors: true, strict: false }).comp
 
 const configFileName = 'workspace.json';
 
-const workspaceSchema = require('../../../schemas/workspace.schema.json') as object;
-const validateWorkspaceConfig = new Ajv({ allErrors: true, strict: false }).compile<WorkspaceConfig>(workspaceSchema);
-
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
 
 function getWorktreeCacheKey(root: string): string {
     const resolved = path.resolve(root);
     return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
 }
-
 
 async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
     try {
@@ -89,9 +86,7 @@ async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promis
     }
 
     if (!(await isGitRepository(repo.sourcePath))) {
-        throw new Error(
-            vscode.l10n.t('Configured path exists but is not a Git repository: {0}', repo.relativePath),
-        );
+        throw new Error(vscode.l10n.t('Configured path exists but is not a Git repository: {0}', repo.relativePath));
     }
     if (!(await hasConfiguredRemote(repo.sourcePath, repo.remote))) {
         throw new Error(vscode.l10n.t('Configured repository remote does not match: {0}', repo.relativePath));
@@ -154,7 +149,10 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
             throw new Error(
                 vscode.l10n.t(
                     'Invalid workspace.json: {0}',
-                    vscode.l10n.t('Repository path resolves outside the configured parent root: {0}', repos[i].relativePath),
+                    vscode.l10n.t(
+                        'Repository path resolves outside the configured parent root: {0}',
+                        repos[i].relativePath,
+                    ),
                 ),
             );
         }
@@ -382,9 +380,7 @@ async function getWorktreeChanges(worktreePath: string, ignoredChildPaths: strin
         .filter((change) => {
             if (change.status !== '??') return true;
             const filePath = path.posix.normalize(change.filePath).replace(/\/+$/, '');
-            return !ignoredPaths.some(
-                (childPath) => filePath === childPath || filePath.startsWith(childPath + '/'),
-            );
+            return !ignoredPaths.some((childPath) => filePath === childPath || filePath.startsWith(`${childPath}/`));
         });
 }
 
@@ -415,14 +411,19 @@ async function removeMultiRepositoryWorktree(
             continue;
         }
         if (exists) {
-            throw new Error(vscode.l10n.t('Path exists but is not a worktree of the configured repository: {0}', repo.relativePath));
+            throw new Error(
+                vscode.l10n.t('Path exists but is not a worktree of the configured repository: {0}', repo.relativePath),
+            );
         }
     }
 
     for (const child of children) {
         await assertWorktreeClean(child.path);
     }
-    await assertWorktreeClean(entry.path, children.map((child) => child.repo.relativePath));
+    await assertWorktreeClean(
+        entry.path,
+        children.map((child) => child.repo.relativePath),
+    );
 
     const removed: string[] = [];
     let removing = '';
@@ -458,10 +459,7 @@ async function removeChildRepositoryWorktree(
     if (!repo) throw new Error(`Repository is not configured: ${relativePath}`);
 
     const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
-    if (
-        !(await isConfiguredRepository(repo)) ||
-        !(await isRegisteredWorktree(repo.sourcePath, childPath))
-    ) {
+    if (!(await isConfiguredRepository(repo)) || !(await isRegisteredWorktree(repo.sourcePath, childPath))) {
         throw new Error(`No generated worktree found for repository: ${repo.relativePath}`);
     }
     await assertWorktreeClean(childPath);

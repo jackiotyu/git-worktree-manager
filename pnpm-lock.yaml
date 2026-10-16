@@ -170,6 +170,9 @@ importers:
 
   .:
     dependencies:
+      ajv:
+        specifier: ^8.20.0
+        version: 8.20.0
       dayjs:
         specifier: ^1.11.23
         version: 1.11.23
