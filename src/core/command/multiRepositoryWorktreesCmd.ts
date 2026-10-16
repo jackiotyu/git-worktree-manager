@@ -413,13 +413,6 @@ async function removeMultiRepositoryWorktree(
         const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
         if (!(await pathExists(childPath))) continue;
 
-        const registered =
-            (await isConfiguredRepository(repo)) && (await isRegisteredWorktree(repo.sourcePath, childPath));
-        if (!registered) {
-            throw new Error(
-                vscode.l10n.t('Path exists but is not a worktree of the configured repository: {0}', repo.relativePath),
-            );
-        }
         children.push({ repo, path: childPath });
     }
 
