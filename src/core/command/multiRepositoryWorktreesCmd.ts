@@ -62,7 +62,9 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
     }
     if (config?.version !== 1 || !config.repo || typeof config.repo !== 'object' || Array.isArray(config.repo)) {
-        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Expected version 1 and a repo object')));
+        throw new Error(
+            vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Expected version 1 and a repo object')),
+        );
     }
 
     const repos: RepoEntry[] = [];
@@ -75,12 +77,22 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
             typeof value.remote !== 'string' ||
             !value.remote.trim()
         ) {
-            throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Invalid repository entry: {0}', relativePath)));
+            throw new Error(
+                vscode.l10n.t(
+                    'Invalid workspace.json: {0}',
+                    vscode.l10n.t('Invalid repository entry: {0}', relativePath),
+                ),
+            );
         }
         const sourcePath = resolveSafeRelativePath(sourceRoot, relativePath);
         const normalized = process.platform === 'win32' ? sourcePath.toLowerCase() : sourcePath;
         if (seenPaths.has(normalized)) {
-            throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Duplicate repository path: {0}', relativePath)));
+            throw new Error(
+                vscode.l10n.t(
+                    'Invalid workspace.json: {0}',
+                    vscode.l10n.t('Duplicate repository path: {0}', relativePath),
+                ),
+            );
         }
         seenPaths.add(normalized);
         repos.push({ relativePath, name: value.name, remote: value.remote, sourcePath });
@@ -95,7 +107,11 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
                 throw new Error(
                     vscode.l10n.t(
                         'Invalid workspace.json: {0}',
-                        vscode.l10n.t('Overlapping repository paths: {0} and {1}', repo.relativePath, other.relativePath),
+                        vscode.l10n.t(
+                            'Overlapping repository paths: {0} and {1}',
+                            repo.relativePath,
+                            other.relativePath,
+                        ),
                     ),
                 );
             }
@@ -309,7 +325,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
         });
 
     let selectedBranch = await pickBranchStep();
-    while (selectedBranch?.branch) {
+    while (selectedBranch && selectedBranch?.branch) {
         const branch = (
             selectedBranch.remote
                 ? selectedBranch.branch.slice(selectedBranch.branch.indexOf('/') + 1)
@@ -345,14 +361,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
                 title: vscode.l10n.t('Creating multi-repository worktree'),
                 cancellable: false,
             },
-            () =>
-                createMultiRepositoryWorktree(
-                    root,
-                    branch,
-                    selectedRepoPaths,
-                    targetRoot,
-                    selectedBranch.startPoint,
-                ),
+            () => createMultiRepositoryWorktree(root, branch, selectedRepoPaths, targetRoot, selectedBranch.startPoint),
         );
         if (target) {
             void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));
@@ -383,7 +392,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
     try {
         const { mainRepo, repos, entries } = await getMultiRepositoryWorktrees(root);
 
-        const quickPick = showMultiRepositoryWorktreesQuickPick({
+        showMultiRepositoryWorktreesQuickPick({
             entries,
             refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
             onCreate: async (quickPick) => {
