@@ -204,7 +204,7 @@ async function getMainWorktreeRootFromMetadata(root: string): Promise<string> {
     if (!stat.isFile()) return '';
 
     const content = await fs.readFile(gitEntry, 'utf8');
-    const match = /^gitdir:\\s*(.+)\\s*$/im.exec(content);
+    const match = /^gitdir:\s*(.+)\s*$/im.exec(content);
     if (!match) return '';
 
     const gitDir = path.resolve(root, match[1].trim());
