@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import path from 'path';
-import { toSimplePath } from '@/core/util/path';
+import { normalizeRepositoryPath } from '@/core/util/multiRepositoryWorktree';
 import { Alert } from '@/core/ui/message';
 import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
 import { pickBranch } from '@/core/quickPick/pickBranch';
@@ -27,10 +26,6 @@ import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPi
 import { showMultiRepositoryWorktreesQuickPick } from '@/core/quickPick/multiRepositoryWorktrees';
 
 const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
-
-function getWorktreeCacheKey(root: string): string {
-    return toSimplePath(path.resolve(root));
-}
 
 async function openWorktreeTerminal(
     entry: MultiRepositoryWorktreeEntry,
@@ -131,7 +126,7 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
     }
 
     let state: Awaited<ReturnType<typeof getMultiRepositoryWorktrees>> | undefined;
-    const cacheKey = getWorktreeCacheKey(root);
+    const cacheKey = normalizeRepositoryPath(root);
     const loadState = async () => {
         state = await getMultiRepositoryWorktrees(root);
         multiRepositoryWorktreeCache.set(cacheKey, state.entries);
