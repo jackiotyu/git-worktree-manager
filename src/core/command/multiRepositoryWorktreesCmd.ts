@@ -17,12 +17,16 @@ import {
     openInCurrentWindowQuickInputButton,
     openExternalTerminalQuickInputButton,
     openTerminalQuickInputButton,
-    createMultiRepositoryWorktreeQuickInputButton,
     removeMultiRepositoryWorktreeQuickInputButton,
     completeRepositoriesQuickInputButton,
     removeChildRepositoryQuickInputButton,
 } from '@/core/quickPick/quickPick.button';
 import { pickRepositories, pickRepositoriesWithBackButton } from '@/core/quickPick/pickRepositories';
+import {
+    showMultiRepositoryWorktreesQuickPick,
+    type MultiRepositoryWorktreeEntry,
+    type MultiRepositoryWorktreePickItem,
+} from '@/core/quickPick/multiRepositoryWorktrees';
 
 interface WorkspaceRepo {
     name: string;
@@ -44,16 +48,6 @@ interface RepoEntry {
 interface WorktreeEntry {
     path: string;
     branch: string;
-}
-
-interface MultiRepositoryWorktreeEntry extends WorktreeEntry {
-    isMain: boolean;
-    repoStatuses: boolean[];
-}
-
-interface MultiRepositoryWorktreePickItem extends vscode.QuickPickItem {
-    entry: MultiRepositoryWorktreeEntry;
-    buttons: vscode.QuickInputButton[];
 }
 
 const configFileName = 'workspace.json';
@@ -220,32 +214,6 @@ async function getMultiRepositoryWorktrees(
     return { mainRepo, repos, entries: result.filter((entry) => entry.isMain || entry.repoStatuses.some(Boolean)) };
 }
 
-function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepositoryWorktreePickItem {
-    const readyCount = entry.repoStatuses.filter(Boolean).length;
-    const missingCount = entry.repoStatuses.length - readyCount;
-    return {
-        label: entry.branch,
-        description: entry.path,
-        detail: missingCount
-            ? vscode.l10n.t(
-                  '{0}/{1} repositories ready · {2} missing',
-                  readyCount,
-                  entry.repoStatuses.length,
-                  missingCount,
-              )
-            : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
-        entry,
-        buttons: [
-            ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
-            ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
-            ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
-            completeRepositoriesQuickInputButton,
-            removeChildRepositoryQuickInputButton,
-            openInCurrentWindowQuickInputButton,
-        ].filter((button) => button.enabled),
-    };
-}
-
 async function openWorktreeTerminal(
     entry: MultiRepositoryWorktreeEntry,
     button: vscode.QuickInputButton,
@@ -395,40 +363,28 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
     try {
         const { mainRepo, repos, entries } = await getMultiRepositoryWorktrees(root);
 
-        const quickPick = vscode.window.createQuickPick<MultiRepositoryWorktreePickItem>();
-        quickPick.title = vscode.l10n.t('Multi-Repository Worktrees');
-        quickPick.buttons = [createMultiRepositoryWorktreeQuickInputButton];
-        quickPick.placeholder = vscode.l10n.t('Select a worktree to open in a new window');
-        quickPick.matchOnDescription = true;
-        quickPick.matchOnDetail = true;
-        quickPick.items = entries.map(createWorktreePickItem);
-
-        const disposables: vscode.Disposable[] = [];
-        const refreshItems = async () => {
-            const updated = await getMultiRepositoryWorktrees(root);
-            quickPick.items = updated.entries.map(createWorktreePickItem);
-        };
-
-        disposables.push(
-            quickPick.onDidTriggerButton(async (button) => {
-                if (button !== createMultiRepositoryWorktreeQuickInputButton) return;
-                quickPick.hide();
+        const quickPick = showMultiRepositoryWorktreesQuickPick({
+            entries,
+            refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
+            onCreate: async (quickPick) => {quickPick.hide();
                 try {
                     await createMultiRepositoryWorktreeFromWorkspace(root);
                     await multiRepositoryWorktreesCmd();
                 } catch (error) {
                     Alert.showErrorMessage(String(error));
                 }
-            }),
-            quickPick.onDidAccept(async () => {
+            
+            },
+            onAccept: async (selected, quickPick) => {
                 const selected = quickPick.selectedItems[0];
                 if (!selected) return;
                 quickPick.hide();
                 await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
                     forceNewWindow: true,
                 });
-            }),
-            quickPick.onDidTriggerItemButton(async (event) => {
+            
+            },
+            onItemButton: async (event, quickPick, refreshItems) => {
                 if (event.button === completeRepositoriesQuickInputButton) {
                     const missingRepos = repos.filter((_, index) => !event.item.entry.repoStatuses[index]);
                     if (!missingRepos.length) return;
@@ -547,13 +503,9 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 } catch (error) {
                     Alert.showErrorMessage(String(error));
                 }
-            }),
-            quickPick.onDidHide(() => {
-                quickPick.dispose();
-                disposables.forEach((disposable) => disposable.dispose());
-            }),
-        );
-        quickPick.show();
+            
+            },
+        });
     } catch (error) {
         Alert.showErrorMessage(String(error));
     }
