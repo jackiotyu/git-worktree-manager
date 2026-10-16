@@ -353,6 +353,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
             label: repo.name,
             description: repo.relativePath,
             detail: repo.remote,
+            relativePath: repo.relativePath,
         })),
         {
             title: vscode.l10n.t('Create Multi-Repository Worktree'),
@@ -369,7 +370,7 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
         validateInput: (value) => (value.trim() ? undefined : 'Branch name cannot be empty'),
     });
     if (!branch) return;
-    const selectedRepoPaths = selectedRepos.map((repo) => repo.description!);
+    const selectedRepoPaths = selectedRepos.map((repo) => repo.relativePath);
     const target = await vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Notification,
