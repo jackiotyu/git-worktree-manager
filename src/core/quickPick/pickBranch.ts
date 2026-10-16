@@ -524,30 +524,41 @@ export const pickBranch: IPickBranch = async ({
     createBranchOnPick = true,
 }) => {
     const { resolve, reject, promise } = withResolvers<ResolveValue>();
+    let quickPick: vscode.QuickPick<BranchForWorktree> | undefined;
+
     try {
         const isValidGit = await checkGitValid(cwd);
         if (!isValidGit) {
             Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
             return;
         }
-        const quickPick = vscode.window.createQuickPick();
+
+        quickPick = vscode.window.createQuickPick<BranchForWorktree>();
+        const activeQuickPick = quickPick;
         const sortState = { sortBy: 'name' as BranchSortBy };
         const refreshItems = () =>
-            updateQuickItems({ mainFolder, cwd, showCreate, quickPick, sortBy: sortState.sortBy });
+            updateQuickItems({
+                mainFolder,
+                cwd,
+                showCreate,
+                quickPick: activeQuickPick,
+                sortBy: sortState.sortBy,
+            });
         const updateButtons = () => {
-            quickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
+            activeQuickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
         };
-        quickPick.title = title;
-        quickPick.placeholder = placeholder;
-        quickPick.canSelectMany = false;
+        activeQuickPick.title = title;
+        activeQuickPick.placeholder = placeholder;
+        activeQuickPick.canSelectMany = false;
         updateButtons();
-        quickPick.step = step;
-        quickPick.totalSteps = totalSteps;
-        quickPick.onDidAccept(() =>
-            handleAccept({
+        activeQuickPick.step = step;
+        activeQuickPick.totalSteps = totalSteps;
+        activeQuickPick.onDidAccept(() => {
+            if (activeQuickPick.busy) return;
+            return handleAccept({
                 resolve,
                 reject,
-                quickPick,
+                quickPick: activeQuickPick,
                 cwd,
                 mainFolder,
                 title,
@@ -555,29 +566,32 @@ export const pickBranch: IPickBranch = async ({
                 createBranchOnPick,
                 step,
                 totalSteps,
-            }),
-        );
-        quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
-        quickPick.onDidTriggerButton((event) =>
+            });
+        });
+        activeQuickPick.onDidHide(() => handleHide({ resolve, reject, quickPick: activeQuickPick }));
+        activeQuickPick.onDidTriggerButton((event) =>
             handleTriggerButton({
                 resolve,
                 reject,
                 event,
-                quickPick,
+                quickPick: activeQuickPick,
                 onSortChange: (sortBy) => {
                     sortState.sortBy = sortBy;
                     updateButtons();
-                    refreshItems();
+                    void refreshItems();
                 },
             }),
         );
-        quickPick.onDidTriggerItemButton((event) => handleTriggerItemButton({ event }));
-        quickPick.show();
-        quickPick.busy = true;
-        refreshItems();
+        activeQuickPick.onDidTriggerItemButton((event) => handleTriggerItemButton({ event }));
+
+        // Show the picker before fetching branch and tag data.
+        activeQuickPick.busy = true;
+        activeQuickPick.show();
+        await refreshItems();
+
         const { branchList, remoteBranchList, tagList } = await getRefList(cwd);
         if (!branchList) {
-            quickPick.hide();
+            activeQuickPick.hide();
             return;
         }
         updateRefListCache(mainFolder, {
@@ -585,11 +599,15 @@ export const pickBranch: IPickBranch = async ({
             remoteBranchList,
             tagList,
         });
-        refreshItems();
-        quickPick.busy = false;
-        return await promise;
+        await refreshItems();
+        activeQuickPick.busy = false;
     } catch (error) {
         logger.error(error);
         reject(error);
+        if (quickPick) {
+            quickPick.busy = false;
+            quickPick.hide();
+        }
     }
+    return promise;
 };
