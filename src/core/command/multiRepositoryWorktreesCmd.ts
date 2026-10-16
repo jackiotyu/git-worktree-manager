@@ -45,11 +45,6 @@ interface RepoEntry {
     sourcePath: string;
 }
 
-interface WorktreeEntry {
-    path: string;
-    branch: string;
-}
-
 const configFileName = 'workspace.json';
 
 async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
@@ -68,7 +63,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
     }
     if (config?.version !== 1 || !config.repo || typeof config.repo !== 'object' || Array.isArray(config.repo)) {
-        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', 'expected version 1 and a repo object'));
+        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Expected version 1 and a repo object')));
     }
 
     const repos: RepoEntry[] = [];
@@ -81,12 +76,12 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
             typeof value.remote !== 'string' ||
             !value.remote.trim()
         ) {
-            throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `invalid repo entry: ${relativePath}`));
+            throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Invalid repository entry: {0}', relativePath)));
         }
         const sourcePath = resolveSafeRelativePath(sourceRoot, relativePath);
         const normalized = process.platform === 'win32' ? sourcePath.toLowerCase() : sourcePath;
         if (seenPaths.has(normalized)) {
-            throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', `duplicate path: ${relativePath}`));
+            throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', vscode.l10n.t('Duplicate repository path: {0}', relativePath)));
         }
         seenPaths.add(normalized);
         repos.push({ relativePath, name: value.name, remote: value.remote, sourcePath });
@@ -101,7 +96,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
                 throw new Error(
                     vscode.l10n.t(
                         'Invalid workspace.json: {0}',
-                        `overlapping paths: ${repo.relativePath} and ${other.relativePath}`,
+                        vscode.l10n.t('Overlapping repository paths: {0} and {1}', repo.relativePath, other.relativePath),
                     ),
                 );
             }
@@ -366,7 +361,8 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
         const quickPick = showMultiRepositoryWorktreesQuickPick({
             entries,
             refreshEntries: async () => (await getMultiRepositoryWorktrees(root)).entries,
-            onCreate: async (quickPick) => {quickPick.hide();
+            onCreate: async (quickPick) => {
+                quickPick.hide();
                 try {
                     await createMultiRepositoryWorktreeFromWorkspace(root);
                     await multiRepositoryWorktreesCmd();
@@ -376,8 +372,6 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             
             },
             onAccept: async (selected, quickPick) => {
-                const selected = quickPick.selectedItems[0];
-                if (!selected) return;
                 quickPick.hide();
                 await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
                     forceNewWindow: true,
