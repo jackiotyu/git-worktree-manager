@@ -560,10 +560,10 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             onCreate: async () => {
                 try {
                     await createMultiRepositoryWorktreeFromWorkspace(root);
+                    await multiRepositoryWorktreesCmd();
                 } catch (error) {
                     Alert.showErrorMessage(String(error));
                 }
-                await multiRepositoryWorktreesCmd();
             },
             onAccept: async (selected, quickPick) => {
                 quickPick.hide();
