@@ -28,6 +28,10 @@ interface WorktreeEntry {
     branch: string;
 }
 
+interface MultiRepositoryWorktreeEntry extends WorktreeEntry {
+    repoStatuses: boolean[];
+}
+
 const configFileName = 'workspace.json';
 
 async function pathExists(target: string): Promise<boolean> {
@@ -115,6 +119,18 @@ async function isGitRepository(repoPath: string): Promise<boolean> {
         const repoRoot = path.resolve(stdout.trim());
         const target = path.resolve(repoPath);
         return process.platform === 'win32' ? repoRoot.toLowerCase() === target.toLowerCase() : repoRoot === target;
+    } catch {
+        return false;
+    }
+}
+
+async function isGitRepositoryPresent(repoPath: string): Promise<boolean> {
+    try {
+        const [repoStat, gitStat] = await Promise.all([
+            fs.stat(repoPath),
+            fs.stat(path.join(repoPath, '.git')),
+        ]);
+        return repoStat.isDirectory() && (gitStat.isFile() || gitStat.isDirectory());
     } catch {
         return false;
     }
@@ -238,7 +254,7 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     }
 }
 
-async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: string; entries: WorktreeEntry[] }> {
+async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: string; entries: MultiRepositoryWorktreeEntry[] }> {
     const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
     const normalizedRoot = path.resolve(root);
     const normalizedRepoRoot = path.resolve(workspaceRepoRoot);
@@ -255,17 +271,15 @@ async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: st
     const entries = (await getWorktrees(mainRepo)).filter(
         (entry) => path.resolve(entry.path) !== path.resolve(mainRepo),
     );
-    const result: WorktreeEntry[] = [];
-    for (const entry of entries) {
-        const complete = await Promise.all(
-            repos.map(async (repo) => {
-                const childPath = resolveRepoPath(entry.path, repo.relativePath);
-                return pathExists(childPath) && isGitRepository(childPath);
-            }),
-        );
-        if (complete.some(Boolean)) result.push(entry);
-    }
-    return { mainRepo, entries: result };
+    const result = await Promise.all(
+        entries.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => ({
+            ...entry,
+            repoStatuses: await Promise.all(
+                repos.map((repo) => isGitRepositoryPresent(resolveRepoPath(entry.path, repo.relativePath))),
+            ),
+        })),
+    );
+    return { mainRepo, entries: result.filter((entry) => entry.repoStatuses.some(Boolean)) };
 }
 
 export async function multiRepositoryWorktreesCmd(): Promise<void> {
@@ -315,26 +329,23 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
             return;
         }
         if (action.value === 'status') {
-            const items = await Promise.all(
-                entries.map(async (entry) => {
-                    const statuses = await Promise.all(
-                        repos.map(async (repo) => {
-                            const childPath = resolveRepoPath(entry.path, repo.relativePath);
-                            return isGitRepository(childPath);
-                        }),
-                    );
-                    const readyCount = statuses.filter(Boolean).length;
-                    const missingCount = statuses.length - readyCount;
-                    return {
-                        label: entry.branch,
-                        description: entry.path,
-                        detail: missingCount
-                            ? vscode.l10n.t('{0}/{1} repositories ready · {2} missing', readyCount, statuses.length, missingCount)
-                            : vscode.l10n.t('{0}/{1} repositories ready', readyCount, statuses.length),
-                        entry,
-                    };
-                }),
-            );
+            const items = entries.map((entry) => {
+                const readyCount = entry.repoStatuses.filter(Boolean).length;
+                const missingCount = entry.repoStatuses.length - readyCount;
+                return {
+                    label: entry.branch,
+                    description: entry.path,
+                    detail: missingCount
+                        ? vscode.l10n.t(
+                              '{0}/{1} repositories ready · {2} missing',
+                              readyCount,
+                              entry.repoStatuses.length,
+                              missingCount,
+                          )
+                        : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
+                    entry,
+                };
+            });
             await vscode.window.showQuickPick(items, {
                 title: vscode.l10n.t('Show repository status'),
                 matchOnDescription: true,
