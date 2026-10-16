@@ -187,6 +187,7 @@ async function createMultiRepositoryWorktree(
     const repos = configuredRepos.filter((repo) => selectedPaths.has(repo.relativePath));
 
     const created: Array<{ repoPath: string; worktreePath: string }> = [];
+    const targetRootExisted = await pathExists(targetRoot);
     let parentCreated = false;
     try {
         await addBranchWorktree(mainRepo, targetRoot, branch, startPoint);
@@ -215,6 +216,9 @@ async function createMultiRepositoryWorktree(
         if (parentCreated) {
             try {
                 await execAuto(mainRepo, ['worktree', 'remove', '--force', targetRoot]);
+                if (targetRootExisted) {
+                    await fs.mkdir(targetRoot, { recursive: true });
+                }
             } catch (cleanupError) {
                 cleanupErrors.push(String(cleanupError));
             }
