@@ -77,6 +77,10 @@ export function showMultiRepositoryWorktreesQuickPick(
     quickPick.items = options.entries.map(createMultiRepositoryWorktreePickItem);
 
     const disposables: vscode.Disposable[] = [];
+    let resolveHidden: (() => void) | undefined;
+    const hidden = new Promise<void>((resolve) => {
+        resolveHidden = resolve;
+    });
     const refreshItems = async () => {
         const entries = await options.refreshEntries();
         quickPick.items = entries.map(createMultiRepositoryWorktreePickItem);
@@ -86,9 +90,6 @@ export function showMultiRepositoryWorktreesQuickPick(
         quickPick.onDidTriggerButton(async (button) => {
             if (button !== createMultiRepositoryWorktreeQuickInputButton) return;
 
-            const hidden = new Promise<void>((resolve) => {
-                quickPick.onDidHide(resolve);
-            });
             quickPick.hide();
             await hidden;
             await options.onCreate();
@@ -100,6 +101,7 @@ export function showMultiRepositoryWorktreesQuickPick(
         }),
         quickPick.onDidTriggerItemButton((event) => options.onItemButton(event, quickPick, refreshItems)),
         quickPick.onDidHide(() => {
+            resolveHidden?.();
             quickPick.dispose();
             disposables.forEach((disposable) => disposable.dispose());
         }),
