@@ -1,5 +1,31 @@
 import { execAuto } from '@/core/git/exec';
 import { addWorktreeRaw } from '@/core/git/addWorktree';
+import { pathExists } from '@/core/util/fs';
+import { isRegisteredWorktree } from '@/core/util/multiRepositoryWorktree';
+
+async function createOrAttachWorktree(
+    repoPath: string,
+    targetPath: string,
+    operation: () => Promise<void>,
+): Promise<void> {
+    const targetExisted = await pathExists(targetPath);
+    try {
+        await operation();
+    } catch (error) {
+        if (!targetExisted) {
+            try {
+                if (await isRegisteredWorktree(repoPath, targetPath)) {
+                    await execAuto(repoPath, ['worktree', 'remove', '--force', targetPath]);
+                }
+            } catch (cleanupError) {
+                throw new Error(
+                    `Worktree creation failed: ${String(error)}. Failed to clean up ${targetPath}: ${String(cleanupError)}`,
+                );
+            }
+        }
+        throw error;
+    }
+}
 
 export async function addBranchWorktree(
     repoPath: string,
@@ -24,9 +50,13 @@ export async function addBranchWorktree(
     }
 
     if (localBranch || remoteBranches.length === 1) {
-        await addWorktreeRaw(targetPath, branch, true, repoPath);
+        await createOrAttachWorktree(repoPath, targetPath, () =>
+            addWorktreeRaw(targetPath, branch, true, repoPath),
+        );
         return;
     }
 
-    await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath, ...(startPoint ? [startPoint] : [])]);
+    await createOrAttachWorktree(repoPath, targetPath, async () => {
+        await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath, ...(startPoint ? [startPoint] : [])]);
+    });
 }
