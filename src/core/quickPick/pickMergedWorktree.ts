@@ -59,9 +59,7 @@ export const pickMergedWorktree = async (
 
     const handleSelectAllMerged = (event: vscode.QuickInputButton) => {
         if (quickPick.busy || event !== selectAllMergedButton) return;
-        quickPick.selectedItems = quickPick.items.filter(
-            (item): item is IMergedWorktreePick => 'isMerged' in item && item.isMerged,
-        );
+        quickPick.selectedItems = quickPick.items.filter((item) => item.isMerged);
     };
 
     quickPick.onDidAccept(handleAccept);
