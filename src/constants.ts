@@ -4,6 +4,7 @@ export enum Commands {
     refreshWorktree = 'git-worktree-manager.refreshWorktree',
     switchWorktree = 'git-worktree-manager.switchWorktree',
     addWorktree = 'git-worktree-manager.addWorktree',
+    multiRepositoryWorktrees = 'git-worktree-manager.multiRepositoryWorktrees',
     addGitFolder = 'git-worktree-manager.addGitFolder',
     addToFavorite = 'git-worktree-manager.addToFavorite',
     addRootsToRepo = 'git-worktree-manager.addRootsToRepo',

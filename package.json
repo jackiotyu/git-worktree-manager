@@ -49,6 +49,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "git-worktree-manager.multiRepositoryWorktrees",
+        "title": "Manage Multi-Repository Worktrees",
+        "category": "Worktree"
+      },
+      {
         "command": "git-worktree-manager.sortWorktreesByDefault",
         "title": "%cmd.sortWorktreesByDefault%",
         "category": "Worktree",
