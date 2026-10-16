@@ -12,6 +12,10 @@ import {
     getRegisteredWorktreePaths,
     hasConfiguredRemote,
     isMarkedMultiRepositoryWorktree,
+    isNestedPath,
+    isPathWithinRoot,
+    normalizeRepositoryPath,
+    resolveCanonicalPath,
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
     normalizeWorktreePath,
@@ -53,38 +57,6 @@ interface RepoEntry {
 }
 
 const configFileName = 'workspace.json';
-
-function normalizePathForComparison(targetPath: string): string {
-    const normalized = path.normalize(path.resolve(targetPath));
-    return process.platform === 'win32' || process.platform === 'darwin' ? normalized.toLowerCase() : normalized;
-}
-
-function isNestedPath(parent: string, candidate: string): boolean {
-    const relative = path.relative(parent, candidate);
-    return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
-}
-
-async function resolveCanonicalPath(targetPath: string): Promise<string> {
-    const absolutePath = path.resolve(targetPath);
-    const root = path.parse(absolutePath).root;
-    const segments = path.relative(root, absolutePath).split(path.sep).filter(Boolean);
-    let current = root;
-
-    for (let i = 0; i < segments.length; i++) {
-        const nextPath = path.join(current, segments[i]);
-        try {
-            await fs.lstat(nextPath);
-        } catch (error) {
-            if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-                return path.resolve(current, ...segments.slice(i));
-            }
-            throw error;
-        }
-        current = await fs.realpath(nextPath);
-    }
-
-    return current;
-}
 
 async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
     try {
@@ -149,7 +121,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
             );
         }
         const sourcePath = resolveSafeRelativePath(sourceRoot, relativePath);
-        const normalized = normalizePathForComparison(sourcePath);
+        const normalized = normalizeRepositoryPath(sourcePath);
         if (seenPaths.has(normalized)) {
             throw new Error(
                 vscode.l10n.t(
@@ -163,18 +135,12 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     }
     if (!repos.length) throw new Error(vscode.l10n.t('No repositories are configured in workspace.json'));
 
-    const canonicalRoot = normalizePathForComparison(await resolveCanonicalPath(sourceRoot));
+    const canonicalRoot = normalizeRepositoryPath(await resolveCanonicalPath(sourceRoot));
     const canonicalPaths = await Promise.all(repos.map((repo) => resolveCanonicalPath(repo.sourcePath)));
     const normalizedCanonicalPaths = canonicalPaths.map(normalizePathForComparison);
 
     for (let i = 0; i < repos.length; i++) {
-        const relativeToRoot = path.relative(canonicalRoot, normalizedCanonicalPaths[i]);
-        if (
-            !relativeToRoot ||
-            relativeToRoot === '..' ||
-            relativeToRoot.startsWith(`..${path.sep}`) ||
-            path.isAbsolute(relativeToRoot)
-        ) {
+        if (!isPathWithinRoot(canonicalRoot, normalizedCanonicalPaths[i])) {
             throw new Error(
                 vscode.l10n.t(
                     'Invalid workspace.json: {0}',
