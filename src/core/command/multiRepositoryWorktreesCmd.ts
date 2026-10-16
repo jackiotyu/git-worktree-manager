@@ -367,13 +367,13 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     await multiRepositoryWorktreesCmd();
                 } catch (error) {
                     Alert.showErrorMessage(String(error));
-                    }
+                }
             },
             onAccept: async (selected, quickPick) => {
                 quickPick.hide();
                 await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(selected.entry.path), {
-                        forceNewWindow: true,
-                    });
+                    forceNewWindow: true,
+                });
             },
             onItemButton: async (event, quickPick, refreshItems) => {
                 if (event.button === completeRepositoriesQuickInputButton) {
@@ -494,7 +494,6 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 } catch (error) {
                     Alert.showErrorMessage(String(error));
                 }
-            
             },
         });
     } catch (error) {
