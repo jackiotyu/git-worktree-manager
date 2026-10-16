@@ -320,10 +320,19 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     const statuses = await Promise.all(
                         repos.map(async (repo) => {
                             const childPath = resolveRepoPath(entry.path, repo.relativePath);
-                            return `${repo.name}: ${(await isGitRepository(childPath)) ? vscode.l10n.t('Ready') : vscode.l10n.t('Missing')}`;
+                            return isGitRepository(childPath);
                         }),
                     );
-                    return { label: entry.branch, description: entry.path, detail: statuses.join(' · '), entry };
+                    const readyCount = statuses.filter(Boolean).length;
+                    const missingCount = statuses.length - readyCount;
+                    return {
+                        label: entry.branch,
+                        description: entry.path,
+                        detail: missingCount
+                            ? vscode.l10n.t('{0}/{1} repositories ready · {2} missing', readyCount, statuses.length, missingCount)
+                            : vscode.l10n.t('{0}/{1} repositories ready', readyCount, statuses.length),
+                        entry,
+                    };
                 }),
             );
             await vscode.window.showQuickPick(items, {
