@@ -47,6 +47,7 @@ async function createBranchStrategy({
     cwd,
     mainFolder,
     showSelectRef,
+    createBranchOnPick,
     quickPick,
     resolve,
     refreshItems,
@@ -54,6 +55,7 @@ async function createBranchStrategy({
     cwd: string;
     mainFolder: string;
     showSelectRef: boolean;
+    createBranchOnPick: boolean;
     quickPick: vscode.QuickPick<BranchForWorktree>;
     resolve: (value: ResolveValue) => void;
     refreshItems: () => void;
@@ -90,9 +92,13 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    await createBranchFrom(cwd, branchName, branchItem.branch || branchItem.hash);
-    const hash = await getLastCommitHash(cwd, true);
-    resolve({ branch: branchName, hash });
+    if (createBranchOnPick) {
+        await createBranchFrom(cwd, branchName, branchItem.branch || branchItem.hash);
+        const hash = await getLastCommitHash(cwd, true);
+        resolve({ branch: branchName, hash });
+    } else {
+        resolve({ branch: branchName });
+    }
     quickPick.hide();
     quickPick.dispose();
 }
@@ -108,7 +114,8 @@ async function handleAccept({
     cwd,
     mainFolder,
     refreshItems,
-}: HandlerArgs & { cwd: string; mainFolder: string; refreshItems: () => void }) {
+    createBranchOnPick,
+}: HandlerArgs & { cwd: string; mainFolder: string; refreshItems: () => void; createBranchOnPick: boolean }) {
     try {
         const selected = quickPick.selectedItems[0];
         if (isSelectCreateBranch(selected)) {
@@ -116,6 +123,7 @@ async function handleAccept({
                 cwd,
                 mainFolder,
                 showSelectRef: selected === createNewBranchFromItem,
+                createBranchOnPick,
                 quickPick,
                 resolve,
                 refreshItems,
@@ -373,9 +381,10 @@ const createNewBranchFromItem: vscode.QuickPickItem = {
     label: `$(plus) ${vscode.l10n.t('Create new branch from...')}`,
 };
 
-const getPreItems = (showCreate: boolean): vscode.QuickPickItem[] => {
+const getPreItems = (showCreate: boolean, createBranchOnPick: boolean): vscode.QuickPickItem[] => {
     if (!showCreate) return [];
-    return [createNewBranchItem, createNewBranchFromItem, { label: '', kind: vscode.QuickPickItemKind.Separator }];
+    const items = createBranchOnPick ? [createNewBranchItem, createNewBranchFromItem] : [createNewBranchItem];
+    return [...items, { label: '', kind: vscode.QuickPickItemKind.Separator }];
 };
 
 const mapRefItems = ({
@@ -383,6 +392,7 @@ const mapRefItems = ({
     remoteBranchList,
     tagList,
     showCreate,
+    createBranchOnPick,
     mainFolder,
     checkoutTypes,
     sortBy,
@@ -391,6 +401,7 @@ const mapRefItems = ({
     remoteBranchList: RefList;
     tagList: RefList;
     showCreate: boolean;
+    createBranchOnPick: boolean;
     mainFolder: string;
     checkoutTypes: CheckoutType[];
     sortBy: BranchSortBy;
@@ -405,7 +416,7 @@ const mapRefItems = ({
     });
 
     const items = [
-        ...getPreItems(showCreate),
+        ...getPreItems(showCreate, createBranchOnPick),
         ...mapWorktreeBranchItems(sortRefList(worktreeItems, sortBy), mainFolder, defaultBranch),
     ];
     const checkoutTypeItemsGetters = {
@@ -460,19 +471,21 @@ const updateQuickItems = async ({
     mainFolder,
     cwd,
     showCreate,
+    createBranchOnPick,
     quickPick,
     sortBy,
 }: {
     mainFolder: string;
     cwd: string;
     showCreate: boolean;
+    createBranchOnPick: boolean;
     quickPick: vscode.QuickPick<BranchForWorktree>;
     sortBy: BranchSortBy;
 }) => {
     // Read cache
     const refList = await getRefListCache(mainFolder, cwd);
     const checkoutTypes = getCheckoutTypes();
-    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, mainFolder, checkoutTypes, sortBy });
+    if (refList) quickPick.items = mapRefItems({ ...refList, showCreate, createBranchOnPick, mainFolder, checkoutTypes, sortBy });
 };
 
 export const pickBranch: IPickBranch = async ({
@@ -483,6 +496,7 @@ export const pickBranch: IPickBranch = async ({
     step,
     totalSteps,
     showCreate,
+    createBranchOnPick = true,
 }) => {
     const { resolve, reject, promise } = withResolvers<ResolveValue>();
     try {
@@ -494,7 +508,7 @@ export const pickBranch: IPickBranch = async ({
         const quickPick = vscode.window.createQuickPick();
         const sortState = { sortBy: 'name' as BranchSortBy };
         const refreshItems = () =>
-            updateQuickItems({ mainFolder, cwd, showCreate, quickPick, sortBy: sortState.sortBy });
+            updateQuickItems({ mainFolder, cwd, showCreate, createBranchOnPick, quickPick, sortBy: sortState.sortBy });
         const updateButtons = () => {
             quickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
         };
@@ -504,7 +518,7 @@ export const pickBranch: IPickBranch = async ({
         updateButtons();
         quickPick.step = step;
         quickPick.totalSteps = totalSteps;
-        quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, refreshItems }));
+        quickPick.onDidAccept(() => handleAccept({ resolve, reject, quickPick, cwd, mainFolder, refreshItems, createBranchOnPick }));
         quickPick.onDidHide(() => handleHide({ resolve, reject, quickPick }));
         quickPick.onDidTriggerButton((event) =>
             handleTriggerButton({
