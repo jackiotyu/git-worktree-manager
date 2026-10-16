@@ -1,0 +1,22 @@
+src/core/command/index.ts
+  h_efb56b9ff7aea6 60-63
+src/core/command/multiRepositoryWorktreesCmd.ts
+  h_efb56b9ff7aea6 238,241-242,258
+src/core/quickPick/pickBranch.ts
+  h_efb56b9ff7aea6 489-497
+src/core/util/repo.ts
+  h_efb56b9ff7aea6 32
+src/core/util/repoScan.ts
+  h_efb56b9ff7aea6 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d4e38941ad6051789f20120ce421bd5d7116e1c6",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
