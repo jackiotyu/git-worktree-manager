@@ -1,0 +1,14 @@
+src/core/command/multiRepositoryWorktreesCmd.ts
+  h_efb56b9ff7aea6 76-82,100-105,117,126-129,135-139,146-148,169-172,184-187,232-235,245-248,255-257,260-265,278-286,297,300-307,318-333,337-344,367-369
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "42ead328bbcb51af464651e183114a07b325662e",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
