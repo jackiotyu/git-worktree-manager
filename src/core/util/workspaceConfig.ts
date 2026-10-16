@@ -12,7 +12,10 @@ import {
 } from '@/core/util/multiRepositoryWorktree';
 
 const configFileName = 'gwm.json';
-const configFilePaths = (root: string) => [path.join(root, '.vscode', configFileName), path.join(root, configFileName)];
+const configFilePaths = (root: string) => [
+    path.join(root, '.vscode', configFileName),
+    path.join(root, configFileName),
+];
 
 let validateWorkspaceConfigPromise: Promise<import('ajv').ValidateFunction<WorkspaceConfig>> | undefined;
 
