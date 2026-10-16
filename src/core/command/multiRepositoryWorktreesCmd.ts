@@ -392,16 +392,22 @@ interface WorktreeChange {
 
 async function getWorktreeChanges(worktreePath: string, ignoredChildPaths: string[] = []): Promise<WorktreeChange[]> {
     const { stdout } = await execAuto(worktreePath, ['status', '--porcelain=v1', '-z', '--untracked-files=all']);
-    const ignoredPaths = ignoredChildPaths.map((item) => path.normalize(item).replace(/[\\/]+$/, ''));
+    const backslash = String.fromCharCode(92);
+    const ignoredPaths = ignoredChildPaths.map((item) =>
+        item.split(backslash).join('/').split('/').filter(Boolean).join('/'),
+    );
     return stdout
-        .split('\\0')
+        .split(String.fromCharCode(0))
         .filter(Boolean)
-        .map((record) => ({ status: record.slice(0, 2), filePath: record.slice(3).replace(/\\\\/g, '/') }))
+        .map((record) => ({
+            status: record.slice(0, 2),
+            filePath: record.slice(3).split(backslash).join('/'),
+        }))
         .filter((change) => {
             if (change.status !== '??') return true;
-            const filePath = path.posix.normalize(change.filePath).replace(/\\/+$/, '');
+            const filePath = path.posix.normalize(change.filePath).replace(/\/+$/, '');
             return !ignoredPaths.some(
-                (childPath) => filePath === childPath || filePath.startsWith(`${childPath}/`),
+                (childPath) => filePath === childPath || filePath.startsWith(childPath + '/'),
             );
         });
 }
@@ -426,7 +432,8 @@ async function removeMultiRepositoryWorktree(
     for (const repo of repos) {
         const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
         const exists = await pathExists(childPath);
-        const registered = await isRegisteredWorktree(repo.sourcePath, childPath);
+        const registered =
+            (await isGitRepository(repo.sourcePath)) && (await isRegisteredWorktree(repo.sourcePath, childPath));
         if (registered) {
             if (exists) children.push({ repo, path: childPath });
             continue;
@@ -475,7 +482,10 @@ async function removeChildRepositoryWorktree(
     if (!repo) throw new Error(`Repository is not configured: ${relativePath}`);
 
     const childPath = resolveSafeRelativePath(entry.path, repo.relativePath);
-    if (!(await isRegisteredWorktree(repo.sourcePath, childPath))) {
+    if (
+        !(await isGitRepository(repo.sourcePath)) ||
+        !(await isRegisteredWorktree(repo.sourcePath, childPath))
+    ) {
         throw new Error(`No generated worktree found for repository: ${repo.relativePath}`);
     }
     await assertWorktreeClean(childPath);
