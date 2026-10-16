@@ -1,3 +1,4 @@
+import fs from 'fs/promises';
 import { execAuto } from '@/core/git/exec';
 import { addWorktreeRaw } from '@/core/git/addWorktree';
 import { pathExists } from '@/core/util/fs';
@@ -9,10 +10,19 @@ async function createOrAttachWorktree(
     operation: () => Promise<void>,
 ): Promise<void> {
     const targetExisted = await pathExists(targetPath);
+    let safeToClean = !targetExisted;
+    if (targetExisted) {
+        try {
+            safeToClean = (await fs.stat(targetPath)).isDirectory() && (await fs.readdir(targetPath)).length === 0;
+        } catch {
+            safeToClean = false;
+        }
+    }
+
     try {
         await operation();
     } catch (error) {
-        if (!targetExisted) {
+        if (safeToClean) {
             try {
                 if (await isRegisteredWorktree(repoPath, targetPath)) {
                     await execAuto(repoPath, ['worktree', 'remove', '--force', targetPath]);
