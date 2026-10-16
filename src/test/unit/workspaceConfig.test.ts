@@ -35,7 +35,9 @@ rs.mock('@/core/util/repo', () => ({
 rs.mock('@/core/util/multiRepositoryWorktree', () => ({
     isNestedPath: (parent: string, child: string) => {
         const relative = path.relative(parent, child);
-        return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
+        return (
+            relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative)
+        );
     },
     isPathWithinRoot: (root: string, child: string) => {
         const relative = path.relative(root, child);
