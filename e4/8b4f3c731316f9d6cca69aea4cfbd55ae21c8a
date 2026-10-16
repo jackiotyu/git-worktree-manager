@@ -1,0 +1,16 @@
+eslint.config.mjs
+  h_efb56b9ff7aea6 48
+src/core/command/multiRepositoryWorktreesCmd.ts
+  h_efb56b9ff7aea6 71,129,245,274
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e48b4f3c731316f9d6cca69aea4cfbd55ae21c8a",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
