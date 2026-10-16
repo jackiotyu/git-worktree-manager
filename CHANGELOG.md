@@ -1,3 +1,11 @@
+## v3.33.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.0...v3.33.1)
+
+### 🚀 Enhancements
+
+- Make remote optional in gwm.json ([227fdfb](https://github.com/jackiotyu/git-worktree-manager/commit/227fdfb))
+
 ## v3.33.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.32.0...v3.33.0)
