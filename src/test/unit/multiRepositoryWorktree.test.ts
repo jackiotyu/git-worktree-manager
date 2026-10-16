@@ -2,7 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, rs } from '@rstest/core';
 import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
-import { getRegisteredWorktreePaths, isMarkedMultiRepositoryWorktree, isRegisteredWorktree, markMultiRepositoryWorktree } from '@/core/util/multiRepositoryWorktree';
+import {
+    getRegisteredWorktreePaths,
+    hasConfiguredRemote,
+    isMarkedMultiRepositoryWorktree,
+    isRegisteredWorktree,
+    markMultiRepositoryWorktree,
+    normalizeWorktreePath,
+} from '@/core/util/multiRepositoryWorktree';
 import * as execModule from '@/core/git/exec';
 
 rs.mock('@/core/git/exec', () => ({
@@ -33,9 +40,9 @@ describe('multi-repository worktree utilities', () => {
 
         const paths = await getRegisteredWorktreePaths('/repos/main');
 
-        expect(paths.has(path.resolve('/repos/main'))).toBe(true);
-        expect(paths.has(path.resolve('/repos/feature'))).toBe(true);
-        expect(paths.has(path.resolve('/repos/feature-copy'))).toBe(false);
+        expect(paths.has(normalizeWorktreePath('/repos/main'))).toBe(true);
+        expect(paths.has(normalizeWorktreePath('/repos/feature'))).toBe(true);
+        expect(paths.has(normalizeWorktreePath('/repos/feature-copy'))).toBe(false);
     });
 
     it('checks whether a path is registered by its source repository', async () => {
@@ -45,6 +52,20 @@ describe('multi-repository worktree utilities', () => {
 
         await expect(isRegisteredWorktree('/repos/main', '/repos/feature')).resolves.toBe(true);
         await expect(isRegisteredWorktree('/repos/main', '/repos/other')).resolves.toBe(false);
+    });
+
+    it('matches equivalent HTTPS and SSH remotes', async () => {
+        rs.mocked(execModule.execAuto).mockResolvedValue(
+            result(
+                'origin https://github.com/JackIoTyu/Example.git (fetch)\\n' +
+                    'origin https://github.com/JackIoTyu/Example.git (push)\\n',
+            ),
+        );
+
+        await expect(hasConfiguredRemote('/repos/example', 'git@github.com:jackiotyu/example.git')).resolves.toBe(
+            true,
+        );
+        expect(execModule.execAuto).toHaveBeenCalledWith('/repos/example', ['remote', '-v']);
     });
 
     it('marks a linked worktree in its own Git directory', async () => {
