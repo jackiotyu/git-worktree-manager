@@ -11,6 +11,7 @@ import { isGitRepository, isGitRepositoryPresent } from '@/core/util/repo';
 import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
 import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
+import { pickBranch } from '@/core/quickPick/pickBranch';
 import { Commands } from '@/constants';
 import {
     openInCurrentWindowQuickInputButton,
@@ -351,12 +352,16 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
     });
     if (!selectedRepos?.length) return;
 
-    const branch = await vscode.window.showInputBox({
+    const selectedBranch = await pickBranch({
         title: vscode.l10n.t('Create Multi-Repository Worktree'),
-        prompt: vscode.l10n.t('Enter the branch name for the multi-repository worktree'),
-        validateInput: (value) => (value.trim() ? undefined : 'Branch name cannot be empty'),
+        placeholder: vscode.l10n.t('Select an existing branch or create a new branch'),
+        mainFolder: root,
+        cwd: (await getWorkspaceContext(root)).mainRepo,
+        showCreate: true,
+        createBranchOnPick: false,
     });
-    if (!branch) return;
+    if (!selectedBranch || !selectedBranch.branch) return;
+    const branch = selectedBranch.branch;
     const selectedRepoPaths = selectedRepos.map((repo) => repo.relativePath);
     const target = await vscode.window.withProgress(
         {
