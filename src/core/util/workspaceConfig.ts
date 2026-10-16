@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import fs from 'fs/promises';
 import path from 'path';
 import { resolveSafeRelativePath } from '@/core/util/path';
+import type { RepoEntry, WorkspaceConfig } from '@/types';
 import { hasGitMetadata } from '@/core/util/repo';
 import {
     isNestedPath,
@@ -9,24 +10,6 @@ import {
     normalizeRepositoryPath,
     resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
-
-interface WorkspaceRepo {
-    name: string;
-    remote: string;
-}
-
-interface WorkspaceConfig {
-    version: 1;
-    parent?: string;
-    repo: Record<string, WorkspaceRepo>;
-}
-
-export interface RepoEntry {
-    relativePath: string;
-    name: string;
-    remote: string;
-    sourcePath: string;
-}
 
 const configFileName = 'workspace.json';
 
@@ -45,34 +28,6 @@ async function getWorkspaceConfigValidator(): Promise<import('ajv').ValidateFunc
         });
     }
     return validateWorkspaceConfigPromise;
-}
-
-const multiRepositoryWorktreeCache = new Map<string, MultiRepositoryWorktreeEntry[]>();
-
-function getWorktreeCacheKey(root: string): string {
-    return toSimplePath(path.resolve(root));
-}
-
-async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
-    try {
-        return (await isGitRepository(repo.sourcePath)) && (await hasConfiguredRemote(repo.sourcePath, repo.remote));
-    } catch {
-        return false;
-    }
-}
-
-async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promise<void> {
-    if (!(await pathExists(repo.sourcePath))) {
-        await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
-        await execAuto(cloneCwd, ['clone', '--', repo.remote, repo.sourcePath]);
-    }
-
-    if (!(await isGitRepository(repo.sourcePath))) {
-        throw new Error(vscode.l10n.t('Configured path exists but is not a Git repository: {0}', repo.relativePath));
-    }
-    if (!(await hasConfiguredRemote(repo.sourcePath, repo.remote))) {
-        throw new Error(vscode.l10n.t('Configured repository remote does not match: {0}', repo.relativePath));
-    }
 }
 
 export async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
