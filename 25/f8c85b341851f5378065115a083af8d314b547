@@ -1,0 +1,21 @@
+src/core/git/addBranchWorktree.ts
+  s_55da3321d03aa0::t_457319619ff82c 66
+src/core/util/multiRepositoryWorktree.ts
+  s_55da3321d03aa0::t_7d0cf2eac03949 44,78,89,93,121,148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25f8c85b341851f5378065115a083af8d314b547",
+  "prompts": {},
+  "sessions": {
+    "s_55da3321d03aa0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "73cdb1ce-b9e3-4e6b-a098-c9c68ff0f59d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
