@@ -26,6 +26,9 @@ async function createOrAttachWorktree(
             try {
                 if (await isRegisteredWorktree(repoPath, targetPath)) {
                     await execAuto(repoPath, ['worktree', 'remove', '--force', targetPath]);
+                    if (targetExisted) {
+                        await fs.mkdir(targetPath, { recursive: true });
+                    }
                 }
             } catch (cleanupError) {
                 throw new Error(
