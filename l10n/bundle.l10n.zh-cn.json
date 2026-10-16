@@ -196,6 +196,7 @@
     "Remove a worktree": "删除 Worktree",
     "Enter the branch name for the multi-repository worktree": "输入多仓库 Worktree 的分支名称",
     "gwm.json was not found in the workspace root": "工作区根目录中未找到 gwm.json",
+    "gwm.json was not found in the workspace root or .vscode folder": "工作区根目录或 .vscode 目录中未找到 gwm.json",
     "Invalid gwm.json: {0}": "gwm.json 无效：{0}",
     "No repositories are configured in gwm.json": "gwm.json 中未配置仓库",
     "Multi-repository worktree created: {0}": "已创建多仓库 Worktree：{0}",
