@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { getWorktreeTopLevel } from '@/core/git/getWorktreeTopLevel';
 
-export async function hasWorktreeGitMetadata(dir: string): Promise<boolean> {
+export async function hasGitMetadata(dir: string): Promise<boolean> {
     const gitEntry = path.join(dir, '.git');
     try {
         const entry = await fs.stat(gitEntry);
@@ -35,5 +35,5 @@ export async function isGitRepository(repoPath: string): Promise<boolean> {
 }
 
 export async function isGitRepositoryPresent(repoPath: string): Promise<boolean> {
-    return hasWorktreeGitMetadata(repoPath);
+    return hasGitMetadata(repoPath);
 }
