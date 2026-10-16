@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { execAuto } from '@/core/git/exec';
+import { toSimplePath } from '@/core/util/path';
 
 const markerFileName = 'git-worktree-manager-multi-repository.json';
 
@@ -105,8 +106,7 @@ export async function hasConfiguredRemote(repoPath: string, configuredRemote: st
 }
 
 export function normalizeRepositoryPath(targetPath: string): string {
-    const normalized = path.normalize(path.resolve(targetPath));
-    return process.platform === 'win32' || process.platform === 'darwin' ? normalized.toLowerCase() : normalized;
+    return toSimplePath(path.resolve(targetPath));
 }
 
 export function isNestedPath(parent: string, candidate: string): boolean {
