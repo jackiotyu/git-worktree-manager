@@ -12,6 +12,7 @@ import {
 } from '@/core/util/multiRepositoryWorktree';
 
 const configFileName = 'gwm.json';
+const configFilePaths = (root: string) => [path.join(root, '.vscode', configFileName), path.join(root, configFileName)];
 
 let validateWorkspaceConfigPromise: Promise<import('ajv').ValidateFunction<WorkspaceConfig>> | undefined;
 
@@ -31,12 +32,19 @@ async function getWorkspaceConfigValidator(): Promise<import('ajv').ValidateFunc
 }
 
 export async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]> {
-    const configPath = path.join(root, configFileName);
-    let raw: string;
-    try {
-        raw = await fs.readFile(configPath, 'utf8');
-    } catch {
-        throw new Error(vscode.l10n.t('gwm.json was not found in the workspace root'));
+    let configPath = '';
+    let raw: string | undefined;
+    for (const candidate of configFilePaths(root)) {
+        try {
+            raw = await fs.readFile(candidate, 'utf8');
+            configPath = candidate;
+            break;
+        } catch {
+            // Try the next supported configuration location.
+        }
+    }
+    if (raw === undefined) {
+        throw new Error(vscode.l10n.t('gwm.json was not found in the workspace root or .vscode folder'));
     }
 
     let parsedConfig: unknown;
@@ -55,7 +63,7 @@ export async function loadConfig(root: string, sourceRoot = root): Promise<RepoE
     }
     const config = parsedConfig as WorkspaceConfig;
     const parentPath = config.parent?.trim() ?? '';
-    const repositoryRoot = parentPath ? path.resolve(root, parentPath) : sourceRoot;
+    const repositoryRoot = parentPath ? path.resolve(path.dirname(configPath), parentPath) : sourceRoot;
     if (parentPath && !(await hasGitMetadata(repositoryRoot))) {
         throw new Error(vscode.l10n.t('Configured parent path is not a Git repository: {0}', repositoryRoot));
     }
