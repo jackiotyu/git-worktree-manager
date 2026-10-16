@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { execAuto } from '@/core/git/exec';
 import { getBaseWorktreeDir, getSubDir } from '@/core/util/folder';
+import { getMainFolder } from '@/core/git/getMainFolder';
 import { Alert } from '@/core/ui/message';
 
 interface WorkspaceRepo {
@@ -109,15 +110,7 @@ async function isGitRepository(repoPath: string): Promise<boolean> {
 
 async function addBranchWorktree(repoPath: string, targetPath: string, branch: string): Promise<void> {
     await fs.mkdir(path.dirname(targetPath), { recursive: true });
-    try {
-        await execAuto(repoPath, ['worktree', 'add', '--guess-remote', targetPath, branch]);
-    } catch (firstError) {
-        try {
-            await execAuto(repoPath, ['worktree', 'add', '-b', branch, targetPath]);
-        } catch {
-            throw firstError;
-        }
-    }
+    await execAuto(repoPath, ['worktree', 'add', '--guess-remote', targetPath, branch]);
 }
 
 async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
@@ -133,7 +126,12 @@ async function getWorktrees(repoPath: string): Promise<WorktreeEntry[]> {
 
 async function createMultiRepositoryWorktree(root: string, branch: string): Promise<string> {
     const { repos } = await loadConfig(root);
-    const mainRepo = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
+    const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
+    if (path.resolve(workspaceRepoRoot) !== path.resolve(root)) {
+        throw new Error('Open the repository root containing workspace.json, not a subfolder.');
+    }
+    const mainRepo = await getMainFolder(root);
+    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
     const parentDir = getBaseWorktreeDir(mainRepo);
     await fs.mkdir(parentDir, { recursive: true });
     let index = 1;
@@ -189,15 +187,20 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
 
 async function getMultiRepositoryWorktrees(root: string): Promise<{ mainRepo: string; entries: WorktreeEntry[] }> {
     const { repos } = await loadConfig(root);
-    const mainRepo = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
-    const entries = (await getWorktrees(mainRepo)).filter((entry) => !entry.path.startsWith(mainRepo) || entry.path !== mainRepo);
+    const workspaceRepoRoot = (await execAuto(root, ['rev-parse', '--show-toplevel'])).stdout.trim();
+    if (path.resolve(workspaceRepoRoot) !== path.resolve(root)) {
+        throw new Error('Open the repository root containing workspace.json, not a subfolder.');
+    }
+    const mainRepo = await getMainFolder(root);
+    if (!mainRepo) throw new Error('Unable to resolve the main repository.');
+    const entries = (await getWorktrees(mainRepo)).filter((entry) => path.resolve(entry.path) !== path.resolve(mainRepo));
     const result: WorktreeEntry[] = [];
     for (const entry of entries) {
         const complete = await Promise.all(repos.map(async (repo) => {
             const childPath = resolveRepoPath(entry.path, repo.relativePath);
             return pathExists(childPath) && isGitRepository(childPath);
         }));
-        if (complete.every(Boolean)) result.push(entry);
+        if (complete.some(Boolean)) result.push(entry);
     }
     return { mainRepo, entries: result };
 }
@@ -273,10 +276,10 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
         for (const repo of repos) {
             const childPath = resolveRepoPath(selected.entry.path, repo.relativePath);
             if (await isGitRepository(childPath)) {
-                await execAuto(repo.sourcePath, ['worktree', 'remove', '--force', childPath]);
+                await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
             }
         }
-        await execAuto(mainRepo, ['worktree', 'remove', '--force', selected.entry.path]);
+        await execAuto(mainRepo, ['worktree', 'remove', selected.entry.path]);
         void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree removed: {0}', selected.entry.path));
     } catch (error) {
         Alert.showErrorMessage(String(error));
