@@ -255,5 +255,15 @@
     "View Child Repositories": "查看子仓库",
     "Child Repositories in {0}": "{0} 中的子仓库",
     "Select a child repository to open in a new window": "选择要在新窗口中打开的子仓库",
-    "No child repositories found in this worktree": "此工作树中没有子仓库"
+    "No child repositories found in this worktree": "此工作树中没有子仓库",
+    "Switch Branch Across Repositories": "切换所有仓库的分支",
+    "Complete all child repositories before switching branches.": "请先补全所有子仓库，再切换分支。",
+    "Branch {0} is already checked out in another worktree: {1}": "分支 {0} 已在其他 Worktree 中检出：{1}",
+    "Branch {0} exists in only some repositories. No repositories were changed.": "分支 {0} 仅存在于部分仓库中，未更改任何仓库。",
+    "Branch operation partially completed for {0}. Updated: {1}. Failed at {2}: {3}": "分支 {0} 的操作仅部分完成。已更新：{1}。在 {2} 处失败：{3}",
+    "Unable to switch to branch {0} in {1}: {2}": "无法在 {1} 中切换到分支 {0}：{2}",
+    "Select a common branch or create a new branch": "选择共有分支或创建新分支",
+    "Switching branch across repositories": "正在切换所有仓库的分支",
+    "Switched all repositories to branch: {0}": "所有仓库已切换到分支：{0}",
+    "Cannot create a branch from detached HEAD in {0}.": "无法从 {0} 的分离 HEAD 创建分支。"
 }
