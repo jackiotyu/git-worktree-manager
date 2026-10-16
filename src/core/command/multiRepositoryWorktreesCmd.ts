@@ -130,7 +130,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
     const config = parsedConfig as WorkspaceConfig;
     const parentPath = config.parent?.trim() ?? '';
     const repositoryRoot = parentPath ? path.resolve(root, parentPath) : sourceRoot;
-    if (parentPath && !(await isGitRepository(repositoryRoot))) {
+    if (parentPath && !(await isGitRepositoryPresent(repositoryRoot))) {
         throw new Error(vscode.l10n.t('Configured parent path is not a Git repository: {0}', repositoryRoot));
     }
 
