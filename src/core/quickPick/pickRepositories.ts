@@ -9,7 +9,7 @@ export interface RepositoryQuickPickItem {
 
 export async function pickRepositories(
     repos: RepositoryQuickPickItem[],
-    options: { title: string; placeHolder: string; canSelectMany: boolean },
+    options: { title: string; placeHolder: string; canSelectMany: boolean; step?: number; totalSteps?: number },
 ): Promise<RepositoryQuickPickItem[] | undefined> {
     const items = repos.map((repo) => ({
         label: repo.name,
@@ -20,6 +20,8 @@ export async function pickRepositories(
     const pickOptions = {
         title: options.title,
         placeHolder: options.placeHolder,
+        step: options.step,
+        totalSteps: options.totalSteps,
         ignoreFocusOut: true,
     };
     if (options.canSelectMany) {
