@@ -18,7 +18,6 @@ import {
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
     normalizeRepositoryPath,
-    normalizeRepositoryPath,
     resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 import { Alert } from '@/core/ui/message';

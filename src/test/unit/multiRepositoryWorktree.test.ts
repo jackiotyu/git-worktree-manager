@@ -11,7 +11,6 @@ import {
     isRegisteredWorktree,
     markMultiRepositoryWorktree,
     normalizeRepositoryPath,
-    normalizeWorktreePath,
     resolveCanonicalPath,
 } from '@/core/util/multiRepositoryWorktree';
 import * as execModule from '@/core/git/exec';
@@ -44,9 +43,9 @@ describe('multi-repository worktree utilities', () => {
 
         const paths = await getRegisteredWorktreePaths('/repos/main');
 
-        expect(paths.has(normalizeWorktreePath('/repos/main'))).toBe(true);
-        expect(paths.has(normalizeWorktreePath('/repos/feature'))).toBe(true);
-        expect(paths.has(normalizeWorktreePath('/repos/feature-copy'))).toBe(false);
+        expect(paths.has(normalizeRepositoryPath('/repos/main'))).toBe(true);
+        expect(paths.has(normalizeRepositoryPath('/repos/feature'))).toBe(true);
+        expect(paths.has(normalizeRepositoryPath('/repos/feature-copy'))).toBe(false);
     });
 
     it('checks whether a path is registered by its source repository', async () => {
@@ -105,9 +104,7 @@ describe('multi-repository worktree utilities', () => {
             ),
         );
 
-        await expect(hasConfiguredRemote('/repos/example', 'git@github.com:jackiotyu/example.git')).resolves.toBe(
-            true,
-        );
+        await expect(hasConfiguredRemote('/repos/example', 'git@github.com:jackiotyu/example.git')).resolves.toBe(true);
         expect(execModule.execAuto).toHaveBeenCalledWith('/repos/example', ['remote', '-v']);
     });
 
