@@ -12,7 +12,7 @@ export function normalizeWorktreePath(targetPath: string): string {
 export async function getRegisteredWorktreePaths(repoPath: string): Promise<Set<string>> {
     const { stdout } = await execAuto(repoPath, ['worktree', 'list', '--porcelain']);
     const paths = [...stdout.matchAll(/^worktree (.+)$/gm)].map((match) =>
-        normalizeWorktreePath(match[1].trimEnd()),
+        normalizeWorktreePath(match[1].replace(/\r$/, '')),
     );
     return new Set(paths);
 }
