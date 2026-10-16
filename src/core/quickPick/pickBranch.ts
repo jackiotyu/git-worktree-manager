@@ -525,14 +525,9 @@ export const pickBranch: IPickBranch = async ({
 }) => {
     const { resolve, reject, promise } = withResolvers<ResolveValue>();
     let quickPick: vscode.QuickPick<BranchForWorktree> | undefined;
+    let cancelledWhileLoading = false;
 
     try {
-        const isValidGit = await checkGitValid(cwd);
-        if (!isValidGit) {
-            Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
-            return;
-        }
-
         quickPick = vscode.window.createQuickPick<BranchForWorktree>();
         const activeQuickPick = quickPick;
         const sortState = { sortBy: 'name' as BranchSortBy };
@@ -568,7 +563,10 @@ export const pickBranch: IPickBranch = async ({
                 totalSteps,
             });
         });
-        activeQuickPick.onDidHide(() => handleHide({ resolve, reject, quickPick: activeQuickPick }));
+        activeQuickPick.onDidHide(() => {
+            if (activeQuickPick.busy) cancelledWhileLoading = true;
+            handleHide({ resolve, reject, quickPick: activeQuickPick });
+        });
         activeQuickPick.onDidTriggerButton((event) =>
             handleTriggerButton({
                 resolve,
@@ -584,15 +582,30 @@ export const pickBranch: IPickBranch = async ({
         );
         activeQuickPick.onDidTriggerItemButton((event) => handleTriggerItemButton({ event }));
 
-        // Show the picker before fetching branch and tag data.
+        // Show the picker before checking Git state or loading branch and tag data.
         activeQuickPick.busy = true;
         activeQuickPick.show();
+
+        const isValidGit = await checkGitValid(cwd);
+        if (cancelledWhileLoading) return promise;
+        if (!isValidGit) {
+            Alert.showErrorMessage(vscode.l10n.t('The folder is not a valid Git repository'));
+            resolve();
+            activeQuickPick.busy = false;
+            activeQuickPick.hide();
+            return promise;
+        }
+
         await refreshItems();
+        if (cancelledWhileLoading) return promise;
 
         const { branchList, remoteBranchList, tagList } = await getRefList(cwd);
+        if (cancelledWhileLoading) return promise;
         if (!branchList) {
+            resolve();
+            activeQuickPick.busy = false;
             activeQuickPick.hide();
-            return;
+            return promise;
         }
         updateRefListCache(mainFolder, {
             branchList,
@@ -600,13 +613,15 @@ export const pickBranch: IPickBranch = async ({
             tagList,
         });
         await refreshItems();
-        activeQuickPick.busy = false;
+        if (!cancelledWhileLoading) activeQuickPick.busy = false;
     } catch (error) {
-        logger.error(error);
-        reject(error);
-        if (quickPick) {
-            quickPick.busy = false;
-            quickPick.hide();
+        if (!cancelledWhileLoading) {
+            logger.error(error);
+            reject(error);
+            if (quickPick) {
+                quickPick.busy = false;
+                quickPick.hide();
+            }
         }
     }
     return promise;
