@@ -45,3 +45,61 @@ export async function isMarkedMultiRepositoryWorktree(worktreePath: string): Pro
         return false;
     }
 }
+
+function stripRemotePath(remotePath: string): string {
+    let result = remotePath;
+    while (result.startsWith('/')) result = result.slice(1);
+    while (result.endsWith('/')) result = result.slice(0, -1);
+    if (result.toLowerCase().endsWith('.git')) result = result.slice(0, -4);
+    return result;
+}
+
+function normalizeRemote(remote: string): string {
+    const value = remote.trim();
+    const backslash = String.fromCharCode(92);
+    const isWindowsDrivePath =
+        value.length >= 3 && /^[a-zA-Z]:/.test(value) && (value[2] === '/' || value[2] === backslash);
+
+    if (!value.includes('://') && !isWindowsDrivePath) {
+        const colonIndex = value.indexOf(':');
+        const hostAndUser = colonIndex > 0 ? value.slice(0, colonIndex) : '';
+        if (hostAndUser && !hostAndUser.includes('/') && !hostAndUser.includes(backslash)) {
+            const host = hostAndUser.slice(hostAndUser.lastIndexOf('@') + 1).toLowerCase();
+            let remotePath = stripRemotePath(value.slice(colonIndex + 1));
+            if (host === 'github.com') remotePath = remotePath.toLowerCase();
+            return host + '/' + remotePath;
+        }
+    }
+
+    try {
+        const url = new URL(value);
+        if (['file:', 'git:', 'http:', 'https:', 'ssh:'].includes(url.protocol)) {
+            const isDefaultPort =
+                (url.protocol === 'http:' && url.port === '80') ||
+                (url.protocol === 'https:' && url.port === '443') ||
+                (url.protocol === 'ssh:' && url.port === '22');
+            const port = url.port && !isDefaultPort ? ':' + url.port : '';
+            const host = url.hostname.toLowerCase() + port;
+            let remotePath = stripRemotePath(url.pathname);
+            if (url.hostname.toLowerCase() === 'github.com') remotePath = remotePath.toLowerCase();
+            return host + '/' + remotePath;
+        }
+    } catch {
+        // Local paths and non-URL remotes are compared in their literal form below.
+    }
+
+    let normalized = value.split(backslash).join('/');
+    while (normalized.endsWith('/')) normalized = normalized.slice(0, -1);
+    if (normalized.toLowerCase().endsWith('.git')) normalized = normalized.slice(0, -4);
+    return normalized;
+}
+
+export async function hasConfiguredRemote(repoPath: string, configuredRemote: string): Promise<boolean> {
+    const { stdout } = await execAuto(repoPath, ['remote', '-v']);
+    const expected = normalizeRemote(configuredRemote);
+    const remoteUrls = stdout
+        .split(/\r?\n/)
+        .map((line) => line.trim().split(/\s+/)[1])
+        .filter((remote): remote is string => Boolean(remote));
+    return remoteUrls.some((remote) => normalizeRemote(remote) === expected);
+}
