@@ -242,7 +242,10 @@ class WorktreeActionPicker {
                     disposables.length = 0;
                     activeQuickPick.dispose();
                 }),
-                activeQuickPick.onDidAccept(() => this.handleAccept({ quickPick: activeQuickPick, resolve, reject, viewItem })),
+                activeQuickPick.onDidAccept(() => {
+                    if (activeQuickPick.busy) return;
+                    return this.handleAccept({ quickPick: activeQuickPick, resolve, reject, viewItem });
+                }),
                 activeQuickPick.onDidTriggerButton((event) => {
                     if (event === backButton) {
                         resolve();
