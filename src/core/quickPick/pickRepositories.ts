@@ -4,7 +4,7 @@ import { backButton } from '@/core/quickPick/quickPick.button';
 export interface RepositoryQuickPickItem {
     name: string;
     relativePath: string;
-    remote: string;
+    remote?: string;
 }
 
 export async function pickRepositories(

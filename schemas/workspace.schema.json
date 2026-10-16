@@ -34,8 +34,7 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "name",
-          "remote"
+          "name"
         ],
         "properties": {
           "name": {
