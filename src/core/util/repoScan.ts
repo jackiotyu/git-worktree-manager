@@ -4,7 +4,7 @@ import folderRoot from '@/core/folderRoot';
 import { Config } from '@/core/config/setting';
 import { execBase } from '@/core/git/exec-base';
 import { toSimplePath } from '@/core/util/path';
-import { hasWorktreeGitMetadata } from '@/core/util/repo';
+import { hasGitMetadata } from '@/core/util/repo';
 
 const GIT_ENTRY_GLOB = ['**/.git', '**/HEAD'];
 const DEFAULT_IGNORE_GLOBS = ['**/node_modules/**', '**/.git/*'];
@@ -90,7 +90,7 @@ export const scanNestedRepos = async (): Promise<string[]> => {
     const valid = await mapConcurrent(candidateList, 8, async (candidate) => {
         const isValid = candidate.bare
             ? await isBareRepository(candidate.path)
-            : await hasWorktreeGitMetadata(candidate.path);
+            : await hasGitMetadata(candidate.path);
         return isValid ? toSimplePath(candidate.path) : '';
     });
 
