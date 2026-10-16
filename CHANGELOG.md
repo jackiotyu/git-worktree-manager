@@ -1,3 +1,15 @@
+## v3.33.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.32.0...v3.33.0)
+
+### 🚀 Enhancements
+
+- Multi repository worktrees ([#75](https://github.com/jackiotyu/git-worktree-manager/pull/75))
+
+### 🎨 Styles
+
+- Correct indentation in release workflow configuration ([f5016e5](https://github.com/jackiotyu/git-worktree-manager/commit/f5016e5))
+
 ## v3.32.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.31.0...v3.32.0)
