@@ -66,14 +66,6 @@ function stripRemotePath(remotePath: string): string {
     return result;
 }
 
-function stripRemotePath(remotePath: string): string {
-    let result = remotePath;
-    while (result.startsWith('/')) result = result.slice(1);
-    while (result.endsWith('/')) result = result.slice(0, -1);
-    if (result.toLowerCase().endsWith('.git')) result = result.slice(0, -4);
-    return result;
-}
-
 function normalizeRemote(remote: string): string {
     const value = remote.trim();
     const backslash = String.fromCharCode(92);
