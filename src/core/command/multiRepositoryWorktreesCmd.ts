@@ -154,7 +154,7 @@ async function createMultiRepositoryWorktree(
             if (await pathExists(targetPath)) {
                 throw new Error(`Target path already exists: ${targetPath}`);
             }
-            await addBranchWorktree(repo.sourcePath, targetPath, branch, startPoint);
+            await addBranchWorktree(repo.sourcePath, targetPath, branch);
             created.push({ repoPath: repo.sourcePath, worktreePath: targetPath });
         }
         return targetRoot;
