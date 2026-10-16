@@ -100,7 +100,7 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 }
 ```
 
-`repo` 的键是子仓库在多仓库 Worktree 中使用的安全相对路径。`name` 用于在选择器中显示，`remote` 用于在子仓库源目录不存在时执行 clone。
+`repo` 的键是子仓库在多仓库 Worktree 中使用的安全相对路径。`name` 用于在选择器中显示。可选的 `remote` 用于在子仓库源目录不存在时执行 clone，并在配置后校验现有仓库的远端。
 
 可选的 `parent` 用于指定查找子仓库源目录的基准仓库根路径，支持绝对路径或相对于 `gwm.json` 所在目录的路径。省略时，扩展会根据 Git 元数据推导主工作树根目录；使用 bare 仓库布局时则采用当前工作树。此属性不会改变负责管理多仓库 Worktree 的 Git 仓库。
 
