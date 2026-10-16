@@ -1,0 +1,59 @@
+src/core/command/multiRepositoryWorktreesCmd.ts
+  h_efb56b9ff7aea6 42,100-101,102,139,170-172,280-284
+  s_26e9839bca8945::t_3eb91b1d3dee9e 26
+eslint.config.mjs
+  h_efb56b9ff7aea6 48
+src/core/command/index.ts
+  h_efb56b9ff7aea6 60-63
+src/core/quickPick/pickBranch.ts
+  h_efb56b9ff7aea6 506-509,510-513
+src/core/util/repoScan.ts
+  h_efb56b9ff7aea6 91
+src/types.ts
+  h_efb56b9ff7aea6 182-188
+src/test/unit/addBranchWorktree.test.ts
+  h_efb56b9ff7aea6 69-76,82
+src/test/unit/multiRepositoryWorktree.test.ts
+  h_efb56b9ff7aea6 118
+src/core/git/addBranchWorktree.ts
+  s_55da3321d03aa0::t_457319619ff82c 66
+src/core/util/multiRepositoryWorktree.ts
+  s_55da3321d03aa0::t_7d0cf2eac03949 86,120,131,135,163,190
+src/core/util/workspaceConfig.ts
+  h_efb56b9ff7aea6 70
+src/core/quickPick/multiRepositoryWorktrees.ts
+  h_efb56b9ff7aea6 47
+src/core/quickPick/quickPick.button.ts
+  h_efb56b9ff7aea6 210
+src/core/multiRepository/worktreeService.ts
+  h_efb56b9ff7aea6 31-34,43-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "227fdfb3fb3f7fa9be2d4189d9e6a21a4c69baae",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  },
+  "sessions": {
+    "s_26e9839bca8945": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ce157e2a-3015-432b-bbf0-d18f79c38d50",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    },
+    "s_55da3321d03aa0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "73cdb1ce-b9e3-4e6b-a098-c9c68ff0f59d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
