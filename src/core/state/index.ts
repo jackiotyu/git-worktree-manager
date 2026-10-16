@@ -92,7 +92,7 @@ export class WorkspaceState {
     static update(key: KeyWorkspaceNestedRepos, value: string[]): Thenable<void>;
     static update(key: string, value: any): Thenable<void> {
         return this.state.update(key, value).then(() => {
-            workspaceStateEvent.fire(key as KeyGitRepoRefList);
+            workspaceStateEvent.fire(key as StateKey);
         });
     }
 }
