@@ -247,5 +247,6 @@
     "Configured repository remote does not match: {0}": "配置的仓库远端与现有仓库不匹配：{0}",
     "Path exists but is not a worktree of the configured repository: {0}": "路径已存在，但不是配置仓库的 Worktree：{0}",
     "Worktree contains uncommitted changes: {0}": "Worktree 存在未提交的更改：{0}",
-    "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "Worktree 已部分移除。已移除：{0}。在 {1} 处失败：{2}"
+    "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "Worktree 已部分移除。已移除：{0}。在 {1} 处失败：{2}",
+    "Repository path resolves outside the workspace root: {0}": "仓库路径解析后位于工作区根目录之外：{0}"
 }
