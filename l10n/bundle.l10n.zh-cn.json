@@ -248,5 +248,8 @@
     "Path exists but is not a worktree of the configured repository: {0}": "路径已存在，但不是配置仓库的 Worktree：{0}",
     "Worktree contains uncommitted changes: {0}": "Worktree 存在未提交的更改：{0}",
     "Partially removed worktree. Removed: {0}. Failed at {1}: {2}": "Worktree 已部分移除。已移除：{0}。在 {1} 处失败：{2}",
-    "Repository path resolves outside the workspace root: {0}": "仓库路径解析后位于工作区根目录之外：{0}"
+    "Repository path resolves outside the workspace root: {0}": "仓库路径解析后位于工作区根目录之外：{0}",
+    "Invalid parent path in workspace.json": "workspace.json 中的 parent 路径无效",
+    "Configured parent path is not a Git repository: {0}": "配置的 parent 路径不是 Git 仓库：{0}",
+    "Repository path resolves outside the configured parent root: {0}": "仓库路径解析后位于配置的 parent 根目录之外：{0}"
 }
