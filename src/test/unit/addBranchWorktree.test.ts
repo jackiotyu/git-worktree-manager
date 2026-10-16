@@ -79,9 +79,7 @@ describe('addBranchWorktree', () => {
 
     it('removes a partially created worktree when checkout fails', async () => {
         const targetPath = path.join(os.tmpdir(), `gwm-partial-worktree-${process.pid}-missing`);
-        rs.mocked(execModule.execAuto)
-            .mockResolvedValueOnce(result())
-            .mockResolvedValueOnce(result());
+        rs.mocked(execModule.execAuto).mockResolvedValueOnce(result()).mockResolvedValueOnce(result());
         rs.mocked(multiRepositoryWorktreeModule.isRegisteredWorktree).mockResolvedValueOnce(true);
         rs.mocked(addWorktreeModule.addWorktreeRaw).mockRejectedValueOnce(new Error('checkout failed'));
 
