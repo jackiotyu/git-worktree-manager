@@ -235,7 +235,7 @@ function createWorktreePickItem(entry: MultiRepositoryWorktreeEntry): MultiRepos
             : vscode.l10n.t('{0}/{1} repositories ready', readyCount, entry.repoStatuses.length),
         entry,
         buttons: [
-            ...(entry.isMain ? [removeMultiRepositoryWorktreeQuickInputButton] : []),
+            ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
             completeRepositoriesQuickInputButton,
