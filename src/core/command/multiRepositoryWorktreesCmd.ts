@@ -137,7 +137,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<RepoEntry[]>
 
     const canonicalRoot = normalizeRepositoryPath(await resolveCanonicalPath(sourceRoot));
     const canonicalPaths = await Promise.all(repos.map((repo) => resolveCanonicalPath(repo.sourcePath)));
-    const normalizedCanonicalPaths = canonicalPaths.map(normalizePathForComparison);
+    const normalizedCanonicalPaths = canonicalPaths.map(normalizeRepositoryPath);
 
     for (let i = 0; i < repos.length; i++) {
         if (!isPathWithinRoot(canonicalRoot, normalizedCanonicalPaths[i])) {
