@@ -64,7 +64,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<{ config: Wo
     try {
         config = JSON.parse(raw) as WorkspaceConfig;
     } catch (error) {
-        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
+        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)), { cause: error });
     }
     if (config?.version !== 1 || !config.repo || typeof config.repo !== 'object' || Array.isArray(config.repo)) {
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', 'expected version 1 and a repo object'));
@@ -164,10 +164,13 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
     const parentDir = getBaseWorktreeDir(mainRepo);
     await fs.mkdir(parentDir, { recursive: true });
     let index = 1;
-    let targetRoot = '';
+    let targetRoot: string;
     while (true) {
-        targetRoot = path.join(parentDir, getSubDir(path.basename(mainRepo), branch.replace(/[\\/]/g, '-'), index));
-        if (!(await pathExists(targetRoot))) break;
+        const candidate = path.join(parentDir, getSubDir(path.basename(mainRepo), branch.replace(/[\\/]/g, '-'), index));
+        if (!(await pathExists(candidate))) {
+            targetRoot = candidate;
+            break;
+        }
         index += 1;
     }
 
@@ -208,7 +211,7 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
             }
         }
         if (cleanupErrors.length) {
-            throw new Error(vscode.l10n.t('Partially created; cleanup may be required: {0}', cleanupErrors.join('; ')));
+            throw new Error(vscode.l10n.t('Partially created; cleanup may be required: {0}', cleanupErrors.join('; ')), { cause: error });
         }
         throw error;
     }
