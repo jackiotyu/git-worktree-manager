@@ -364,7 +364,8 @@ async function createMultiRepositoryWorktreeFromWorkspace(root: string): Promise
                 title: vscode.l10n.t('Creating multi-repository worktree'),
                 cancellable: false,
             },
-            () => createMultiRepositoryWorktree(root, branch, selectedRepoPaths, targetRoot, branchSelection.startPoint),
+            () =>
+                createMultiRepositoryWorktree(root, branch, selectedRepoPaths, targetRoot, branchSelection.startPoint),
         );
         if (target) {
             void vscode.window.showInformationMessage(vscode.l10n.t('Multi-repository worktree created: {0}', target));

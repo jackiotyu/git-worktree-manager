@@ -58,11 +58,14 @@ describe('addBranchWorktree', () => {
 
         await addBranchWorktree('/repos/main', '/worktrees/feature', 'feature', 'release/2.x');
 
-        expect(execModule.execAuto).toHaveBeenNthCalledWith(
-            3,
-            '/repos/main',
-            ['worktree', 'add', '-b', 'feature', '/worktrees/feature', 'release/2.x'],
-        );
+        expect(execModule.execAuto).toHaveBeenNthCalledWith(3, '/repos/main', [
+            'worktree',
+            'add',
+            '-b',
+            'feature',
+            '/worktrees/feature',
+            'release/2.x',
+        ]);
         expect(addWorktreeModule.addWorktreeRaw).not.toHaveBeenCalled();
     });
 

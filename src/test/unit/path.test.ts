@@ -110,7 +110,6 @@ describe('isSubPath', () => {
     });
 });
 
-
 describe('resolveSafeRelativePath', () => {
     const root = path.resolve('workspace');
 
