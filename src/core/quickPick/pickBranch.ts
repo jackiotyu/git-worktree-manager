@@ -97,7 +97,7 @@ async function createBranchStrategy({
         const hash = await getLastCommitHash(cwd, true);
         resolve({ branch: branchName, hash });
     } else {
-        resolve({ branch: branchName });
+        resolve({ branch: branchName, startPoint: branchItem.branch || branchItem.hash });
     }
     quickPick.hide();
     quickPick.dispose();
