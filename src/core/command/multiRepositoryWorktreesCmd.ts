@@ -68,7 +68,7 @@ async function loadConfig(root: string, sourceRoot = root): Promise<{ config: Wo
     try {
         config = JSON.parse(raw) as WorkspaceConfig;
     } catch (error) {
-        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)), { cause: error });
+        throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', String(error)));
     }
     if (config?.version !== 1 || !config.repo || typeof config.repo !== 'object' || Array.isArray(config.repo)) {
         throw new Error(vscode.l10n.t('Invalid workspace.json: {0}', 'expected version 1 and a repo object'));
@@ -126,10 +126,7 @@ async function isGitRepository(repoPath: string): Promise<boolean> {
 
 async function isGitRepositoryPresent(repoPath: string): Promise<boolean> {
     try {
-        const [repoStat, gitStat] = await Promise.all([
-            fs.stat(repoPath),
-            fs.stat(path.join(repoPath, '.git')),
-        ]);
+        const [repoStat, gitStat] = await Promise.all([fs.stat(repoPath), fs.stat(path.join(repoPath, '.git'))]);
         return repoStat.isDirectory() && (gitStat.isFile() || gitStat.isDirectory());
     } catch {
         return false;
@@ -245,10 +242,7 @@ async function createMultiRepositoryWorktree(root: string, branch: string): Prom
             }
         }
         if (cleanupErrors.length) {
-            throw new Error(
-                vscode.l10n.t('Partially created; cleanup may be required: {0}', cleanupErrors.join('; ')),
-                { cause: error },
-            );
+            throw new Error(vscode.l10n.t('Partially created; cleanup may be required: {0}', cleanupErrors.join('; ')));
         }
         throw error;
     }
@@ -277,9 +271,7 @@ async function getMultiRepositoryWorktrees(
         entries.map(async (entry): Promise<MultiRepositoryWorktreeEntry> => ({
             ...entry,
             repoStatuses: await Promise.all(
-                repos.map((repo) =>
-                    isGitRepositoryPresent(resolveRepoPath(entry.path, repo.relativePath)),
-                ),
+                repos.map((repo) => isGitRepositoryPresent(resolveRepoPath(entry.path, repo.relativePath))),
             ),
         })),
     );
