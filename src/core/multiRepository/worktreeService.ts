@@ -28,7 +28,7 @@ export interface MultiRepositoryWorktreeEntry {
 
 async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
     try {
-        return (await isGitRepository(repo.sourcePath)) && (await hasConfiguredRemote(repo.sourcePath, repo.remote));
+        return (await isGitRepository(repo.sourcePath)) && (!repo.remote || (await hasConfiguredRemote(repo.sourcePath, repo.remote)));
     } catch {
         return false;
     }
@@ -36,6 +36,9 @@ async function isConfiguredRepository(repo: RepoEntry): Promise<boolean> {
 
 async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promise<void> {
     if (!(await pathExists(repo.sourcePath))) {
+        if (!repo.remote) {
+            throw new Error(vscode.l10n.t('Repository source does not exist and no remote is configured: {0}', repo.relativePath));
+        }
         await fs.mkdir(path.dirname(repo.sourcePath), { recursive: true });
         await execAuto(cloneCwd, ['clone', '--', repo.remote, repo.sourcePath]);
     }
@@ -43,7 +46,7 @@ async function ensureRepositorySource(repo: RepoEntry, cloneCwd: string): Promis
     if (!(await isGitRepository(repo.sourcePath))) {
         throw new Error(vscode.l10n.t('Configured path exists but is not a Git repository: {0}', repo.relativePath));
     }
-    if (!(await hasConfiguredRemote(repo.sourcePath, repo.remote))) {
+    if (repo.remote && !(await hasConfiguredRemote(repo.sourcePath, repo.remote))) {
         throw new Error(vscode.l10n.t('Configured repository remote does not match: {0}', repo.relativePath));
     }
 }
