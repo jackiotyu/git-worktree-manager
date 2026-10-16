@@ -34,7 +34,7 @@ describe('multi-repository worktree utilities', () => {
         const paths = await getRegisteredWorktreePaths('/repos/main');
 
         expect(paths.has(path.resolve('/repos/main'))).toBe(true);
-        expect(paths.has(path.resolve('/repos/feature')).toBe(true);
+        expect(paths.has(path.resolve('/repos/feature'))).toBe(true);
         expect(paths.has(path.resolve('/repos/feature-copy'))).toBe(false);
     });
 
@@ -48,11 +48,16 @@ describe('multi-repository worktree utilities', () => {
     });
 
     it('marks a linked worktree in its own Git directory', async () => {
-        rs.mocked(execModule.execAuto).mockResolvedValue(result(tempRoot));
+        rs.mocked(execModule.execAuto).mockImplementation(async (cwd, args) => {
+            if (args?.[0] === 'rev-parse') {
+                return result(cwd === '/worktrees/feature' ? tempRoot : path.join(tempRoot, 'unknown-git-dir'));
+            }
+            return result();
+        });
 
         await markMultiRepositoryWorktree('/worktrees/feature');
 
         expect(await isMarkedMultiRepositoryWorktree('/worktrees/feature')).toBe(true);
-        expect(await isMarkedMultiRepositoryWorktree('/worktrees/unknown')).toBe(true);
+        expect(await isMarkedMultiRepositoryWorktree('/worktrees/unknown')).toBe(false);
     });
 });
