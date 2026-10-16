@@ -84,6 +84,26 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
    - 将 Worktree 添加到 VSCode 工作区，同时处理多个分支。
    - 保存到收藏夹以便日后快速访问。
 
+## 多仓库 Worktree
+
+在主仓库根目录创建 `workspace.json`，用于配置需要一起管理的子仓库：
+
+```json
+{
+  "version": 1,
+  "repo": {
+    "packages/api": {
+      "name": "api",
+      "remote": "https://github.com/your-org/api.git"
+    }
+  }
+}
+```
+
+`repo` 的键是子仓库在多仓库 Worktree 中使用的安全相对路径。`name` 用于在选择器中显示，`remote` 用于在子仓库源目录不存在时执行 clone。
+
+可选的 `parent` 用于指定查找子仓库源目录的基准仓库根路径，支持绝对路径或相对于 `workspace.json` 所在目录的路径。省略时，扩展会根据 Git 元数据推导主仓库根目录。此属性不会改变负责管理多仓库 Worktree 的 Git 仓库。
+
 ## 配置 ⚙️
 
 根据你的工作流程自定义 Git Worktree Manager：
