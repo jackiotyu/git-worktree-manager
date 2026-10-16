@@ -14,10 +14,16 @@
       "const": 1,
       "description": "Workspace configuration format version."
     },
+    "parent": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Optional parent repository path, absolute or relative to workspace.json. Defaults to the main repository root."
+    },
     "repo": {
       "type": "object",
       "minProperties": 1,
-      "description": "Child repositories keyed by safe relative paths under the main repository.",
+      "description": "Child repositories keyed by safe relative paths under the configured parent path, or under the main repository root when parent is omitted.",
       "propertyNames": {
         "type": "string",
         "minLength": 1,
