@@ -1,0 +1,16 @@
+src/core/quickPick/multiRepositoryWorktrees.ts
+  h_efb56b9ff7aea6 47
+src/core/quickPick/quickPick.button.ts
+  h_efb56b9ff7aea6 210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1ae8439fd104d0d630119eedba549f44660e88c7",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
