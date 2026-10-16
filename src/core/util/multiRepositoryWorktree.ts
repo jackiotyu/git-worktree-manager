@@ -20,12 +20,12 @@ export function resolveRepoPath(root: string, relativePath: string): string {
         path.win32.parse(relativePath).root ||
         segments.includes('..')
     ) {
-        throw new Error(\`Repository path must be a safe relative path: \${relativePath}\`);
+        throw new Error(`Repository path must be a safe relative path: ${relativePath}`);
     }
     const resolved = path.resolve(root, relativePath);
     const relative = path.relative(root, resolved);
-    if (!relative || relative === '..' || relative.startsWith(\`..\${path.sep}\`) || path.isAbsolute(relative)) {
-        throw new Error(\`Repository path escapes the workspace root: \${relativePath}\`);
+    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+        throw new Error(`Repository path escapes the workspace root: ${relativePath}`);
     }
     return resolved;
 }
