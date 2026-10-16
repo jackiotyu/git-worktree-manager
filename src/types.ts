@@ -179,7 +179,7 @@ export type FetchArgs = {
     remoteRef: string;
     cwd: string;
 };
-export type IBranchForWorktree = { branch?: string; hash?: string; mainFolder?: string; remote?: boolean };
+export type IBranchForWorktree = { branch?: string; hash?: string; mainFolder?: string; remote?: boolean; startPoint?: string };
 export type BranchForWorktree = vscode.QuickPickItem & IBranchForWorktree;
 export type IPickBranchResolveValue = IBranchForWorktree | void | false;
 export type IPickBranchParams = {
