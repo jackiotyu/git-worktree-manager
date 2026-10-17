@@ -60,6 +60,28 @@ describe('multi-repository branch switching', () => {
         expect(branches).toEqual(['feature']);
     });
 
+    it('uses configured source paths for child repositories in the main worktree', async () => {
+        rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
+            if (args[0] === 'branch') return result('main\\n');
+            if (args[0] === 'worktree') return result(`worktree ${cwd}\\nbranch refs/heads/main\\n`);
+            return result();
+        });
+
+        const mainEntry: MultiRepositoryWorktreeEntry = {
+            ...entry,
+            path: mainRepo,
+            isMain: true,
+        };
+
+        await expect(getCommonMultiRepositoryBranches(mainRepo, [childRepo], mainEntry)).resolves.toEqual(['main']);
+
+        expect(execModule.execAuto).toHaveBeenCalledWith(childRepo.sourcePath, ['branch', '--format=%(refname:short)']);
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(
+            path.join(mainRepo, 'client'),
+            ['branch', '--format=%(refname:short)'],
+        );
+    });
+
     it('creates a new branch from each repository worktree current HEAD', async () => {
         rs.mocked(execModule.execAuto).mockImplementation(async (_cwd = '', args = []) => {
             if (args[0] === 'branch' && args[1] === '--show-current') {
