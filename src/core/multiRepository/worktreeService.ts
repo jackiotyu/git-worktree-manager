@@ -307,7 +307,7 @@ function getBranchWorktrees(
         { repoPath: mainRepo, worktreePath: entry.path, label: path.basename(entry.path) },
         ...repos.map((repo) => ({
             repoPath: repo.sourcePath,
-            worktreePath: resolveSafeRelativePath(entry.path, repo.relativePath),
+            worktreePath: entry.isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath),
             label: repo.relativePath,
         })),
     ];
