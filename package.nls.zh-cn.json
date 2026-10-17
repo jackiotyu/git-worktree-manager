@@ -128,5 +128,13 @@
     "config.worktreeLabelTemplate.description": "Worktree 标签（树视图中每一项的加粗文本）的模板。留空则使用默认标签（分支名或标签名）。可用的变量：\n\n- `$REF_NAME`：Worktree 中检出的引用名称，例如分支名或标签名。\n- `$BASE_NAME`：Worktree 的文件夹名称。\n- `$FULL_PATH`：Worktree 的完整路径。\n- `$RELATIVE_PATH`：相对路径（相对于主仓库目录）。\n- `$LAST_COMMIT`：该 worktree 最后一次提交的相对时间（例如 “3 周前”）。\n\n示例：`$BASE_NAME ⇄ $REF_NAME` 先显示文件夹名称，再显示分支名。",
     "config.terminalNameTemplate.description": "打开内置终端时显示的名称模板。可用的变量：\n\n- `$FULL_PATH`：文件夹的完整路径。\n- `$BASE_NAME`：文件夹名称。\n- `$LABEL`：展示的名称、文件夹名称或者 Worktree 展示的名称",
     "cmd.multiRepositoryWorktrees": "管理多仓库 Worktree",
-    "cmd.createMultiRepositoryWorktree": "创建多仓库 Worktree"
+    "cmd.createMultiRepositoryWorktree": "创建多仓库 Worktree",
+    "schema.workspace.title": "Git Worktree Manager 工作区配置",
+    "schema.workspace.description": "配置与 Git Worktree Manager 工作区关联管理的子仓库。",
+    "schema.workspace.version": "工作区配置格式版本。",
+    "schema.workspace.parent": "用于定位子仓库源目录的可选基础仓库根目录；可以是绝对路径或相对于 gwm.json 的路径。",
+    "schema.workspace.repo": "以安全相对路径为键的子仓库配置；路径相对于指定的 parent，未指定时相对于主仓库根目录。",
+    "schema.workspace.repoPath": "相对仓库路径。不允许绝对路径以及 '.' 或 '..' 路径段。",
+    "schema.workspace.name": "在仓库选择器中显示的名称。",
+    "schema.workspace.remote": "仓库不存在时用于获取仓库的 Git remote URL 或克隆源。"
 }
