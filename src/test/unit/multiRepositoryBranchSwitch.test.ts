@@ -156,4 +156,60 @@ describe('multi-repository branch switching', () => {
         expect(execModule.execAuto).not.toHaveBeenCalledWith(mainWorktree, ['switch', 'partial']);
         expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'partial']);
     });
+    it('rejects switching when the target branch is checked out in another worktree', async () => {
+        rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
+            if (args[0] === 'branch') return result('main\nfeature\n');
+            if (args[0] === 'status') return result();
+            if (args[0] === 'worktree') {
+                return result(
+                    `worktree ${cwd}\nbranch refs/heads/main\n\nworktree ${mainWorktree}\nbranch refs/heads/feature\n\nworktree ${mainWorktree}-other\nbranch refs/heads/feature\n`,
+                );
+            }
+            return result();
+        });
+
+        await expect(switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'feature')).rejects.toThrow(
+            'already checked out in another worktree',
+        );
+
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(mainWorktree, ['switch', 'feature']);
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'feature']);
+    });
+
+    it('rejects switching before changing any repository when a worktree is dirty', async () => {
+        rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
+            if (args[0] === 'status') return result(cwd === mainWorktree ? ' M changed.ts\\0' : '');
+            if (args[0] === 'branch') return result('main\nfeature\n');
+            return result();
+        });
+
+        await expect(switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'feature')).rejects.toThrow(
+            'uncommitted changes',
+        );
+
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(mainWorktree, ['switch', 'feature']);
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'feature']);
+    });
+
+    it('reports repositories already switched when a later repository fails', async () => {
+        rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
+            if (args[0] === 'branch') return result('main\nfeature\n');
+            if (args[0] === 'status') return result();
+            if (args[0] === 'worktree') {
+                return result(`worktree ${cwd}\nbranch refs/heads/main\n\nworktree ${mainWorktree}\nbranch refs/heads/feature\n`);
+            }
+            if (args[0] === 'switch' && cwd === path.join(mainWorktree, 'client')) {
+                throw new Error('simulated checkout failure');
+            }
+            return result();
+        });
+
+        await expect(switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'feature')).rejects.toThrow(
+            /partially completed.*Updated:.*feature.*Failed at client.*simulated checkout failure/i,
+        );
+
+        expect(execModule.execAuto).toHaveBeenCalledWith(mainWorktree, ['switch', 'feature']);
+        expect(execModule.execAuto).toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'feature']);
+    });
+
 });
