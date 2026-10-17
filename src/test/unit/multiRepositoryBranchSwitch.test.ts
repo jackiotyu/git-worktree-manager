@@ -62,8 +62,8 @@ describe('multi-repository branch switching', () => {
 
     it('uses configured source paths for child repositories in the main worktree', async () => {
         rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
-            if (args[0] === 'branch') return result('main\\n');
-            if (args[0] === 'worktree') return result(`worktree ${cwd}\\nbranch refs/heads/main\\n`);
+            if (args[0] === 'branch') return result('main\n');
+            if (args[0] === 'worktree') return result(`worktree ${cwd}\nbranch refs/heads/main\n`);
             return result();
         });
 
