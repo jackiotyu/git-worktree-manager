@@ -8,6 +8,23 @@ import {
 } from '@/core/multiRepository/worktreeService';
 import type { RepoEntry } from '@/types';
 
+rs.mock('vscode', () => ({
+    l10n: { t: (message: string) => message },
+    window: {
+        createOutputChannel: () => ({
+            appendLine: () => {},
+            append: () => {},
+            show: () => {},
+            hide: () => {},
+            dispose: () => {},
+            error: () => {},
+            info: () => {},
+            trace: () => {},
+            warn: () => {},
+        }),
+    },
+}));
+
 rs.mock('@/core/git/exec', () => ({
     execAuto: rs.fn(),
 }));
