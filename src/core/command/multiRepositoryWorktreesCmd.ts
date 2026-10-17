@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { normalizeRepositoryPath } from '@/core/util/multiRepositoryWorktree';
 import { Alert } from '@/core/ui/message';
 import { inputWorktreeDir } from '@/core/ui/inputWorktreeDir';
-import { inputNewBranch } from '@/core/ui/inputNewBranch';
 import { pickBranch } from '@/core/quickPick/pickBranch';
 import {
     completeMultiRepositoryWorktree,
@@ -18,6 +17,8 @@ import {
 import { Commands } from '@/constants';
 import {
     openInCurrentWindowQuickInputButton,
+    revealInSystemExplorerQuickInputButton,
+    openRepositoryQuickInputButton,
     openExternalTerminalQuickInputButton,
     openTerminalQuickInputButton,
     removeMultiRepositoryWorktreeQuickInputButton,
@@ -164,6 +165,22 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                 if (!currentState) return;
                 const { mainRepo, repos } = currentState;
 
+                if (event.button === revealInSystemExplorerQuickInputButton) {
+                    await vscode.commands.executeCommand(Commands.revealInSystemExplorerContext, {
+                        name: event.item.entry.branch,
+                        fsPath: event.item.entry.path,
+                        uriPath: vscode.Uri.file(event.item.entry.path).toString(),
+                    });
+                    return;
+                }
+                if (event.button === openRepositoryQuickInputButton) {
+                    await vscode.commands.executeCommand(Commands.openRepository, {
+                        name: event.item.entry.branch,
+                        fsPath: event.item.entry.path,
+                        uriPath: vscode.Uri.file(event.item.entry.path).toString(),
+                    });
+                    return;
+                }
                 if (event.button === viewChildRepositoriesQuickInputButton) {
                     quickPick.hide();
                     const childQuickPick = showMultiRepositoryChildRepositoriesQuickPick({
@@ -176,6 +193,22 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                             });
                         },
                         onItemButton: async (childEvent, refreshItems, close) => {
+                            if (childEvent.button === revealInSystemExplorerQuickInputButton) {
+                                await vscode.commands.executeCommand(Commands.revealInSystemExplorerContext, {
+                                    name: childEvent.item.repo.name,
+                                    fsPath: childEvent.item.path,
+                                    uriPath: vscode.Uri.file(childEvent.item.path).toString(),
+                                });
+                                return;
+                            }
+                            if (childEvent.button === openRepositoryQuickInputButton) {
+                                await vscode.commands.executeCommand(Commands.openRepository, {
+                                    name: childEvent.item.repo.name,
+                                    fsPath: childEvent.item.path,
+                                    uriPath: vscode.Uri.file(childEvent.item.path).toString(),
+                                });
+                                return;
+                            }
                             if (
                                 childEvent.button === openExternalTerminalQuickInputButton ||
                                 childEvent.button === openTerminalQuickInputButton
@@ -254,24 +287,17 @@ export async function multiRepositoryWorktreesCmd(): Promise<void> {
                     quickPick.hide();
                     try {
                         const branches = await getCommonMultiRepositoryBranches(mainRepo, repos, event.item.entry);
-                        const createLabel = vscode.l10n.t('Create new branch...');
-                        const options: Array<{ label: string; branch?: string; create?: boolean }> = [
-                            ...branches.map((branch) => ({ label: branch, branch })),
-                            { label: `$(plus) ${createLabel}`, create: true },
-                        ];
-                        const selected = await vscode.window.showQuickPick(options, {
-                            placeHolder: vscode.l10n.t('Select a common branch or create a new branch'),
+                        const selected = await pickBranch({
+                            title: vscode.l10n.t('Switch Branch Across Repositories'),
+                            placeholder: vscode.l10n.t('Select a common branch or create a new branch'),
+                            mainFolder: mainRepo,
+                            cwd: event.item.entry.path,
+                            showCreate: true,
+                            createBranchOnPick: false,
+                            allowCreateFrom: false,
+                            branchNames: branches,
                         });
-                        if (!selected) return;
-
-                        let branch = selected.branch;
-                        if (selected.create) {
-                            const newBranch = await inputNewBranch(event.item.entry.path, undefined, {
-                                title: vscode.l10n.t('Switch Branch Across Repositories'),
-                            });
-                            if (typeof newBranch !== 'string' || !newBranch) return;
-                            branch = newBranch;
-                        }
+                        const branch = selected && selected.branch;
                         if (!branch) return;
 
                         await vscode.window.withProgress(
