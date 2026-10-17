@@ -9,6 +9,7 @@ import {
 import type { RepoEntry } from '@/types';
 
 rs.mock('vscode', () => ({
+    env: { language: 'en' },
     l10n: { t: (message: string) => message },
     window: {
         createOutputChannel: () => ({
