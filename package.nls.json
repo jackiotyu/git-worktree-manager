@@ -128,5 +128,13 @@
     "config.worktreeLabelTemplate.description": "Template for the worktree label (the bold text of each item in the tree view). Leave empty to keep the default label (the branch or tag name). Available variables:\n\n- `$REF_NAME`: The ref name checked out in the worktree, such as the branch or tag name.\n- `$BASE_NAME`: The folder name of the worktree.\n- `$FULL_PATH`: The full path of the worktree.\n- `$RELATIVE_PATH`: The relative path (relative to the main repo directory).\n- `$LAST_COMMIT`: Relative time of the last commit on this worktree (e.g. \"3 weeks ago\").\n\nExample: `$BASE_NAME ⇄ $REF_NAME` shows the worktree folder name first, then the branch.",
     "config.terminalNameTemplate.description": "Template for the terminal name. Available variables:\n\n- `$FULL_PATH`: The full path of the folder.\n- `$BASE_NAME`: The folder name.\n- `$LABEL`: The display name, the folder name or the worktree display name.",
     "cmd.multiRepositoryWorktrees": "Manage Multi-Repository Worktrees",
-    "cmd.createMultiRepositoryWorktree": "Create Multi-Repository Worktree"
+    "cmd.createMultiRepositoryWorktree": "Create Multi-Repository Worktree",
+    "schema.workspace.title": "Git Worktree Manager workspace configuration",
+    "schema.workspace.description": "Configures the child repositories managed alongside a Git Worktree Manager workspace.",
+    "schema.workspace.version": "Workspace configuration format version.",
+    "schema.workspace.parent": "Optional base repository root used to locate child repository source folders; may be absolute or relative to gwm.json.",
+    "schema.workspace.repo": "Child repositories keyed by safe relative paths under the configured parent path, or under the main repository root when parent is omitted.",
+    "schema.workspace.repoPath": "A relative repository path. Absolute paths and '.' or '..' path segments are not allowed.",
+    "schema.workspace.name": "Display name shown in the repository picker.",
+    "schema.workspace.remote": "Git remote URL or clone source used when the repository is missing."
 }
