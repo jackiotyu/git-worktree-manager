@@ -65,7 +65,9 @@ export function showMultiRepositoryChildRepositoriesQuickPick(
                         ...(!options.entry.isMain ? [removeChildRepositoryQuickInputButton] : []),
                         ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
                         ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
-                        ...(revealInSystemExplorerQuickInputButton.enabled ? [revealInSystemExplorerQuickInputButton] : []),
+                        ...(revealInSystemExplorerQuickInputButton.enabled
+                            ? [revealInSystemExplorerQuickInputButton]
+                            : []),
                         ...(openRepositoryQuickInputButton.enabled ? [openRepositoryQuickInputButton] : []),
                         openInCurrentWindowQuickInputButton,
                     ],

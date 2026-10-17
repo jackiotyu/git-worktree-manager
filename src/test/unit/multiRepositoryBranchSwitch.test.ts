@@ -72,7 +72,11 @@ describe('multi-repository branch switching', () => {
         await switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'new-feature');
 
         expect(execModule.execAuto).toHaveBeenCalledWith(mainWorktree, ['switch', '-c', 'new-feature']);
-        expect(execModule.execAuto).toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', '-c', 'new-feature']);
+        expect(execModule.execAuto).toHaveBeenCalledWith(path.join(mainWorktree, 'client'), [
+            'switch',
+            '-c',
+            'new-feature',
+        ]);
     });
 
     it('does not create a branch when a repository is in detached HEAD', async () => {
@@ -84,15 +88,16 @@ describe('multi-repository branch switching', () => {
             return result();
         });
 
-        await expect(
-            switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'new-feature'),
-        ).rejects.toThrow('detached HEAD');
+        await expect(switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'new-feature')).rejects.toThrow(
+            'detached HEAD',
+        );
 
         expect(execModule.execAuto).not.toHaveBeenCalledWith(mainWorktree, ['switch', '-c', 'new-feature']);
-        expect(execModule.execAuto).not.toHaveBeenCalledWith(
-            path.join(mainWorktree, 'client'),
-            ['switch', '-c', 'new-feature'],
-        );
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainWorktree, 'client'), [
+            'switch',
+            '-c',
+            'new-feature',
+        ]);
     });
 
     it('does not change repositories when the target branch exists in only some repositories', async () => {
@@ -101,9 +106,9 @@ describe('multi-repository branch switching', () => {
             return result();
         });
 
-        await expect(
-            switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'partial'),
-        ).rejects.toThrow('No repositories were changed');
+        await expect(switchMultiRepositoryWorktreeBranch(mainRepo, [childRepo], entry, 'partial')).rejects.toThrow(
+            'No repositories were changed',
+        );
 
         expect(execModule.execAuto).not.toHaveBeenCalledWith(mainWorktree, ['switch', 'partial']);
         expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'partial']);

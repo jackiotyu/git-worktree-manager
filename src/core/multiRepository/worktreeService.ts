@@ -289,7 +289,6 @@ export async function removeChildRepositoryWorktree(
     await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
 }
 
-
 interface BranchWorktree {
     repoPath: string;
     worktreePath: string;
@@ -316,13 +315,15 @@ function getBranchWorktrees(
 
 async function getLocalBranches(worktreePath: string): Promise<Set<string>> {
     const { stdout } = await execAuto(worktreePath, ['branch', '--format=%(refname:short)']);
-    return new Set(stdout.split(/\r?\n/).map((branch) => branch.trim()).filter(Boolean));
+    return new Set(
+        stdout
+            .split(/\r?\n/)
+            .map((branch) => branch.trim())
+            .filter(Boolean),
+    );
 }
 
-async function getBranchesCheckedOutElsewhere(
-    repoPath: string,
-    worktreePath: string,
-): Promise<Map<string, string>> {
+async function getBranchesCheckedOutElsewhere(repoPath: string, worktreePath: string): Promise<Map<string, string>> {
     const { stdout } = await execAuto(repoPath, ['worktree', 'list', '--porcelain']);
     const branches = new Map<string, string>();
     let listedPath = '';
@@ -365,9 +366,7 @@ export async function getCommonMultiRepositoryBranches(
     const checkedOutBranches = await Promise.all(
         worktrees.map(({ repoPath, worktreePath }) => getBranchesCheckedOutElsewhere(repoPath, worktreePath)),
     );
-    return commonBranches
-        .filter((branch) => checkedOutBranches.every((branches) => !branches.has(branch)))
-        .sort();
+    return commonBranches.filter((branch) => checkedOutBranches.every((branches) => !branches.has(branch))).sort();
 }
 
 export async function switchMultiRepositoryWorktreeBranch(
@@ -381,7 +380,10 @@ export async function switchMultiRepositoryWorktreeBranch(
         await execAuto(worktreePath, ['check-ref-format', '--branch', branch]);
     }
 
-    await assertWorktreeClean(entry.path, repos.map((repo) => repo.relativePath));
+    await assertWorktreeClean(
+        entry.path,
+        repos.map((repo) => repo.relativePath),
+    );
     for (const { worktreePath } of worktrees.slice(1)) await assertWorktreeClean(worktreePath);
 
     const branchLists = await Promise.all(worktrees.map(({ worktreePath }) => getLocalBranches(worktreePath)));
