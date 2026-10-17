@@ -52,6 +52,9 @@ branch refs/heads/main
 
 worktree ${target}
 branch refs/heads/feature
+
+worktree ${target}-other
+branch refs/heads/shared
 `;
 }
 
