@@ -5,6 +5,10 @@ import type { RepoEntry } from '@/types';
 import {
     backButton,
     openInCurrentWindowQuickInputButton,
+    revealInSystemExplorerQuickInputButton,
+    openRepositoryQuickInputButton,
+    openExternalTerminalQuickInputButton,
+    openTerminalQuickInputButton,
     removeChildRepositoryQuickInputButton,
 } from '@/core/quickPick/quickPick.button';
 
@@ -59,6 +63,12 @@ export function showMultiRepositoryChildRepositoriesQuickPick(
                     path: repoPath,
                     buttons: [
                         ...(!options.entry.isMain ? [removeChildRepositoryQuickInputButton] : []),
+                        ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
+                        ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
+                        ...(revealInSystemExplorerQuickInputButton.enabled
+                            ? [revealInSystemExplorerQuickInputButton]
+                            : []),
+                        ...(openRepositoryQuickInputButton.enabled ? [openRepositoryQuickInputButton] : []),
                         openInCurrentWindowQuickInputButton,
                     ],
                 },

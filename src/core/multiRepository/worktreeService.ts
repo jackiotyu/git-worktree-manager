@@ -288,3 +288,145 @@ export async function removeChildRepositoryWorktree(
     await assertWorktreeClean(childPath);
     await execAuto(repo.sourcePath, ['worktree', 'remove', childPath]);
 }
+
+interface BranchWorktree {
+    repoPath: string;
+    worktreePath: string;
+    label: string;
+}
+
+function getBranchWorktrees(
+    mainRepo: string,
+    repos: RepoEntry[],
+    entry: MultiRepositoryWorktreeEntry,
+): BranchWorktree[] {
+    if (entry.repoStatuses.some((exists) => !exists)) {
+        throw new Error(vscode.l10n.t('Complete all child repositories before switching branches.'));
+    }
+    return [
+        { repoPath: mainRepo, worktreePath: entry.path, label: path.basename(entry.path) },
+        ...repos.map((repo) => ({
+            repoPath: repo.sourcePath,
+            worktreePath: entry.isMain ? repo.sourcePath : resolveSafeRelativePath(entry.path, repo.relativePath),
+            label: repo.relativePath,
+        })),
+    ];
+}
+
+async function getLocalBranches(worktreePath: string): Promise<Set<string>> {
+    const { stdout } = await execAuto(worktreePath, ['branch', '--format=%(refname:short)']);
+    return new Set(
+        stdout
+            .split(/\r?\n/)
+            .map((branch) => branch.trim())
+            .filter(Boolean),
+    );
+}
+
+async function getBranchesCheckedOutElsewhere(repoPath: string, worktreePath: string): Promise<Map<string, string>> {
+    const { stdout } = await execAuto(repoPath, ['worktree', 'list', '--porcelain']);
+    const branches = new Map<string, string>();
+    let listedPath = '';
+    for (const line of stdout.split(/\r?\n/)) {
+        if (line.startsWith('worktree ')) {
+            listedPath = line.slice('worktree '.length);
+        } else if (
+            line.startsWith('branch refs/heads/') &&
+            normalizeRepositoryPath(listedPath) !== normalizeRepositoryPath(worktreePath)
+        ) {
+            branches.set(line.slice('branch refs/heads/'.length), listedPath);
+        }
+    }
+    return branches;
+}
+
+async function assertBranchNotCheckedOutElsewhere(
+    repoPath: string,
+    worktreePath: string,
+    branch: string,
+): Promise<void> {
+    const listedPath = (await getBranchesCheckedOutElsewhere(repoPath, worktreePath)).get(branch);
+    if (listedPath) {
+        throw new Error(
+            vscode.l10n.t('Branch {0} is already checked out in another worktree: {1}', branch, listedPath),
+        );
+    }
+}
+
+export async function getCommonMultiRepositoryBranches(
+    mainRepo: string,
+    repos: RepoEntry[],
+    entry: MultiRepositoryWorktreeEntry,
+): Promise<string[]> {
+    const worktrees = getBranchWorktrees(mainRepo, repos, entry);
+    const branchLists = await Promise.all(worktrees.map(({ worktreePath }) => getLocalBranches(worktreePath)));
+    const commonBranches = [...branchLists[0]].filter((branch) =>
+        branchLists.every((branches) => branches.has(branch)),
+    );
+    const checkedOutBranches = await Promise.all(
+        worktrees.map(({ repoPath, worktreePath }) => getBranchesCheckedOutElsewhere(repoPath, worktreePath)),
+    );
+    return commonBranches.filter((branch) => checkedOutBranches.every((branches) => !branches.has(branch))).sort();
+}
+
+export async function switchMultiRepositoryWorktreeBranch(
+    mainRepo: string,
+    repos: RepoEntry[],
+    entry: MultiRepositoryWorktreeEntry,
+    branch: string,
+): Promise<void> {
+    const worktrees = getBranchWorktrees(mainRepo, repos, entry);
+    for (const { worktreePath } of worktrees) {
+        await execAuto(worktreePath, ['check-ref-format', '--branch', branch]);
+    }
+
+    await assertWorktreeClean(
+        entry.path,
+        repos.map((repo) => repo.relativePath),
+    );
+    for (const { worktreePath } of worktrees.slice(1)) await assertWorktreeClean(worktreePath);
+
+    const branchLists = await Promise.all(worktrees.map(({ worktreePath }) => getLocalBranches(worktreePath)));
+    const existingCount = branchLists.filter((branches) => branches.has(branch)).length;
+    if (existingCount > 0 && existingCount < worktrees.length) {
+        throw new Error(
+            vscode.l10n.t('Branch {0} exists in only some repositories. No repositories were changed.', branch),
+        );
+    }
+
+    const create = existingCount === 0;
+    if (create) {
+        for (const { worktreePath, label } of worktrees) {
+            const { stdout } = await execAuto(worktreePath, ['branch', '--show-current']);
+            if (!stdout.trim()) {
+                throw new Error(vscode.l10n.t('Cannot create a branch from detached HEAD in {0}.', label));
+            }
+        }
+    } else {
+        await Promise.all(
+            worktrees.map(({ repoPath, worktreePath }) =>
+                assertBranchNotCheckedOutElsewhere(repoPath, worktreePath, branch),
+            ),
+        );
+    }
+
+    const changed: string[] = [];
+    for (const { worktreePath, label } of worktrees) {
+        try {
+            await execAuto(worktreePath, create ? ['switch', '-c', branch] : ['switch', branch]);
+            changed.push(label);
+        } catch (error) {
+            throw new Error(
+                changed.length
+                    ? vscode.l10n.t(
+                          'Branch operation partially completed for {0}. Updated: {1}. Failed at {2}: {3}',
+                          branch,
+                          changed.join(', '),
+                          label,
+                          String(error),
+                      )
+                    : vscode.l10n.t('Unable to switch to branch {0} in {1}: {2}', branch, label, String(error)),
+            );
+        }
+    }
+}
