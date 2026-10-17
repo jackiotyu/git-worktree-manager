@@ -97,10 +97,10 @@ describe('multi-repository branch switching', () => {
         await expect(getCommonMultiRepositoryBranches(mainRepo, [childRepo], mainEntry)).resolves.toEqual(['main']);
 
         expect(execModule.execAuto).toHaveBeenCalledWith(childRepo.sourcePath, ['branch', '--format=%(refname:short)']);
-        expect(execModule.execAuto).not.toHaveBeenCalledWith(
-            path.join(mainRepo, 'client'),
-            ['branch', '--format=%(refname:short)'],
-        );
+        expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainRepo, 'client'), [
+            'branch',
+            '--format=%(refname:short)',
+        ]);
     });
 
     it('creates a new branch from each repository worktree current HEAD', async () => {
