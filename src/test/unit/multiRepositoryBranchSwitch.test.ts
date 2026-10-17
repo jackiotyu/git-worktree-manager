@@ -10,7 +10,10 @@ import type { RepoEntry } from '@/types';
 
 rs.mock('vscode', () => ({
     env: { language: 'en' },
-    l10n: { t: (message: string) => message },
+    l10n: {
+        t: (message: string, ...args: unknown[]) =>
+            args.reduce((text, arg, index) => text.replace(`{${index}}`, String(arg)), message),
+    },
     window: {
         createOutputChannel: () => ({
             appendLine: () => {},
