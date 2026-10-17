@@ -3,6 +3,8 @@ import type { MultiRepositoryWorktreeEntry } from '@/core/multiRepository/worktr
 import { normalizeRepositoryPath } from '@/core/util/multiRepositoryWorktree';
 import {
     openInCurrentWindowQuickInputButton,
+    revealInSystemExplorerQuickInputButton,
+    openRepositoryQuickInputButton,
     openExternalTerminalQuickInputButton,
     openTerminalQuickInputButton,
     createMultiRepositoryWorktreeQuickInputButton,
@@ -43,6 +45,8 @@ export function createMultiRepositoryWorktreePickItem(
             ...(entry.isMain ? [] : [removeMultiRepositoryWorktreeQuickInputButton]),
             ...(openExternalTerminalQuickInputButton.enabled ? [openExternalTerminalQuickInputButton] : []),
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
+            ...(revealInSystemExplorerQuickInputButton.enabled ? [revealInSystemExplorerQuickInputButton] : []),
+            ...(openRepositoryQuickInputButton.enabled ? [openRepositoryQuickInputButton] : []),
             completeRepositoriesQuickInputButton,
             removeChildRepositoryQuickInputButton,
             viewChildRepositoriesQuickInputButton,
