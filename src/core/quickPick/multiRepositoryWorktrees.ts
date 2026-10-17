@@ -47,10 +47,10 @@ export function createMultiRepositoryWorktreePickItem(
             ...(openTerminalQuickInputButton.enabled ? [openTerminalQuickInputButton] : []),
             ...(revealInSystemExplorerQuickInputButton.enabled ? [revealInSystemExplorerQuickInputButton] : []),
             ...(openRepositoryQuickInputButton.enabled ? [openRepositoryQuickInputButton] : []),
+            switchMultiRepositoryBranchQuickInputButton,
             completeRepositoriesQuickInputButton,
             removeChildRepositoryQuickInputButton,
             viewChildRepositoriesQuickInputButton,
-            switchMultiRepositoryBranchQuickInputButton,
             openInCurrentWindowQuickInputButton,
         ].filter((button) => button.enabled),
     };
