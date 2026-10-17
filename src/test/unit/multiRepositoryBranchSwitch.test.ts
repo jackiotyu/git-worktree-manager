@@ -196,7 +196,8 @@ describe('multi-repository branch switching', () => {
             if (args[0] === 'branch') return result('main\nfeature\n');
             if (args[0] === 'status') return result();
             if (args[0] === 'worktree') {
-                return result(`worktree ${cwd}\nbranch refs/heads/main\n\nworktree ${mainWorktree}\nbranch refs/heads/feature\n`);
+                const target = cwd === mainRepo ? mainWorktree : path.join(mainWorktree, 'client');
+                return result(`worktree ${cwd}\nbranch refs/heads/main\n\nworktree ${target}\nbranch refs/heads/feature\n`);
             }
             if (args[0] === 'switch' && cwd === path.join(mainWorktree, 'client')) {
                 throw new Error('simulated checkout failure');
