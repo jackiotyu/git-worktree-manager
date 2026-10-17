@@ -461,9 +461,10 @@ const mapRefItems = ({
     });
 
     if (!branchNames) return items;
+    const branches = new Set(branchNames);
     return items.filter((item) => {
         const branch = (item as BranchForWorktree).branch;
-        return (branch && branchNames.includes(branch)) || item.label === createNewBranchItem.label;
+        return (branch && branches.has(branch)) || item.label === createNewBranchItem.label;
     });
 };
 
