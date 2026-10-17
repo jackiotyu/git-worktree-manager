@@ -156,6 +156,7 @@ describe('multi-repository branch switching', () => {
         expect(execModule.execAuto).not.toHaveBeenCalledWith(mainWorktree, ['switch', 'partial']);
         expect(execModule.execAuto).not.toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'partial']);
     });
+
     it('rejects switching when the target branch is checked out in another worktree', async () => {
         rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
             if (args[0] === 'branch') return result('main\nfeature\n');
@@ -178,7 +179,7 @@ describe('multi-repository branch switching', () => {
 
     it('rejects switching before changing any repository when a worktree is dirty', async () => {
         rs.mocked(execModule.execAuto).mockImplementation(async (cwd = '', args = []) => {
-            if (args[0] === 'status') return result(cwd === mainWorktree ? ' M changed.ts\\0' : '');
+            if (args[0] === 'status') return result(cwd === mainWorktree ? ' M changed.ts' : '');
             if (args[0] === 'branch') return result('main\nfeature\n');
             return result();
         });
@@ -212,5 +213,4 @@ describe('multi-repository branch switching', () => {
         expect(execModule.execAuto).toHaveBeenCalledWith(mainWorktree, ['switch', 'feature']);
         expect(execModule.execAuto).toHaveBeenCalledWith(path.join(mainWorktree, 'client'), ['switch', 'feature']);
     });
-
 });
