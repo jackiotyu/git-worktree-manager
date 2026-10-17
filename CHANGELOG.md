@@ -1,3 +1,11 @@
+## v3.33.3
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.2...v3.33.3)
+
+### 🚀 Enhancements
+
+- Enhance multi-repository worktree management ([#79](https://github.com/jackiotyu/git-worktree-manager/pull/79))
+
 ## v3.33.2
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.1...v3.33.2)
