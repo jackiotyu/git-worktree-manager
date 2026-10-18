@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "oxc"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "typescript/no-explicit-any": "off",
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true,
+        "allowTernary": true,
+        "allowTaggedTemplates": true
+      }
+    ],
+    "curly": [
+      "error",
+      "multi-line",
+      "consistent"
+    ],
+    "eqeqeq": "warn",
+    "no-throw-literal": "warn",
+    "no-multi-str": "error",
+    "prefer-template": "warn",
+    "template-curly-spacing": "error",
+    "no-useless-escape": "error"
+  },
+  "ignorePatterns": [
+    "out",
+    "dist",
+    "**/*.d.ts",
+    "node_modules",
+    "webpack.config.js",
+    "*.md",
+    "src/@types/vscode.git.enums.ts",
+    "rspack.config.js",
+    "rstest.config.js"
+  ]
+}
