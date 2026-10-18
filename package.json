@@ -1457,7 +1457,7 @@
     "prettier": "prettier . --write",
     "test:unit": "rstest",
     "test:unit:watch": "rstest --watch",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsrs --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -1476,7 +1476,7 @@
     "eslint-plugin-prettier": "^5.5.7",
     "ovsx": "^1.2.0",
     "prettier": "^3.9.10",
-    "typescript": "~6.0.3",
+    "tsrs": "0.16.0-ts7.1.0-dev.20260929",
     "typescript-eslint": "^8.71.2"
   },
   "dependencies": {
