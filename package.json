@@ -1471,10 +1471,10 @@
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^4.0.0",
     "changelogithub": "^15.0.5",
-    "ovsx": "^1.2.0",
-    "tsrs": "0.16.0-ts7.1.0-dev.20260929",
+    "ovsx": "^1.3.0",
+    "oxfmt": "^0.73.0",
     "oxlint": "^1.88.0",
-    "oxfmt": "^0.73.0"
+    "tsrs": "0.16.0-ts7.1.0-dev.20260929"
   },
   "dependencies": {
     "dayjs": "^1.11.23",

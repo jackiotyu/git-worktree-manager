@@ -1,7 +1,9 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
     "plugins": ["eslint", "typescript", "oxc"],
-    "categories": { "correctness": "error" },
+    "categories": {
+        "correctness": "error"
+    },
     "rules": {
         "typescript/no-explicit-any": "off",
         "no-unused-expressions": [
