@@ -12,12 +12,14 @@ Use the repository’s pinned package manager and lockfile: `pnpm install`.
 - `pnpm run watch` rebuilds as source files change.
 - `pnpm run package` creates the production bundle.
 - `pnpm run test:unit` runs the Rstest unit suite; add `--watch` via `pnpm run test:unit:watch` for iterative work.
-- `pnpm run check-types` checks TypeScript without emitting files.
-- `pnpm run lint` runs ESLint on `src/` and applies its configured fixes.
+- `pnpm run check-types` checks TypeScript types with tsrs without emitting files.
+- `pnpm run lint` runs Oxlint on `src/` and applies its configured fixes.
+- `pnpm run format` formats supported files with Oxfmt.
+- `pnpm run format:check` checks formatting without changing files.
 
 ## Coding Style & Naming Conventions
 
-Follow the existing TypeScript patterns and keep modules focused within their `src/core/` area. Prettier and EditorConfig specify four spaces, LF endings, semicolons, single quotes, and a 120-character print width. Use descriptive camelCase names for functions and variables; test files use the `*.test.ts` suffix. Run lint and type checks for changes to implementation code.
+Follow the existing TypeScript patterns and keep modules focused within their `src/core/` area. Use Oxfmt for formatting; its settings are in `.oxfmtrc.json`. EditorConfig specifies four-space indentation, LF endings, and a final newline. Use descriptive camelCase names for functions and variables; test files use the `*.test.ts` suffix. Run lint and type checks for changes to implementation code.
 
 ## Testing Guidelines
 
