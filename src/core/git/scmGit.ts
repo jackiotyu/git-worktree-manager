@@ -65,7 +65,7 @@ export class GitApi implements vscode.Disposable {
     private cacheAPI(api?: ScmGitApi): void {
         this._api = api;
         this._gitPath = api?.git.path || 'git';
-        this._gitEnv = (api?.git as any).env || {};
+        this._gitEnv = (api?.git as any)?.env || {};
     }
 
     dispose(): void {
