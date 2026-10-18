@@ -1453,14 +1453,14 @@
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
-    "lint": "eslint src --fix",
-    "prettier": "prettier . --write",
+    "lint": "oxlint src --fix",
     "test:unit": "rstest",
     "test:unit:watch": "rstest --watch",
-    "check-types": "tsrs --noEmit"
+    "check-types": "tsrs --noEmit",
+    "format": "oxfmt .",
+    "format:check": "oxfmt . --check"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@rspack/cli": "^2.2.9",
     "@rspack/core": "^2.2.9",
     "@rstest/core": "^0.11.12",
@@ -1471,13 +1471,10 @@
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^4.0.0",
     "changelogithub": "^15.0.5",
-    "eslint": "^10.12.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.7",
     "ovsx": "^1.2.0",
-    "prettier": "^3.9.10",
     "tsrs": "0.16.0-ts7.1.0-dev.20260929",
-    "typescript-eslint": "^8.71.2"
+    "oxlint": "^1.88.0",
+    "oxfmt": "^0.73.0"
   },
   "dependencies": {
     "dayjs": "^1.11.23",
