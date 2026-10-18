@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "ignorePatterns": [
+    ".github",
+    ".vscode",
+    "*.md",
+    "pnpm-lock.yaml",
+    "package.json",
+    "schemas/*",
+    "out",
+    "dist",
+    "node_modules",
+    "**/*.d.ts",
+    "webpack.config.js",
+    "src/@types/vscode.git.enums.ts",
+    "rspack.config.js",
+    "rstest.config.js"
+  ]
+}
