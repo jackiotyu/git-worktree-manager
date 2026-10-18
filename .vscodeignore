@@ -12,9 +12,8 @@ vsc-extension-quickstart.md
 pnpm-lock.yaml
 .pnpm*
 **/tsconfig.json
-**/.eslintrc.json
-**/eslint.config.mjs
-**/.eslintignore
+.oxlintrc.json
+.oxfmtrc.json
 **/*.map
 **/*.ts
 images/**
@@ -26,7 +25,6 @@ AGENTS.md
 README.zh-CN.md
 .github/**
 .nvmrc
-.prettierignore
 .codegraph/
 pnpm-workspace.yaml
 .claude
