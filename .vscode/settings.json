@@ -1,5 +1,15 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode",
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode",
+        "editor.formatOnSave": true
+    },
     "files.exclude": {
         "out": false, // set this to true to hide the "out" folder with the compiled JS files
         "dist": false // set this to true to hide the "dist" folder with the compiled JS files
