@@ -1,3 +1,21 @@
+## v3.34.0
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.3...v3.34.0)
+
+### 🚀 Enhancements
+
+- Show create branch option while typing ([#81](https://github.com/jackiotyu/git-worktree-manager/pull/81))
+
+### 📖 Documentation
+
+- Update repository guidelines and add commit & pull request guidelines ([fbd20a7](https://github.com/jackiotyu/git-worktree-manager/commit/fbd20a7))
+
+### 🏡 Chore
+
+- Replace ESLint and Prettier with Oxlint and Oxfmt ([#80](https://github.com/jackiotyu/git-worktree-manager/pull/80))
+- Update VSCode settings and recommendations for Oxlint and Oxfmt ([edbb61a](https://github.com/jackiotyu/git-worktree-manager/commit/edbb61a))
+- Update pnpm action version to v6.1.0 in release workflow ([f6c7844](https://github.com/jackiotyu/git-worktree-manager/commit/f6c7844))
+
 ## v3.33.3
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.2...v3.33.3)
