@@ -265,5 +265,6 @@
     "Select a common branch or create a new branch": "选择共有分支或创建新分支",
     "Switching branch across repositories": "正在切换所有仓库的分支",
     "Switched all repositories to branch: {0}": "所有仓库已切换到分支：{0}",
-    "Cannot create a branch from detached HEAD in {0}.": "无法从 {0} 的分离 HEAD 创建分支。"
+    "Cannot create a branch from detached HEAD in {0}.": "无法从 {0} 的分离 HEAD 创建分支。",
+    "Create branch {0}": "创建分支 {0}"
 }

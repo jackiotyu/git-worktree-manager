@@ -18,6 +18,7 @@ import { withResolvers } from '@/core/util/promise';
 import { createBranchFrom } from '@/core/git/createBranch';
 import { inputNewBranch } from '@/core/ui/inputNewBranch';
 import { comparePath } from '@/core/util/folder';
+import { validateBranchName } from '@/core/util/branch';
 import logger from '@/core/log/logger';
 
 type ResolveValue = IPickBranchResolveValue;
@@ -40,6 +41,18 @@ interface TriggerButtonHandlerArgs extends HandlerArgs {
 
 interface HandleTriggerItemButtonArgs {
     event: vscode.QuickPickItemButtonEvent<BranchForWorktree>;
+}
+
+async function resolveCreatedBranch(
+    cwd: string,
+    branchName: string,
+    createBranchOnPick: boolean,
+    base?: string,
+): Promise<ResolveValue> {
+    if (!createBranchOnPick) return { branch: branchName, startPoint: base };
+
+    await createBranchFrom(cwd, branchName, base);
+    return { branch: branchName, hash: await getLastCommitHash(cwd, true) };
 }
 
 // Create a new branch
@@ -100,19 +113,31 @@ async function createBranchStrategy({
         quickPick.show();
         return;
     }
-    if (createBranchOnPick) {
-        await createBranchFrom(cwd, branchName, branchItem.branch || branchItem.hash);
-        const hash = await getLastCommitHash(cwd, true);
-        resolve({ branch: branchName, hash });
-    } else {
-        resolve({ branch: branchName, startPoint: branchItem.branch || branchItem.hash });
-    }
+    resolve(await resolveCreatedBranch(cwd, branchName, createBranchOnPick, branchItem.branch || branchItem.hash));
     quickPick.hide();
     quickPick.dispose();
 }
 
-function isSelectCreateBranch(item: vscode.QuickPickItem) {
-    return [createNewBranchItem, createNewBranchFromItem].includes(item);
+function isSelectCreateBranch(item: vscode.QuickPickItem | undefined): item is BranchForWorktree {
+    return !!item && [createNewBranchItem, createNewBranchFromItem].includes(item);
+}
+
+function updateCreateBranchInputItem(
+    quickPick: vscode.QuickPick<BranchForWorktree>,
+    showCreate: boolean,
+    value: string,
+) {
+    const branchName = value.trim();
+    const items = quickPick.items.filter((item) => item !== createBranchInputItem);
+    const existingBranch = items.some((item) => item.branch === branchName);
+
+    if (!showCreate || !branchName || existingBranch) {
+        quickPick.items = items;
+        return;
+    }
+
+    createBranchInputItem.label = `$(plus) ${vscode.l10n.t('Create branch {0}', branchName)}`;
+    quickPick.items = [createBranchInputItem, ...items];
 }
 
 async function handleAccept({
@@ -124,6 +149,7 @@ async function handleAccept({
     title,
     refreshItems,
     createBranchOnPick,
+    showCreate,
     step,
     totalSteps,
 }: HandlerArgs & {
@@ -132,11 +158,33 @@ async function handleAccept({
     title: string;
     refreshItems: () => void;
     createBranchOnPick: boolean;
+    showCreate: boolean;
     step?: number;
     totalSteps?: number;
 }) {
     try {
         const selected = quickPick.selectedItems[0];
+        if ((!selected || selected === createBranchInputItem) && quickPick.value.trim() && showCreate) {
+            const branchName = quickPick.value.trim();
+            const existingBranch = quickPick.items.find((item) => item.branch === branchName);
+            if (existingBranch) {
+                resolve(existingBranch);
+                quickPick.hide();
+                quickPick.dispose();
+                return;
+            }
+
+            const { sanitizedName, validationMessage } = validateBranchName(branchName);
+            if (!sanitizedName || validationMessage?.severity === vscode.InputBoxValidationSeverity.Error) {
+                if (validationMessage) void vscode.window.showWarningMessage(validationMessage.message);
+                return;
+            }
+
+            resolve(await resolveCreatedBranch(cwd, sanitizedName, createBranchOnPick));
+            quickPick.hide();
+            quickPick.dispose();
+            return;
+        }
         if (isSelectCreateBranch(selected)) {
             await createBranchStrategy({
                 cwd,
@@ -156,16 +204,14 @@ async function handleAccept({
         quickPick.hide();
         quickPick.dispose();
     } catch (error) {
-        vscode.window.showErrorMessage(`${error}`);
+        Alert.showErrorMessage(`${error}`);
+        quickPick.hide();
+        quickPick.dispose();
         reject(error);
     }
 }
 
 function handleHide({ resolve, quickPick }: HandlerArgs) {
-    const selected = quickPick.selectedItems[0];
-    if (isSelectCreateBranch(selected)) {
-        return;
-    }
     resolve(false);
     quickPick.dispose();
 }
@@ -397,11 +443,17 @@ const mapTagItems = (tagList: RefList) => {
     return tagItems;
 };
 
+const createBranchInputItem: BranchForWorktree = {
+    label: '',
+    alwaysShow: true,
+};
 const createNewBranchItem: vscode.QuickPickItem = {
     label: `$(plus) ${vscode.l10n.t('Create new branch...')}`,
+    alwaysShow: true,
 };
 const createNewBranchFromItem: vscode.QuickPickItem = {
     label: `$(plus) ${vscode.l10n.t('Create new branch from...')}`,
+    alwaysShow: true,
 };
 
 const getPreItems = (showCreate: boolean, allowCreateFrom: boolean): vscode.QuickPickItem[] => {
@@ -464,7 +516,7 @@ const mapRefItems = ({
     const branches = new Set(branchNames);
     return items.filter((item) => {
         const branch = (item as BranchForWorktree).branch;
-        return (branch && branches.has(branch)) || item.label === createNewBranchItem.label;
+        return (branch && branches.has(branch)) || item === createNewBranchItem || item === createNewBranchFromItem;
     });
 };
 
@@ -552,9 +604,10 @@ export const pickBranch: IPickBranch = async ({
     try {
         quickPick = vscode.window.createQuickPick<BranchForWorktree>();
         const activeQuickPick = quickPick;
+        let creatingBranch = false;
         const sortState = { sortBy: 'name' as BranchSortBy };
-        const refreshItems = () =>
-            updateQuickItems({
+        const refreshItems = async () => {
+            await updateQuickItems({
                 mainFolder,
                 cwd,
                 showCreate,
@@ -563,17 +616,25 @@ export const pickBranch: IPickBranch = async ({
                 quickPick: activeQuickPick,
                 sortBy: sortState.sortBy,
             });
+            updateCreateBranchInputItem(activeQuickPick, showCreate, activeQuickPick.value);
+        };
         const updateButtons = () => {
             activeQuickPick.buttons = [backButton, getSortButton(sortState.sortBy)];
         };
         activeQuickPick.title = title;
         activeQuickPick.placeholder = placeholder;
         activeQuickPick.canSelectMany = false;
+        activeQuickPick.sortByLabel = false;
         updateButtons();
         activeQuickPick.step = step;
         activeQuickPick.totalSteps = totalSteps;
+        activeQuickPick.onDidChangeValue((value) => {
+            updateCreateBranchInputItem(activeQuickPick, showCreate, value);
+        });
         activeQuickPick.onDidAccept(() => {
             if (activeQuickPick.busy) return;
+            const selected = activeQuickPick.selectedItems[0];
+            creatingBranch = isSelectCreateBranch(selected) || selected === createBranchInputItem;
             return handleAccept({
                 resolve,
                 reject,
@@ -583,12 +644,16 @@ export const pickBranch: IPickBranch = async ({
                 title,
                 refreshItems,
                 createBranchOnPick,
+                showCreate,
                 step,
                 totalSteps,
+            }).finally(() => {
+                creatingBranch = false;
             });
         });
         activeQuickPick.onDidHide(() => {
             if (activeQuickPick.busy) cancelledWhileLoading = true;
+            if (creatingBranch) return;
             handleHide({ resolve, reject, quickPick: activeQuickPick });
         });
         activeQuickPick.onDidTriggerButton((event) =>

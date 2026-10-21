@@ -264,5 +264,6 @@
     "Select a common branch or create a new branch": "共通ブランチを選択するか、新しいブランチを作成",
     "Switching branch across repositories": "全リポジトリのブランチを切り替え中",
     "Switched all repositories to branch: {0}": "すべてのリポジトリをブランチ {0} に切り替えました",
-    "Cannot create a branch from detached HEAD in {0}.": "{0} の detached HEAD からブランチを作成できません。"
+    "Cannot create a branch from detached HEAD in {0}.": "{0} の detached HEAD からブランチを作成できません。",
+    "Create branch {0}": "ブランチ {0} を作成"
 }
