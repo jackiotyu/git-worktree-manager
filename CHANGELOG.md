@@ -1,3 +1,11 @@
+## v3.34.1
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.34.0...v3.34.1)
+
+### 🚀 Enhancements
+
+- Support BASE_ROOT in worktree label templates ([#83](https://github.com/jackiotyu/git-worktree-manager/pull/83))
+
 ## v3.34.0
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.33.3...v3.34.0)
