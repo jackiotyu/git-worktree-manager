@@ -120,7 +120,7 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 
 - **`git-worktree-manager.treeView.worktreeLabelTemplate`**  
   自定义 worktree 在树视图中显示的标签（加粗文本）。留空则使用默认标签（分支名或标签名）。  
-  可用变量：`$REF_NAME`（分支名或标签名）、`$BASE_NAME`、`$FULL_PATH`、`$RELATIVE_PATH`、`$LAST_COMMIT`。  
+  可用变量：`$REF_NAME`（分支名或标签名）、`$BASE_NAME`、`$BASE_ROOT`（主仓库根目录的父目录）、`$FULL_PATH`、`$RELATIVE_PATH`、`$LAST_COMMIT`。  
   **示例:** `"$BASE_NAME ⇄ $REF_NAME"` 先显示文件夹名称，再显示分支名。
 
 - **`git-worktree-manager.treeView.worktreeSortOrder`**

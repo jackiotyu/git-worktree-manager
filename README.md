@@ -120,7 +120,7 @@ Customize Git Worktree Manager to fit your workflow:
 
 - **`git-worktree-manager.treeView.worktreeLabelTemplate`**  
   Customize the label (the bold text) of each worktree in the tree view. Leave empty to keep the default label (the branch or tag name).  
-  Available variables: `$REF_NAME` (branch or tag name), `$BASE_NAME`, `$FULL_PATH`, `$RELATIVE_PATH`, `$LAST_COMMIT`.  
+  Available variables: `$REF_NAME` (branch or tag name), `$BASE_NAME`, `$BASE_ROOT` (parent directory of the main repository root), `$FULL_PATH`, `$RELATIVE_PATH`, `$LAST_COMMIT`.  
   **Example:** `"$BASE_NAME ⇄ $REF_NAME"` shows the worktree folder name first, then the branch.
 
 - **`git-worktree-manager.treeView.worktreeSortOrder`**
