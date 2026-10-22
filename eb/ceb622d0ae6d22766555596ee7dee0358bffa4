@@ -1,0 +1,26 @@
+README.md
+  h_efb56b9ff7aea6 123
+README.zh-CN.md
+  h_efb56b9ff7aea6 123
+package.nls.ja.json
+  h_efb56b9ff7aea6 128
+package.nls.json
+  h_efb56b9ff7aea6 128
+package.nls.zh-cn.json
+  h_efb56b9ff7aea6 128
+package.nls.zh-tw.json
+  h_efb56b9ff7aea6 128
+src/core/treeView/items/worktree.ts
+  h_efb56b9ff7aea6 86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ebceb622d0ae6d22766555596ee7dee0358bffa4",
+  "prompts": {},
+  "humans": {
+    "h_efb56b9ff7aea6": {
+      "author": "jackiotyu <2504448153@qq.com>"
+    }
+  }
+}
