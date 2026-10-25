@@ -1,3 +1,11 @@
+## v3.34.2
+
+[compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.34.1...v3.34.2)
+
+### 🚀 Enhancements
+
+- Add BASE_ROOT_NAME template variable ([#83](https://github.com/jackiotyu/git-worktree-manager/pull/83))
+
 ## v3.34.1
 
 [compare changes](https://github.com/jackiotyu/git-worktree-manager/compare/v3.34.0...v3.34.1)
