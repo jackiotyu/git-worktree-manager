@@ -115,12 +115,19 @@ Git Worktree Manager 将 worktree 管理能力直接集成到 VS Code 中，
 
 - **`git-worktree-manager.treeView.worktreeDescriptionTemplate`**  
   自定义 worktree 在树视图中显示的描述文本，便于快速识别陈旧的 worktree。  
-  可用变量：`$FULL_PATH`、`$BASE_NAME`、`$RELATIVE_PATH`、`$LAST_COMMIT`（最后一次提交的相对时间，例如 “3 周前”）。鼠标悬停可查看绝对时间戳。  
+  可用变量：
+  - `$REF_NAME`：当前 worktree 显示的引用名称，可以是分支名、标签名；detached HEAD 时为缩写的提交哈希。
+  - `$BASE_NAME`：当前 worktree 的文件夹名称。
+  - `$BASE_ROOT`：主仓库根目录的父目录完整路径。
+  - `$BASE_ROOT_NAME`：主仓库根目录的父目录名称。
+  - `$FULL_PATH`：当前 worktree 的完整路径。
+  - `$RELATIVE_PATH`：相对于主仓库根目录的路径；主仓库本身显示为其文件夹名称。
+  - `$LAST_COMMIT`：最后一次提交距今的相对时间（例如“3 周前”）；无法获取时为空。鼠标悬停可查看绝对时间戳。  
   **示例:** `"$RELATIVE_PATH · $LAST_COMMIT"`
 
 - **`git-worktree-manager.treeView.worktreeLabelTemplate`**  
   自定义 worktree 在树视图中显示的标签（加粗文本）。留空则使用默认标签（分支名或标签名）。  
-  可用变量：`$REF_NAME`（分支名或标签名）、`$BASE_NAME`、`$BASE_ROOT`（主仓库根目录的父目录）、`$FULL_PATH`、`$RELATIVE_PATH`、`$LAST_COMMIT`。  
+  可用变量与 `git-worktree-manager.treeView.worktreeDescriptionTemplate` 相同。  
   **示例:** `"$BASE_NAME ⇄ $REF_NAME"` 先显示文件夹名称，再显示分支名。
 
 - **`git-worktree-manager.treeView.worktreeSortOrder`**

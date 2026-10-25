@@ -83,6 +83,7 @@ export class WorktreeItem extends vscode.TreeItem implements IWorktreeLess {
         return {
             FULL_PATH: worktreePath,
             BASE_NAME: path.posix.basename(worktreePath),
+            BASE_ROOT_NAME: path.basename(path.dirname(item.mainFolder)),
             BASE_ROOT: path.dirname(item.mainFolder),
             RELATIVE_PATH: relativePath,
             LAST_COMMIT: item.lastCommitDate ? formatTime(item.lastCommitDate) : '',

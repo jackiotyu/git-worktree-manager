@@ -20,6 +20,19 @@ describe('formatTemplate', () => {
         expect(formatTemplate('$NAME/$NAME', { NAME: 'x' })).toBe('x/x');
     });
 
+    it('handles variable names that share a prefix regardless of declaration order', () => {
+        expect(
+            formatTemplate('$BASE_ROOT_NAME - $BASE_ROOT', {
+                BASE_ROOT: '/projects',
+                BASE_ROOT_NAME: 'projects',
+            }),
+        ).toBe('projects - /projects');
+    });
+
+    it('does not replace tokens inside variable values', () => {
+        expect(formatTemplate('$VALUE', { VALUE: '$BASE_ROOT', BASE_ROOT: '/repo' })).toBe('$BASE_ROOT');
+    });
+
     it('leaves unknown tokens untouched', () => {
         expect(formatTemplate('$UNKNOWN - $BASE_NAME', { BASE_NAME: 'wt' })).toBe('$UNKNOWN - wt');
     });

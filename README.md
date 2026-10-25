@@ -115,12 +115,19 @@ Customize Git Worktree Manager to fit your workflow:
 
 - **`git-worktree-manager.treeView.worktreeDescriptionTemplate`**  
   Customize the description next to each worktree in the tree view. Handy for spotting stale worktrees at a glance.  
-  Available variables: `$FULL_PATH`, `$BASE_NAME`, `$RELATIVE_PATH`, `$LAST_COMMIT` (relative time of the last commit, e.g. "3 weeks ago"). Hover a worktree to see the absolute timestamp.  
+  Available variables:
+  - `$REF_NAME`: The ref name displayed for this worktree: branch or tag name, or abbreviated commit hash for a detached HEAD.
+  - `$BASE_NAME`: The folder name of the current worktree.
+  - `$BASE_ROOT`: The full path of the parent directory of the main repository root.
+  - `$BASE_ROOT_NAME`: The name of that parent directory.
+  - `$FULL_PATH`: The full path of the current worktree.
+  - `$RELATIVE_PATH`: The path relative to the main repository root; for the main worktree, this is its folder name.
+  - `$LAST_COMMIT`: The relative time since the last commit (e.g. "3 weeks ago"); empty if unavailable. Hover a worktree to see the absolute timestamp.  
   **Example:** `"$RELATIVE_PATH · $LAST_COMMIT"`
 
 - **`git-worktree-manager.treeView.worktreeLabelTemplate`**  
   Customize the label (the bold text) of each worktree in the tree view. Leave empty to keep the default label (the branch or tag name).  
-  Available variables: `$REF_NAME` (branch or tag name), `$BASE_NAME`, `$BASE_ROOT` (parent directory of the main repository root), `$FULL_PATH`, `$RELATIVE_PATH`, `$LAST_COMMIT`.  
+  It supports the same variables as `git-worktree-manager.treeView.worktreeDescriptionTemplate`.  
   **Example:** `"$BASE_NAME ⇄ $REF_NAME"` shows the worktree folder name first, then the branch.
 
 - **`git-worktree-manager.treeView.worktreeSortOrder`**
