@@ -7,5 +7,7 @@ export type TemplateVars = Record<string, string>;
  * @param vars Map of token names (without `$`) to values
  */
 export function formatTemplate(template: string, vars: TemplateVars): string {
-    return Object.entries(vars).reduce((text, [key, value]) => text.split(`$${key}`).join(value), template);
+    return template.replace(/\$([A-Za-z_][A-Za-z0-9_]*)/g, (token, key: string) =>
+        Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : token,
+    );
 }
